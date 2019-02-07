@@ -1,0 +1,23 @@
+Music:
+    OhSeraph
+    locust3s
+    KReichJr
+
+Graphics:
+    Faust
+    pixeloutlaw
+    signopt200
+    RedPandersBear
+
+Programming:
+    KReichJr
+    signopt200
+
+Narrative:
+    KGtheLegend
+    HereGoesNothing
+
+Mechanics:
+    Neo
+    signopt200
+    KD_Alpha

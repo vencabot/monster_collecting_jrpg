@@ -1,0 +1,190 @@
+Regarding game themes, the world is our oyster. Other games in the genre have
+used themes such as:
+    Collecting wild animals and making them fight.
+    Forming pacts with demons.
+    Discovering and befriending ghosts.
+    Traveling to a new world where monsters are your party members.
+    Creating party members from robotic parts.
+
+Heregoes puts forth an idea of having a team of pro-wrestling demons.
+
+Based on Seraph's original music submissions, I feel like we're getting vibes
+of very intense, heroic battles.
+
+This music isn't making me think of something like Pokemon, where most of the
+fights are pretty casual and arbitrary.
+
+So, maybe, narratively speaking, our stakes are a little bit higher in each
+battle.
+
+KGtheLegend brings up the idea that, the fights could be raised to an
+intensity where you may need to exhaust your party. "Not every character is
+making it out of this battle."
+
+In Austin's 'rival theme,' I get the impression that we're looking at a sort
+of dramatic, fated duel. It's not necessarily a more violent fight, but it is
+more charged. There's some stake in ideals.
+
+With music like this as inspiration, maybe we should look at themes that
+aren't necessarily quite as infantile as many games in the genre, which are
+aimed at young children. Maybe we're looking at something a little bit deeper
+or a little bit darker in terms of themes. In that respect, maybe we should
+take a second look at KG's idea of team members being, in some capacity,
+disposable.
+
+In terms of narrative, KG is getting a vibe like maybe the events that took
+place before the game begins have a huge significance on the story, and maybe
+there's a mystery for our characters to solve regarding either WHAT happened
+or how to deal with what happened.
+
+HereGoes puts forward the idea that we should let the player choose their
+main character.
+
+KD puts forth the idea that it's cool when, in a JRPG, you can play as both
+the HERO and the VILLAIN. Maybe they have different play-styles, such as in
+Breath of Fire IV, when the villain, Fou Lu, is pretty godlike, so you get
+the impression from playing him that he's going to be a very worthy foe.
+
+You also have games like FF8, where the player moves between playing Squall
+and his party, and playing Laguna and his party.
+
+Zanzhu suggests having more-powerful "magic" or "technology" not necessarily
+being common in this world, so that we have something for the player to
+aspire to later in the game.
+
+KReichJr has been stressing an idea for the narrative where some portion of the game's introduction (whether it be as long as a quarter of the game, or as short as just the intro) should have a world that's not as conflicted for the characters. Something a bit more lighthearted. But then some conflict arises that puts the world into a different perspective that's a bit darker and perhaps the relationship between the lead protagonist and their rival is somehow tied into this conflict.
+
+
+02/06/2019
+
+We're gonna sit down and really zone-in on narrative and theming, today. As a part of that, why don't we look at what little we know about our game so far and think about how that could influence our world.
+
+* We know that combat is going to be a big part of our game. Unsurprising, since it's a JRPG. But that's gonna have an impact the world we design.
+
+* We know that combat can be pretty grueling. We discussed before that combat is going to be maybe a lot more dramatic than games such as Pokemon, and may involve totally exhausting your party in a single encounter and maybe even sacrificing characters.
+
+* We know that we're going to have more than one protagonist with more than one team operating more-or-less independently. Not only do we have multiple protagonists to explore the world from multiple perspectives, but at least two of these protagonists (we don't really know how many we're gonna have, yet) are gonna have a pre-existing relationship that is likely to be tied to the core story of our world.
+
+* The idea was brought up, before, that the player would end up controlling both sides of a rivalry.
+
+* Our protagonists are leaders of some kind of troop, be they monsters or whatever. Our characters have responsibility over a team.
+
+* We know that these characters are going to grow in some way. In many RPGs, the story totally ignores the fact that the characters start off being very weak -- and, by the end, they have comparatively godlike power. We could go the route of ignoring this aspect (in terms of the narrative) as many RPGs do, but we could also consider as we design our world and themes for the game. These parties, warriors, etc. -- they get a lot stronger through some process.
+
+So that's our game, so far. Now we can start to look at narrative themes that we could apply to our game:
+
+* Panders brings up the idea that we could examine a strained relationship between the 'leaders' and the 'units'. Maybe we discover, over the course of the game, that these units are not entirely sympathetic to the goals they're being made to fight for.
+
+* Kenny kind of ties into this idea that panders brought up by saying that, not only do we learn that maybe these characters are being used unfairly, but we might also learn about their origins and their culture or species or something along those lines. Maybe the protagonists (and, by extension, the player) start the game looking at these units as pawns to be used -- and then, over the course the game, their perspective changes on these characters.
+
+* I noticed that, on Discord, Kenny brought up the idea that these units could be 'built' by the player. I am definitely sympathetic toward this idea, because I feel like it ties into what we know about the combat: that units may need to be destroyed. That they have limited durability. I feel like these notions sort of coincide with the idea that these units are constructed in some capacity.
+
+* Panders brings up an idea that I think is brilliant. What if there are multiple ways to bring a unit onto your team on a moral spectrum. Maybe units that are willing to join your team are rarer and / or less powerful than units that have to be 'forced' to join your team. This would encourage the player to 'force' units to join, since those units would be more powerful and are more readily available, but there's the moral angle. A player might choose, instead, to befriend their units, which could have a more heroic impact on the narrative, but at the cost of making minute-to-minute combat more difficult. The friendly units would typically be less powerful, or more rare, or otherwise limited in some way.
+
+* Kenny brings up the idea that the protagonists could be in a literal family, or maybe in some kind of group, or clan, or organization together, and one of them, for some reason, branches off and becomes an antagonist to the others (but we'd be able to play as that character, and so we'd have more insight into the reasoning behind their divergence).
+
+* HereGoes brings up the idea, which is also somewhat popular in JRPGs, to bring the antagonist INTO a group of other protagonists before we know that they're gonna end up being a bad guy.
+
+* Kenny brings up the idea that maybe some of the characters don't even realize that they're family -- but perhaps the player does, which adds in some dramatic irony.
+
+* Also, we discussed the idea that the story's world or themes could start off lighter and become more conflicted later on. That kind of ties into the ideas that both Kenny and HereGoes have put forward. Maybe, at the beginning, things are all hunky-dory with our 'family unit,' and we're ignorant to the idea that one of the characters is going to end up being an antgonist, but it's their divergence from the team that invites the story's central conflict.
+
+* HereGoes brings up the idea that we could even have this future 'antagonist' on our team for long enough to develop them, mechanically (in the game). What I like about this idea is that, once they do split off and become antagonistic toward the rest of our characters, it gives us a hook into them that makes it easier for us to play from their perspective even though they might otherwise be considered a villain.
+
+* Panders brings up the idea that, if a unit falls in battle, you might have to re-recruit them. I do feel like, in order to add weight to the sacrifice of a character, we would want for the process of bringing them back onto the team to be difficult or costly. Maybe the more powerful the unit is, the more difficult they are to bring back.
+
+
+I feel like we've talked a lot about narrative ideas, which I'm really excited about. We have an hour left, and I think it's important -- maybe even more important than our story -- to look at the world that the story takes place in. It's at this point that we can begin thinking about how the world's mechanics will influence our game and what sorts of units we want to draw and create, visually. And what roles in society our protagonists might play.
+
+Why don't we kind of change gears and start coming up with some ideas for worlds for our game to take place in.
+
+Panders brings up the idea that we could easily start by looking at what genres appeal to us.
+
+Do you guys want to have a sort of high-fantasy world, or is that overly played out?
+
+We could do something that's more low-fantasy. Something a bit grimier.
+
+We could look at science-fiction and have themes that involve outer space or other dimensions or whatever.
+
+We could look at something more surreal. I've been playing Yume Nikki, which takes place in a variety of dream worlds and that's pretty interesting, although it definitely complicates things like 'story'.
+
+HereGoes suggests that he likes worlds that are kind of realistic, themselves, but with characters that are outlandish.
+
+We could have a world that has a 'light side' and a 'dark side', similar to a lot of video games and anime stories. There are some parallels between the worlds but maybe one is more grounded and the other is more fantastical.
+
+It sounds to me like what HereGoes is talking about is something like Earthbound. The world in Earthbound is very grounded; it's very similar to our modern world. But this is contrasted by the fact that the story and the characters are so bizarre and unexpected, juxtaposed.
+
+
+
+
+
+I think we should have a world which is very grounded in realism, whether it be in our world's past or the present. But, out of seemingly nowhere, some kind of technology or other mcguffin is introduced to either the world or exclusively to our protagonists that allows them to tap into the power of a parellel world, which is where they get the ability to recruit and control these units.
+
+Speaking of this 'mcguffin' that changes the whole world into something more fantastical is actually developed within our group of protagonists and then leaks out and is maybe even 'misused' by a greater organization or even the whole world.
+
+
+
+
+Here's what we know, now:
+
+Our protagonists all START OFF as a part of some group, and they collectively discover or create a way to tap into some otherworldly power that gives them an unusual amount of power in the form of giving them command over a small army.
+
+The secret of this power is leaked out, and now the protagonists and the world at large have to adjust to the way that this impacts society. Maybe we've got anarchy in the way that gangs, in possession of this power, can overthrow governments.
+
+The world may have started off very similar to our world, but because of this revelation, it's now becoming more conflicted and more video-game'esque.
+
+Panders brings up the idea that maybe some traumatic force causes some special protagonist to break the barrier between two worlds. The problem is that, once that barrier is broken, the impact this action has ends up being very widespread.
+
+Maybe this power is something that characters can explicitly share with others, whether it be a physical object or some other kind of gift that can be passed on. I like this idea, because it adds some relatability to how this power ends up being leaked out and used for evil or whatever. Because somebody shared it with the wrong person, because they either had the wrong impression of them or maybe just because people are complex and the sharer couldn't have predicted the way that having this gift would impact that person.
+
+Let me put forward an idea that ties into what Panders said. Panders brings up the idea that maybe this 'alternate world' that our characters' power comes from could be in the form of a book whose characters come to life at the protagonist's command. What I think would be interesting would be if we could tie an idea like this into Kenny's idea of 'building' characters, and here's why:
+
+From a gameplay perspective, I think it'd be interesting if we could have a character's "soul" be distinct from their "body," and I'm only using these terms to describe abstract gameplay concepts -- not to literally speak about a body and soul. What I mean, it'd be interesting, I think, to have our 'monsters' have their own attributes and skills and growth, but maybe have them be tied to some accessory or armor or summoning stone or a book or a doll or a mechanical body which would augment that character's growth.
+
+So maybe, when you 'capture' a unit, you also have to provide it with some physical anchor which would basically affect its class. Because it would affect its growth, although that unit's innate attributes would also impact their growth. So you could end up with a wide variety of combinations of 'monster' and 'anchor'. Whatever you bind them to could have durability.
+
+* Panders puts forth the idea that we eventually find that the only way to bring stability back to the world is to kill the original person that broke the barrier, so to speak, as the way to repair that barrier.
+
+Going with Pander's original example of using 'books,' I think the idea would be for the player to decide which 'book' to bind a particular 'spirit' to. That way, you have all of these interesting 'spirits' which come with their own unique attribute balance (whether they be defensive or offensive or quick or whatever), and you could augment that by binding them to a particular book. And these 'books' (or whatever they end up being) could act as a decent incentive to find treasure in the world, as we move into talking about our game's other pillars in the future (we've discussed combat, but we also need to discuss the exploration and management aspects of the game in the future).
+
+* Austin puts forward the idea that maybe one of these 'units' becomes the / a antagonist. Maybe it's apparently more sentient than the others. Maybe it can bind and re-bind ITSELF to a variety of anchors. Maybe we could ironically swap the 'trainer' / 'monster' relationship, and this 'unit' could end up as a 'leader' and the humans or whatever could end up being under its control.
+
+What do you guys think? Should our 'anchors' for the characters be, themselves, themed? Or should they be random objects? Both have advantages:
+
+If we use random objects, we have a massive and interesting variety of things to choose from when we're deciding what can be used to attach to our monsters or whatever. It kinda adds a dreamlike element to the world.
+
+On the other hand, if we knuckle down and fixate on a particular theme (such as 'toys' or 'books' or 'robots' or something along those lines. Stones or whatever), we could use that to enhance the theming of the world over-all.
+
+Austin's new battletheme is more hopeful and innocent. Still very exciting. Maybe our characters are less MORALLY conflicted? Maybe they're fighting a more OVERT evil? And the darker battle theme could be used once the lines are bit muddied? This song is still charged with gusto and an eagerness to fight, but it's much cleaner and less INTERNALLY conflicted. Maybe, at first, our family of protagonists are all facing one common goal, and this theme represents that. And then later, when they're broken up internally, they're all pursuing objectives that are conflict with each other, and the battle theme reflects that they're not 100% sure that what they're doing is right, but they feel like they've gotta do it anyway. The new battle soundtrack is very confident and self-assured. The original battle theme is definitely a lot more trepidatious.
+
+Listening to Austin's 'emotion' theme, we can get an insight into our world / story / characters: This is an apparently innocent protagonist who feels forlorn. Maybe this is after his family (of other protagonists that we'll also play as) is broken up, and he's trying to reunite them, basically. Maybe this character could be thought of as our 'lead' protagonist, or the most traditional protagonist, as opposed to other characters whose motivations might be more complex?
+
+lesson_zero brings up the idea that it's sort of relaxed and upbeat. A travel theme. Maybe this character has a new motivation and he's setting out on it.
+
+
+
+
+One thing we can take from Austin's 'lighter' battle theme is that, at first, our characters' objectives are very straight forward. They're very confident that they're the good guys and they're putting a stop to some evil force. This could used narratively as a sort of fake-out, where some percentage of our game takes place with these simpler themes -- but then, either before or after this original antagonist is defeated, we find that things really aren't quite that simple. When you walk away, in the game, you don't hear me say (in the game). "Please,
+
+Things aren't that simple, and our protagonists end up having to go their own ways.
+
+
+
+
+
+So, recap for the day:
+
+* The world our players inhabit is based firmly in reality.
+
+* We know that the world was changed to be more dynamic by some inciting
+incident and some resulting power that's unearthed by our protagonists.
+
+* The main conflicts of the story (and the darkness in our world) comes from the fact that this 'power' has leaked into the wrong hands. Or, if we're not taking a moral stance, if not the 'wrong' hands, then into the hands of people that are using in such a way that incites chaos and conflict.
+
+* We started off with a relatively safe world where things more-or-less make sense, and now we end up with a world where power dynamics are shifting rapidly. Governments are not necessarily the authoratative power over the world. Right away, our world becomes more 'video-game'esque' and inviting to all kinds of interesting conflicts and characters.
+
+* We talked about how our protagonists could start off as a part of a group with a common goal, and then as we see more of how this new power is affecting the world, their beliefs are no longer strictly equivalent. We find that these characters have to split up and do their own thing, with some of them even coming into conflict with each other.
+
+* We discussed the possibility that this 'power' is leaked out to the world in one of a variety of ways: it could be that our protagonists, by uncovering this power, have breached a barrier between worlds that results in others developing similar powers. It could be that our protagonists have developed or found their way to this power, and they have to give it to others explicitly, either by telling them the secret or giving them some kind of object. In any case, we know that this power starts off in the hands of a select few, and it ends up falling into the possession of characters that bring a lot of conflict to our story.
+
+* We discussed that, whatever 'units' we're using as the source of this power -- "this power" certainly being the ability to 'summon' or 'recruit' or 'lead' a small army of some kind of unit -- they need to be 'bound' to something physical, maybe? Or something that makes them work, like a 'battery' or something along those lines. In any case, these 'units' are distinct from some object that they require to operate in our world. We have these units that can't really do anything on their own, and maybe our protagonists control them because they have control over these objects that essentially 'give life' or 'animation' to these units.

@@ -1,0 +1,403 @@
+Our goal here is to make a monster-collecting JRPG in the style of games
+like:
+    Pokemon
+    Dragon Quest Monsters
+    Robopon
+    Digimon
+    Shin Megami
+    Medabots
+
+    Suikoden
+    Chrono Cross
+    Final Fantasy Type Zero
+    Wild Arms 4
+    Lufia 2
+    Phantasy Star I (pay to revive characters)
+
+//    Advance Wars
+//    Front Mission
+//    Ogre Battle
+//    Final Fantasy Tactics
+//    Shining Force
+//    Valkyria Chronicles
+
+We can broaden our horizons by looking at these not as "monster collecting"
+games, but rather JRPGs where you have a LOT of characters that you can move
+onto and off of your party.
+
+Any game where your investment into an individual character isn't as
+significant as the party-makeup that you decide on.
+
+These are all games where your character-growth decisions are on a spectrum of
+significance compared to what characters you choose to put on your party.
+
+Another primary aspect of a "monster-collecting" game is the
+monster-collection aspect. It's about traveling a game world and discovering
+new characters to add to your party.
+
+We need to have a LOT of characters.
+The player needs to be incentivized to explore to COLLECT those characters.
+There needs to be some interesting decisions to make regarding which
+characters the player ends up using.
+
+For the sake of simplicity, since the point of this game-development project
+is for us to come together and learn about game-design, we should lay some
+ground-rules so that we don't get too ambitious.
+
+For instance, let's focus on 1-on-1 character battles (in the vein of
+Pokemon).
+
+Let's focus on the game being 2D. We're going to be developing the game using
+Pygame, which is especially good at making 2D games.
+
+If we're going to focus on making a one-on-one "monster battle" RPG, we
+should look at what we can TAKE from these grid-based tactics JRPGs.
+
+Character customization is strong in tactics-style games. But the downside of
+this is that, in some of these, you end up using mostly the same team for the
+whole game. So, maybe what we can take from that is that we need to strike a
+balance between making it interesting to develop a character but also giving
+each character some limits so that the player doesn't really want to use one
+set of characters for the whole game.
+
+We're gonna have a lot of characters to choose from, so it would make sense to
+have a major of the part of the game being choosing which characters you want
+to use for which situations.
+
+An idea might be to have multiple teams. That way, you're incentivized to use
+a wider variety of characters.
+
+Following our tactics-game analogy, maybe we could think of each monster as
+representing a 'class'. Every class has different tools, and they should all
+be interesting, but you shouldn't be able to tackle every challenge in the
+game using the same set of tools or classes.
+
+What we're fixating on, right now, is how do you strike a balance between
+making it to fun to grow a character but also not getting the player too
+attached to that character, so they can still be swapped around.
+
+In Pokemon 1st gen, you mostly just grind to level up characters, and that's
+kind of boring. Aside from that, you can choose which skills they learn, and,
+to an extent, when they evolve. I personally feel like Pokemon's approach to
+character growth might be a bit TOO hands-off for this project.
+
+On the other hand, we've listed a lot of games where the player is rewarded
+for sticking with the same few characters for the whole game. In those games,
+the characters can have their classes dramatically changed throughout the
+game. They can be developed to fulfill a wide variety of needs. They can wear
+all kinds of different equipment that can have an impact on their function. I
+feel like that might be a bit TOO deep of growth per-character.
+
+When a character levels up, what happens? What decisions does the player make
+regarding character growth?
+
+Let's dial it back. What decisions are coming into play when deciding which
+characters you want to bring onto your party.
+
+In Pokemon, you consider type-matchups. Certain types are weak or strong
+against other types, and that's a major influence on what characters you
+bring onto your party.
+
+In classic JRPGs, a major factor of character choice would be your opponent's
+defense weaknesses. Some enemies are weaker to physical attacks, or, more
+specifically, 'blunt' attacks. Or 'piercing'. Or 'slashing' attacks. Or
+magical attacks of a variety of elements. Maybe an opponent is especially
+evasive, so you need a character that has a lot of accuracy. Or maybe they do
+a lot of damage, so you need a character that has a lot of health or defense.
+
+We're talking about choosing a team based on what types of opponents you
+expect to fight.
+
+Maybe, in each battle, the player will have to make some difficult decisions
+regarding how to consume their characters' resources. Compare this to games in
+the Final Fantasy franchise, where individual battles are sometimes trivial,
+and if there are decisions to make regarding resource consumption (HP, SP,
+MP), they're made over the course of dungeon rather than a single battle.
+
+So maybe our fights could be longer, or maybe the party is somehow healed
+between battles to encourage the player to consume their resources more
+aggressively.
+
+KG brings up the idea that we could solve some of our problems regarding
+incentivizing the player to use a wider variety of characters by having some
+characters be removed from the party when they die or something else happens
+to permanently or temporarily remove them from the game.
+
+Of course, in other games that use a mechanic like that, there becomes a
+different decision-making process regarding how much to invest in a single
+character when you know that you might not always be able to use them.
+
+I really like the idea that KGtheLegend put forward: remove characters from
+the party, in battle, on a permanent or semi-permanent basis as a way to
+encourage the player to A.) be very careful regarding which characters they
+pick to bring into battle, and B.) use more characters, because maybe
+the player's original favorites might be incapacited.
+
+At the same time, I feel like it might be a bit harsh to permanently remove a
+character from the game, if only because that would have a lot influence over
+the way that we design our character-growth mechanics. I feel like, if you
+expect that your character might permanently die, we can't really ask the
+player to invest too many decisions into that individual character's growth.
+
+Maybe, when a character is "killed" or removed from the game, we can think of
+some way for the player to "buy" them back. But the player wouldn't have
+access to that character for some amount of time.
+
+HereGoes mentions it would be cool to let the player choose their main
+character.
+
+Something that I think about, regarding monster-collection games like
+Pokemon, is that the "protagonist" or "trainer" or whatever they may be
+typically doesn't get a lot of mechanical growth.
+
+In Pokemon, the character can train any number of monsters, but the trainer,
+himself, doesn't really become any more powerful throughout the game.
+
+If we allow the player to choose their own main character, maybe each
+"trainer" or "protagonist" can have different mechanical attributes that
+influence they way manage their team. Maybe the protagonist you choose
+imparts some kind of bonus to your team, or maybe they can earn some kind of
+currency (EXP, etc.) that they can use to enhance or otherwise give a bonus to
+their entire team. That way, the protagonist can grow along with the
+individual party members, AND there could be an interesting decision to be
+made regarding WHICH main character you choose to play.
+
+If we can have the player shift control between more than one protagnist,
+that would definitely incentivize the player to experiment with different
+team-layouts and monsters. In fact, maybe different protagonist have access to
+different party members / monsters / classes , at least early-on, so the
+player is encouraged to try new things and not just settle on one
+team-makeup.
+
+KD puts forth the idea of how much cooler Pokemon would be if we could
+control the main character's party as well as the main antagonists' team.
+That makes me think of how interesting to be to experiment with different
+MEANS of COLLECTING your party members. In Pokemon, the trainer catches them
+in the wild, in balls, but Team Rocket steal their monsters. That could be
+interesting: you can choose between different protagonists -- maybe even more
+than one in a single playthrough -- and perhaps one of the factors that sets
+them apart is the condition they need to meet to add new characters to their
+team.
+
+Let's do a recap of what we fixated on the most, today:
+    * Individual encounters being more resource-intensive than in more
+      casual JRPGs. Maybe characters need to be sacrificed in order to win,
+      sometimes. Maybe your 'mage' will have to totally exhaust their ammo.
+      You might have to make more difficult decisions more often in combat.
+      There are greater consequences for your decisions in individual
+      encounters.
+
+    * The player may be given the opportunity to choose between different
+      protagonists, each of which may come with their own set of gameplay
+      ramifications. Maybe they give their respective teams different buffs.
+      Maybe the way that they collect new characters varies. Of course their
+      narrative varies. These characters, themselves, can be grown in a
+      way that's distinct from the way that the individual "monsters" grow.
+      Maybe, when your protagonist dies, you can pick up from another
+      characters' perspective.
+
+    * Between the fact that you might have multiple teams (one for each
+      protagonist) and each of those teams, because of the trainer's bonus,
+      will incentivize different types of play, and because characters might
+      need to be sacrificed in battle on a semi-regular basis, we've got
+      some pretty strong incentive for the player to utilize a larger
+      percentage of the game's available monsters / classes.
+
+    * Although we discussed the idea of removing characters from the party
+      as a way to make combat more interesting and to encourage the player
+      to not overly rely on the same small team, perhaps the player can buy
+      back "dead" characters or otherwise earn them back onto the team after
+      some amount of time or difficult trial has been passed. That way,
+      although the player will definitely need to replace their party-member
+      on a temporary basis, they might feel safer to invest more into a
+      characters' development, knowing that they won't PERMANENTLY die.
+
+    * OhSeraph shared some really awesome musical contributions that really
+      acted as a lot of inspiration for our game, in terms of narrative and
+      gameplay style.
+
+Look at 'evoland,' as mentioned by Zanzhu.
+
+
+
+
+
+
+02/04/19
+
+If we're making a JRPG (and we are), we could think of the issues of 'balance' as being issues of 'classes' or 'jobs' (in Final Fantasy).
+
+We've been comparing our game to Pokemon, which is something you gotta do, but if we're speaking in broader terms, you could look at each Pokemon as falling into a certain class. Some Pokemon are 'warriors'. Some are 'wizards'. There's even a couple 'healers'. Some could be as thought of as 'rogues,' because they might have low physical attack by high critical.
+
+Let's talk about our combat. How do you guys envision combat actually playing out? What's the UI like? How do you control your character? What sorts of things can your character do, and what can the opponent do?
+
+I decided early on, for the sake of simplicity, that we'd be working with 1-on-1 battles in the same style as Pokemon. In Pokemon, you have a team, and your team make-up is significant, but in the first generation especially, combat is a 1-on-1 affair, and both teams can swap characters in and out. It's sort of like a tag battle, basically.
+
+If we have one-on-one tag battles, how is the make-up of your team important?
+
+In Pokemon, the real significance of your team is based on 'type-matchups'. So, certain characters are particularly strong or weak against other character types, and so you're mostly just swapping characters around to work around these simplistic type match-ups.
+
+I think we should be a little more creative than that.
+
+Austin recommends something sort of similar to Pokemon's 'type-matchup' system, where a character might do 'slashing' damage and the opponent's armor might be resistant or vulnerable to that type of damage.
+
+Immediately, I want to point out that I like this idea more than Pokemon's type system right off the bat. Because, in Pokemon, your 'type' is one-dimensional. It affects the sorts of attacks you DO and the sorts of damage you TAKE. If our characters can have a sort of 'weapon' (whether it be 'equipped' or just a permanent part of the character) and a sort of 'armor', we get more variety in our match-ups.
+
+Austin's talking about 'jobs' as well. I recently played through a monster-collecting JRPG called World of Final Fantasy. As compared to Pokemon, WoFF allowed you to give your monsters 'classes'. It was sort of like how Pokemon 'evolve' into stronger and slightly different types, except that you could also devolve. You could move between forms, and skills that you learned in one form could sort of be applied to another form, sort of like traditional multi-classing in RPGs.
+
+Another concern we have is that, if individual monsters are too interesting and can be customized too much, it would defy the need to switch characters. Every character needs to have some limit to what their role is capable of so that the player is encouraged to swap them around to create an ideal deck for different situations. If characters are too flexible, there's no need for that.
+
+On the other hand, if characters are TOO LIMITED, they won't be interesting to micro-manage. In Pokemon, your characters basically only level up from experience. And they MIGHT learn a couple of different skills that you can choose from. For the most part, though, you don't really have any agency over the way they grow.
+
+BestMatchup put forward the idea of, at least internally, within our team, coming up with a set of 'roles' that 'monsters' can fit into. Maybe the particulars of how they go about fulfilling that role can vary DRAMATICALLY, but, as game designers, maybe we can think of the different 'pokemon' or 'classes' or whatever you want to call them as fitting into a set of roles.
+
+Let's talk about how combat is going to play out.
+
+In Pokemon, when you swap characters to create a better match-up for yourself, you incur a penalty. That's a big part of how Pokemon battles play out: although you have a team of six, and you can bring any of those creatures out into battle, one-at-a-time, you cannot attack on the same turn that you swap characters, so your opponent gets a free hit on you. That's a MAJOR DISINCENTIVE to swap characters. You really want to put a lot of strategy into the order that you send your characters out in.
+
+Is that something that we want to copy? Or do we want to make it more free for the player to swap characters? If they can swap characters too freely, how is that dissimilar from an RPG where you control the entire party at once?
+
+We've got 1-on-1 battles, but if characters can be swapped without a penalty, how do we determine, for instance, which character is taking damage from the opponent on THIS turn? If I want to use a 'healer' character to heal the 'tank' character, that makes the healer vulnerable to damage, right? We swap out the tank for the healer, and the healer casts some kind of spell, but now the healer is vulnerable because they just took an action?
+
+We're kind of working within the idea of a one-on-one combat system where characters are tagged in-and-out.
+
+I'm not sure I understand Kenny and Austin's suggestion in the chat, but what I get from it is, what if you could, like, have the tank take a hit, and then quickly swap out to the healer, who could use a healing skill, and then we could swap the tank back in before the opponent gets their turn?
+
+The core riddle of our combat gameplay is that characters who are not tagged in are not vulnerable, which is great for us, but they also can't act, which sucks for us. So, there's a risk-reward with having any character take an action, because, to take an action, they have to be tagged in. And if they're tagged in, they're vulnerable to damage.
+
+We're talking about, in one-on-one tag battles, how do we make the party dynamic more interesting.
+
+Austin phrases his idea like this, "You have a timer of 25 seconds. If you swap a character out at, say, 10 seconds, the time could still be going while you swap. Then, you have whatever time is left to complete your turn."
+
+In Austin's example, we're talking about LITERAL SECONDS. And that's what Kenny and I are talking about: the tactical difference between real-time and wait-time battles.
+
+I think what Austin's suggestion could be interpreted as, in a more abstract sense, is that, on a turn, you're given a certain amount of resources (seconds). Different actions can consume a different amount of those resources (different attacks take different amounts of time). On your turn, you can take any number of actions as long as they fit within that resource limit (you can do as many things as you want as long as you have time on your turn).
+
+If we were going to make this into slower-paced, tactical battles, we could give the player something like "AP". Every turn, you get 25 "AP". You can do whatever you want with that AP, including swapping characters -- but when you run out of AP, whoever is left tagged in is vulnerable to the opponent's turn.
+
+What's kind of cool about that is that maybe different protagonists have different amounts of that resource.
+
+Another trapping of our game-design philosophy that I want to point out: because we're in the 'monster collecting' genre, our opponents will have access to the same tools we do. It's not like Final Fantasy, where our team consists of "characters" and the enemy team consists of baddies that deal in different growth mechanics. The enemy units, in our game, will consist of the same types of units that we have access to. So our units will be balanced to fight each other, at some point.
+
+I feel like we've made some good progress. Let's recap:
+
+* Combat starts with our team's turn. On our turn, we have a certain amount of time (25 seconds). Different actions take different amounts of time, and, once we're out of time, the opponent gets their turn. And the loop continues.
+
+* Only the character who took the last action on a turn is vulnerable to the opponent. It's tag-based combat, so a major of the strategy will be to organize the actions on your turn so that the last action leaves the character vulnerable that you want to be vulnerable.
+
+* Obviously, more powerful actions will consume more time. Maybe some actions will be especially useful because they take a very little amount of time.
+
+* Perhaps different 'protagonists' or 'trainers' might have different amounts of time to take their turn. Some heavy-hitting protagonists might get a bonus to aggression for their whole team, but they'll have less time to choose multiple actions.
+
+Kenny puts forth the question: should there be a bonus for not using all of your AP. I say no, there shouldn't be. I want to encourage the player to consume all of their resources. I don't want to reward the player for saving and being conservative. I want for the player to feel at liberty to use everything they have. The fights are gonna be really difficult, ideally; I would like for them to be so strenuous that the player always wishes they had more AP. I don't want them to feel at liberty to not use their entire turn so that they can get some kind of bonus.
+
+If we penalize the player for NOT using their AP, we're adding a whole different dimension of difficulty to the game, because now they have to do math on every turn to make sure that they get everything done they WANT to get done, AND end their turn on the character that they want to be vulnerable, AND they use ENOUGH of the CORRECT skills to consume as much of their AP has possible. Then we're looking at skills whose entire purpose is to dump AP for that purpose. I'm not sure I'm 100% on board with that idea, but it is VERY interesting.
+
+We're talking with HereGoes and Kenny in the chat: should swapping characters consume AP.
+
+There's two ways to look at this problem, and it's all based around how many actions a single character can effectively take in a single turn. If each character is really only good for ONE skill that they have, then you really can't charge for swapping.
+
+On the other hand, if it's interesting to the player for a character to take more than one action while they're tagged in, maybe it would make combat MORE interesting to charge for swapping. That way, the player has some incentive to utilize a single character's abilities more effectively.
+
+Both sides of the battle will follow exactly the same rules.
+
+We're discussing in the roles in the chat, again. Maybe different units have 'primary' roles, 'secondary' roles, and maybe even 'tertiary' roles -- and the skills they can learn are based on these roles. Maybe if you have a certain role as your 'secondary,' you don't have access to the most powerful skills of that role -- and if it's your tertiary, you only have access to the most basic skills of that role. You can then mix-and-match skills from the various roles, but whatever role is your 'primary' is likely to give you the most powerful and useful skills.
+
+BestMatchup recommends an idea where the player is encouraged to inflict some minimum amount of damage to the enemy team or else they get some kind of bonus on their next turn.
+
+BUT WHAT IF the protagonist or 'trainer' that you choose determines what sort of condition you have for getting a bonus in battle. Maybe some trainers get a bonus if their team doesn't take enough damage on the previous turn. Maybe other trainers get a bonus if their team doesn't take damage of a certain element on their turn. Maybe another trainer gets a bonus if the opposing team has some number of status ailments on their team.
+
+This would encourage a variety of different playstyles not only because you want the bonus for YOUR team, which means meeting certain conditions, but also because you want to PREVENT your opponent from getting THEIR bonus by interrupting THEIR conditions.
+
+HereGoes talks about Persona as a sort of groundwork for looking at how different characters can fill more than one role, even if they're not equally effective at all roles. One of my favorite games of all time, Final Fantasy XIII, does something very similar, where characters they have the potential to fill certain roles, but not EVERY role, and they specialize in one role in particular.
+
+We could look at every 'monster' (Pokemon, yokai) as having a certain 'role' which determines which skillsets they have access to -- and maybe they have more limited access to their 'secondary' and maybe 'tertiary' skillsets.
+
+I kinda like this idea because choosing skills from a set adds interest to the micro-management aspect, and that's something that I'd really like to have in the game.
+
+Like we mentioned earlier, Pokemon doesn't really have a lot of micro-management. The monsters in that game are pretty set in stone. You just pick the monsters you want, and that's the limit of your party design. On the other hand, if you have too much freedom to micro-manage an individual monster, it discourages you from ever having to swap party members. You could be set to complete the game with just one party.
+
+As we continue to look at ways that your 'trainer' or 'leader' could have perks that affect your whole team, RedPanders brings up the idea that maybe you could have a trainer that empowers the skills or characters that fit a certain 'role' or 'class' or 'type'.
+
+I think, personally, it'd be more interesting to have an AP penalty for swapping characters. It means that you have to be more careful about when you swap, and it means that, when you tag someone in, you probably want to make the most use of their skills that you can before swapping again.
+
+The alternative would be to look at every character as though they were an ability, and you can swap them in and out freely on your turn to use their respective abilities in any order.
+
+But, you know, if you charge the player to tag, that makes it more difficult to end the turn on your tank, which I think is interesting.
+
+The AP, as the 'turn currency', is not something that is intrinsic to the monster / unit. The turn currency is attached to the trainer / leader. Although, maybe monsters / units could have some kind of attribute (speed?) that acts as a multiplier for their ability cost in AP. So, maybe a very 'fast' unit could conduct the same action as a 'slow' unit, but it would cost less AP.
+
+Today, I'm really glad that we've focused more on combat flow, because I really wanted to talk about that and nail some things down. Here's what we've discussed so far:
+
+* Because we're a 'monster collecting JRPG,' our player characters will form a 'team' or a 'deck' of units / monsters. Even though we're talking about 'teams' using the same nomenclature as those of team-based RPGs like 'Final Fantasy' or 'Breath of Fire' or 'Persona,' our combat is ONE-ON-ONE. It's a tag-based system that you could think of as theoretically taking place in a wrestling ring. Only one character from each team can be in the ring at the same time, and only the character that's in the ring can take an action or take damage.
+
+* When the leader's turn begins, whatever unit is currently tagged in can take any number of actions, all of which will draw from that leader's pool of 'AP' (turn currency). Those same actions might also draw from the unit's 'MP' or 'SP' or 'ammo'. As long as the leader has AP, they can use that AP to tag in another character from the team, who can then continue using up the AP with THEIR abilities.
+
+* So, unlike Pokemon, our turn is not consumed by taking a single action. In Pokemon, you have turns that go back and forth between two opposing characters that can be swapped for another unit on their team, but each of those characters can only take ONE action before their turn is consumed. In our game, the leader can instruct their team to take any number of actions on a single turn until their AP is consumed.
+
+Although only the 'tagged in' character can directly take damage or be targeted for traditional 'status changes' (poison, paralyze, whatever), I like the idea that some skills might passively affect either the ALLY party or the ENEMY party. Maybe, by having a certain character on your team, all characters on the team get a buff. Maybe by using a certain ABILITY, as HereGoes says, maybe you can exert some control over how your opponent tags characters. Maybe you can make tagging cost more AP. Maybe you can lock a certain character on their team from being tagged in for the next turn.
+
+So, even though only the tagged characters can take or deal damage, there may never-the-less be some mechanisms at play that have a broader effect on a team.
+
+BestMatchup raises the idea of 'counter attacks' or 'counter reactions' of some kind that take place when the enemy takes a certain action.
+
+I want to talk more about that when we have the time to look more in-depth at how our characters are going to grow and be customized. I'm going to say, one more time, because I do think it's very important and worth reiterating, that there's a very careful balance to be struck between having a lot of agency over how individual characters GROW (because that's interesting and fun), but also limiting that agency -- limiting the ways that we can customize our characters -- to encourage the player to constantly be changing their party layout to make the most of MASSIVE roster of potential units (because we're a monster-collecting JRPG), because THAT'S fun and interesting.
+
+So we want to strike a balance between having it be interesting to micro-manage individual units, but also have it not be so flexible that the player doesn't feel like they ever need to try using a different type of unit.
+
+So, in the future, we're really going to dedicate a lot of thought to how our characters -- whether we're talking about 'leaders' or 'units' -- grow.
+
+Certain units have abilities that debuff untagged units (but these should be very rare). It's very interesting, but it undermines the idea that untagged units should be more-or-less safe, and the risk-reward of the game comes from wanting to use a unit's abilities but not wanting them to be left tagged into the arena at the end of the turn, where they'll be vulnerable.
+
+Kenny puts forth the idea, which he says is inpsired by FF6, that some dungeons or tasks or scenarios may require the player to use more than one team.
+
+Although we haven't put the idea forward strictly speaking, up to this point, I think that it more-or-less goes without saying, because I really like the idea of the player taking charge of more than one leader, and, by extension, more than one team. I feel like, with different leaders imparting their team with different perks, this will really help the player explore a wider variety of unit types -- which is our goal. If we're going to design 100 different unit types, we want to encourage the player to try them all and find out which leaders they work best with and how best to use them in a team. So it makes sense, then, to have the player control multiple leaders and their teams to complete a single scenario.
+
+Although we're not going to have individual COMBAT sections where more than one team fights on the same side at once, we may very well have concurrent or related fights where the player will be moving between teams for different fights.
+
+To be clear, more powerful abilities will consume more of the turn's AP, and / or more ammo from the unit.
+
+The idea was brought up that maybe, for the sake of simplicity, the individual monsters don't level up -- rather, the leader levels up, and all of the units that they're leading might have power reflecting the level of their leader.
+
+I kind of like the idea that, maybe, you have a certain amount of 'skill points' or 'level points' to distribute to your team mates based on the level of your leader. This idea really appeals to me because it encourages the player to swap out units regularly without having to worry about whether or not some unit has been grinded up to par.
+
+
+
+02/06/2019:
+
+After reading last night's discourse on the Discord server, one thing that I do want to emphasize is that, to me, a good game isn't made by its story or its individual mechanics. Those are definitely major factors that can enhance the experience of playing a game, but what 'gameplay' boils down to, for me, is pretty simple:
+
+It's how interesting the player's decisions are. How difficult those decisions are to make. How impactful the consequences of those decisions are. How often the player gets to make these decisions. Are those decisions really impactful or worthwhile.
+
+* Zanzhu brings up the idea that maybe, whether or not a character is 'sacrificed' or is 'destroyed' or otherwise falls in combat, maybe the player only has access to them for some limited amount of time. His example is Jagged Alliance 2, where units are hired for some length of contract and then have to be re-hired.
+
+We're discussing the idea of binding a unit to a particular object as a way to make gameplay more interesting (and this would also impact the narrative).
+
+Points that I would like make about this idea:
+
+* When binding a 'character' to something that's more disposable, it allows us to think about 'durability' as an attribute of a character. Maybe they only last a certain amount of time. They're destructible.
+
+* It allows us to forgo the trappings of RPGs that have smaller parties and more micro-management per-character. In Final Fantasy, you only have six units, and so it makes sense to worry about things like what weapon they're holding AND what armor they're wearing AND what accessory they have on. In a game where we're going to have maybe more than a hundred characters, maybe they don't individually have armor and such that can be swapped, but maybe, when you recruit them, you have to pick an item that will influence their growth -- and that could be your decision that's parallel to 'equipment' in other RPGs. But because you can't change it, it encourages to recruit more units and try different things.
+
+* These 'sparked' or 'bindable' objects could effectively act as treasure for the player to find or buy with currency. That's kind of interesting: you have a collection of 'spirits' that you've recruited, but you also have a collection of objects that you can use to bind them together.
+
+
+
+
+
+
+Before we call it a day, I had an idea that I'm afraid I'm gonna forget if I don't write it down:
+
+* In combat, we talked about how the player has a certain of 'AP' or 'turn currency', and they can use that currency to act multiple times with the in-ring character or they can tag another character into the ring, and whoever is left in the ring when the turn currency runs dry is going to have to face the aggression of the opponent. We also, on Discord, discussed the possibility of giving the leader some actions that can consume AP.
+
+That being case, I had the idea of having a bonus to action effectiveness that goes up as the remaining AP of the turn goes down. So, the less AP you have remaining when you take an action, the more powerful that action is. I think that's interesting because it adds a risk-reward element where your most powerful action is the last one you take, and so your most 'aggressive' character or your 'healer' might be left in the ring to take the opponent's assault. By extension, 'tank' characters would have to have pretty lame abilities so that it'd be a tough decision to end the turn with THEM in the ring, because you'd be sacrificing more damage or healing or whatever that you could've gotten if you ended the turn with a non-tank characters in the ring.
+
+
+* Panders also brings up that there's already a disincentive to end the turn on a tank: if it costs AP to tag other characters in, then you're going to have to tag someone else in at the START of your next turn, because you probably don't want to spend the whole turn as the tank. So, if you're super conservatively, every turn would start with swapping the tank OUT and then end with swapping the tank back IN, which could be expensive.
+
+
+
+
+What Kenny said about his uncertainty toward the narrative idea of the protagonists being able to 'gift' their power: if they could do that, you'd think it'd be more of a part of the game.
+
+Up to this point, we've sort of been looking at the idea of 'multiple team leaders' or 'protagonists' as being closely tied to the story. But what if the player could make a choice about which characters he gives this power to, and that would tie into our idea of having several different 'leaders' who all have their own perks, and growth trees, other buffs for their team: maybe the player has to decide which of these characters and their respective play-styles to 'activate'. In this example, we wouldn't just be playing as the main protagonist and the rest of their group or family, but we'd be playing as the main protagonist and whoever the player chooses to gift their power to.
