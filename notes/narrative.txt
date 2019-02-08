@@ -188,3 +188,230 @@ incident and some resulting power that's unearthed by our protagonists.
 * We discussed the possibility that this 'power' is leaked out to the world in one of a variety of ways: it could be that our protagonists, by uncovering this power, have breached a barrier between worlds that results in others developing similar powers. It could be that our protagonists have developed or found their way to this power, and they have to give it to others explicitly, either by telling them the secret or giving them some kind of object. In any case, we know that this power starts off in the hands of a select few, and it ends up falling into the possession of characters that bring a lot of conflict to our story.
 
 * We discussed that, whatever 'units' we're using as the source of this power -- "this power" certainly being the ability to 'summon' or 'recruit' or 'lead' a small army of some kind of unit -- they need to be 'bound' to something physical, maybe? Or something that makes them work, like a 'battery' or something along those lines. In any case, these 'units' are distinct from some object that they require to operate in our world. We have these units that can't really do anything on their own, and maybe our protagonists control them because they have control over these objects that essentially 'give life' or 'animation' to these units.
+
+
+
+
+
+02/07/19:
+
+
+Questions regarding setting that I would like to answer today:
+
+    1.) If our game world is congruent with our "real" world, what time
+        period does it take place in?
+
+    2.) Where do our characters come from, socially? How old are they? What
+        is their relationship to one another? What area are they from? How
+        does that influence their character?
+
+    3.) These 'monster' units that are the core of our gameplay. What are
+        they? Aliens? Spirits? Ancient creatures? Extra-dimensional beings?
+        Where do they come from, and what's their deal?
+
+    4.) These units require some sort of in-game 'item' to be bound to them
+        that influences their durability, their longevity, and their growth.
+        What are these items? Pokeballs? Crystals? Batteries? Some kind of
+        conduit? Physical anchor, if they don't have their own bodies?
+
+    5.) Once we've nailed down things like time-period and area, we need to
+        think about what sorts of obstacles our characters might face as
+        they try to overcome SOMETHING.
+
+    6.) I don't want to overly fixate on story today. We're not necessarily
+        talking about how characters are going to grow and interact. Really,
+        I feel like the time is upon to talk about the SETTING. The WORLD.
+
+
+BestMatchup raises a couple of suggestions right away:
+    * These beings could be brought into our world by some godlike figure
+      that suddenly appears, throwing the world into upset. Maybe humanity
+      makes use of these beings as some sort of tribute to that deity.
+
+    * Maybe humanity (Kenny mentioned that the 'discovery' could be made by
+      our group of protagonists) discovers some kind of mineral that ends up
+      being pivotal to our society's technological development. Maybe the
+      unexpected side-effect of using this mineral is that some kinds of
+      creature end up attaching to certain people.
+
+
+Up to this point we've been looking at our protagonists as a "group" that eventually breaks up, and throughout the game (or even at will?) we play as them individually. This is a cool narrative idea, but it's also a cool gameplay, because we want to explore different team-leaders who have different perks that may encourage the player to use different team set-ups. The idea would be to get a broader variety of more interesting strategies for the player by giving them different advantages and disadvantages based on who they're playing as.
+
+BUT I really like the idea of the power being explicitly given from one playable character to another, if only because it could add an interesting gameplay dimension: the player gets to choose which narrative-supporting characters end up becoming playable (and therefore more central to the story). If we were to do something like that, our initial 'team' would need to be made much smaller -- maybe even just a duo.
+
+I like the idea of having the story take place in a more grounded environment that becomes more fantastical. I really don't care what time-period it takes place in. That being said, HereGoes brings up the interesting idea of having it take place in a time that's more relatable to us because that makes the world feel more real, and so it's even more fantastical when this supernatural element comes into play. Considering EarthBound, that's part of what makes it such a classic. Although it is very fantastical, it's really different from its peers because it takes place in the modern day.
+
+If we used a big city as our setting, our characters wouldn't need to travel as far to experience a wider variety of settings. On the other hand, there's nothing wrong with traveling far to see other cool stuff. Our characters could take trains or cars or planes or whatever.
+
+What are the DISADVANTAGES of having our game take place literally in the year 2019:
+    * It's not very "imaginative," but maybe that's for the best.
+    * There could be some 'pop culture bias' that makes the game dateable. I
+      don't think that's a big issue. It's not like we'd be referencing
+      movies or whatever. Really, the only way you'd probably know that it
+      doesn't take place in a time-period as far back as the 80's is that
+      our characters could have smartphones.
+    * Panders mentions that we couldn't necessarily have futuristic stuff.
+      But that's whatever. If we wanted future stuff, we could just say that
+      it comes from this 'deity' or 'mineral'. The idea is that, whatever
+      time period we choose, the game's world becomes much more fantastical
+      somewhere with 25% of the game's story. At that point, a lot of the
+      setting's interest would come from the juxtaposition of things that
+      we're accustomed to IN REAL LIFE being beside things that are
+      fantastic to us.
+    * If we were to put the setting somewhere in history, that could make
+      things more exciting as we could leverage the social and cultural
+      differences of the time just to add interest for players who are
+      literally spending every day of their real lives in 2019.
+    * Steve mentions that, since we can look back at history, it gives us a
+      place to diverge from. We could put our own spin on history in such a
+      way that our current time wouldn't necessarily exist.
+
+What are the explicit ADVANTAGES of taking place in the year 2019:
+    * It's more relatable to our players.
+    * We've got cellphones and the internet and shit. That's kind of
+      interesting.
+    * HereGoes mentions that, if we're in a world that's more relatable to
+      us, the super-natural stuff stands out even more.
+
+We should consider how our setting could add a dimension to gameplay.
+    * If our game takes place in the modern day, we could think of how the
+      internet and video gaming and cell phones could add depth to our
+      gameplay.
+
+    * Steve mentions that, if our games take place in frontier-times, there
+      could be a more understandable survival element to the game.
+
+    * If we take place during the Prohibition, maybe our characters could
+      make money running alcohol.
+
+
+We're gonna lock in the idea of our game taking place in the year-of-our-lord 2019. That means that our characters have access to all of our modern conveniences, and that's the world they live in.
+
+Who are our characters? Where do they come from socially? Where does the game take place? How old are they? Are they rich? Are they poor? Are they employed? Are they in school?
+
+HereGoes mentions that one of our main characters could be a 20-something "wagecuck".
+
+I wanna point out that I am partial to Kenny's idea that whatever ends up changing in our world that makes it so nuts, is discovered by our lead protagonist. And it's originally kept secret among a small group, and then it leaks out and essentially corrupts the world around our characters. This is essentially how our story's conflict is going to grow.
+
+We could have a variety of backgrounds for our characters if our game were to take place at a university. It tends to bring together a lot of different types of people. Could even use it as a primary setting.
+
+Maybe our lead antagonist could end up being representative of some kind of conglomerate or something along those lines. Later on, we'll discuss more about how this 'power' gets transferred from one person to another and exactly how it spreads so that it becomes a problem for our characters.
+
+I want to put forth an idea that would be strong, I think, if we were to go with the idea that the protagonists can explicitly share their power -- that's the only way that it leaks -- and they choose who they share it with. Maybe they can only share it with two people. And those people can share it with two people. It spreads, that way. It grows exponentially.
+
+My only hesitation about having the primary setting be a campus is that it is an extremely popular setting. In a huge amount of Japanese RPGs and anime, high school or academia is the setting. But there's a good reason for that: it's a good setting.
+
+What if the game takes place in a mall that our main characters work at? We would have a setting with a lot of variety where you could have characters that work in different stores which, themselves, have a sort of different culture.
+
+A problem with 'the mall' is that it's pretty small compared to a college campus. I think we'd all agree that, even if the mall is a central setting, the characters would need to pretty much constantly leave the mall and explore around.
+
+HereGoes has been heregoes'ing about how, in Persona, we usually work with a relatively small map compared to other JRPGs (where you explore abstractions of 'continents' or the entire world). Maybe, if our game primarily takes place in and around a mall, our setting could be the city that exists around the mall, and our characters' conflict could be to prevent this power from spreading beyond the city. It's leaking fast, local gangs and other unsavory groups or individuals are mis-using this power. It's spreading quickly, and our characters are on a race against the clock to prevent it from escaping the city, at which point it would spread so fast that it probably couldn't be stopped.
+
+HereGoes mentions that individual stores could become their own dungeon, and I like that idea too, except that we've more-or-less locked in that the game takes place entirely in one dimension (ours). The video-game'esque quality comes from how our world ends up being corrupted by the supernatural. We could still turn on our heels and say that our real world remains more-or-less unchanged, but our characters move between dimensions that are loosely based on reality, ala Persona.
+
+I think that we should keep the game in one dimension -- none of this 'light world' 'dark world' stuff that I enjoy so much in other games. We discussed that as the game goes on, our characters will learn more about the origins of the 'monsters' they've been fighting beside. Maybe, at that point, they could go to the 'monster' world, near the end of the game, and we could have that extra-dimensional element.
+
+
+
+
+
+Our game takes place in the modern day. Our starting character is working at a mall, in his early twenties. Much of his character dynamics come from co-workers both at his store and stores around his, in the mall. A central conflict of the game is how the spreading of this monster-controlling power ruins their personal relationships, but also becomes a major danger in their city. Our lead protagonist takes responsibility for stopping the spread of this power before it leaves the city. Other characters will have different objectives that they use their powers to accomplish, or they may work beside the main character.
+
+
+
+We need to figure out what the nature of this 'power' is. We know, for the sake of our gameplay, that involves otherwise normal people being given command over a small army of some kind of supernatural unit. Different characters in the narrative will use this power for good or evil or whatever. What we need to decide is what this power is, where it comes from, what's the nature of these units. We have a 'monster-collecting JRPG' on our hands, so that's really all we know for sure: we've got a bunch of characters that we're gonna have control over, and they're gonna fight each other.
+
+Let's list our options:
+    * Ghosts
+    * Monsters
+    * Aliens
+    * Extra-dimensional beings
+    * Spirits that have no physical body except what they bind to (objects)
+    * Creatures from dreams.
+    * Imaginary friends
+    * Maybe they're from games or books or movies
+    * Disembodied emotions? Feelings? Memories?
+
+Panders points out that if we somehow give our characters the ability to draw fictional characters into the real world, we IMMEDIATELY get a ton of personality for all our creatures. That's a really easy way for our units to be ICONIC and dramatically different.
+
+Steve points out that maybe a currency in our game (and narrative) could be related to a character's passion. The more passionate the character is, the more powerful they are with this power.
+
+And in Pander's idea, throughout the course of the game, we could find out that there's more to this power than meets the eye. Maybe this power doesn't come strictly from our characters' imagination or whatever, but it comes from their ability to bind some DISEMBODIED SPIRIT or a THETAN or an EXTRA-DIMENSIONAL WHATEVER. It's that revelation that could act as the twist. The image that they take in the real world might be created from some fictional character, but there's something deeper and more sinister and more climactic at play.
+
+Maybe a protagonist (or antagonist) is a creative, and their character has enough recognition by the public to be summoned.
+
+Somehow, our lead character gets the ability to make widely-recognized fictional characters into a reality. He could even summon wrestlers from major wrestling networks, since they're mostly fictional characters. Maybe, at first, he thinks he's going nuts. He's the only one that can see them. And he eventually discovers that he can actually use to interact with reality and it gives him incredible power to be able to do that.
+
+How did our character get the ability to summon fictional characters? How does he transfer this ability? What is his ORIGINAL use for these characters, before the power is widespread-enough that he has lots of other characters to fight against.
+
+Our lead character -- the one that we start the game with (although the game will end up having many playable characters) -- has to have some kind of powerful motivation to use his power for 'good' (or what he and the audience perceives as good) in the first part of the game. We locked that in previously, when discussing narrative.
+
+Maybe, shortly after our character discovers that they're the only person in this world to have this power, he finds out that there's some evil tied to this power that only he has the power to stop. Maybe he finds out that some movie villain has become sentient and independent and wants to destroy the world, and only he can stop him. He enlists a friend of his from the mall for moral support (or other support), and then, as he defeats this villain (or shortly before he can deal the finishing blow), he's instructed how to and must share his power with his friend to be able to finish the job. What we find, though, is that this decision may have been made hastily, and this friend ends up misusing the power and sharing it with the wrong people, and now we have our rival character and the beginning of this city's dissent into chaos.
+
+What would make a good starting antagonist or conflict for our character, and how does that evolve organically? I feel like it should be symbolic of a struggle that we can relate to. We've already discussed that our main character is basically a minimum-wage employee at the very nexus of consumer obsession (the mall). What conflict does this character have that we can abstract into a villain for him to defeat, only to find that the world (and his conflicts) have become much more complex.
+
+What sorts of internal conflicts might a twenty-something, lower-middle-class mall employee deal with? Romantic? Something with their family? Their dissatisfaction with choices they'd made that put them in a position where they feel powerless? Monetary problems, emotional frustration from dealing with customers. Problems with management.
+
+Maybe the conflict is that our protagonist feels as though they have no agency in their lives, and that they exist to be used up by higher powers (corporate, management). We could abstract that into a villain which somehow mind-controls humanity to use as slaves or avatars or conduits, and the player has to use their power to defeat this villain. Before they can, the power they'd been hoping to use good ends up spreading to several others, and then to many others, which creates a conflict. We see an arch in our character where they go from being powerless to being very powerful and having to make a lot of decisions and take a lot of iniative -- only for us to find out, through a twist, that by summoning and controlling these spirits, they've sort of become what they hated, at one point.
+
+We discussed before about how we wanted for there to be some twist regarding the story behind these 'monsters' that our characters are summoning. At first, our playable characters use these monsters freely as a sort of army, but, over the course of the game, we discover that there's more to these creatures that may make it morally dubious to use them in combat. We kind of tie that into our lead protagonist's arch, where he's sort of used that way in his day-to-day life and seeks to escape that system. He ends up finding himself at the top of a similar system.
+
+We've locked in the idea of our character sharing their gift with others, and the ones that it gets shared to can also share that gift with others, and so-on-and-so-forth. We're going to start with one character having the power, and then they can share it with two other people. So, the player chooses two people to share the power with, and one of those two becomes the rival character. As the power gets shared outward, many other antagonists appear in this city.
+
+As we lock in our setting, let's finally discuss what sorts of enemies our player characters might face.
+
+For one thing, not every character who gets this power is going to become an enemy. Several or many could end up being player-characters. We want to see this city from multiple perspectives and, from in a gameplay sense, that'll give us the opportunity to explore the different skillsets, perks, etc., of a variety of team leaders and the teams that they control. However, it'll be implied, at least, that many of the characters that acquire this power become antagonistic toward our protagonists. And then there will almost certainly be many characters this power spreads to that are not really noteworthy. Characters that are either subservient to an organization that is, itself, an antagonist to our characters, or just characters that get the power and don't really do anything of note with it.
+
+The power is going to be shared from person-to-person. Some people that get it will become controllable by the player. Others will end up becoming major villains.
+
+What sorts of villains will our playable characters have to overcome in their over-arching quest to stop the spread of this power?
+
+They could fall into two varieties:
+    * Imminent threats that, if not handled, could cause death or other
+      chaos in the world.
+
+    * Characters that are directly in opposition to our lead protagonist's
+      primary quest of figuring out how to stop the spread of this power.
+      Maybe characters that are aware of the player's quest to eliminate the
+      power, and they want to destroy the protagonist and his sympathizers
+      so that they can keep their power.
+
+Basically, we've got SUPPORTING VILLAINS that are just BAD GUYS that we have to take time away from our quest to STOP because they're just causing too much fucking trouble.
+
+And then we've got PRIMARY VILLAINS who are aware of our protagonist's quest to eliminate this power before it leaves the city, and they want to interrupt his mission.
+
+What kinds of villains are we looking at?
+
+Let's list some possibilities:
+
+    * Common criminals who want to use their power to literally rob places?
+    * Corporate villain that wants to use their power to wipe out
+      competition or otherwise control a market?
+    * "Political villain" that literally wants to use this power to
+      overthrow or otherwise control a government or area?
+    * An oppressed class, such as the sorts of wage-slaves that our
+      character typically hangs out with, who are trying to violently over-
+      throw society and to overcome their oppression.
+    * Maybe a government branch or something that's using this power to
+      implement martial law or something that our characters have to defeat
+      because they're being way overly oppressive.
+    * Maybe some religious or moral-centered group that wants to use this
+      power to push an agenda.
+
+We've been talking a lot about friends who share this power with each other and characters that cooperate with their power, but I'm also kind of hesitant to put player characters into explicit, large 'groups' because we are talking about 'monster-collecting JRPG,' Pokemon gameplay. We have a player character. He has a team of units. Battles are conducted in a 1v1 ring where two units fight each other at a time, basically, and there is one team-leader on each side. For us to form parties of team-leaders seems a bit counter-productive to our game-design. That's more for traditional Final Fantasy-esque JRPGs, where you have a team of 6 protagonists. Our teams consist of ONE protagonist and their units.
+
+Before we quit our game-design stream, let's do one final recap of the over-all situation for our narrative and setting:
+
+* Our setting is the year 2019. Our story takes place in a moderately-sized city with our lead protagonist working as a wage-slave at a mall. The other characters also inhabitants of the city, many of which are also employees or customers at the mall.
+
+* Our character's primary quest is to prevent a malevolent power that only he is aware of from mind-controlling humanity to use them as a way to usurp world power. He does this using a power that he discovers in himself (or something) to bring fictional characters to life. Only he can see them but he can use them to combat this malevolent force.
+
+* In pursuing this quest, he reveals his secret to an ally who he ends up sharing his power with. Although he makes good progress in defeating his malevolent opponent, he finds that, by sharing his power, he's opened Pandora's Box and now there is much more conflict and chaos in his city as many other people can now summon these fictional characters and use them to their own ends.
+
+* As the game goes on, the player will take control of any number of other characters who now have access to these powers. Some may directly ally with the lead protagonists, others may act entirely independently (for good or ill), and others yet may directly oppose the lead protagonist. The player will have some agency in who they gift these powers to, and so they will be able to sort of pick which characters they play as and what kinds of decisions they make.
+
+* As the lead protagonist tries to find a way to neutralize this supernatural power before it spreads too far outside of his city, at which point the whole world could be threatened by the same chaos that his city going through, he'll have to do battle with a large cast of antagonists that are all using this power for different reasons.
+
+That's kind of where we're at with the setting and narrative, so far.
+
+* As the story goes on, we're gonna find out more about the truth behind these spirits that the characters have been summoning and find that there's a sort of twist; it's not as simple as it seems to draw these fictional characters from books, movies, shows, and games. There's more to this transaction than meets the eye. It'll probably tie into how to eventually neutralize this power before the world is destroyed.
