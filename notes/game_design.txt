@@ -405,3 +405,248 @@ Up to this point, we've sort of been looking at the idea of 'multiple team leade
 Maybe the character choices (narrative decisions) that a character makes could influence what sorts of units or classes or whatever that playable character has access to. Their personality affects their team structure, essentially.
 
 Steve points out that it's kind of a cool idea that our playable characters represent a diverse number of objectives that may be 'good' or 'evil' or otherwise personally motivated. They're all personally motivated.
+
+
+
+
+
+02/11/2019
+
+Today, we're going to be talking more in-depth about our game's primary combat system. Before I start rattling off new ideas, let's review what we already know about our combat:
+
+*) Combat is 1v1 tag-style, similar to Pokemon. Only one character from each
+   team can be taking action at one time.
+
+*) Unlike Pokemon, characters can take more than one action per turn and can
+   even tag in another character on the same turn. This is accomplished
+   through an 'AP' system, where the 'trainer' starts each turn with a
+   certain amount of AP to spend on turn-actions and the turn is only over
+   when they either run out of AP or choose to end their turn.
+
+*) AP cannot be saved between turns. This is meant to encourage the player
+   to choose their actions carefully to consume as much of their AP each
+   turn as possible.
+
+*) Although unit actions all cost AP, as well as tagging, there are some
+   actions that the leader character can take to consume AP as well. This
+   might include using items or even calling upon special skills, although
+   these skills would need to be fairly limited so that the player can't
+   over-rely on them. The advantage of these skills would be that they can
+   be used regardless of which unit is currently in the ring.
+
+That's what we know as of right now. Here are some points that have been on my mind over the weekend:
+
+*) I think that every unit in the game should have available skills from 3
+   different 'classes'.
+
+*) Basically, every 'class' in the game would be a list of abilities to be
+   used in combat, and these abilities would be sorted in order of useful-
+   ness or power or effectiveness. They'd be sorted into three groups:
+   'Primary' abilities, 'Secondary' abilities, and 'Tertiary' abilities.
+
+*) Each unit would have a 'Primary' class, 'Secondary' class, and 'Tertiary'
+   class. The unit would have access to all of the abilities from their
+   'Primary' class, the 'Secondary' and 'Tertiary' abilities from their
+   'Secondary' class, and only the Tertiary abilities of their Tertiary
+   class.
+
+*) In Pokemon, it seems like the abilities that each Pokemon has access to
+   is random or hand-picked for that unit. In our game, there would be a
+   rigid set of classes which have access to certain abilities, and the
+   abilities that a unit would have access to would be entirely based on
+   their combination of Primary, Secondary, and Tertiary classes.
+
+*) I think that would make balance and the decisions of who goes onto your
+   team a little bit easier.
+
+*) In Pokemon (and a lot of other JRPGs), there is a lot of cross-over in
+   the intended usage of certain abilities. You'll almost always have a ton
+   of skills that deal a small amount of physical damage. You'll also have
+   a lot of cross-over in 'magic' skills, usually because they're of
+   different 'elements'. I would really like it if we could minimize the
+   amount of cross-over between abilities. I would like to avoid abilities
+   that are just stronger versions of other abilities, which we may intend
+   to be unlocked later. Ideally, every ability would have a unique and
+   valuable purpose.
+
+*) As a part of that, I think that we can give abilities interesting costs
+   so that we can afford the player a variety of tactical options to go
+   about accomplishing what they want to accomplish. For instance, we know
+   that all abilities will carry an AP cost (which eventually brings about
+   the end of the leader's turn). However, maybe they may also be balanced
+   against having a limited number of uses per fight, or per turn. Maybe
+   some abilities consume ammo that the unit is carrying (such as 'MP').
+   Maybe some abilities consume HP, or will afflict an ally unit with a
+   negative status change. Maybe using the ability will cost your entire
+   party 5% of their HP. This is sort of an unusual way of looking at Skill
+   cost in a JRPG, but I think that if we balance abilities against a
+   variety of interesting costs, it'll make tactical decisions in combat
+   more interesting.
+
+*) Panders brings up the idea that maybe the 'Tertiary' abilities could be
+   assigned to a unit NOT by their 'monster type,' but by some external
+   factor, such as their equipment or something. In the past, I've pushed
+   to have their equipment be permanently attached to them and affect their
+   growth in some way, but I also feel like the idea of having it affect
+   their Tertiary abilities could be interesting. On the other hand, the
+   Tertiary abilities are kind of meawnt to be the least-interesting
+   abilities. I sort of imagine the Tertiary abilities as being a minor way
+   to impact battle and, maybe most importantly of all, a way to consume the
+   remaining AP in a turn.
+
+*) With respect for the fact that the 'Tertiary' abilities are only going to
+   provide a very small augmentation to your overall strategy, I don't see
+   why you shouldn't be allowed to define it, yourself, by choosing which
+   equipment is bound to your units.
+
+*) I also think that individual units could have a special 'perk' that
+   gives them some unique property in battle. Previously, we talked about
+   how each 'trainer' or 'leader' character could come with certain perks or
+   passive traits or qualities that will influence the sorts of strategies
+   you might use when bringing that leader (and their team) into battle.
+   But I also think it could add interest to the experience of designing a
+   party if each unit had one special trait that would affect how you use
+   them in a team. Maybe they could passively buff the entire party by some
+   small amount. Maybe they're an extremely powerful unit, but bringing them
+   into the team results in some DEBUFF to either them or the party. Maybe
+   some units, in battle, could debuff the enemy party just by being there.
+   Maybe some traits are triggered only when a unit is in the ring, or maybe
+   it triggers every time they're swapped into or out of the ring. The
+   possibilities are endless.
+
+*) So basically, what we know about 'units' so far is that they:
+    *) Have some base attributes which affect their growth. JRPG stuff.
+    *) Naturally have access to two classes' worth of abilities, but have
+       restricted access to the abilities of their 'Secondary' class.
+    *) They have a single piece of equipment permanently bound to them,
+       which augments the attributes they get when they level-up and
+       provides the unit with a 'Tertiary' class, which is even more
+       restricted than their secondary class.
+    *) They have a single 'perk' or 'passive' that makes the unit more
+       interesting, tactically.
+    *) The MAIN THING that we need to know is what 'attributes' or 'stats'
+       our units have which will play out in battle.
+
+*) For individual 'abilities', here's what we know so far:
+    *) Abilities are attached to classes and are ranked in order of impact
+       as 'Primary,' 'Secondary,' and 'Tertiary.'
+    *) We know that every ability comes with one or more costs. At the very
+       least, each ability costs some amount of the leader's AP to use, but
+       they'll also have other costs and limitations associated with them.
+       These could be of a huge variety of things. Basically, when you use
+       an ability, there's gonna be a trade-off which is probably pro-
+       portional to how powerful the ability is.
+    *) Maybe some abilities have a limited number of usages per battle or
+       per turn.
+
+Panders brings up the idea that maybe abilities can be 'super charged' to
+have greater effectiveness at some (relatively small) cost. An ability can
+be powered up more or less based on whether it's in that units' Primary,
+Secondary, or Tertiary class.
+
+I think this is an awesome idea, but it also adds a lot of complexity (which isn't necessarily a bad thing). I feel like, 'boosted' abilities probably should have special qualities to them aside from just doing more damage or healing more health. Which would make it difficult to balance them all. On the other, maybe they don't need that, and perhaps you can only power-up lower-level abilities. Maybe, if 'Warrior' is your Primary Class, you can power-up Warrior's secondary abilities by 1 level and their tertiary abilities by 2 levels, essentially bringing them closer to the power of a primary ability.
+
+Panders goes on to clarify that he's talking about essentially putting all abilities on the same level of usefulness (tertiary), but having some abilities (those ranked as 'Primary' or 'Secondary') be buffable to effectively make them much more useful, whether this be done on-the-fly during the turn (which would afford a HUGE amount of tactical power, maybe too much), or whether it be done on a permanent-basis while managing the character outside of battle. Effectively choosing how much AP some of their abilities will cost in exchange for making them more powerful.
+
+I feel like we have a pretty well-rounded view of what makes units and leaders interesting, and we have a broad view of 
+
+Panders goes on to clarify that he's talking about essentially putting all abilities on the same level of usefulness (tertiary), but having some abilities (those ranked as 'Primary' or 'Secondary') be buffable to effectively make them much more useful, whether this be done on-the-fly during the turn (which would afford a HUGE amount of tactical power, maybe too much), or whether it be done on a permanent-basis while managing the character outside of battle. Effectively choosing how much AP some of their abilities will cost in exchange for making them more powerful.
+
+In general, I feel like we've got a broad idea of how combat is going to play out. In fact, I think we're almost ready to start designing classes (and, from there, we can start designing units). But we really need to decide on what kind of 'attributes' or 'stats' our units have so that we can get a deep-enough understanding of what sorts of situations might occur in combat to the point that we can really think about what classes will make the most sense.
+
+    *) 'HP' is the amount of damage a unit can take before they fall. Many
+       attacks will deal HP damage directly, and combat is over once all of
+       the units on one team have had their HP reduced to 0. 'HP' is
+       essentially directly tied to the 'win condition' of combat. A unit
+       with high HP might be used effectively to absord damage for other
+       units.
+
+    *) 'ATK' is the indicator of how much damage a unit can do with direct,
+       (physical?) attack abilities. A unit with high 'ATK' will likely be
+       used to deal HP damage directly to the enemy team, where-as other
+       units might have the responsibility of recovering from the opponent's
+       turn or setting up an ATK unit to deal damage.
+
+Here's a question: do we want for units to have 'elemental weaknesses'. I've played many RPGs where elemental weaknesses have been a factor that have been all-too-easy to ignore. They didn't add anything interesting to the gameplay. On the other hand, I've played games where 'elemental' and other weaknesses were HUGELY integral to combat and played a big factor in what skills and equipment my characters used. Even then, although I've enjoyed these games, I'm not 100% sold that seeing that my opponent has an elemental weakness really gave me an interesting decision to make.
+
+The ultimate sinner in this regard, in my opinion, is the Final Fantasy franchise, which is considered to be among the most important JRPG franchises. In those games, you almost always have a class in the vein of 'black mage,' which has access to all of the elemental magics. So attacking the enemy's weakness is as simple as choosing the right spell. They all have the same cost. They're all virtually the same: they just have different names and hurt different foes. It's not that interesting.
+
+And in other games where you might know, in advance, that enemies are weak to fire, you might make the prudent decision to outfit your team with fire-infused weapons. You're doing more damage. You're rewarded for your foresight. But if you could've won just as easily without equipping 'fire swords,' there's really no point. On the other hand, if you can't easily win without equipping 'fire swords,' then it's basically mandatory, and the decision to equip swords isn't that interesting.
+
+In Pokemon, I feel like it falls into the latter-side of the 'fire sword' example above. Types are everything in Pokemon (Gen 1), and FREQUENTLY result in one-shot kills. So, the bulk of the 'tactics' is just knowing what element your opponent is going to be using and picking the opposite element. That's not interesting. It actually sucks energy AWAY from the tactical side of the game. I wouldn't want for elemental weaknesses to take away from the interesting decisions you make. If it's going to be a factor, it would need to make the game MORE interesting.
+
+I've been using the term 'elemental,' since it's most common in JRPGs, but that's the same for units that are weak to 'smash' damage or 'pierce' damage. Some RPGs basically apply 'elements' to physical attacks as well, and it's basically the same.
+
+If we're looking at ways that elemental weaknesses (and strengths) could make tactics MORE interesting, I think it's interesting that, if you know the enemy team has a unit with abilities that one of your team members is weak against, you have to be more careful about when you send your unit out. That's kind of interesting. That adds a layer of tactics.
+
+*) As a sub-note, maybe part of what makes elements less interesting in 'Pokemon', for me, is that every creature in the game has a strict list of things that they're strong and weak against, and most of the good abilities in the game play into that system.
+
+*) Maybe we could implement elemental strengths and weaknesses on a scale that isn't a factor for every single match-up in the game.
+
+*) Maybe we could balance it such that NOT EVERY UNIT has any elemental
+   strength or weakness. In fact, maybe it could be somewhat rare.
+
+*) For instance, maybe we have a unit that's otherwise very powerful. It's
+   got good abilities and good stats. One of its downsides, however, is that
+   its weak in certain match-ups in a way that not every unit has to worry
+   about.
+
+*) That being the case, maybe every (or most) units should deal some
+   'elemental' damage, but it only has a negative (or positive) impact on
+   certain, special units.
+
+As I say it out loud, we run into a dilemma. I kinda like the idea we've described above, but the issue arises that if you KNOW what kinds of units you're going to be facing in an upcoming challenge, you could hypothetically rig your team such that you're taking advantage of the match-ups in a way that might be overly-simplified (our team will take less damage, now, or do more damage).
+
+I feel like it makes the most sense when you don't know what's coming. Then, you're sort of taking a risk by bringing a certain unit onto your party. That's what I like about it. If you know what units are coming (which is very likely, unless every fight's units are 100% randomized), then you can start abusing the system to give yourself an advantage that isn't all that interesting.
+
+What Panders is saying is that every dungeon could have a wide variety of elemental units. That way, you're not just saying, "Oh, I'm going into the volcano. I better not bring any ice types, because everything there is a fire-type."
+
+I honestly think it would be more interesting if things like 'elemental weakness' and 'elemental strength', or 'elemental defense' and 'elemental attack' were attached directly to the UNIT, for all attacks they do and all damage they take. I don't think I want to fuck around too much with 'elements' on the scale of individual abilities. I don't think I want for there to be a 'black mage' class that has access to all of the elements. I think it makes for more interesting decisions -- greater consequences -- if the unit, itself, always attacks with some element and they're always weak (or strong) to some other element.
+
+On that note, maybe the 'equipment' that a unit is permanently bound to might impact their elemental standing, in rare cases. We talked before about how every unit will have some 'perk' or 'passive'. Maybe that's where elemental stuff goes? Or maybe not; it could just be a generic attribute that all units share, but it's much less significant for most units.
+
+Let's go back to attributes:
+    *) HP
+    *) OFF, which is just 'attack power.' Do we really need a different stat
+       for 'physical attack' and 'magic attack'? Because, in JRPGs, how
+       often does one unit take interesting advantage of both 'physical' and
+       'magic' attack? Maybe we just need one 'offense' stat and their
+       classes will determine what kind of attack that is. I don't think we
+       really need to differentiate between 'magic' attacks and 'physical'
+       attacks, right?
+
+Panders brings up the point that, when you have two different attack stats (physical and magic), you can also have two different DEFENSE stats (physical and magic). So, a character that's got a lot of physical defense might be weak to an opponent who has a lot of magical attack. But this ties right back into what we were just saying about 'rock paper scissors' and whether or not that makes the game more interesting or less interesting.
+
+We gotta bring in 'MP,' because I think that's an interesting way for some attacks to have a cost. We talked, above, about how, in our game, abilities could have a TON of different costs. They could have a limited number of uses per encounter or per turn, they might draw from the unit's HP or give the entire TEAM some status ailment. There's all kinds of costs for using abilities. By implementing 'MP,' I think we can strike a cool balance, because these attacks might have unlimited usages 'per encounter' or 'per turn,' but, by requiring MP to use, that will limit what OTHER abilities you use on your NEXT turn.
+
+In Pokemon, every ability can only be used so many times before the Pokemon rests. This is also the behavior in most Dark Souls games and many classic pen-and-paper RPGs: you can only use EACH ability so many times.
+
+What's cool about MP is that you can use any INDIVIDUAL ability however you want, but it will have a cost in the TOTAL NUMBER OF ABILITIES that you use before resting. You don't have 10 uses of 'Heal' and 10 uses of 'Thunder'. You have to choose between Heal and Thunder because of your MP limit.
+
+So, it's a different kind of cost. It's a cost that's balanced against all of your other skills. I like that as an option for how to give certain abilities a cost.
+
+Panders brings up the idea that maybe units can have a limit to how many actions they can take per turn. So, a unit with higher 'agility' might have a tactical advantage over a unit with lower agility because the unit with higher agility can take more actions before having to be tagged out (or before the end of the turn).
+
+On the surface, I can see how that could lead to some interesting decisions. On the other hand, I also feel like, over-all, it probably lowers the amount of interesting decisions, and here's how:
+
+It makes the most sense to me to balance "how many actions a single unit does per turn" with the fact that you WANT to tag another character in because of what we hope will be some tense tactical complexity in the game. In fact, we're even implementing a strict AP cost for tagging another unit in, because players are gonna WANT to tag in more units so they can use a wider variety of class abilities in a single turn, or make sure that a character with high DEF/HP is in the ring at the end of the turn.
+
+Really, I've been look the idea of a single unit doing several actions in one turn as being a compromise. I feel like, in most cases, you're not going to want to have a single unit take more than one action, and if that's what they're doing, it's because you're trying to burn AP since you can't afford to swap in another character or you can't afford to swap a character in that would be safe if they were left in the ring for the next opponent turn. That being the case, I think a major part of the strategy of the game would be knowing which of your units has the most potential for taking multiple actions per turn. Like, you might want to swap in Unit A because they have a really cool ability you want to use, but you know that you'd need to swap in Unit B before the end of the turn, which means that you'd be wasting a lot of AP with swapping. So, you make the tough decision to swap in Unit C, who might not be quite AS useful, but he can do a variety of things: he's a jack of all trades and a master of none. It's a compromise to swap in Unit C, but it can do several things in one turn.
+
+If a Leader character could only use a certain number of unit abilities per turn, it would encourage them to use bigger, more AP-intensive abilities. It would limit their tactical flexibility (which I think of as a good thing, in many cases), which could be cool. Maybe, instead of this being a trait of a Leader character, maybe it's a status ailment. Maybe a leader can be inflicted with an ailment that only allows them to use two unit abilities per turn, so now they have to make the difficult decision of which two to use to get the maximum effectiveness and consume as much AP as you can with only two abilities.
+
+We've got these attributes for our units, basically:
+    HP
+    DEF
+    OFF
+    MP
+    LP (Life Points)
+
+    ATTACK ELEMENT
+    ELEMENTAL STRENGTHS AND WEAKNESSES
+    PERK
+    Primary, Second, and Tertiary classes
+    Once piece of permanent equipment which affects their growth, their
+    tertiary class, their elements -- whatever.
+
+'LP' is an attribute that is reduced by '1' every time your unit's HP hits zero, and certain rare, high-cost abilities can also reduce it directly. When a unit's LP reaches zero, it can't be revived, any more. We've previously talked about 'durability' in our game, and the possibility that units may die on a semi-permanent basis. Maybe 'LP' is how that works -- or, it could just be automatically restored at the end of every fight, and it only prevents a unit from being revived during THAT fight. But I kinda like the former idea: it's how they get 'destroyed' and then you need to painstakingly buy them back and replace them on your team for a while.
