@@ -650,3 +650,134 @@ We've got these attributes for our units, basically:
     tertiary class, their elements -- whatever.
 
 'LP' is an attribute that is reduced by '1' every time your unit's HP hits zero, and certain rare, high-cost abilities can also reduce it directly. When a unit's LP reaches zero, it can't be revived, any more. We've previously talked about 'durability' in our game, and the possibility that units may die on a semi-permanent basis. Maybe 'LP' is how that works -- or, it could just be automatically restored at the end of every fight, and it only prevents a unit from being revived during THAT fight. But I kinda like the former idea: it's how they get 'destroyed' and then you need to painstakingly buy them back and replace them on your team for a while.
+
+
+
+
+02/13/19
+
+Let's review the attributes that our units have (and maybe the ones that our 'leaders' have as well):
+
+Units:
+    HP - The maximum amount of damage the unit can take before falling.
+    DEF - A pseudo-linear reduction of damage that encourages the opponent
+          to use higher-damage attacks over lower-damage ones.
+    ATK - A multiplier for the damage of damaging abilities.
+    SP - The unit's universal ammo count.
+    LP - The number of times a unit can fall before being destroyed.
+    DYNAMIC - A quality of the unit that will affect how they're played
+              outside of the normal rules of battle.
+    Status Effects - Additional rules applied to the character on a per-
+                     battle or per-turn basis.
+    Primary Class - The abilities pool that the unit has unrestricted
+                    access to and which has the biggest impact on their role
+                    in battle.
+    Secondary Class - An abilities pool from which the unit can access all
+                      but the most powerful abilities. Adds utility to the
+                      character outside of a rigid role.
+    Tertiary Class - A very limited abilities pool from which the unit can
+                     only access the most trivial abilities. Maybe useful in
+                     the clutch. Provided by the unit's equipment.
+    Equipment - Affects the unit's growth and tertiary class. May also
+                provide an additional Dynamic. Permanently bound to unit.
+
+We can't really get a vision of how any unit will behave in battle until we start thinking about the 'classes,' which are just the ability pools. That being said, do we need any other attributes for individual characters.
+
+I feel like the numerical attributes (HP, ATK, SP, LP) are pretty simple. Overly simple? I think that the real interesting differences between units will come from their 3 classes and their dynamics. HP affects 'tankiness'. ATK is an attribute that will affect your likeliness to want to attack with them. That sounds obvious, but it's kind of interesting because characters like healers, status-afflicters, buff'ers, don't really need ATK. They're not really going to ever attack the enemy directly. They would need SP instead of ATK.
+
+When you see a unit that has high SP, you should expect them to be able to use more expensive abilities, which could have a big function in combat outside of doing direct HP damage -- or they could do exceptional HP damage. A unit with high SP is a unit to be especially wary of, and it might be a good idea to target them with abilities that reduce their MP to limit what they're capable of.
+
+If a character has high LP, they're more reliable in combat. You don't need to dance around keeping them on their feet as desperately. On the other hand, characters with low LP might be very powerful but they're very fragile.
+
+I was thinking last night that rather than having units have an elemental attack attribute and an elemental weakness attribute, maybe every unit should just have a single elemental 'type'. Some units would take more damage FROM these types. Others would deal more damage TO these types. Some might take LESS damage from these types, or MORE damage from these types -- but it wouldn't be about 'type' matchup. It'd be due to a Dynamic or a status effect.
+
+In other words, it wouldn't be that 'Fire' units are always strong against 'Ice' units. It's more like, THIS PARTICULAR UNIT deals more damage to Fire units. The unit's 'types' don't directly interact at all. It's just a quality of Dynamics and status effects. The only reason that each unit would have a 'type' would be so that these Dynamics could effect them differently.
+
+I don't think that I personally want to fuck around with accuracy. I don't know for sure if I've ever played a game -- and I've played a lot of JRPGs -- where I've really enjoyed having an evasion mechanic. Typically, units will have some kind of 'dodgeability' attribute and some kind of 'accuracy' attribute, and, when dealing a direct attack, these attributes will be compared between the attacker and the defender and that will calculate the percentage chance of the attack completely missing.
+
+I just can't imagine a situation where that sort of dice-roll could have a strictly positive impact on the depth fo strategy. On the one hand, it adds risk and it incentivizes the player to minimize risk in intesive situations by relying on higher-accuracy units / abilities, and it also adds an element of dynamism where you plan has to change based on whether or not a previous ability connected. But I also feel like it can make certain units over-powered (if they have high evasion attribute) and, in a game where every turn is going to matter so much, and units can die semi-permanently, it seems like it could make low-accuracy abilities or units much, much less feasible in combat. I feel like the risk might be too high. I wonder if it woiuld make more sense to just have every ability be assumed to connect, unless the unit is under the effect of some Status Ailment (which can be stacked) which would reduce their likelihood of hitting.
+
+From what I understand, there are guys out there that will look at a move in a JRPG that says, "20% chance to hit for triple damage," and that's attractive to them. Every JRPG I've played has abilities like this. I've never used them. I can't stand them. I don't see the point to them. Because you're gonna win the encounter if you stay solid and play smart. Why take such a big risk just to end it a little bit sooner?
+
+Some people like gambling. I don't like gambling. I like certainty -- but gambling adds a thrill, it adds risk. To some people, that's exciting. I find it annoying.
+
+I still feel like having 'accuracy' be a core part of the game (a stat of every unit, along with 'evasion') isn't something I want to do. I'm not opposed (and may be in favor of) having accuracy or evasion-affecting status effects, and I can also concede that it may add tactical interest to the game for select abilities to come packaged with a chance to miss.
+
+HereGoes brings up the point that, sometimes, chance-to-miss attacks in JRPGs make for great hail-marys. What I find interesting about that statement is that he mentions that these attacks may be 'insta-kills'. It makes me think that, because of what I said about the importance of 'staying solid' and having a 'RELIABLE stategy,' moves that have a high chance to miss really should have KILLER benefits if they succeed. I feel like maybe a part of the reason that I've never really been attracted to these 'high chance to miss' moves in JRPGs is that the trade-off just isn't worth the risk. You might get a 'crit', which is bullshit. I can't risk my entire strategy just to get a crit.
+
+On the other hand, if the reward was sufficiently high, maybe I could see how you COULD put your entire strategy into jeopardy and risk having to recover after a failure. Let's keep that in mind as we design classes and abilities; it might be cool to have some abilities that have a high chance to miss but are very, very rewarding if they succeed. That's an incentive to 'gamble' that I can understand.
+
+We're continuing to look at what numerical attributes our units need to make combat more interesting.
+
+Here's what I was thinking while talking to Kenny last about how battle would play out: in a game that's going in the direction that ours is, units are so much more than their numerical attributes. In fact, the more I think about it, the more they're like cards in a collectible card game. Here's why I say that:
+
+The way that you play a unit and play AGAINST a unit is based heavily on their Dynamic and their classes. So, when you're facing an opponent, you basically want to read their 'description', and that affects how you play against them -- sort of like the text on a card. Every unit has its own rule (Dynamic) which you basically need to know when going up against them. Kinda reminds of a collectible card game.
+
+DEF usually is a multipler that reduces HP damage. But, again, how is that really different from having more HP? Any time that a unit gets more DEF, couldn't you have just given them more HP and still have the same effect?
+
+Panders mentions that 'defense' could affect low-damage attacks and high-damage differently. Perhaps your attack has to exceed some amount of damage before it can 'crack' the enemy's defense.
+
+Is that kind of overpowered? On the discussion of having to 'crack' the enemy's defense, Panders puts forward an equation where defense reduces the amount of damage done in a linear fashion, which rewards higher-damage attacks over lower-damage attacks. This could positively impact the strategies that your opponent comes up with, because if they have a few remaining AP to consume on their turn, using a low-damage attack becomes less attractive. They want to deal damage in big, lump hits. This isn't a concern you would have against an opponent that has low defense.
+
+Let's talk for a second about 'growth' and what I believe are the trappings of it. This being true of any JRPG, but especially of monster-collection JRPGs.
+
+I've been thinking about the benefits and the disadvantages of having a traditional 'level-up' system, where each unit gains EXP at the end of battle and then, after acruing so much, they 'level up' and their attributes increase.
+
+To me, the major disadvantage of going this route -- well, there's two:
+    1.) It rewards the player directly for sticking with the same team. In
+        a game where you've got potentially more than a hundred types of
+        units to choose from, and where you want to reward the player for
+        trying different strategies and re-configuring their team based on
+        the challenges they expect to face in the near future, I think that
+        you want to avoid situations where the player is saying to them-
+        selves, "I could try this other unit, but they're under-leveled, and
+        so I would need to grind in order to bring them into my party."
+
+    2.) It rewards the player for grinding and overpowering their opponent
+        with numerical superiority. We want for our players to succeed based
+        on how well they can apply a strategy and build a team that has good
+        synergy. If you reward the player for grinding, you're basically
+        rewarding them for sacrificing their TIME rather than having to
+        develop a strong strategy.
+
+That's to say that I'm entirely against character growth. But I think that maybe we should come up with a way that allows for the leader and their units to get stronger (and have more complex strategies available to them, or open up new areas to them where the opponents were previously too powerful) in such a way that they all level-up UNIFORMLY. There's an EXP 'pool' that all units share under one leader, or something, so that you can bring any unit onto your team for the first time and they're up to speed.
+
+The player should be rewarded for completing battles with some kind of character growth. I love the idea that, after an encounter, the player is given new possibilites for managing their team -- that's what character growth is all about, to me. Character growth gives you some creative power over your team; you've earned some currency, and now you can spend that currency to give you more tactical options. Make you feel more confident in dealing with future scenarios.
+
+On the other hand, the downside of this very same property is that it can trivialize future encounters if you do it too much (grinding). And like we said, it can disadvantage new additions to the team, which discourages the player from swapping out units -- and that's the last thing I want to do. I want to encourage the player to swap out units as much we can.
+
+So, at some point, we're going to need to think of a way to 'grow' characters or teams in such a way that new units can be 'brought up to speed' very quickly.
+
+*) GoodVibe mentions the GENERAL GAME DESIGN CONCEPT of exhaustion, and that's something that I like, too, because it adds more depth and dynamism to the strategy. It means that your first encounter on an adventure will have different rules, effectively, than your tenth encounter. I like the idea that you have to pace yourself or risk burning out, and I like that, as you get burned out, encounters that might've been easy at first are now major threats. In our design so far, we've looked at that 'exhaustion' as something that occurs over the course of a single battle.
+
+In fact, I've considered that, since we want for each fight to be at such a high difficulty, it would probably make sense to have the units' HP, etc., be restored completely between fights. That way, we can balance each encounter so that the player is encouraged to totally blow their load. Sacrifice HP, sacrifice SP -- and, ideally, they would NEED to do that in order to win. I feel like that could greatly enhance the stress-levels (in a good way) per fight, versus most JRPGs where because you have to fight SO many monsters as you explore, each individual encounter can't be TOO intensive. What ends up happening is that the game becomes pretty easy.
+
+If we can balance our combat so that it's super-intense, I feel like that implies having to make major sacrifices in each fight, which means that it would probably make sense to refresh the team after each encounter.
+
+GoodVibe's got me thinking: maybe the leader / team could have a simple 'exhaustion' attribute which goes up after encounter and debuffs the team slightly over time, even if their numerical attributes do get refreshed.
+
+*) Zanzhu brings up the idea that, aside from rewarding units for appearing in combat by giving them EXP (and, by extension, level-ups), EXP can also be put into a 'pool' that can be selected expended to any unit that the leader might have access to.
+
+One risk of this, right away, is that the player might be inclined to spend that EXP on the units that were just in the battle. One way to avoid this would be to have level-ups require exponentially more EXP. That way, spending it on a high-level unit would yield much less reward than spending it on a low-level unit. Lower-level units grow a LOT more per-EXP than high-level ones.
+
+I feel like we made a lot of progress with our design, tonight. Next time (Monday) I would like to start talking about classes. What sorts of abstract 'roles' might our units need to fill on our team? What sorts of abilities would make sense within those roles?
+
+Very importantly, how many units do we want on a single team? We want for each team to have strengths and weaknesses, tactically. We want for the player to have to sacrifice some options in order to open up other options. If each unit has access to 3 classes, how many units do we need for the player to have enough options to deal with a variety of enemy teams without giving them SO many options that they can deal with ANY enemy team.
+
+We want the player to ALWAYS WISH they had access to ONE more class or ONE more unit. We want them to make difficult decisions about who is included in their team. How many units do we need to have on each time to succeed in that? It's a dance to control how often the player needs to switch units, and how flexible we want for individual teams to be so that they don't run the risk of entering a fight where they basically have NO chance of winning because they came in with the wrong team. Each time needs to be SOMEWHAT flexible but also restricted enough that the player has to make regular and difficult decisions about who to include on their team.
+
+Before I forget, this is an idea that I've been playing with and we can discuss more in the future; I just want to write it down before I forget:
+
+What if. Instead of having a traditional JRPG "team" that can only be changed at a save-point. Every encounter started with a draft. (This was inspired by last night's 3S Team Battle).
+
+What if one of the two teams in battle (player or opponent) could get 'initiative,' and that meant that the opponent had to pick a unit from their collection and show it to the player. Then, the player could pick a unit from THEIR collection to counter that unit.
+
+And then the opponent would pick ANOTHER unit to counter THAT unit. That way, I feel like you could encourage the player to familiarize themselves with a wide variety of strategies and units, and change their team on a per-battle basis with some foresight into what strategies the opponent has available to them. Before battle, you would be able to see what your opponent's team and they would be able to see what YOUR team is. I kinda think that's a cool idea, and it adds an element of strategy and gameplay before the battle even starts.
+
+There would be UI difficulties, and you'd need to be able to sort your collection of units so that your favorites are on top, or something, depending on how many units you have. It could end up being a lot of scrolling. But I think it's a cool way to encourage the player to not get too attached to a single team and encourage them to pick the right tools for the job before each job.
+
+*) Cajun mentions that individual units could have an 'exhaustion' attribute which would also encourage the player to try different units. Worth thinking about.
+
+Panders brings up the idea, half-jokingly, that teams could be constructed at random. I was talking with Kenny, last night, about how forcing the player to re-evaluate their plan and come up with something on the fly is a virtue of game design, I feel like. Maybe there's some kind of status ailment or something that causes the opponent's team (or the player's team) to have one character slot filled by a random unit from their collection.
+
+What if, before battle, the player could only pick from a pool of units from their collection that is, itself, randomized. You'd basically draw 20 cards from a deck, and be able to bring 4 of those cards into your hand.
