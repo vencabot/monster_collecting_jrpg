@@ -781,3 +781,78 @@ There would be UI difficulties, and you'd need to be able to sort your collectio
 Panders brings up the idea, half-jokingly, that teams could be constructed at random. I was talking with Kenny, last night, about how forcing the player to re-evaluate their plan and come up with something on the fly is a virtue of game design, I feel like. Maybe there's some kind of status ailment or something that causes the opponent's team (or the player's team) to have one character slot filled by a random unit from their collection.
 
 What if, before battle, the player could only pick from a pool of units from their collection that is, itself, randomized. You'd basically draw 20 cards from a deck, and be able to bring 4 of those cards into your hand.
+
+When considering the way that units (monsters) will level-up, perhaps they gradually unlock their second and tertiary classes, or they unlock their dynamics, or they maybe even unlock secondary equipment slots -- or something like that. Maybe the level-ups aren't strictly about raising stats or learning new "abilities" from their classes.
+
+I think that the average amount of AP that a leader should get per turn is 10 AP. That's what they start their turn with.
+
+This way:
+    *) The weakest abilities in the game can cost 1 AP.
+    *) Character tagging (which is super significant to tactics) can cost
+       3 AP.
+    *) This way, you can basically tag twice per turn, but, by doing so,
+       you limit the amount of actions you can do to consuming 4AP, which
+       could be one kind of powerful ability or a couple middling abilities.
+    *) This would prevent the player from being able to swap a tank OUT, use
+       some abilities, and then swap the tank back IN before the end of the
+       turn. With 10 AP to work in this set-up, that would be doable and
+       even very tactical for some teams, but it would limit the amount of
+       offense your team would have.
+
+Even if only a little bit, I like gnomedjunior's idea that the leader could gain AP as they level up. Because of the way the game is engineered, it couldn't be by MUCH, but I do like the idea of opening up more tactical possibilities to the player as the game goes on.
+
+For 'offensive' classes, they have a ratio of 3:1 attack to 'utility' skills. 'Standard' classes can be about even, and 'utility' classes can be mostly utility skills with a few offensive skills.
+
+What Panders is saying is that, if you group attack abilities into a range of damage-to-cost, you can give 'attack centric' classes a bigger variety of tactical options when it comes to dealing damage at a variety of costs. On the other hand, classes which are more 'limited' in terms of attack potential may be able to do a LOT of damage per turn, but they won't have as many OPTIONS for damage-to-cost. So, some non-attack classes may ONLY have low-cost, low-damage attack abilities. Other non-attack classes may have only a couple HIGH cost HIGH damage abilities -- but, in any case, only the 'offense' classes will have the widest variety of cost and damage breadth. That way, the 'offensive' classes can effectively do damage in a wider variety of scenarios.
+
+gnomedjunior is joining us for the first time, today, and doesn't really have a great grasp of how our combat is going to play out, but I do like his ideas for broad roles in combat, including "scout," "utility", "tank", "stealth".
+
+gnomedjunior brings up the idea of some powerful attacks maybe even draining the MP of multiple units.
+
+gnomedjunior brings up the idea for a 'dynamic' where maybe a certain unit (or even a unit under a certain status effect) will gain power based on how much damage they take.
+
+Let me talk about 'status changes' for a moment:
+
+In traditional JRPGs, status changes are relatively straight-forward, and by that I mean:
+    *) They'll either last for a certain number of turns (maybe with some
+       randomness).
+    *) Or they'll be removed directly by either 'curing' a negative status
+       change or 'dispeling' a positive one.
+    *) Maybe certain items or abilities can cure PARTICULAR status changes,
+       or you'll have an item or ability that cures ALL status changes.
+
+That's how it works in a typical JRPG.
+
+I was thinking, what if status changes have special requirements to cure them, rather than just 'casting the ability that cures it' or 'using the item that cures it' or 'waiting some number of turns'.
+
+What if some status changes will only wear off after a the character takes a certain amount of damage, or inflicts a certain amount of damage, or consumes a certain amount of MP, or AP. What if a status change only wears off after the unit has been tagged in or out a certain number of times. I think that could be more interesting and have a greater impact on your tactics.
+
+And maybe instead of having every 'curative' ability directly remove the status change, what if some just 'lessen the condition.' Maybe you're poisoned, and you're gonna stay poisoned until you tag out three times. Maybe a healer could have an ability that would lower that 'curative requirement' down to only needing to be swapped once.
+
+I think we don't really need status changes that persist outside of combat. We've already got the 'exhaustion' system for adding some stress to the player between encounters.
+
+My idea was not that certain status ailments like 'poison' would always require the same condition to cure it, but rather that certain abilities might inflict poison DIFFERENTLY. Certain abilities might inflict a poison that wears off after a certain number of turns, while others might inflict the same 'ailment' but with a different condition for curing it. Maybe some abilities might inflict a status ailment with a somewhat randomized condition for curing that ailment.
+
+On the subject of ailments, Panders mentions an idea where the afflicted unit could only use even or odd AP costing abilities.
+
+GnomedJunior brings up the awesome idea of a ailment or ability that would neutralize a unit or leader's 'dynamic'.
+
+LasteveqA_ brings up an idea that I'd considered but hadn't remembered to write down until now: what if some status ailments were like 'threats'. That is to say, they don't trigger right away but have a condition that must be met for them to take affect.
+
+GnomedJunior brings up the idea of abilities that only trigger when the unit that used them is attacked (counter abilities). These would make sense for 'tanky' classes.
+
+GnomedJunior also mentions the idea of 'traps'. We touched on this with LasteveqA_'s idea of 'threat' status changes, but what if we had certain abilities that would add new 'dynamics' or 'rules' to the entire battlefield. We haven't considered that before.
+
+Up to this point, we've given dynamics (special rules) to units and leaders, and we have status changes that can apply special rules, but what if there was a slot for a dynamic that applied to the entire battle rather than just individual units or leaders. What if you could use a skill that would cause any unit that attacks with MP to take damage. I guess maybe we don't need that, since you could also look at it as just adding that dynamic to both teams.
+
+It would be more clear if, rather than giving both leaders the same 'status change,' there was a slot for rules that affects the entire battlefield. Let's lock that in.
+
+Status changes can be inflicted on UNITS and will affect that unit individually.
+Status changes can be inflicted on the LEADER, which will affect the entire team.
+Status changes can be inflicted on the BATTLEFIELD, which will affect both teams equally.
+
+Maybe certain dungeons or areas or parts of the game carry special rules on the battlefield.
+
+gnomedjunior brings up the idea that having various rules apply to the battlefield might encourage different strategies or empower certain classes. We're always looking for ways to encourage the player to switch up their team and exploit different strategies.
+
+It'd be cool if certain rules on the battlefield could trigger other rules. LasteveqA_ mentions that rules could 'level up,' and I'm choosing to interpret that as, maybe, after a certain amount of time, a rule becomes more severe -- or, when triggered, the rule might become more severe.

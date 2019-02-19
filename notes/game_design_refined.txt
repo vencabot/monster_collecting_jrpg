@@ -1,0 +1,145 @@
+COMBAT
+Leaders:
+    *) 'Dynamics' (Special rules that the character brings into battle)
+        - These may affect the ally or enemy team, or both.
+        - They can have a huge variety of effects.
+    *) A 10-unit 'deck' of units that they carry with them into dungeons
+    *) In combat, they choose a 4-unit party from that deck
+    *) On each turn, they have a max and current AP value (consumed by
+       taking actions)
+    *) An inventory of items
+
+Units:
+    *) A max and current HP value
+    *) A DEF value (which scales weaker attacks harder than stronger ones)
+    *) An ATK value which scales the damage of their abilities
+    *) A max and current MP value which is consumed by some abilities
+    *) An LP value which is reduced when the unit is KO'd and by some
+       special abilities
+           - When a unit's LP reaches zero, they cannot be revived by
+             normal means.
+    *) An exhaustion percentage. After each encounter, a unit's exhaustion
+       goes up, making them less effective. Rest in 'town' to restore
+       exhaustion. The idea is to encourage leaders to use more of their
+       10-unit 'deck' when choosing 4 units to bring into battle.
+    *) A primary class, whose abilities they have unrestricted access to.
+       For this reason, a unit's primary class is likely to determine the
+       bulk of their function in battle.
+    *) A secondary class, whose abilities the unit can access the first 2/3
+       tiers of. Because they can't access the most powerful abilities of
+       this class, this secondary class adds dynamism and utility to a unit
+       outside of their primary role.
+    *) A tertiary class, whose abilities the unit only has very limited
+       access to (only the first tier). These abilities aren't going to be
+       hugely useful most of the time, but they may come in clutch when the
+       going gets rough.
+    *) A permanently-bound 'equipment' slot, which affects the unit's growth
+       and provides their tertiary class. May also add a 'dynamic'.
+    *) A 'dynamic,' which is a special rule that this unit takes into
+       battle.
+    *) A list of active status effects, both positive and negative.
+    *) An 'elemental' type that will only come into play under certain
+       'dynamics'. Maybe some units have a dynamic (or status affect) which
+       will make them vulnerable to attacks by units of a certain type. Or
+       more robust against units of a certain type. Or maybe they get
+       powered up (or weakened) when they're on a team with a unit of a
+       certain type, or when the enemy team contains a unit of a certain
+       type. Unlike Pokemon, we're not looking at rigid 'type' match-ups,
+       RPS-style. Instead, unique dynamics and status affects will
+       arbitrarily give units a variety of strengths or weaknesses based on
+       type.
+
+Combat Flow:
+    *) Before battle, the ally leader and the opponent leader will roll for
+       'initiative'. Whoever loses this roll will pick one unit from their
+       deck to bring into battle, and this choice is visible to both
+       parties.
+    *) After each unit pick, the opposing leader will get their turn to pick
+       a unit, which will also be visible to both parties. This will go on
+       until both leaders have selected 4 units from their deck to bring
+       into the encounter.
+    *) The leader who rolled initiative will also get the first turn in
+       battle.
+    *) On a leader's turn, they'll have a limited amount of AP to consume by
+       using their unit's actions and actions that the leader may take
+       directly.
+    *) Typical actions that a 'unit' would take will have the most direct
+       impact on battle. They'll typically target either themselves or the
+       enemy which is currently in the 'ring,' but they may also sometimes
+       target other units on either team (targeting a non-ring unit on the
+       enemy team should be pretty rare, since the game's mechanics should
+       be balanced around the in-ring units being the vulnerable ones and
+       the out-of-ring units being relatively safe).
+    *) Typical actions that a 'leader' would take will have a less direct or
+       more 'tactical' impact on the overall battle, commonly including
+       things like 'tagging' different units into the ring or using an item
+       from their inventory. Certain leaders may also have special abilities
+       that they can use, and these would be tactically very powerful
+       because they can be used regardless of which unit is in the ring. For
+       this reason, they probably shouldn't be directly related to disabling
+       the enemy team.
+    *) Unlike in some JRPGs, all of the units would have all of their
+       attributes restored between fights except for 'exhaustion' (and maybe
+       LP).
+
+Abilities:
+    *) An affect, obviously. This might be to deal HP damage to the opponent
+       currently in the ring. It could do MP damage. It could do LP damage.
+       It could inflict a temporary status change, which could give a
+       variety of buffs or nerfs to the target. It could heal HP. It could
+       heal MP or even the leader's AP, in some rare cases.
+    *) A cost. Virtually all abilities will cost the leader's AP, but
+       abilities could have a wide variety of costs, including the unit's
+       MP, or HP, or even LP. It could be a negative status ailment that the
+       user or maybe even other units on the team would have to take on.
+       There could be any number of interesting costs associated with using
+       an ability. Some could be very simple and others could be very
+       complex and have a long-term impact on the strategy for the rest of
+       the encounter.
+    *) A 'tier' that affects whether or not they can be used under a
+       'secondary' or 'tertiary' class. Tier 3 abilities can only be used if
+       the unit has the class in question as their 'primary' class.
+
+Status Change (Ailment, Buff):
+    *) These will apply a new rule to the unit similar to a dynamic. These
+       affects may be positive, negative, or otherwise just affect or limit
+       the tactics available to the player when they utilize that unit.
+    *) It'll have a condition for the status change to end. This could be a
+       variety of rules, including dealing a certain amount of damage or
+       taking a certain amount of damage, or having a number of turns pass,
+       or consuming some amount of MP or AP or getting swapped out -- any of
+       things. This would be independent of the status change itself, and
+       the condition for the status change's end could be lessened by some
+       abilities, or made MORE severe by other abilities, or directly
+       REMOVED or CURED by other abilities still. Maybe some abilities would
+       randomly change the condition, so the player could hope they end up
+       with something easier.
+    *) An optional condition for the status change to BEGIN. This would
+       limit or influence the strategic choices made by the leader depending
+       on whether they want to trigger the status change sooner or, in the
+       case of a negative status change, avoid triggering it.
+
+Class:
+    *) A collection of tiered abilities.
+    *) The ability tiers available to the unit depend on whether this class
+       is bound as a Primary, Secondary, or Tertiary class.
+    *) Should have abilities cherry-picked so that they encourage the unit
+       into a tactical role in combat. The classes that a unit has available
+       to them will obviously impact what sorts of teams they work best in,
+       what sorts of teams they work best against.
+    *) No class should be too flexible with what sorts of tactics are
+       available to it, not only to prevent a unit or team from being over-
+       powered, tactically, but also because we want for a unit's
+       flexibility to come from its COMBINATION of Primary, Secondary, and
+       Tertiary.
+    *) A class should have a relatively focused idea of what it's 'for' in
+       battle.
+
+Battlefield:
+    *) Has a 'ring' which contains two units -- one from each team.
+    *) Only units in the ring and the leaders can take action.
+    *) Units in the ring can be swapped for an AP cost.
+    *) Some abilities may affect single units outside of the ring, or entire
+       teams, or maybe only the units that are outside of the ring. Directly
+       attacking units outside of the ring should be very, very rare.
+    *) May be impacted by status changes or special dynamics.
