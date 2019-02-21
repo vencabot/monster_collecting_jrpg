@@ -1,6 +1,7 @@
 COMBAT
 Leaders:
-    *) 'Dynamics' (Special rules that the character brings into battle)
+    *) 'Leader Dynamics' (Special rules that the character brings into
+        battle)
         - These may affect the ally or enemy team, or both.
         - They can have a huge variety of effects.
     *) A 10-unit 'deck' of units that they carry with them into dungeons
@@ -8,6 +9,7 @@ Leaders:
     *) On each turn, they have a max and current AP value (consumed by
        taking actions)
     *) An inventory of items
+    *) They're going to be able to grow somehow.
 
 Units:
     *) A max and current HP value
@@ -35,7 +37,7 @@ Units:
        going gets rough.
     *) A permanently-bound 'equipment' slot, which affects the unit's growth
        and provides their tertiary class. May also add a 'dynamic'.
-    *) A 'dynamic,' which is a special rule that this unit takes into
+    *) A 'unit dynamic,' which is a special rule that this unit takes into
        battle.
     *) A list of active status effects, both positive and negative.
     *) An 'elemental' type that will only come into play under certain

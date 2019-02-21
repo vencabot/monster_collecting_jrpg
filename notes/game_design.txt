@@ -856,3 +856,151 @@ Maybe certain dungeons or areas or parts of the game carry special rules on the 
 gnomedjunior brings up the idea that having various rules apply to the battlefield might encourage different strategies or empower certain classes. We're always looking for ways to encourage the player to switch up their team and exploit different strategies.
 
 It'd be cool if certain rules on the battlefield could trigger other rules. LasteveqA_ mentions that rules could 'level up,' and I'm choosing to interpret that as, maybe, after a certain amount of time, a rule becomes more severe -- or, when triggered, the rule might become more severe.
+
+
+
+02/20/19
+
+We're gonna have a mock battle, today, which means that we all have to close our eyes and imagine that we're having a real encounter with another real player.
+
+Battle starts by rolling for initiative. We're gonna have two teams with two leaders: Team A, and Team B.
+
+Team A gets initiative, so Team B needs to pick a unit from their deck.
+
+As long as we're imagining an encounter, why don't we imagine what sorts of decisions might go into designing a 10-unit deck.
+
+So now I'm the leader of Team B and I need to pick a unit from my deck without having any idea of what sorts of units my opponent has access to.
+
+What's in my deck?
+
+We have to consider exhaustion, which means that we might want to bring in multiples of the same or similar units just to make sure that no individual one gets too tired.
+
+We need atk damage to defeat our opponents.
+But battle could be over quickly if we can't cure status changes.
+We could end battle quickly if we can afflict status changes effectively.
+We could pick units whose Unit Dynamics complement each other.
+
+One thing I know we're gonna need is a way to deal damage. We should probably pick a unit that can not only deal damage but also has a complimentary Unit Dynamic with our other units. After all, lots of units and classes can deal damage, so if we're going to put ONE of them in our deck, perhaps the Unit Dynamic would be a hugely influential factor.
+
+What are THE MOST IMPORTANT roles to have filled in a battle? Again, we can't see what units our opponent has in their deck. We were unlucky enough to have to blind-pick our first unit, so it has to be something that we KNOW we're likely to need.
+
+You guys know me: I like defense. The way I see it, the longer we can draw out battle, the more likely I am to win because I can get a feel for my opponent and gradually build up my advantage.
+
+I want to bring in a unit that has high HP and high DEF, and their abilities might revolve around healing themselves, or temporarily boosting their defense (or the defense of the party). A tank would be stuck in the 'ring' more often than other characters -- but he wouldn't take actions. We talked before about how, if you end the turn on a tank you have to swap them out for a more aggressive unit at the start of the next turn and then swap the aggressive unit back out for the tank by the end of the turn, which wastes a lot of AP. So, there would be two kinds of tanks, then:
+
+SUPER effective tanks whose abilities you would RARELY use (because you'd be swapping them in and out, so much).
+
+Tanks which have to have decent, flexible abilities, because you DON'T want to swap them that much, but you still want for them to be able to absord the enemy's aggression.
+
+A tank isn't really a tank if the other party members can't act. The idea of a 'tank' with decent abilities so that you can leave them in the ring for longer (and not waste AP with tagging) is kind of silly, because if they don't tag in and out, none of the other units on the team can act.
+
+Maybe a game with this design wouldn't benefit as much from 'traditional' tanks. It would probably make more sense to think of the 'defensive' unit on the party as being the one that raises the defense of other party members. These buffs could target the ally party in a variety of interesting ways: they could affect the next unit to swap in, or the whole team, or there could be a status change or dynamic that boosts some kind of defense somewhere on the party whenever the 'tank' is swapped in.
+
+Maybe I don't want my first unit to be a traditional, high-HP / DEF TANK, but rather a 'caster' that can make my team more defensive. Maybe it's important to my defensive, slow-paced strategy to bring in a character that can give my team buffs to make them more durable.
+
+One of my four units is gonna be the guy that makes my team more durable.
+This unit also has a secondary class. And a Unit Dynamic. What would be a good secondary class for a unit that makes the team more durable.
+
+Well, he's probably going to be using his Primary Class every chance he gets -- which is the idea of a 'primary class' and that's why 'secondary classes' and 'tertiary classes' are more situational.
+
+We gotta ask ourselves: do we feel lucky? Well, do we? Punk? We gotta ask ourselves when will our unit make use of their secondary class.
+
+What jumps out at me is that, if our "defense buff'er" is consuming MP for all of their abilities, maybe we should consider a secondary class that doesn't consume MP -- that way, if they're stuck in the ring or if they run out of MP they're not totally useless.
+
+Even within the role of 'defense buff-er', there's a variety of ways they could play. My idea was to have a caster, who probably has low HP and low ATK, get swapped in, cast a buff that lasts a couple turns, and then get swapped out.
+
+But Faust brings up the idea of a 'defense buff-er' who, himself, is somewhat tanky, and then he could get swapped in, cast a buff, and then close out the turn -- absorb damage on the enemy turn, and then tag out for a FRESHLY BUFFED ally unit.
+
+In the latter case, the unit would likely suffer some shortcoming regarding the effectiveness of his buffs -- either because he has low MP (can't cast that many) or his class doesn't have as good of buffing abilities (maybe a 'tanky', high HP & DEF unit should only have defense-buffing as their secondary or tertiary classes), or maybe we need another Attribute for our units that determines their effectiveness with inflicting status changes. Units that have a higher 'status change inflicting' stat would cast more effective status changes that may last longer, etc. But that's kind of complex and I think, now that I've said it out loud, we have the solution to this problem by limiting high-HP/DEF characters by putting buffs and casting, etc., only into their secondary or tertiary class slots.
+
+*) A Dynamic that makes a unit more powerful every turn that they aren't killed, or they don't take damage, or something along those lines.
+
+If I'm picking a unit for my team, without knowing what my opponent is picking, I think I want a unit that can buff my team's defense but which has low HP and DEF, itself. You swap it in, it casts a buff, and you swap it out before the end of the turn. That turn is partially wasted by all of the AP spent swapping the unit in and out, but now our team is more durable for some amount of time until I have to waste another turn doing the same thing.
+
+So basically, we're designing a class whose purpose it is to get swapped INTO battle, cast a spell that raises defense or makes the party more durable, and then gets swapped OUT of battle.
+
+That unit's primary class is one that has Abilities like this:
+    *) It's got something that can apply a relatively significant defensive
+       boost to the whole team for some small amount of time. Some large
+       cost. Tier 3.
+    *) It's got something that can apply a significant defensive boost to a
+       single ally unit (who will likely be swapped in next turn). Some
+       significant cost. Tier 2.
+    *) For some small cost, he can raise resistance to a certain unit type?
+       Minor cost? Tier 1?
+    *) As a Tier 2 ability, maybe he can impart his own defense to another
+       unit maybe even until the end of battle. It won't be as temporary,
+       but it will make this unit much more frail.
+    *) I want an ability that can make a unit INVINCIBLE to ONE attack
+       (keeping in mind that the opponent can attack more than once per
+       round). Considering that the opponent would KNOW that their next
+       attack will be absorbed and that the FOLLOWING attack will NOT be
+       absorbed, I don't know how powerful this ability would be. It would
+       work well against units who ONLY have high-cost, high-damage attacks,
+       so, if that enemy unit were in the ring at the time, they would
+       either need to waste some large cost or be swapped out. Even if the
+       opponent COULD use a low-damage, low-cost attack to get rid of this
+       shield, it would cost them AP. Tier 2.
+    *) I want an ability that makes the ENTIRE PARTY INVINCIBLE for one
+       turn. This would be a PRETTY DAMN HIGH COST, and it would force the
+       opponent to use their turn in ways aside from dealing direct HP
+       damage, such as afflicting my team with negative status changes or
+       buffing their team with positive status changes, or healing their
+       team, or setting up traps, etc. Tier 3. It only lasts one turn.
+    *) How about an ability that makes the each party member, individually,
+       invincible to the next attack they take. It's the same as the ability
+       two abilities up from here, but instantly hits every party member.
+       That would be a very large cost. Tier 3.
+    *) How about an ability that gives a single party member a 'reflect'
+       status change, which will deal any damage given to them back to the
+       opponent, but which also prevents any other positive abilities from
+       working on them. In fact, if an ally unit were to then 'buff the
+       whole team,' the 'reflecting' unit's buff would be sent to one of the
+       opponent units. On the other hand, this also means that, aside from
+       being invincible to damage, they're also invincible to negative
+       status changes, which is pretty powerful -- maybe too powerful. This
+       'reflecting' unit can't be attacked, it can't be healed, it can't be
+       buffed, and it can't be nerfed until 'reflect' wears off. We'll sleep
+       on this. Cool idea, but maybe way too strong.
+
+Let's get an over-all look at what this class is like so far:
+    *) It has abilities for buffing the defense of the entire team and
+       individual units.
+    *) It has an ability for sacrificing its own defense to raise the
+       defense of another unit.
+    *) It has abilities that give a single unit or the entire party the
+       ability to completely absord the HP damage of the next attack they
+       take.
+    *) It has abilities that makes the entire party or individual units
+       completely invincible for one turn.
+    *) It has an ability (maybe) that will raise a unit or the party's
+       resistance to attacks from enemy units of a certain type.
+
+What else do we need, if anything, for a class whose job it is to make the ally team more durable (to HP damage).
+
+Reflecting damage wouldn't work in this game, because the opponent can SEE that you have a 'reflect' status change. They're not gonna attack you. Unless the opponent only has moves that can hit the whole party, in which case they would need to incidentally trigger somebody's 'reflect'. I just don't see that really happening.
+
+nSpyer brings up the idea that 'reflect' isn't strictly a buff. It can also be considered a negative ailment, because you wouldn't be able to heal that unit or buff that unit. That's a really cool idea, but I'm not sure that it's for this class. Maybe it is. We'll consider that. What if a 'defense buffing class' DID have reflect, but it was at a relatively low cost. It would protect you from damage, sure, but it would also have a downside.
+
+What if we had defensive 'shield types' that, when hit, would restore some currency to the team. That sounds kind of cool, but the downside is that if you have this status change, who would attack you? Nobody. What if it was only a minor thing? And if it lasted more than one turn? I think I like this idea, and I want to implement it. Is it for this class? I think maybe?
+
+You could have a 'shield' that DOESN'T PREVENT ANY DAMAGE, but they give the team or a unit some kind of perk when that unit is struck. Maybe it's more for a 'trap' class? Is a 'trap-focused class' really a good tactical decision when you can only bring four units battle.
+
+Goodvibe mentions that a 'defense-raising unit' could not only raise the DEF of its allies, but also maybe raise their chance to evade for some amount of time.
+
+That's awesome, but it also gets me thinking that it could be spun off into its OWN class. Maybe that could be a theme as we design classes: some classes have a more gauranteed function in battle, and they could have a sister class which might be more BENEFICIAL but deals more with CHANCE.
+
+nSpyer reminds us that some classes and abilities will be based around CONTROLLING the way that the opponents act. What I've considered is the past is an ability that will LOCK OUT a unit from being tagged in for a turn or more. nSpyer mentions that maybe units could be 'cursed' to only attack a certain unit.
+
+But the problem with traditional 'aggro' draw, like you see in other party-based games, is that 99% of abilities will only target the opponent who's in the ring. You can't really implement 'aggro' when units outside of the ring can't be targetted directly for attacks. HOWEVER. As I say that out loud, maybe it means that any attack targeting the in-ring unit is redirected to an out-of-ring unit. You could have a tank that 'taunts' the enemy or the enemy-team and, when he's SWAPPED OUT, he's STILL the target for attacks.
+
+We discussed this earlier as a sort of "tank jumps in and takes the bullet for the guy in the ring" ability. It's basically a 'substitution' ability. The unit IN THE RING is temporarily INVINCIBLE to damage, but, whenever they WOULD take damage, a unit from OUT OF THE RING essentially jumps in and takes the damage for them.
+
+What's cool about this is that it could be a status change that only impacts ONE enemy unit. Like, maybe you afflict the most powerful enemy unit with a status change that makes it so that all of their attacks will only hit one specific member on your team. Or it could affect the enemy party.
+
+We could have berzerk and all kinds of cool status change.
+
+Ideas for other 'defensive' classes:
+    *) A class that draws aggro to it.
+    *) A class that gives the allies a PERCENTAGE CHANGE to neutralize
+       damage.
