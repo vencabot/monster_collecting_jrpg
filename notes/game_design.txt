@@ -1004,3 +1004,137 @@ Ideas for other 'defensive' classes:
     *) A class that draws aggro to it.
     *) A class that gives the allies a PERCENTAGE CHANGE to neutralize
        damage.
+
+
+02/21/19
+
+Kenny raised the idea on Discord of two different classes, both of which I think are interesting and worth exploring:
+    *) A direct-attacker class whose entire function (or a big part of its
+       function) is to pierce through defense. Maybe its attacks will
+       lower the defense of the target on top of doing damage.
+    *) A class which 'steals' or otherwise transplants buffs and nerfs.
+       What if a class could take the nerf OFF OF one of its allies and
+       move it to one of the opponents, or take a buff OFF OF one of its
+       opponents and move it to one of its allies. That's a cool idea.
+
+Let's get back to picking our units for battle. I picked a unit whose primary role is to raise the defense of my team and otherwise prevent direct HP damage. It's probably going to have (relatively) low ATK, DEF, and HP, itself, but high MP. Considering these attributes, what's an interesting idea for a secondary class?
+
+He's got low ATK, probably, so he's probably not going to be using his MP to attack the opponent -- and even if he had high MP, I'm not sure I'd want to have to choose between attacking and buffing. On the other hand, that's probably why it would be interesting.
+
+We have four units on our team. So, I've got a lot of other roles that need to be filled on this team. Should he also be able to heal? He wouldn't have access to the Tier 3 healing abilities, which makes sense, because that's not his primary role. Any turn that he's healing, he essentially can't be buffing. Or he'll be stuck in the ring.
+
+Keep in mind that we can have a variety of different 'healing' classes. Maybe healing as a tertiary class? Maybe some kind of negative status change class that could make the opponent even shittier at dealing damage to me? That has too much cross-over. Why would I pick one over the other?
+
+Considering that this class is based around making my team survive LONGER, maybe it'd be fun to give this unit a secondary class which slowly erodes the enemy team over time. Some kind of status affliction or something that affects the enemy team over time. Or maybe just a class that buffs my units in terms of atk or something along those lines as a secondary (so they'd be lacking the Tier 3 abilities).
+
+I think this unit's Tertiary Class should be HP healing, just to get that out of the way. It makes sense to me that a class with high MP and low ATK would be able to use some minor healing abilities.
+
+With def buffing and healing, we are really fucked if this unit is the last one on our team that's still standing, because it can't do damage at all.
+
+Why don't we go with some kind of gimmick where we're afflicting the enemy team with status changes that diminish them over time.
+
+Let's design a class that afflicts the opponent with status changes that somehow diminish them over time:
+
+Abilities for this 'poisoner' class:
+    *) Tier 3 ability which afflicts the entire enemy team with a low-
+       potency poison at a great cost.
+    *) Tier 2 ability which afflicts one enemy on the opposing team with a
+       mid-potency poison.
+    *) Tier 3 abiilty which afflict a single enemy with a high-potency
+       poison.
+
+Austin brings up the idea of a poison which damages the enemy unit whenever they take an action.
+
+Do we want this class to specialize in status-changes that directly, continuously reduce their HP under some condition, or do we want this class to specialize in status changes that weaken the enemy over TIME.
+
+I'm gonna say this right out: I don't think that a class which can inflict POISON, to DIRECTLY LOWER THE ENEMY'S HP, is thematically compatible with abilities that weaken the opponent in OTHER WAYS. So we don't need a class which can 'poison' the opponent but also can, say, 'lower its atk over time.'
+
+We don't need this class idea which generally 'fucks the opponent up over time.'
+
+Poison is a tactically interesting status change when done right. What if this class could inflict a special kind of 'poison' which lasts until the poisoner takes damage. What if there were, like, 'antidote gimmicks,' where this unit or the ally team could come up with ways to tease the opponent with an antidote.
+
+Austin brings up the idea that poison (and any other status change or dynamic) that's based around the enemy unit using an ability could have its effect scaled based on what tier ability they use.
+
+Here's what I'm getting from the chat: the more I hear the more I not only LIKE Austin's idea of having an ability that deals damage based on the opponent's actions, but I actually DO think that, thematically, it belongs in this class. This class would be based around inflicting HP damage indirectly. Rather than directly attacking the opponent, it sets up conditions where the opponent will be taking damage and it puts the anus of preventing the damage on the opponent's ability to satisfy the conditions to cure the status change. So that means that we gotta think about how POWERFUL these 'poisons' are so that the opponent can realistically cure or otherwise work around them.
+
+In a game like ours where status changes and 'dynamics' are SO powerful and SO integral to the second-to-second strategy, a status change like 'poison' which is 'okay' at best in most JRPGs could end up becoming way overpowered.
+
+So, speaking of balancing 'poison' in a game as fixated on status changes as this one, IS IT TOO STRONG to have pretty much ANY poison strictly last a certain number of turns. Because in that case, the opponent would pretty much NEED to have some ability or item that could directly cure that poison. Other types of 'cure conditions,' such as 'deal damage to the opponent,' or, 'hit an ally,' or, 'inflict the opponent with a status change' -- basically ANY other cure-condition would probably be more feasible than a hard "survive 4 turns".
+
+This makes me think about how status changes should be able to have MULTIPLE cure-conditions, right? Like, "deal 20 damage to the opposing team or survive 4 turns."
+
+Depending on the severity of the poison, it could be very tough to deal with. We have to consider these sorts of things for all status changes. Not every 4-man-team is going to have a unit that can directly cure or otherwise reduce the severity of all status changes.
+
+Kenny brings up the idea of a cure-condition (or other dynamics) which are based on rewarding the unit for not being used for some amount of turns. Maybe the poison is cured once that unit has gone 3 turns without being used.
+
+I'm gonna go on a small tangent, since we're talking about inflicting negative status changes (ailments):
+
+I'm really in love with the idea of having all of these special 'rules' have a tactical impact on battle.
+
+I love the dynamics. I love the cure-conditions for status changes. I love that 'status changes,' themselves, could be dynamic based on all of these rules that could apply to them.
+
+But here's what I've been thinking that's a challenge we're going to have to deal with, in terms of design: for any given status-change idea ("reduce HP over time"), there is literally an infinite number of rules we could use as a cure condition.
+
+Imagine a status change that lowers your chance-to-hit by "20%". That's a real basic idea for a status change. But when you consider how many different conditions there could be to CURE it, or even how many "trap conditions" there could be to TRIGGER it, you're talking about literally an infinite number of 'abilities' you could create based around this status change.
+
+I almost feel like we need some way to disassociate the 'status change' itself from the condition used to 'cure it' or 'trigger it', etc. But, from a UI standpoint and even from a game-design standpoint I'm not exactly sure how we'd accomplish this or if we'd really want to accomplish this.
+
+Dixx makes the point that, as a way of balancing the status changes, we could have their severity be somewhat random, and, likewise, the 'cure condition' could be somewhat random. It reminded me of an idea I had to have a class which casts a variety of status changes but the cure conditions are always fully randomized.
+
+Before we get too far, this is a problem with our design that I really want to address: how do we choose which status changes get paired up with which conditions considering that, with the way that our rule-system works, there's an endless number of conditions to choose from.
+
+Let's be clear about some language:
+
+When I say 'condition' I'm not talking about a 'status condition.' We're using the term 'status change' for those, right now. I'm talking about a 'cure condition' or a 'trap condition'. These are conditions that must be met before the status change goes away, or conditions that, when met, trigger the status change to activate.
+
+In most JRPGs, you cure 'poison' by using an 'antidote item' or an 'anditote ability'. I think that's boring, and so, in our system, status changes can have a huge variety of conditions that a team can meet in order for that condition to go away. And instead of having a class that can directly cure any status change, it might have an ability that reduces the severity of the condition (so, instead of having to deal 200 damage to the enemy team to cure your blindness, you only have to deal 50 damage after receiving this 'cure' from a healer).
+
+HereGoes brings up the idea of maybe having some kind of 'pair' or 'team' dynamic (maybe based around unit Types) that make certain interactions between them more beneficial.
+
+We also have a problem of variety (too much?) when it comes to SEVERITY of status changes. Do we need a FLEXIBLE WAY for the PLAYER to choose the severity of the status change they're inflicting. Some status changes will stack, so you can make them more severe by inflicting them more than once. Even then, we could create SO many different abilities that inflict status changes DIRECTLY at a variety of severities.
+
+Looking at 'blindness' again, you could have a Tier 1 ability that inflicts a -10% penalty to-hit. But you could also have a Tier 3 ability which inflicts a -40% (or higher) penalty to-hit.
+
+How do you choose which combinations are the MOST interesting and how do you avoid creating too many combinations.
+
+This is kind of a crazy idea, but I'm gonna throw it out there:
+    What if the classes / abilities, themselves, were somewhat randomized. When you capture a unit, maybe its abilities can vary within a certain window a variance. Maybe you could have two of the same unit, essentially, but their respective 'tier 3 blinding' abilities for their primary class could have different severities and different cure-conditions.
+
+    This would also solve a conceptual problem I've been having with whether or not it'd be interesting to allow the player to capture more than one of a single kind of unit. It adds a gatcha element.
+
+    Whether or not the 'randomness within classes' idea is cool, it is a big leap for our game design and it should be taken very seriously. But I think it's a pretty sensible solution considering our unique problem: too many options for severity and condition, but all of those options are interesting. How do you choose which ones to use when they're all so interesting and could make combat so much deeper, having these varieties of conditions. I think that having an element of randomness, where you could have two of the same kind of unit but they're powerful in different situations, against different enemy parties, because the cure-conditions they have on their status changes is different.
+
+    The only problem that I see with that is that we'd need to come up with a MECHANICAL way (because it's randomnized) to make sure that you don't get an overly-powerful pair of STATUS CHANGE and CURE-CONDITION.
+
+    Up to this point, I've been looking at 'abilities' as being strictly defined. What I'm proposing now is that each 'ability', even if it's under the same NAME and has the same basic function, and always occupies the same place in the class -- I'm proposing that this ability is UNIQUE because it's randomized within a given, balanced window of variance.
+
+    I'm gonna go even further: I like this idea EVEN IF we need to hard-code a variety of severities and conditions. Maybe not every status change will have access to every possible cure condition. Maybe they'll only have access to three or four variations that we would pick -- but the BENEFIT would be that a unit COULD have all of these cool options without us needing to literally create FOUR or more of essentially the same ability within the same class.
+
+    Dixx is right, though. I do think that this is something that, with the right design philsophy, would be relatively trivial to implement. However, let it be stated that we are definitely adding complexity, here.
+
+    Dixx brings up the idea that, for these sorts of 'random within a unit' variances, we could have it balanced in some way based on some attribute of the unit, if we wanted to. Basically, we could balance it so that a unit who rolls high ATTRIBUTES (HP, ATK, DEF) could be bent toward having weaker abilities. We could weight it that way.
+
+    I think what Dixx is talking about is how to define randomness for the encounters? Maybe what Dixx is talking about is that not EVERY ability within a unit's class would have its abilities' severity and cure-condition individually randomized. Maybe we'd just create a few different 'sets' that a unit could end up with.
+
+    What's cool about Dixx's idea is that you could essentially get two of
+the same exact unit if it randomly rolled the same 'size,' 'gender,' or whatever we're using as a SEED to define its moves. What Dixx is talking about rolling for a SEED for each unit, and then using that seed to determine the 'variant' attributes of its abilities. You don't roll totally randomly for every ability. Rather, you roll for this seed and then use that seed to determine all of its abilities. That way, you could have two of the same unit if it had the same seed.
+
+    The thing about this idea is that it doesn't really help us in terms of balancing these randomized classes. It's still totally random, because we're gonna be going through each possible seed to make sure that it's not too strong or too weak. It's kind of a cool idea because I am attracted to the notion that you could get two of the exact same unit based on this seed. That's kind of cool. On the other hand, when you're LIMITING the random possibilities, this way, I feel like you're risking DESIGNING a class, but then too many of the possible seeds make that class too strong or too weak. If every ability rolls individually, you have an infinite, essentially, number of combinations of EFFECTIVENESS.
+
+    Before we end the stream, I want to clarify more about Dixx's idea for 'seeding' units to pre-determine their variant abilities. What he's talking about is having some abilities take their variance from a PARTICULAR seed, and others from a DIFFERENT seed, and maybe the unit's various seeds are even balanced against EACH OTHER. So maybe a unit can't have a really 'godlike seed' for all of its seeds. In his example, he mentioned that some abilities might be based on 'height,' and others might be based on 'weight', etc., etc., but if 'weight' makes certain abilities 'better' for that class, then it could haven't really high height AND weight. When we're creating the unit, we would balance those seeds against each other.
+
+    That does make pretty good sense to me when we're talking about the SEVERITY of the status change and the SEVERITY of the condition. But ideally, I would like for the nature of the condition (based on a number of turns, or based on swapping the unit in and out of the ring, or based on dealing so much damage to the opposing team) to be more random, because I don't think that any of these are strictly BETTER than other conditions. They're just DIFFERENT and would play out differently in different scenarios, against different teams.
+
+    But Dixx is right: when we're talking about SEVERITY of the status change, itself, and the SEVERITY of the condition (how MANY turns do you gotta wait), we are strictly talking about making that ability BETTER. So you could basically roll a WORSE version of that ability. And so maybe balancing that against some seeds which are balanced against EACH OTHER would be a way to prevent a unit from rolling as COMPLETELY TRASH or UNBELIEVABLY AMAZING.
+
+    Let's also, before I end the stream, remember that our abilities also have 'costs' which could be somewhat random in their severity and their nature.
+
+    Dixx also goes on to clarify that, MECHANICALLY SPEAKING, in our code for how we balance these abilities against the seeds, having a HIGH or GOOD seed could actually negatively impact other abilities, to some extent. That way, we're kind of ensuring that a unit would be really GOOD at some things and not as good at other things.
+
+    It's a pretty complex mechanism that we're going to have to work out in more detail later, but I think that Dixx really hits it on the head when he conceptualized for us a way to randomize a unit's attributes but also keep them somewhat balanced. This is almost certainly a better way, though more complex, to go about randomizing within a class rather than just raw-randomizing every individual ability. Because, in that case, you would definitely end up with some units who roll HIGH in a LOT of abilities or super LOW in a lot of abilities. It would be really difficult if it were possible to balance a unit where every ability is randomized.
+
+    I'm gonna go out on a limb and say that we came up with a lot of solutions, today, for some very abstract problems that we were destined to have. We didn't get as far as I hoped we would with our 'mock battle' as a way to design new classes, but with what we've determined today regarding how abilities can vary, it will be MUCH EASIER in the future to define classes. Because we won't need to over-fixate as much about the exact severity of each ability or its exact cost or cure-conditon or whatever.
+
+    I'm gonna make note that what's also cool about this is that we can IMMEDIATELY WRITE-OFF a bunch of classes which our game wouldn't have necessarily benefited from.
+
+    A class idea I had was a class that's entirely based around "weakening the opponent over time." "All of its abilities would lower some enemy attribute each turn." That COULD still be a thing, but it's not as important or interesting when you consider that, in GENERAL, status changes will have their cure-conditions randomized to an extent. To me, that's MORE interesting. I don't think you really want to base a class around the CURE-CONDITION for its status changes.
