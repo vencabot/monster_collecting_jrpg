@@ -1,0 +1,9 @@
+Vencabot's Team:
+    Unit 1:
+        Defense Buffer, Pinning, Poisoner
+        low ATK, mid DEF, mid LP, high MP, low-mid HP
+
+Adversary Team:
+    Unit 1:
+        ATK Buffer, Piercer, HP healing
+        mid ATK, low DEF, mid LP, mid MP, high HP

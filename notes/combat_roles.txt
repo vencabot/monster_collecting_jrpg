@@ -1,0 +1,66 @@
+All class names are works in progress.
+
+Defense Buffer:
+    *) Raising defense of ally units
+    *) Granting temporary invincibility to damage
+    *) Can sacrifice its own defense to raise the defense of an ally
+    *) Some invincibility only lasts for 1 attack
+    *) Other invincibility only lasts for 1 turn
+
+Status Change Stealer:
+    *) Moves buffs and afflictions between characters in battle.
+
+Pinner:
+    *) It will prevent one unit on the enemy team from being swapped in.
+    *) At a RELATIVELY LOW COST, it can target the unit in the ring so that, once it leaves, it can't come back in until cured.
+    *) At a VERY HIGH cost, it can target a unit NOT in the ring to prevent it from entering the ring until cured.
+    *) These abilities are going to be quite costly. Any class which DIRECTLY CONTROLS the opponent's OPTIONS on their turn is going to be very powerful in a game that's based as much around tactics and synergy as this game is.
+
+Poisoner:
+    *) Specializes in abilities that deal HP damage over time.
+    *) Some of its abilities may be traps that the opponent must avoid
+       springing.
+    *) May afflict individual units or the enemy party, based on tier and
+       cost.
+    *) Poisons vary in potency and how hard they are to cure.
+    *) These 'poisons' might only deal HP damage under certain circumstances
+       (unit IN the ring for a turn, unit NOT in the ring for a turn, unit
+       attacks DIRECTLY on this turn).
+
+ATK Buffer:
+    *) Raise the ATK of a single unit or multiple units.
+    *) Give a unit a % chance to deal extra damage, but this buff lasts
+       UNTIL this damage is triggered.
+    *) Maybe it can give a unit an even GREATER BOOST, but at some cost to
+       that unit, be it having lower DEF, or it takes damage when it
+       attacks. It's a BIG boost, but at a cost. You could at this 'cost'
+       group of abilities as making your team more aggression-oriented.
+
+HP Healer:
+    *) Can heal HP immediately or inflict a status change that heals over
+       time.
+    *) May also be able to set up "reverse trap," on ally units, where HP is
+       healed when a certain condition is triggered.
+    *) This same class would also revive downed units.
+    *) Tertiary abilities could be any of the above, but at a very low
+       potency, so the amount healed wouldn't be MUCH. Or it could be a
+       relatively big heal but a high cost.
+    *) Maybe even sacrifice own HP to heal.
+    *) What if there was a class whose tertiary was to revive, and that's
+       all it could do. Maybe a 'reviver' class?
+
+Attackers that specialize in big damage over many hits?
+Attackers that specialize in fairly high damage over single hits?
+Healers that can reduce the duration of negative status changes.
+Cheerleader class that can raise the duration of positive status changes.
+Manipulator class that can raise/shorten the duration of any status change.
+Dodger class that can give allies a % chance to dodge.
+Berzerker class variants of attack classes that have a % chance to miss.
+Piercer class whose abilities typically ignore defense.
+An attacker that wounds itself, either for MP, HP, LP, etc., to do big damage.
+Pinning unit which prevents the enemy from using a unit they want to use.
+Pinning unit which prevents the opponent from swapping characters with some penalty. In that respect, it sets up traps.
+What about a class which limits the opponent's use of their primary or secondary class? That seems really, really powerful; it would be on a very limited basis.
+How about a 'reviver' class which doesn't really heal HP directly, but its reviving abilities are really good.
+
+All of these classes / roles may end up bleeding into each other or taking on other functions, etc.

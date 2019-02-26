@@ -1138,3 +1138,86 @@ the same exact unit if it randomly rolled the same 'size,' 'gender,' or whatever
     I'm gonna make note that what's also cool about this is that we can IMMEDIATELY WRITE-OFF a bunch of classes which our game wouldn't have necessarily benefited from.
 
     A class idea I had was a class that's entirely based around "weakening the opponent over time." "All of its abilities would lower some enemy attribute each turn." That COULD still be a thing, but it's not as important or interesting when you consider that, in GENERAL, status changes will have their cure-conditions randomized to an extent. To me, that's MORE interesting. I don't think you really want to base a class around the CURE-CONDITION for its status changes.
+
+
+
+02/25/19
+
+We just made a note about the possiblity of a healer class that can reduce the duration of 'negative status changes,' but that would imply that we always know which status changes are 'negative.' With how much our gameplay is based around synergy, what may seem like a nerf may end up being a buff. So maybe Kenny's idea makes more sense: look at status changes AGNOSTICALLY and maybe have one class that extends or shortens status change duration.
+
+Or we could keep it simple and give 'healer' classes the ability to shorten durations of traditionally 'negative' status changes and leave it up to the player to exploit that in the case that this negative status change might somehow boost the party due to a Dynamic or something.
+
+Maybe many classes have variants which are more POTENT but have a % chance to fail.
+
+Because we haven't completed many (or any) mock battles yet, we haven't really nailed down just how specific these 'roles' are going to end up being. We've mused about this before, but let's be explicit:
+
+*) Every unit is going to have the abilities of 3 different classes, so, even if each class is really, REALLY specific, the unit may end up being somewhat flexible.
+
+*) We want to strictly control how flexible any unit is, tactically, to encourage the player to regularly use different team members.
+
+*) Depending on how LONG we expect for combat to play out, each match may only comprise so many turns, in which case you could almost think of each class as being primarily a couple of abilities.
+
+*) We have 4 units on the battlefield, and each one has 3 classes. I almost feel like each 'class' doesn't really need a lot of variance within it. Basically, you could almost think about each class as only doing '1 thing,' and the variety in its abilities is a few different ways to go about accomplishing that 1 thing.
+
+*) The idea of a 'status affliction' class MIGHT NOT MAKE SENSE in the sense of giving it a huge variety of afflictions to cast on the opponent team. Within our model, it might make more sense to have a 'poisoner' class and a 'blind'er' class and a 'paralyzer' class. I don't think you really need a class that can inflict every kind of negative status change; you're probably only going to use one or two of them per battle. That's what I mean when I talk about, "how flexible do individual classes need to be".
+
+
+To design a UNIT with 3 classes, you kind of have to think outside of the box, and I'm having difficulty with that. The benefit is that, when you're PLAYING the game, you don't have to do this part: the designing of the units. You're just GIVEN units and you have to choose from them. I think that'll be fun.
+
+That being said, as we COME UP WITH UNITS, I'm finding it difficult, already, to marry classes together in interesting ways. I picked, for my first unit, a unit that can raise the defense of my team. What I'm struggling is what its secondary class should be? 
+
+The problems I'm having are these:
+    *) The secondary class can't synergize with the primary class in a way that makes this unit too strong.
+    *) The secondary class's abilities won't be used on a turn where this unit is, instead, using its PRIMARY abilities. When are these gonna get used?
+    *) These abilities have to compliment the statistical attributes of whatever unit we're using.
+    *) If they compliment the attributes TOO much, why are we using these secondary abilities instead of our primary ones?
+    *) The whole idea of the secondary class is to say, "This unit's PRIMARY ROLE in battle is effectively dictated by its PRIMARY CLASS. However, combat is dynamic -- the enemy might pull an UNEXPECTED STUNT -- and so this unit may need to take on a secondary role. So, they have these secondary abilities that give the unit a bit more leeway regarding their function in battle.
+    *) Like, you're picking a 10-unit deck before you enter a dungeon. You know that, throughout the course of that dungeon, your units are going to become increasing Exhausted. Furthermore, some might fully consume their MP. Some might be removed from the deck by losing their LP. So, there's going to be times where you NEED to use your units' SECONDARY CLASSES as their PRIMARY ROLES.
+    *) You have to make decisions about who you bring into combat based on not only who your OPPONENT is adding to their team, but also based on what units you have available to you. That means compromises, and compromises become more interesting when you consider that units have secondary and tertiary classes from which they can draw abilities.
+    *) So, considering that we're limiting 'deck size' to 10, when considering designs for units, we don't REALLY need to consider that the PLAYER might want to use abilities from ALL of the unit's classes within a single battle. We could consider that the unit's 3 classes might make it a more flexible pick for what NARROW ROLE it might play in the immediate battle. A unit might not mix and match between its abilities in the course of a single battle, but it may be brought in at the start of a fight just to exploit its secondary class. In that case, it wouldn't have access to the TIER 3 abilities of that class, but, when the going gets tough, maybe the leader has to decide that it needs to exploit at least the Tier 2 abilities of that class -- and because that's the role it's filling in combat, there really isn't enough AP per turn for that same unit to exploit its PRIMARY class.
+
+Because you only have 10 units to choose from for any given battle, and they're going to be Exhausted. Or maybe you want to have a GREATER COVERAGE of roles AVAILABLE to you at the start of a battle, so you can effectively have 20 different roles available to you if you consider that 10 of those roles are going to be lacking their Tier 3 abilities.
+
+So maybe that's a healthy way to look at secondary classes: you might not ever use the Primary class and the Secondary class in the same fight, but it does give you some tactical flexibility regarding what role a single unit can fill when chosen to be a part of some battle's 4-man team.
+
+
+
+Panders brings up the idea that certain classes may have different ability affects because they're dependent on attributes of the unit that the class belongs to. For instance, maybe some abilities afflict different status changes based on some attribute of the unit using the ability.
+
+Panders brings up that there's a compromise to be made between choosing units for your deck that have BROAD ROLE COVERAGE and those which individually have good MULTI-CLASS SYNERGY. For long, highly tactical fights against bosses or whatever, it might make sense to pick 3 or 4 units whose abilities, across all of their classes, you intend to make use of. But for long dungeons with a lot of enemy variety, it would make sense to fill your deck with enough classes, be they primary or secondary, to cover a lot of different situations.
+
+So this idea makes it a bit easier to come up with secondary classes for units, because, in many cases, it might be TRIVIAL what the combination of classes is. In my example, because I'm picking FIRST, I'm choosing this unit EXPLICITLY to exploit its primary class as a defense-buffer. That being said, I may never use its secondary class in this fight, and, as game designers, maybe we don't really need to THINK about how every fight will have a unit using abilities from all of its classes. Because I'm choosing unit EXPLICITLY to use its PRIMARY class, maybe it's not super important right now what its secondary class is. There will come ANOTHER TIME where I pick this same unit EXPLICITLY to exploit its secondary class, but that day isn't today.
+
+My unit has low ATK and high MP. It has middling DEF. We'll give it a secondary class that isn't about dealing direct damage to the opponent.
+
+How about we talk about an idea I've had for a class which PINS an enemy unit so that it CAN'T enter the ring for some amount of time.
+
+Panders mentions that we could come up with a system for balancing unit growth when we're designing units. We could limit the number of 'points' that a level 0 unit can have in their attributes, where 1 is terrible, 2 is passable, 3 is above average, and 4 is excellent. With a 10-point limit, we could prevent any unit from having high attributes in every area.
+
+The downside of this is that it sort of undermines our ability to balance units by giving them negative or positive Dynamics.
+
+I feel like, over-all, the numerical, statistical attributes that a character has isn't going to be as important in this game as it is in some other JRPGs.
+
+Now that I've picked the first unit for MY team, my opponent has a few considerations to make:
+    *) They could pick a unit that's meant to directly counter my unit.
+    *) They could a unit that begins setting up their favored team synergy.
+    *) They could try to find a balance between those two options.
+
+So basically, in this case, the enemy leader can see that I probably want to buff my team's defense. But they also have to consider that, whoever they pick, I might be able to pin them out of the fight. But if I pin them, I can't buff my team's defense. So, they could INTENTIONALLY pick a unit that I'd ESPECIALLY want to pin, and then they could effectively do a few different things:
+    *) By FORCING me to PIN (use this first unit's secondary class), I have
+       less MP, AP, whatever, to do my buffing.
+    *) If I DO want to pin AND buff, that means that almost certainly this
+       unit with mid-DEF and mid-HP is going to be stuck in the arena a
+       lot, because I won't have enough AP to swap very often.
+
+Maybe a big part of this game's tactics will be to try to force your opponent to use certain abilities to limit their other tactical options.
+
+HereGoes brings up the idea that maybe some status changes will only really take affect after some ability is stacked a certain number of times, so the onus of STOPPING the opponent from hitting them with this ability or whatever falls on the player.
+
+We've talked in the past about how a lot of the tactics in our game is going to be based around implementing special rules. Some RPGs are very straight-forward with units dealing direct HP damage to each other repeatedly until the fight is over. But in our case, we've put a lot of work into developing ideas for 'Dynamics' which are special RULES that the leaders can effectively bring into battle, and also making STATUS CHANGES much more involved than in other JRPGs, to the point where they do basically become just 'additional rules.'
+
+The whole idea of the turn-to-turn tactics would be to DIRECLTY HIT YOUR OPPONENT while also trying to control their options and liberate your options by controlling the RULES that are being applied to battle.
+
+We've talked about how status changes will have unique 'cure conditions,' and we've talked about how some will have 'trap conditions,' where they can be AFFLICTED, but they don't actually TAKE EFFECT until the trap condition is met.
+
+In HereGoes example, maybe the 'trap condition' would be that the unit is hit repeatedly with some SPECIFIC ability or some KIND of ability or something like that. Then, you could sort of have situations where units are 'targetting' an enemy unit in a specific way as a means to cripple them. That adds some interesting tactics, where the afflicted party has to either remove the at-risk unit from the ring or limit the opponent's ability to target them the way they want to.
