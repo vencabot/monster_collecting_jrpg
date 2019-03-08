@@ -1350,3 +1350,441 @@ We have to make the note, before we call it quits, that a card game is MEANT to 
 Up to this point, we've considered balancing the game in such a way that the player can be expected to ALWAYS win, even if it's demanding. Maybe that's a fallacy. Maybe it makes more sense to go the 'card game route,' where, you're fighting an opponent of equal resources and skill, and it's highly demanding, and there's a luck element, and for all of these reasons, sometimes, you ain't gonna win. If you try to balance the game in such a way that the player always has a HIGHLY RELIABLE probability of victory, even if we HYPOTHETICALLY try our DAMNEDEST to make that victory difficult for them, maybe that's just not humanly possible. Is it possible to make a game where the player is always on the bleeding edge of defeat but will never necessarily lose. Probably not.
 
 so maybe we need to re-examine what LOSS means in our game -- and maybe, once we accept that the player can and will lose, we'll be more comfortable introducing some randomness to make it more exciting. Maybe, at that point, randomness adds excitement more than frustration -- because loss becomes less frustrating.
+
+
+
+
+
+03/04/15
+---------------------------------------------
+We're talking about death, today -- in video games, I mean. Let's put down some notes right off the bat:
+
+*) In a game that's meant to be stressful, death has to carry some kind of frightening penalty.
+
+*) In a game where you're meant to be always on the verge of defeat, you're GONNA get defeated -- maybe even a lot. Maybe a lot more than in many other games.
+
+*) If you're going to be suffering defeat, repeatedly, we can't make the penalty for death too high -- or, if we do, we need to balance that penalty against something satisfying and interesting (or otherwise "rewarding") for the player.
+
+*) How do we strike a balance between making death something that the player DOESN'T want to happen but also making it REWARDING.
+
+Let's talk some basic ideas and tropes regarding death in video games.
+
+*) HereGoes points out that, pretty much whenever you die in a video game, you lose some amount of progress. In classic platformers you would either get sent back to the start of the stage, or to a checkpoint -- or in some extreme cases, back to the start of the whole game. In classic JRPGs, you would often get sent back to your last save. In modern JRPGs, you're often just sent back to the start of the fight that you just lost -- but you lost the progress you'd made in that fight. In Dark Souls, you lose the progress you made cutting your way into the dungeon. You pretty much always lose progress.
+
+*) If you use items during battle, they're lost for good. I'm not sure how I feel about that -- in fact, I'd be inclined to give a player their items back. HereGoes asserts that you "shouldn't" get those back. I recognize it as a trope that you don't get your items back, but it's that reason -- I feel like -- that I've never used items in any RPG. I feel like using items is a big risk, because you don't get them back -- and, at the same time, it's usually very reasonable to win without using them.
+
+*) HereGoes mentions kind of a brilliant formula -- an insight into how to properly design items. He points out that there's a sort of pain (maybe an exciting pain) when you die after a long fight and you've lost the items you've been using, but you can offset that by giving the player lots of items. In fact, you could say that you're ENCOURAGING the player to take RISKS with their items if you give them LOTS of items.
+
+*) In modern Roguelikes (or roguelites), when your protagonist dies, you lose all of the items you've collected and usually all of the traditional 'EXP,' but you somehow empower your next run so that, not only have you made progress, but there's also a sort of reward for dying because stress is down, again (enemies are easier). You can use your new knowledge of the game to play more efficiently the next time through. So, although death is painful, you're very much encouraged to jump back in.
+
+****) Side note: HereGoes mentions a kind of interesting idea for a post-battle reward: the concept of a 'boost' that the player can choose from to make their ongoing progress easier or otherwise more rewarding.
+
+
+
+
+Let's talk about what we KNOW about death in OUR game, or ideas that we've otherwise suggested and settled on in the past:
+
+
+*) When a unit faints in battle, they lose 1 LP point -- and when they lose all of their LP, they die semi-permanently. They can't be revived any time soon; that unit is effectively 'lost'. LP can only be restored by resting 'in town' or 'at a save point' or whatever. You essentially can't restore it in dungeons.
+
+*) I had a thought that, if your whole team is wiped, every unit you had on that team loses an additional LP. But you can keep pressing into the dungeon. You bring a deck of 10 units into the dungeon, and you only carry 4 into each fight. If you were to get wiped in a battle and all 4 of your units had 3 LP before they died, they lose 1 LP from the faint and then another LP from the wipe. They're all still alive after the fight. You can keep pressing into the dungeon. Even if they all had 2 LP before they fainted, they'd lose 1 LP from the faint and 1 LP from the wipe which would destroy all of those units -- but you'd still have 6 units in your deck to keep exploring the dungeon with.
+
+*) I feel like units need to be destroyed to raise tension in battle and to encourage the player to not rely on the same units forever.
+
+*) Some people hate durability in video games. Some people hate being 'forced' to stray from their favorite tools in a video game. Me and my brother always have disagreements about the importance of taking things away from the player. To him it feels limiting and as though it takes away the parts of the game that he LIKES to force him to spend time with aspects of the game he doesn't like as much. To me, when I have a winning team or a winning formula or I have a strategy that's working well, I will use it to a fault and I'll be bored unless the game pressures me into changing it up.
+
+*) On this very topic, I've written essays about the two kinds of gamers: ALPHA gamers and BETA gamers. Alpha gamers often times will choose their UNITS or their WEAPONS or their SKILLS based on some kind of aesthetic ideal, to fulfill a power-fantasy. They want to use what's "cool" and they prefer when a game allows them to do that, even if it means playing at some disadvantage. BETA gamers are people who pick their tools in a game based on what's most efficient, and I feel like to make a game more fun for them the game has to be challenging enough that this 'most efficient' strategy is dynamic. If a game is easy enough for an ALPHA gamer to be able to get through it using WHATEVER tools they want, it'll be too easy for the beta gamer who wants a consistent challenge that asks them to examine their tools and always use the best ones for the job.
+
+*) HereGoes points out that if he wants to make a team of all Big Monster Boys, he shouldn't be limited in that. I disagree completely. 100%. You can't get through every challenge in the game using only one party; the game's not gonna be engineered that way. You're gonna need to look at the tools each unit has and look at the tools that the opponent party has and very carefully pick your units to be able to defeat the opponent. I really want the game to be engineered such that the player has to look at the units that they have available and make very careful, deliberate decisions about which ones they use so much that aesthetics is virtually a non-factor.
+
+*) In a game with potentially 100 different units, I would like for the game to be engineered such that the player has to find a use for a large percentage of them. That's why we've discussed an 'exhaustion' mechanic, where units sort of wear down in durability throughout a dungeon. That's why we discussed having units be 'destroyed,' if only a semi-permanent basis, so that they could somehow be revived at some great expense -- so that players wouldn't be parted from units that they've developed some kind of sentimental attachment to but so that their favorite units would be removed from play for some extended amount of time. The idea is that the player should be constantly shaking up their team to meet the needs of the next challenge. I don't want for players to feel like they have one core team of units and that's their team.
+
+*) LP is a currency that each unit has on top of their HP and their MP. HP is traditional: as long as it's above 0, the unit can act. LP is a bit less traditional and I'm lifting it more-or-less directly from the SaGa franchise (it's also used in Steamband). It represents 'life points' or 'wound points,' and the idea is that, once a unit's LP hits 0, they can't be revived any more (with a phoenix down or whatever). In Steamband, once your LP hits 0, it's game-over. So a unit might have 400HP and 5LP. When a unit's HP hits 'zero,' if you want to keep using them in the fight, you need to revive them with some resurrection magic or by throwing a phoenix down or whatever -- but, on top of that, they lose an LP when their HP hits 0. So, you can only revive them so many times. On top of that, some VERY RARE attacks may have a CHANCE to deal LP damage directly. Or, in a game where random chance is minimized, it might just be a very rare, super-expensive attack that can only be used once per battle or whatever that directly reduces LP. In our game idea, I've put forward an additional consideration regarding LP: once a unit's LP hits 0, it's "destroyed" and can't be used for some extended period.
+
+*) If a unit is low on LP before a fight starts, you can preserve that unit by not using them. Because you're picking 4 units from your party of 10 to enter any given encounter. So if you're really attached to a unit, you can take measures to preserve its LP. On the other hand, there would hopefully be times where your units are low on LP but, when you see what sort of team the enemy is using, you decide that it's worth the risk to bring in a unit who may very well be destroyed. In fact, there might even be times where you KNOW that a unit is going to be destroyed, but you need its abilities that badly. You kind of have to sacrifice that unit.
+
+*) The idea with LP is that you wouldn't typically lose it all it one fight. It, along with 'exhaustion' (durability) would represent how your party weakens over the course of a dungeon. The deeper you are into the dungeon, the more careful you have to be because your party's attributes are lowered by their exhaustion and their LP may be getting kind of low.
+
+*) I kind of like the idea of allowing the player to continue exploring the dungeon after a wipe, because they DO have 10 units and only 4 of them just got 'wiped'. I'm not 100% sure that I want to have there be an additional LP penalty for getting wiped -- I think it's kind of interesting, but it might be a bit too harsh. But I mean, you just got wiped; maybe it's suitable to have a somewhat harsh penalty.
+   In any case, one thing that we definitely need to consider is how to make death more rewarding. Let's assume for now that, when your party is wiped -- obviously, all of your units have lost at least 1 LP because they all fainted, and maybe they all lose an additional LP as a penalty for the wipe. In either of those cases, you're still free to keep exploring... but would you? Would you want to? Why would you want to? One thing I can say, for sure, is that, if we're going to charge people an additional LP for wiping and then allow them to keep exploring, maybe our game needs a baked-in mechanic for teleporting to a place they can rest. Because it'd be frustrating to be stuck deep in a dungeon with only 4 units, all of them at high exhaustion and low LP -- you can't get out, supposing that there are random encounters.[
+
+   In most games, the sensible thing to do would be to just send the party back to a place where they can rest after they get wiped. But maybe they DO want to keep pressing on, and maybe, even after the wipe, they still have all 10 of their units available. Or maybe they do only have four units by they think they can let it rock with those 4 units. So maybe there should be a way for a player to 'retreat'. They lose all of their progress in the dungeon but they won't lose any units on a semi-permanent basis because they were trying to escape the dungeon and got into a bunch of encounters that caused their team to die.
+
+*) I think that we've alleviated the stress of death, somewhat, by allowing the party to continue exploring and keep fighting after a wipe. I just realized something. Maybe having the whole team faint, and, by extension, they all lose that LP for having their HP hit zero -- maybe that's penalty enough. Maybe we don't need an additional 1LP penalty to the whole party for a wipe, because they all lost an LP. Maybe that's the penalty. Maybe there is no other penalty for death. That makes a lot of sense to me.
+
+*) In a game that's meant to be as DIFFICULT as this game, your units are going to need every LP they can muster. So, if you want to clear a dungeon, you want to keep as much of your LP as you can. Maybe, if everyone on your team dies, you're fine. You just wake up outside of that fight and nothing has changed except that you incur an 'exhaustion' penalty (like you do after every fight) and, since your whole team fainted, they all lost at least 1 LP.
+
+*) Panders points out that we could have an exhaustion penalty for wiping, which would be more forgiving than an LP penalty (which could destroy units that wouldn't have otherwise been destroyed). But now that I've verbalized the preceding idea, I'm not 100% sure we really need an additional penalty for wiping, be it exhaustion or otherwise. But again, if we did want a penalty for a wipe, exhaustion would make more sense, I think, than my previous idea of penalizing everyone 1 additional LP.
+
+*) I'm happy with that, but, on the subject of death and loss in video games, this is probably the time to talk about what it means for a unit to be 'destroyed'. When a unit hits 0 LP, it's 'destroyed'. It's DEFINITELY removed from the deck. The question becomes, how do you get that unit back. There are a few options.
+
+*) The unit only comes back after the player gets a hard rest. To me, that's too forgiving, but it would at least effectively remove that unit from the deck for the rest of that dungeon. That being the case, we wouldn't even really need an explicit 'destroyed' status, because a unit which has zero LP couldn't be revived, anyway -- and they get their LP back after a hard rest. So, there is no concept of 'destroyed' in this situation. What's cool about this idea is that we could afford to be a LOT more liberal with abilities which directly reduce LP. It would still be a very painful and rare thing to lose LP directly, but if the worst-case scenario is that a unit hits 0 LP and they can't be used FOR THE REST OF THAT DUNGEON RUN, that's not the end of the world. The advantage of having a SMALL penalty for 'destruction' is that we can play with LP a lot more.
+
+*) We already know that you can only swap units out of your 10-unit deck at a hard rest. And then, before each battle, you pick 4 units out of your 10-unit deck.
+
+*) We talked about how units have one piece of 'gear' permanently bound to them. This equipment or whatever would essentially be what you 'caught' the unit in (like a Pokeball), and once the unit comes onto your team, this equipment can't be changed. This gear gives the unit their Tertiary class (which means that you can sort of control the tertiary class of your units) and it would also affect their growth (so you have some small control over their attributes, as well). It may also affect things, such as imparting a Dynamic of some kind.
+
+*) What if, when you died, this piece of gear was destroyed. When you hit 0LP, I mean. And then, when you wanted to 'revive' that 'destroyed' unit, you would need to provide a new piece of gear for it.
+
+Right away, that has problems. For instance, if you got a BETTER PIECE OF GEAR, you'd be encouraged PRETTY EXPLICITLY to just intentionally destroy that unit so that you could change its gear. This defeats the purpose of that piece of gear being permanently affixed to the unit.
+
+*) Let's talk about a benefit of having a HIGH cost to destruction. If the unit can be 'revived' at a hard rest, that's a very LOW cost of destruction, and it means that players can SACRIFICE units more often (which is cool), and we can play a lot more with LP (which is cool). On the other, a benefit of having a HIGH cost is that we want for players to have to swap units around in their deck. If a unit can be resurrected just by getting a hard rest, they're never really removed from the 'deck'. Just during that dungeon. With a low-penalty, there's never a situation where you're at your bed and you have to fill a spot on your deck because one of your units got destroyed.
+
+*) When you enter a dungeon, you have 10 units that you're carrying with you. When a fight starts, both players roll for initiative and whoever wins gets to pick their monster second. And then both players pick their units, one at a time, from their deck. The idea is that, if you win initiative, you can counter-pick your opponent from the units in your deck. And then, obviously, in battle, only one unit is in the ring at a time, so you have to swap units in and out of the ring from the 4 units you brought into that fight.
+
+I think HereGoes complaint is that you can't swap in another unit from your deck during a fight? I don't see how swapping units mid-fight would work.
+
+Both the ally team and enemy team have four units in the battle. They both choose those 4 units before the battle from a deck of 10 available units.
+
+Let's say that you've caught 100 monsters. Before you enter a dungeon, you pick 10 of those monsters to take with you. Before each fight, you pick 4 of those monsters to fight with you. So you have flexibility regarding who you bring into each encounter (to counter-pick your opponent), but that flexibility is limited to the 10 that you brought -- you can't just pick 4 units from your entire menagerie of 100 monsters. You pick those 4 from the 10 you brought into the dungeon. The idea is to encourage the player to create a dynamic within those 10 units that make them flexible with which 4 are chosen in what fights. And also, by limiting the in-dungeon roster size to 10, we can give each unit durability, so that you can selectively NOT use certain monsters to keep them fresh.
+
+The way that pre-battle starts is that, if I got initiative, I could see which SINGLE unit they've picked. Then I can pick a unit from MY team. Then they see what unit I picked and THEY pick their SECOND unit. Then I see what unit THEY just picked and I picked MY second unit. Until we both have 4 units.
+
+I think what HereGoes is saying is that he doesn't want to have to pick 4 units before each fight. That's too much work.
+
+I think that having a roster of 10 from which you pick 4 is good considering the durability. It's good considering that different units have specific functions; not every unit is good for every task. In fact, each unit is really only good for one or two tasks. We have two options:
+
+1.) Youi sort of have to let the leaders see each other's teams so that they know what sort of units they need to compete in that battle.
+
+2.) You go the route of making each individual unit much more flexible, which is what I'm really trying to avoid. I feel like, in most JRPGs, units are much too flexible and that's why you don't ever need to change your units.
+
+In Persona, and in Breath of Fire IV, you have 3 units 'in the ring' (they're all able to act and they're all vulnerable. In Pokemon, and in our game, we only have 1 unit in the ring), and you have some number of units OUT of the ring, and you can swap them in and out more-or-less at will. Our game idea isn't so different, except that we only have ONE unit in the ring, and you can't swap out to your ENTIRE TEAM -- you only have 3 other units 'in the back row'.
+
+The idea already is that you have ONE unit in the ring, and you have three units 'in the back row' which you can swap to at will.
+
+By HereGoes' recommendation, we could allow the player to only bring 4 units into the dungeon. Then we'd have no 'deck' and all of the units on the team would be swappable in battle.
+
+The other way we could do this would be to have our deck of 10, and then have one unit in the ring and 9 units in the 'back row'. Then, you could swap the unit in the ring for any of your 10 units, and, in every night, you would need to knock out 10 units to win, and you'd have 10 units worth of flexibility in every fight.
+
+The hope with the pre-battle 'draft' is that it would be, itself, pretty interesting and, of course, a MAJOR part of the strategy.
+
+If they pick a unit that's a status-afflicter, I might want a unit that can cure status changes. If they go for a couple big attackers, I might decide that, in this fight, I need a dedicated tank. And then the idea is that, when the fight actually starts, you sort of have to utilize your team's dynamic to surprise and defeat your opponent. Picking your four units from your deck of ten should be an exercise in strategy. Because each of your ten units is not suited to every purpose. If you just brought in the same four all the time, there would be many situations they couldn't handle. So, by giving you 10 to choose from, you can be prepared for a variety of situations -- and you could, when creating that deck, decide how specialized you want to be versus how flexible you want to be. In either case, you don't have the flexibility of your entire collection of 100 units. It's a preparation game. It's a game of looking at your 100 and thinking about what situations you're likely to run into in the next dungeon. You pick 10 to suit those situations and then, as those situation arise, you pick the 4 that are the most apt to handle it -- or you pick 4 that are able to handle it while still preserving the LP or exhaustion of units that you want to save.
+
+It does slow down the second-to-second trading of blows, but this is a game of strategy and I don't think it's too much to have a phase before each fight where you are having a battle of wits with your opponent as you're picking units. It's a strategic back and forth.
+
+*) Panders brings up an idea where, instead of seeing what the enemy is PICKING and NOT being able to see their deck, we instead see their DECK but don't see what they're PICKING. That's a really cool idea; it strikes a different balance between the 'counter picking' and the deck-preparation aspect. It adds another level of meta to preparing your deck at your hard-rest.
+
+It definitely would make the fights less-predictable. You would look at the opponent's team and basically say to yourself, "Who are they likely to pick when they see MY team. Who on MY team would they have the most trouble dealing with. Who on THEIR team would I have the most trouble dealing with."
+
+Panders points out that, with THIS mechanic, there's more of an element of guessing. But, in his words, you're rewarded for "calculated gambles." Because you can see their team. You can imagine what sorts of teams they might go with. And you have to make a guess, and so do they.
+
+A downside of it is that it encourages the player, when forming their deck at a hard rest, to construct teams that have strong INTERNAL dynamics -- because you know for a fact that you'll never exactly what kind of team you're up against. It rewards you more for having a strong 1-player game, rather than reacting directly to the precise challenge at hand. An advantage of constructing your team based on the opponent's team is that you're rewarded for building your deck and understanding your individual units such that you can deal with a GIVEN situation. And dynamics WITHIN that TEAM of 4 are sort of secondary.
+
+If you can build your team of 4 based on what 4 units your opponent picks, you're gonna have to construct your deck such that all 10 of your units can hypothetically have good synergy together. But if you can't see what 4 units your opponent has picked, you're much more rewarded for creating your deck with essentially 2 teams of 4 in mind, constructed so that their Dynamics work well together, and they're strong in a variety of situations.
+
+If it's always a guess (be it an educated one), it might be TOO MUCH OF A RISK to ASSUME anything about your opponent's team, ever. So the best choice would be to stick with a team that's strong, on your side, which sort of defeats the purpose of the 'picking the right tools for the right job' ideal.
+
+GoodVibe brought up an idea that I think is really fun. It adds some of the excitement and dynamism of Pander's idea (where a part of the strategy of the preparation phase is planning for who they COULD pick) along with the steadfast 'tool for the job' strategy of my original idea (where you each pick units one-at-a-time, and so you are PARTIALLY picking based on who your opponent picks, but also PARTIALLY guessing because you don't know who they're going to pick NEXT). GoodVibe mentions that maybe you see their entire DECK, but you only can see TWO of the units they pick.
+
+What we can say for sure is that ALL of these approaches are interesting and lend themselves to different types of teams and balance. I think that the way that you handle your pre-fight preparation should be bound as some kind of rule to whatever 'Leader' unit you've picked. Maybe you can choose which of these strategies you go with, with pros and cons for each type. Maybe, if you want to see your entire opponent's team, one-at-a-time, they can also see your entire team. Maybe if you want to conceal your team by only showing your opponent your DECK, maybe you can only see their deck. Maybe there's a build where you CAN'T EVEN see the deck. Maybe it's just a raw guess from the entire collection of monsters.
+
+Maybe whoever wins initiative gets to choose how the pre-fight routine goes. You could totally change your strategy based on how much access you have to your opponent's team before battle, and vice-versa. That's kind of really sick. That adds more depth to the process of creating your 10-unit deck: now maybe you have to consider that, although you want to have some units there to handle SPECIFIC circumstances, you also have to be prepared to deal with the unknown at times.
+
+Even in a one-player situation, maybe the pre-fight draft rules differ from one fight to the next. You have to roll with the punches and, depending on what sort of draft you end up getting -- that could have a very big impact on what sort of teams you pick and, by extension, how fights play out.
+
+
+
+
+03/07/19
+Today, I want to talk about status changes and how we're going to handle them behind-the-scenes. This process will be more-or-less the same for 'dynamics'.
+
+So, we've discussed before about how our game idea is based very heavily around the notion of 'rules'. Some RPGs are more based around numbers but we're sort of minimizing the importance of unit attributes and skill 'damage' and we're focusing more on limiting and augmenting strategic options using special 'rules', such as, 'you can't do ______ for _____ many turns," or, "whenever you _________, you're going to take _____ damage."
+
+These rules, right now, come in a few different forms:
+
+Unit Dynamics, which are special rules that apply whenever a particular unit is in a battle.
+
+Battlefield Dynamics, which are special rules that apply for the course of a single fight.
+
+Status Changes, which are special rules that can be temporarily applied to Units or the Battlefield during combat.
+
+We've got Leader Dynamics, which are special rules that apply when a particular Leader is in battle.
+
+We may have equipment Dynamics, which are special rules that apply whenever a Unit is equipped with a particular piece of gear.
+
+
+
+The question is, considering how varied these rules can be, how are we going to implement them from the programming-side. To quote our friend dixxucker, "is that even feasible." I do believe it's feasible, but it's going to take a little bit of creativity and abstract thinking.
+
+Basically, my first thought is that the flow of combat needs to trigger a variety of events which can, themselves, trigger the effects of dynamics and status changes. So, after a unit takes a turn, we have to check for all of the rules that would apply after that unit takes a turn. Before damage is calculated, we need to check all of the rules that may apply before damage is calculated. At first, this seems like a monumental task to design, but I'm convinced that if we can think outside of the box there's probably some uniform and rational way to implement this.
+
+How should dynamics and status changes be stored, internally? As one big list, per-battle, that we can iterate through and check "is now the time to apply this?" Or should they be stored as the PLAYER might imagine, which would have them be attached to the units or the leaders or the battlefield that they're directly affecting.
+
+The latter option, although it seems sensible, at first, from the player perspective, might not make the most sense programatically -- and that's because some of these rules might be so complex that it can be difficult to establish firmly who and what the rule is DIRECTLY affecting, or otherwise who it should be attached to. It may affect more than one unit. It may have a dynamic affect based on the relationship between two units. Maybe it would make more sense to just have every special rule floating in a 'list of rules' that the battlefield contains.
+
+But, for the player, that does seem like it could be a bit difficult to manage. On the other hand, maybe that would make it SIMPLER to manage. In Final Fantasy Tactics Advance, each battle has a list of 'Laws,' and these Laws will have a negative effect on one or both teams. A big part of the game is to manipulate the Laws. You can remove Laws that are hindering you and you can add Laws to hinder the opponent.
+
+In FFTA, these Laws are presented as just one big list that applies to the battlefield. Maybe, in our game, we look at these 'Dynamics' and 'Status changes' similarly. Maybe they're not really ATTACHED to any unit, but rather that unit BRINGS THEM INTO the battle, and then they apply to the battle.
+
+So, for a curative class, for instance, they wouldn't necessarily target a unit to relieve the effects of some rule against them, but rather they would target a rule that's, itself, an object floating around in battle. Likewise, perhaps an 'afflictor' class wouldn't target a unit to afflict but would rather just create a new rule to float around in battle.
+
+Let's not totally give up on the idea of having these dynamics and status changes attached directly to the units, because it might be feasible -- and, if it were, I think it would be very rational.
+
+Let's create an example and imagine how it would play out:
+Let's talk very simply about a very simple status change: classical 'poison'. We'll look at it in a variety of contexts.
+
+1.) The afflicted unit takes damage after they use an action.
+    *) We need to go through the unit's Status Changes at the end of every
+       action and find out if we need to do anything.
+        -) Right away, I realize that, if you look at things abstractly,
+           you don't really need as many 'event types' as I expected you
+           might.
+        -) For instance, even if some rules only take place 'after the unit
+           deals damage,' you don't need some kind of internal event to
+           proc that's unique to when the unit deals damage. Instead, you
+           just check after they take a turn and ask what ability they used
+           or how much damage they dealt.
+        -) So, basically, we need some kind of 'post-action report' that's
+           saved as an object, and then, whenever a unit takes an action,
+           all of its status changes will be checked against that report to
+           see if anything needs to happen.
+            +) Right away, then, I feel like we need to conceive a sort of
+               'report' object that will be integral to the handling of
+               status changes and dynamics. Whenever anything HAPPENS, a
+               report is generated, and then all of the rules are checked.
+    *) After the unit takes an action, we run through the list of rules
+       that trigger 'after a unit takes an action'.
+        -) So, we need to figure out what sorts of scenarios in combat will
+           potentially trigger a status change -- not the EXACT scenario,
+           but rather the POINT in the FLOW of combat where we'll need to
+           check for status changes. We'll say the PHASE of combat where we
+           need to check for status changes.
+        -) Every PHASE of combat should generate some kind of report, which
+           can then be read by status changes to decide what they wanna do.
+        -) So, in other words, if we have ideas for TRIGGERS for rules, we
+           need to decipher at what PHASE those rules will take place.
+        -) Then, WHENEVER COMBAT REACHES THAT PHASE, we can check to see if
+           the rule's trigger-conditions were actually met or not.
+        -) We have to differentiate, mentally, between the 'triggering' of
+           a rule and the phase during which we CHECK to see if a rule was
+           triggered.
+
+2.) The unit takes damage whenever the leader's turn ends.
+    *) Need a 'phase' to be registered whenever a leader's turn ends.
+
+3.) The unit takes damage whenever the leader's turn begins.
+    *) Need a 'phase' to be registered whenever a leader's turn begins.
+
+4.) The unit takes damage whenever he's swapped into the ring.
+    *) Need a 'phase' to be registered whenever the leader takes an action.
+        -) This is an example of a situation where the 'object' that the
+           status change is actually ATTACHED TO is counter-intuitive to
+           the player. You would think that this 'poison' would be attached
+           to the unit that's taking damage. However, it might make more
+           sense to consider it as being attached to the LEADER, because it
+           takes affect whenever the LEADER does something (swap a unit).
+        -) From the player's perspective, they might see rules as having
+           relationships in a logical context that's different from how
+           things are handled behind-the-scenes. So, should we try to
+           accommodate the player by saying, "KReich is poisoned," -- as
+           in, they can check KReich's status and see, there, that he's
+           poisoned -- or should we just have a big list of Rules and the
+           player can see, there, "If KReich is swapped out of battle, they
+           take damage."
+        -) If we DID decide to attach this 'poison' to KReich, all we'd
+           really need to do would be to check EVERY UNIT IN BATTLE for
+           status changes / dynamics that are triggered on a certain phase
+           every time that phase occurs. So, we could attach this poison to
+           KReich, and then, whenever the leader takes an action, we could
+           iterate through every unit in the battle and check for their
+           rules which take place after the leader takes an action. That
+           seems reasonable. Every time a phase occurs, iterate through
+           every unit and check to see if they have any rules which we need
+           to evaluate whenever that phase occurs.
+        -) That means the only real difficulty with attaching every 'rule'
+           directly to a unit is in situations where that rule might have a
+           very indirect relationship with multiple units; how do you
+           decide where that rule goes? Well, maybe that's exactly why we
+           have the Battlefield to attach rules to. May- let me cut myself
+           off right there. Let's be clear: if we're going to iterate
+           through every unit, on every phase, to see if they have special
+           rules that might take affect on that phase, then it's internally
+           NO DIFFERENT than just using one big list of rules. That's
+           liberating, because it means that it really DOESN'T MATTER,
+           MECHANICALLY, who we attach these rules to. That allows us to
+           attach the rule to wherever we think would make the most sense
+           for the player. That way, if we have something simple like
+           'poison', we CAN put it on the STATUS SCREEN for the unit that
+           is poisoned. It is attached to that unit. And if the player
+           wants to check all of the rules that are attached to the
+           battlefield, they can do that to.
+        -) But we have a problem with this object-oriented approach to
+           saving rules as attributes of Units and Battlefields, and it's
+           related to how a rule might abstractly define a relationship
+           between multiple units. In other words, we could conceptually
+           have 3 units who all share a single status change. For instance,
+           you COULD just poison 3 units individually with the same
+           effectiveness of poison, but if a healer were to neutralize that
+           poison, they could only neutralize it for one unit. What if it's
+           a poison cloud that only affects 3/4 units on your team. If you
+           cure it, it would stop affecting all three units.
+        -) I have a proposal. What if a 'rule object' saves a list, FOR THE
+           PLAYER'S CONVENIENCE, that's a list of objects that the status
+           change or rule 'is affecting'. That way, if you check KReich's
+           status, you can see that he's under the affect of 'Poison
+           Cloud', and if you check Vencabot's status, you can see that
+           he's ALSO under the affect of 'Poison Cloud,' and that's
+           because, when printing their status screen, the client is
+           running through the list of active rules and seeing if any of
+           them apply to that unit. Poison Cloud isn't attached directly
+           to a unit -- rather, a unit is attached to Poison Cloud. So the
+           Rules are objects and the things they're affecting are attached
+           to THEM.
+
+
+Let's just say that our Battle object, which represents an entire battle, has a dictionary of Rules, and the dictionary is configured like so:
+
+{"phase_str": [List of Rules that can be Triggered on that phase"], ...}
+
+So, if I were to afflict KReich with Poison, I would register it to the Battle like:
+
+my_battle["post_action"].append(my_poison_rule)
+
+And then, whenever a phase of battle occurs, the Battle would go through its list of rules for that phase.
+
+We talked before about how a 'Report' object is going to be integral to having Rules be triggered properly. So we need to decide what sorts of information are important to record in these reports, insofar as it relates to triggering rules.
+
+Furthermore, what I find kind of complicated about this is the ABSTRACT THINKING that goes into defining when a 'phase' occurs. If phases occur AFTER stuff, then we have a report to work with, hypothetically. If phases occur BEFORE stuff, we don't have any report to work with. So... do we abstract every phase as being AFTER something, or do we have a mix of phases where we DO have reports (after things), and where we DON'T have reports (before things).
+
+For instance, we could very reasonably have a 'phase' that occurs whenever a leader starts their turn, or "before their turn." Or we could look at that as being the END of the opponent leader's turn.
+
+We could have a phase that takes place BEFORE damage is dealt (doesn't really make sense). Or we could have a phase that takes place AFTER an action is picked, or AFTER an action's effect is calculated. So, a unit would pick an action and then its affect would be calculated and then it could submit a report for what it's gonna do, which could trigger a variety of rules (such as reducing the damage or whatever).
+
+Let's do an example to help us decide how we want to break this up.
+
+Let's say that Vencabot is afflicted with a Rule that is explained thusly: "Whenever Vencabot uses Headbutt, he will do half damage." Soft-Head status.
+
+What's interesting about this rule, right away, is that we APPARENTLY cannot just flatly lower Vencabot's attack power, because it only affects him when he uses a single skill or ability. And affects his damage output, which is weird.
+
+My first thought is that this Rule would apply to a phase after a unit PICKS an action. if Vencabot PICKS Headbutt, then we go through all of the rules that occur after an action is picked, and we check the report. The report says that Vencabot picked Headbutt, which triggers our Soft-Head rule. So what does it do? How does it take its effect? We TRIGGERED it, and I'd say we triggered in a pretty reasonable way.
+
+How does Soft-Head lower the damage that Vencabot does with Headbutt. I feel like it needs access to the damage calculation that was already done. Because the rule plainly states that "headbutt will do half damage." EVEN IF WE COULD, if we lowered Vencabot's attack power only during that single action, it wouldn't necessarily halve the damage, because of factors like defense scaling, etc. So the Rule would need access to the damage calculation and it'd need to be able to affect that, somehow.
+
+The Rule must be able to define AND REPLACE an effect that would've otherwise occured. INSTEAD OF dealing full-damage, this headbutt now deals an AMOUNT OF DAMAGE DEFINED BY THIS RULE. So the damage it would've done is REPLACED by an amount of damage defined by this rule.
+
+Okay. Maybe RULES also generate a report of some kind which the game engine then uses internally to decide WHAT DO. So every phase generates a report that tells the game WHAT DO, and the Rules can manipulate that report, essentially.
+
+So, after an action is picked, part of the report is the EFFECT THAT THE ACTION WILL HAVE. And then, whenever a Rule runs, it generates a report of what IT'S EFFECT WILL BE, and then, once all of the Rules have done their thing, the Battle will look at these reports and decide what effect will occur.
+
+    -) Side-note: a phase should be triggered whenever a rule is triggered.
+       That way, we could have rules that trigger only when other rules are
+       triggered.
+
+
+Let's make an even more complex, 'worst case scenario' example for figuring out how Rules will take effect.
+
+Let's say that Vencabot is inflicted with Soft-Head status: whenever he uses Headbutt, he will deal half of the damage he would have otherwise dealt. But he's also affected by a status change where-by, whenever a rule is triggered by his using a particular ability, he gains 3 defense.
+
+I feel like, not only does this seem like a nightmare scenario, as a programmer, but it's also CORE to the IDEA of our game. This is a problem we MUST solve, because this situation is interesting in the way that I hope our game will be interesting: we have two rules in play that are, combined, presenting a interesting dynamic. You can use combinations like this to develop really crazy strategies.
+
+So how does it trigger.
+
+Well, Vencabot chooses to use Headbutt. This generates a Post-Action-Choice Phase report which explains that Vencabot has chosen to use Headbutt on OhSeraph, and it's expected to do 10 damage.
+
+The Battle then goes through all of its Rules that apply to the Post-Action-Choice Phase, and it feeds those Rules the report. Those Rules can then decide, based on that report, if they want to trigger.
+
+So, as you might imagine, many of the Rules that apply to this Phase are not triggered by this report; they just pass. But Soft-Head is triggered because VENCABOT has chosen to use HEADBUTT. So now it takes action.
+
+It can see from the report how much damage this Headbutt is expected to do. So, just like CHOOSING TO DO HEADBUTT DID NOT HAVE ANY AFFECT ON BATTLE -- it just generated a report -- the triggering of this or any rule ALSO does NOT HAVE ANY AFFECT ON BATTLE. It just generates a new report.
+
+In doing so, we trigger ANOTHER phase. Now that a RULE has been TRIGGERED and a REPORT has been GENERATED, the Battle has to go through all of its Rules that would apply to the Rule-Has-Triggered Phase. It feeds all of THOSE Rules the report generated by Soft-Head, and most Rules pass. But 'Resilience' IS triggered, because VENCABOT gets more DEFENSE whenever a RULE IS TRIGGERED based on him USING A PARTICULAR SKILL.
+
+Resilience generates a report proposing that Vencabot's defense go up by 3.
+
+So, here we are. Vencabot picked an action, and the 'Post-Action-Choice Phase' is now complete. The result is that we have three reports: the base effect of the action choice and the reports of two different Rules about what they want to do.
+
+It seems to me like the Battle now has to look at these reports and decide what the actual affect is of this action that was chosen.
+
+Well, adding defense to Vencabot seems easy. The Battle reads that Resilience wants to add defense to Vencabot, so it adds defense to Vencabot. No problem.
+
+The strange part is how Soft-Head REPLACES the effect that would've occured when Vencabot used Headbutt.
+
+Well, the first solution that comes to mind is to make an action's 'effect' into an object. An 'Effect' object or whatever. The reason you would do this is so that it could, internally in Python, have a unique ID. It has a space in memory; it has a pointer. It has an identity. What's important about this is that the Soft-Head rule could say, in Python'ese, internally, "Replace EFFECT_A with the EFFECT_B that I just made."
+
+Perhaps the way to say it would be to have an effect that DEALS 5 DAMAGE and neutralizes the 10 damage.
+
+Kenny proposes that the damage calculation (or 'effect calculation,' we'll say) could be a function, itself. And so, when a Rule is triggered, it says, "Don't use function_a for damage calculation. Use my function, function_b." And function_b would have access to function_a, so it could run the vanilla calculation and then mess with it. Or it could hypothetically halve Vencabot's ATK and then run function_a and then restore his attack power, for a rule like, "When Vencabot uses Slap, he has half ATK."
+
+So let's further abstract Kenny's idea. Basically, the ACTION you PICK will have an AFFECT that's determined by SOME FUNCTION. Whenever a Rule is triggered, it ALWAYS REPLACES that AFFECT FUNCTION with its own AFFECT FUNCTION, which will often, itself, call the ORIGINAL affect function.
+
+So really, when a rule is triggered, what it's doing is replacing the Affect that otherwise would've occurred, where the 'affect' is abstracted into the notion of being a function. It would ALSO generate a report about what it wants to do, so that other Rules could be triggered -- and those Rules would ALSO take whatever the current Affect function is and replace it.
+
+So, by the end of the phase, we have a Affect function to run. It will be calling the affect functions defined by many other rules. It could have been changed ten times and, each time, it generated a throw-away function, and now we're probably gonna call all ten throw-away functions.
+
+Every time something needs to HAPPEN in the battle, we're creating a new function do define that it's happening.
+
+I have a problem in mind: what about this 'Tender-Head' Rule that hypothetically halves Vencabot's ATK while he's using Headbutt. What's frustrating about this kind of Rule is that has a set-up and a clean-up phase. That's not a problem -- but anyway, let me follow through with my thought, even though I think I figured out the solution.
+
+So, Vencabot wants to deal 10 damage with headbutt. But Tender-Head replaces the Affect function that would've done 10 damage with a new function that halves his ATK, then calculates damage, and then restores his ATK. My issue was that, if you want to add a rule that says, "If Vencabot's ATK is lowered, his ATk is actually doubled," how do you implement that, at this point?
+
+For one thing, the 'angery' rule is triggered by a Report. All Rules are still triggered by a Report. The Report said that Vencabot's ATK was going to be lowered by 5 for the duration of the action. That triggered the Angery Rule, and now, by Kenny's suggestion, Angery has access to the Affect function that defined the damage he was gonna do (which was gonna be with half atk power).
+
+Well, the function we have -- its main output is dealing damage. It deals damage. It lowers Vencabot's atk, then it deals damage, and then it raises Vencabot's atk. How do take that function and change it so that Vencabot's ATK is actually doubled, instead.
+
+Let's be very clear: we can't LITERALLY ALTER a function line-by-line. We can't. All we can do to 'update' this function is to CALL that function within ANOTHER FUNCTION.
+
+Let's be even more clear, 'cause I've just realized something. This 'affect function', itself, CANNOT deal damage. Because it can ONLY calculate an affect.
+
+The 'vanilla' function was to calculate damage. The resultant function after Tender-Head is triggered is also meant to calculate damage. So what about this Angery rule? It's proposing two things: a change to Vencabot's ATK and re-calculate the damage. How does it recalculate damage after the damage calculation has already been fucked with once. Can it 'undo'? This is a weakness of Kenny's proposal regarding affects being 'functions.' If proposed effects were OBJECTS, like in my suggestion, maybe -- you definitely could just REPLACE an affect, right? You can't do the same thing if the effect, itself, is a function...? But even then, in Kenny's suggestion, we've established that the AFFECT is not a function -- it's still a PROPOSED affect, such as 'damage calculation'.
+
+Let's be clear: some Rules would affect the SET-UP for an action (such as lowering attributes before damage calculation) and others would affect the RESULT of an action (such as halving the damage that would've been done). Some Rules would probably affect both.
+
+This is my current thought: what if we define YET ANOTHER abstract object type. What about a 'modifier' object, which defines how some value is going to be modified by a Rule, and when. Because Rules are always going to modify SOMETHING. If a Rule adds a bunch of Modifiers to a phase, other Rules can read or negate those Modifiers.
+
+Some Modifiers might apply BEFORE the affect is calculated and some might apply AFTER the affect is calculated, essentially replacing the affect.
+
+What if these Reports put forth a list of proposed Modifiers, essentially. And then the Rules could apply more Modifiers. And the reports would REPORT which Modifiers were added by which Rules, which could, in turn, trigger other Rules.
+
+To be extra clear, there are many more affects of an action than damage.
+
+I want, before we play 3rd Strike, to propose a full example of how my 'modifier' system would behave.
+
+The Battlefield has a Rule called 'Tender-Head' on it, which is in the 'rules' dict at the key 'Post-Action-Choice'. It's explained to the player as such:
+
+"Whenever Vencabot is using Headbutt, he has half ATK."
+
+The Battlefield has another Rule called 'Angery' on it, which is in the 'rules' dict at the key 'Post-Rule-Trigger'. It's explained to the player as such:
+
+"Whenever Vencabot's ATK is lowered as the result of a Rule, his ATK becomes doubled."
+
+By picking Headbutt, the Post-Action-Choice phase is triggered, and a Report of Vencabot's pick is generated for all of the Rules that care about this phase to read.
+
+So, we have a report that explains as much as we can program in to explain about what just happened and what is expected to happen next. So, in abstract terms, the report would say something like, 
+
+"Vencabot picked Headbutt. It's gonna do 10 damage."
+
+In, "It's gonna do 10 damage" would be a proposed modifier. Maybe the entire report is made up of a list of 'Modifiers,' that define how the game is proposed to play out.
+
+[Vencabot picked Headbutt]
+[Vencabot targeted KReich]
+[KReich is going to take 10 damage.]
+
+This report is fed to every Rule that cares about this phase of combat. When Tender-Head sees the modifier, "Vencabot picked Headbutt," it creates a few more modifiers, and inserts them into the list, in the order they would occur (???).
+
+[Vencabot picked Headbutt]
+[Vencabot target KReich]
+[Vencabot's ATK is halved.]
+[KReich is going to take 10 damage.] * This was NEUTRALIZED by Tender-Head.
+[KReich is going to take 3 damage.]
+[Vencabot's ATK is restored.]
+
+Now, a post-rule-trigger phase is triggered, and this report is sent to every Rule that cares about this phase, including Angery.
+
+Angery sees this rule and is triggered because it sees both, [Vencabot picked Headbutt] and it sees, somehow, that [Vencabot's ATK is halved] is the result of that.
+
+So now, with this list of currently-proposed modifiers, it can change that list to suit its own ends.
+
+[Vencabot picked Headbutt]
+[Vencabot targeted KReich]
+[Vencabot's ATK is halved.] * This was NEUTRALIZED by Angery.
+[Vencabot's ATk is DOUBLED.]
+[Kreich is going to take 10 damage.] * This was NEUTRALIZED by Tender-Head.
+[Kreich is going to take 3 damage.] * This was NEUTRALIZED by Angery.
+[Kreich is going to take 17 damage.]
+[Vencabot's ATK is restored.] * This was NEUTRALIZED by Angery.
+
+This is how I imagine it. We have this proposed list -- a 'report' -- of things that are GONNA HAPPEN IN THE GAME. Rules can read this list of things that are gonna happen, and they have authority to say, "No, that's not gonna happen, after all. Instead, this'll happen."
+
+Kenny's idea is dramatically different in its design, which is part of what makes programming so fun. Because we're out of time, I'm hoping that Kenny will record his thoughts on Discord and we can talk about it next time in more depth.
+
+Basically the report is a list of instructions to the Battle, in order, and these instructions can trigger Rules, which can then modify that list of instructions. In fact, we could abstract these notions as being 'events', right? And we could fill this event log with all kinds of interesting stuff that could trigger all kinds of interesting stuff -- including proposed changes to the event log -- and then, once the phase is all done, the Battle would read this event log and do all the stuff that needs to get done.
