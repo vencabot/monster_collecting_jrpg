@@ -1,72 +1,97 @@
+class Party:
+    def __init__(self, party_name):
+        self.party_name = party_name
+        self.units = []
+        self.battle = None
+
+    def append(self, party_unit):
+        self.units.append(party_unit)
+        party_unit.party = self
+
+
 class PartyUnit:
     def __init__(self, unit_name, hp_current):
         self.unit_name = unit_name
         self.hp_current = hp_current
+        self.party = None
+
+    def slap(self, target_unit):
+        damage_event = UnitTakesDamage(target_unit, self, 8)
+        self.party.battle.events.append(damage_event)
+        self.party.battle.close_phase()
 
 
-class Rule:
-    def __init__(self, rule_name, battle, recurrence_limit):
+class DynamicRule:
+    def __init__(self, rule_name, recurrence_limit):
         self.rule_name = rule_name
-        self.battle = battle
+        self.listen_for = []
         self.recurrence_limit = recurrence_limit
+        self.recurrence_counter = 0
 
-    def trigger_with(self, triggering_event):
-        return self._trigger_with(triggering_event)
+    def check_event(self, checked_event):
+        if type(checked_event) in self.listen_for:
+            if self.recurrence_counter < self.recurrence_limit:
+                if self._check_event(checked_event):
+                    self.recurrence_counter += 1
 
-    def _trigger_with(self, triggering_event):
+    def _check_event(self, checked_event):
         return True
 
+    def limit_reached(self):
+        if self.recurrence_counter >= self.recurrence_limit:
+            return True
+        return False
 
-class BloodForBlood(Rule):
-    def __init__(self, battle, ally_team, enemy_team):
-        super().__init__("Blood for Blood", battle, 1)
+
+class BloodForBlood(DynamicRule):
+    """If an ally unit takes damage, all non-ally units take 1/4 damage."""
+    def __init__(self, ally_team):
+        super().__init__("Blood for Blood", 1)
         self.ally_team = ally_team
-        self.enemy_team = enemy_team
-        self.triggered_by = [UnitTakesDamage]
+        self.listen_for.append(UnitTakesDamage)
 
-    def _trigger_with(self, triggering_event):
+    def _check_event(self, checked_event):
         if (
-                triggering_event.damaged_unit not in self.ally_team
-                or triggering_event.damaging_unit not in self.enemy_team):
+                checked_event.damaged_unit not in self.ally_team.units
+                or not isinstance(checked_event.damaging_unit, PartyUnit)):
             return False
-        damage_amount = triggering_event.damage_amount / 4
-        for enemy_unit in self.enemy_team:
+        damage_amount = checked_event.damage_amount / 4
+        for enemy_unit in checked_event.damaging_unit.party.units:
             damage_event = UnitTakesDamage(enemy_unit, self, damage_amount)
-            self.battle.events.append(damage_event)
+            self.ally_team.battle.events.append(damage_event)
         return True
 
 
-class SacredProtection(Rule):
-    def __init__(self, battle, party_unit):
-        super().__init__("Sacred Protection", battle, 1)
+class SacredProtection(DynamicRule):
+    """Prevents a single unit from taking damage from a DynamicRule."""
+    def __init__(self, party_unit):
+        super().__init__("Sacred Protection", 1)
         self.party_unit = party_unit
-        self.triggered_by = [UnitTakesDamage]
+        self.listen_for.append(UnitTakesDamage)
 
-    def _trigger_with(self, triggering_event):
+    def _check_event(self, checked_event):
         if (
-                triggering_event.damaged_unit is not self.party_unit
-                or not isinstance(triggering_event.damaging_unit, Rule)):
+                checked_event.damaged_unit is not self.party_unit or
+                not isinstance(checked_event.damaging_unit, DynamicRule)):
             return False
-        neutralized_index = battle.events.index(triggering_event)
-        self.battle.events.insert(
+        neutralized_index = battle.events.index(checked_event)
+        self.party_unit.party.battle.events.insert(
                 neutralized_index,
-                RuleNeutralized(triggering_event, self))
+                EventNeutralized(checked_event, self))
         return True
 
 
-class RuleEvent:
-    def __init__(self, event_name):
-        # The Event which results in this Event not executing successfully.
+class BattleEvent:
+    def __init__(self):
         self.neutralized_by = None
-        self.event_name = event_name
 
     def follow_through(self):
         pass
 
 
-class UnitTakesDamage(RuleEvent):
+class UnitTakesDamage(BattleEvent):
     def __init__(self, damaged_unit, damaging_unit, damage_amount):
-        super().__init__("Unit Takes Damage")
+        super().__init__()
         self.damaged_unit = damaged_unit
         self.damaging_unit = damaging_unit
         self.damage_amount = damage_amount
@@ -75,70 +100,85 @@ class UnitTakesDamage(RuleEvent):
         self.damaged_unit.hp_current -= self.damage_amount
         if isinstance(self.damaging_unit, PartyUnit):
             damager_name = self.damaging_unit.unit_name
-        elif isinstance(self.damaging_unit, Rule):
+        elif isinstance(self.damaging_unit, DynamicRule):
             damager_name = self.damaging_unit.rule_name
         print(
                 f"{self.damaged_unit.unit_name} took {self.damage_amount} "
                 f"damage from {damager_name}!")
 
 
-class RuleNeutralized(RuleEvent):
-    def __init__(self, neutralized_rule_event, neutralizing_rule):
-        super().__init__("Rule Neutralized")
-        self.neutralized_rule_event = neutralized_rule_event
+class EventNeutralized(BattleEvent):
+    def __init__(self, neutralized_event, neutralizing_rule):
+        super().__init__()
+        self.neutralized_event = neutralized_event
         self.neutralizing_rule = neutralizing_rule
 
     def follow_through(self):
-        self.neutralized_rule_event.neutralized_by = self.neutralizing_rule
+        self.neutralized_event.neutralized_by = self.neutralizing_rule
         print(
-                f"{self.neutralized_rule_event.damaging_unit.rule_name} "
+                f"{self.neutralized_event.damaging_unit.rule_name} "
                 f"has been neutralized by "
                 f"{self.neutralizing_rule.rule_name}!")
 
 
 class Battle:
-    def __init__(self, team_a, team_b, rules):
-        self.team_a = team_a
-        self.team_b = team_b
-        self.rules = rules
-        self.in_ring = (team_a[0], team_b[0])
+    def __init__(self):
+        self.parties = []
+        self.rules = []
         self.events = []
 
+    def append_party(self, party):
+        self.parties.append(party)
+        party.battle = self
+
     def close_phase(self):
-        triggered_events = {}
-        current_events = []
-        while not current_events == self.events:
-            current_events = self.events.copy()
-            triggered_this_cycle = []
-            for rule_event in current_events:
+        self._trigger_rules()
+        self._reset_recurrence_counters()
+        self._follow_through()
+
+    def _trigger_rules(self):
+        cycle_events = []
+        while not cycle_events == self.events:
+            cycle_events = self.events.copy()
+            for battle_event in cycle_events:
                 for rule in self.rules:
-                    if rule not in triggered_events:
-                        triggered_events[rule] = 0
-                    if (
-                            type(rule_event) in rule.triggered_by and
-                            triggered_events[rule] < rule.recurrence_limit):
-                        if (
-                                rule.trigger_with(rule_event)
-                                and rule not in triggered_this_cycle):
-                            triggered_this_cycle.append(rule)
-            for rule in triggered_this_cycle:
-                triggered_events[rule] += 1
-        for rule_event in self.events:
-            if rule_event.neutralized_by is None:
-                rule_event.follow_through()
+                    rule.check_event(battle_event)
+
+    def _reset_recurrence_counters(self):
+        for rule in self.rules:
+            rule.recurrence_counter = 0
+
+    def _follow_through(self):
+        for battle_event in self.events:
+            if battle_event.neutralized_by is None:
+                battle_event.follow_through()
 
 
-team_a = [
-        PartyUnit("Vencabot", 10), PartyUnit("HereGoesNothing9", 10),
-        PartyUnit("Zanzhu", 10), PartyUnit("Overlord Steve", 10)]
+if __name__ == "__main__":
+    vencabot = PartyUnit("Vencabot", 10)
+    heregoesnothing9 = PartyUnit("HereGoesNothing9", 10)
+    zanzhu = PartyUnit("Zanzhu", 10)
+    overlord_steve = PartyUnit("Overlord Steve", 10)
+    kreichjr = PartyUnit("KReichJr", 10)
+    dixxucker = PartyUnit("dixxucker", 10)
+    ph1ll1p_c = PartyUnit("ph1ll1p_c", 10)
+    kyoto3s = PartyUnit("Kyoto3s", 10)
 
-team_b = [
-        PartyUnit("KReichJr", 10), PartyUnit("dixxucker", 10),
-        PartyUnit("ph1ll1p_c", 10), PartyUnit("Kyoto3s", 10)]
+    team_a = Party("team_a")
+    team_a_units = [vencabot, heregoesnothing9, zanzhu, overlord_steve]
+    for party_unit in team_a_units:
+        team_a.append(party_unit)
 
-battle = Battle(team_a, team_b, [])
-battle.rules.append(BloodForBlood(battle, team_a, team_b))
-battle.rules.append(SacredProtection(battle, team_b[1]))
-battle.events.append(UnitTakesDamage(team_a[0], team_b[0], 4))
-battle.close_phase()
-print(team_b[1].unit_name, team_b[1].hp_current)
+    team_b = Party("team_b")
+    team_b_units = [kreichjr, dixxucker, ph1ll1p_c, kyoto3s]
+    for party_unit in team_b_units:
+        team_b.append(party_unit)
+
+    battle = Battle()
+    battle.append_party(team_a)
+    battle.append_party(team_b)
+    battle.rules.append(BloodForBlood(team_a))
+    battle.rules.append(SacredProtection(dixxucker))
+
+    dixxucker.slap(vencabot)
+    print(dixxucker.unit_name, dixxucker.hp_current)
