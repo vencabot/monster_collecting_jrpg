@@ -1,0 +1,150 @@
+It seems that my existing mechanism for implementing Dynamic Rules is somewhat flawed. The idea of having certain BattleEvents become 'neutralized' before they can 'take effect' while still using those same BattleEvents to trigger DynamicRules carriesa paradox: how can you 'undo' the very BattleEvent that triggered you in the first place? That's the problem.
+
+So, in my example, I give dixxucker two different perks that are BOTH triggered by him taking damage. The first perk is 'Sacred Protection' which will UNDO any damage done to him by another Rule. The second perk is 'Rage' which will grant him additional ATK any time that he takes damage.
+
+The issue is that, with both of these perks on him, he will gain ATK without taking damage, because the first rule, Sacred Protection, undoes the damage AFTER its already triggered Rage.
+
+There's a few different ways that I could go about fixing this problem. I've been thinking about it, and, on one hand, I think that this gives us an opportunity to completely do away with the BattleEvent queue system. I think I've devised a better way to handle triggering DynamicRules that doesn't involve iterating through a list of BattleEvents.
+
+But to abstract things, you could say that what I'm proposing is this:
+
+Any time something HAPPENS in the game that could trigger a DynamicRule, it creates a PAIR of 'events', split across two phases: a PRE-EMPTIVE phase where the happening can be PREVENTED or ALTERED, and a REACTIONARY phase, where the happening can be REACTED to.
+
+In the example of the 'Sacred Protection' and 'Rage' conflict, Sacred Protection would be triggered as a part of the PRE-EMPTIVE phase, thus PREVENTING the damage from ever occuring. Then, Rage would be in the REACTIONARY phase, and it would never trigger because there was no damage dealt to react to.
+
+That seems simple-enough, but what I'm actually proposing is doing away with the event queue completely. I had an idea for how we could go about this.
+
+I'm proposing a new type of object which represents a unit attribute that can trigger DynamicRules. For instance, we know that a unit's 'HP', when altered, can trigger any number of DynamicRules.
+
+If HP goes up, it might trigger some DynamicRule.
+
+When HP goes down, it might trigger some DynamicRule.
+
+So, what I'm proposing is that, instead of saving a unit's 'current_hp' as a simple Python integer attribute, what if we saved it as an object like so:
+
+class DynamicIntAttribute:
+    def __init__(self, value):
+        self.value = value
+        self.rules = []
+
+    def alter_value(self, amount):
+        for rule in self.rules:
+            prevented = rule.check_event(
+                    "value_will_be_altered", self, amount)
+        # Here's where the problem BEGINS.
+        if prevented:
+            rule.check_event("value_alteration_prevented", self, amount)
+            return
+        # Here's where the problem ENDS.
+        self.value += amount
+        for rule in self.rules:
+            rule.check_event("value_altered", self, amount)
+
+Another thing that I'm proposing is that EVERY ACTION in the game trigger rules on two phases: the pre-emptive phase and the reactionary phase. This 'DynamicAttribute' system would streamline that as well, and I'm going to flesh out the example, above, to reflect that.
+
+dixxucker.current_hp.rules.append(SacredProtection(dixxucker))
+
+A problem we're gonna have, with this, is recursive depth. The problem is, "will all of these events eventually RESOLVE."
+
+If we trigger RAGE, for instance, in the PRE-EMPTIVE phase of dixx's current_hp DynamicIntAttribute being altered. We'll just imagine, for the sake of argument, that the rule is, "If Dixx is targeted for damage, his defense goes up." It raises his defense before he takes damage.
+
+What we end up having is a pre-emptive phase that, itself, triggers another pre-emptive phase before the FIRST alteration can actually take effect. Are we at risk of creating some kind of loop where we are forever stuck in these pre-emptive phases and nothing can ever actually happen.
+
+1.) Vencabot uses Slap on Dixx. Slap calls dixxucker.current_hp.alter_value(-10)
+
+2.) Before the HP reduction actually occurs, dixxucker's 'Rage' is triggered.
+
+3.) Rage calls dixxucker.def.alter_value(3).
+
+4.) If there's a Rule in play that prevents units from gaining DEF, it would
+call -- the problem is that the act of PREVENTING THE UNIT FROM GAINING DEF would need, itself, to be an event, in case there's a Rule that prevents another Rule from blocking DEF.
+
+5.) Let's say there's rule called "Diamond Wall," which prevents another Rule from preventing DEF growth. What I'm saying is, the conceptual problem is this: WHEN IS THE UNDERLYING ATTRIBUTE ACTUALLY EVER CHANGED. When are we out of this Hell of asking for permission to do something. When does it actually happen. In this scenario, we're talking about a Rule asking for permission to prevent the effect of another Rule.
+
+6.) Let me rephrase this: with this proposed mechanism, one thing that seems impossible is to PREVENT something from happening in a PRE-EMPTIVE phase. The PRE-EMPTIVE PHASE of an attribute-change is MEANT to PREVENT or alter THAT change. I don't think that you can PREVENT the PREVENTION. If you could, I feel like we might be stuck in a loop of pre-emptive phases where we're constantly checking if anyone is interested in pre-empting the pre-emption of the pre-emption of the pre-emption. That's the thing.
+
+And that seems wack. I don't know if that's feasible considering what we want to accomplish with the DynamicRule system.
+
+Maybe we don't need for preventative Rules to trigger other Rules. Maybe that's just a conceptual limitation of what we're trying to accomplish with this sort of emergent gameplay. Maybe that's just the line: you can't prevent a prevention.
+
+Let's list some situations where it would make sense for a DynamicRule to prevent the prevention caused by another DynamicRule:
+
+If Vencabot uses Slap, Slap does half damage.
+^ That's a pre-ventative Rule, because, when Vencabot chooses Slap, it proposes a change to HP at some amount of damage. This Rule is triggered in the pre-emptive phase and sees the amount of damage proposed and prevents it. After that, it proposes a new amount of damage (half as much).
+
+That's a preventative rule.
+
+Would be interesting -- do we need -- Rules of the type that would be like, "Abilities always deal full damage." This would effectively negate the above rule, which, itself, is a preventative rule. It would prevent and preventative. I don't think I could implement that, with this mechanism as it stands.
+
+I don't think, with this mechanism, I could implement Rule like, "Abilities always deal full damage." How would I prevent the first rule, "Soft Slap," from doing its job.
+
+What would need to happen, in this mechanism, would be for the very NEGATION of the effect to, itself, be able to trigger both a PRE-EMPTIVE and REACTION phase. And, if that were possible, WOULD WE BE STUCK FOREVER IN A TIME VORTEX where nothing could ever happen because we were too busy asking for permission for it to happen (a never-ending spiral of PRE-EMPTIVE phases).
+
+Let's break it down: how would the negation of an alteration trigger other rules. How.
+
+I looked at the example above and made a simple alteration that I think fixes the problem. Let me re-phrase my solution like so:
+
+You have an object, "DynamicAttribute". When the player makes a decision that would alter some value in the game, a few things happen:
+
+Before its value changes, that attribute warns all of its listening Rules that it's about to change and gives them a chance to prevent that change and propose their own changes.
+
+If that change is prevented, then it reports this to all Rules that might be interested in that prevention having occured.
+
+if the change ISN'T prevented, the value is altered and listening rules are notified of this.
+
+Even with this solution, there are conceptual weaknesses with the VERY IDEA of DynamicRules. One that Kenny points out is when you have two Rules that use very absolute language:
+
+SacredProtection prevents damage from Rules.
+DireRules prevents Rules from being prevented.
+
+I feel like this might NOT be a huge problem, and we would just need to... fall back on the ORDER that the Rules were implemented in. I've been considering this, too: in some cases, perhaps the ORDER of the Rules would be significant when determining their priority, and maybe some classes could alter the order of Rules. But I think that's sensible: in cases where PRIORITY would be a factor, perhaps it's just that the bottom-most Rule takes priority. Whatever would trigger last. And if you don't like, then maybe you could somehow change the order of the Rules to be in your favor. I feel like that might be a solution to the problem of when you have two rules that are in competition.
+
+I THINK that solves the Kenny predicament of the immovable object and the unstoppable force. But another problem that I think we have is how Rules will or won't 'stack'. My fear is that this might require an entirely separate and complex mechanism, in itself, to manage.
+
+For instance, what if we have these two rules in play:
+
+ClassicProtect: the target unit takes 75% damage.
+
+Seems simple.
+
+But then we also have this:
+
+FlubbidityWoo: the target unit takes 50% damage and the attacker takes the other 50%.
+
+How do these stack on the same unit? They both directly influence the amount of damage the unit takes.
+
+The obvious thing would be to just have them stack. Vencabot he would've taken 10 damage, but ClassicProtect caused him to take 7.5 instead. But flubbitywoo is triggered, which causes him to take HALF of that damage and his opponent takes half: they both take 3.75 damage.
+
+That makes sense MECHANICALLY. Although it makes sense mechanically, I'm not convinced at all that it makes sense in terms of GAMEPLAY BALANCE. Because, the core gimmick of our game -- the heart of all of the strategy -- comes from the interaction of different Rules and teams playing within these rules. That being the case, I don't think it would be unusual for these two Rules to end up on the same unit. Maybe even more Rules that affect the damage that unit takes. I think it'd be trivial to build a team that could put four rules into play that all lower the amount of damage that Vencabot takes.
+
+I feel like, if we don't have some kind of mechanism that prevents too many rules from stacking on a single unit, it'd be trivial to make that unit super over-powered very quickly.
+
+Let's say you had three different rules, like so:
+
+ClassicProtect
+FlibbityWoo
+Dispersion: The targeted unit takes 50% damage and his teammates get the remainder split among them.
+
+That makes sense. It's fun. The problem is that, that same unit could have two other fucking rules on them that reduce their damage by 50%. That are also, in isolation, fun and interesting. But combined, it just breaks the game.
+
+This is what I was thinking about earlier, in the shower, which coincides directly with KG's recommendation that we 'tag' certain Rules. Like, the 'tag' would somehow influence the way that they stack with each other -- or don't stack. Maybe some Rules simply OVERRIDE other rules. Maybe they can interact but with some special stacking algorithm. Maybe others just stack outright, like we demonstrated above. But, again, my fear is that we're talking about having to implement a whole separate mechanism -- be it tag-based or whatever -- to balance the interactions between certain Rules to prevent their COMBINATION from being too powerful.
+
+You could abstract the problem like this: it's hard to make Rules that are exciting and interesting in isolation without making them completely broken in certain, VERY SIMPLE combinations. It seems we would need some kind of way to influence how certain rules stack with each other.
+
+That's something that we're going to probably need to sleep on.
+
+I think, for today, I'm mostly happy with this 'DynamicAttribute' idea, where Rules are triggered on TWO phases whenever an attribute of certain objects is altered. That makes sense to me, and I don't think that it would result in any infinite-loop problems, as long as we stick with the idea of a 'recurrence limit' on Rules.
+
+You could argument that a rule that both 'buffs' and 'debuffs' a character could be split into literally both of those things: it adds 1 buff and it adds 1 debuff. But what about 'debuffs' that are like, "if MutantXP takes damage while in the back row, whoever's in the ring takes that damage for him." Which character gets that buff? Or is it debuff? If it's for whoever's in the ring, does it count toward their debuff limit? What happens when they're not in the ring anymore?
+
+For this reason, I've sort of been straying away from using terminology like 'buff' and 'debuff.' And that's ONE MORE THING that makes it difficult when talking about how these Rules are going to stack and otherwise negotiate with each other to make the game more balanced.
+
+It's like, you have these Rules which, in isolation, don't debalance the game -- but when you start applying more of them, they game can get unbalanced real quick. And not in a super-strategic way where there's a reasonable counter-play. We're talking about, just some broken-ass shit.
+
+It sounds like what Kenny is saying is that every rule in the game would apply to all units equally.
+
+Here's our final note: on Thursday, I'm going to mock-up our current encounter but using the new DynamicAttribute system that I devised above, and we're gonna see if it works. Supposing that it works (I expect that it will), I think that we will be free to create any Rule that we can imagine and have it work like we expect.
+
+That would be a huge accomplishment.
+
+IF that works, we should definitely move on to figuring out how to balance Rules against each other so that they can't very easily make some super broken combinations. I feel like KG's recommendation that we tag Rules in a certain way to determine how they stack might be the key -- but whatever the solution ends up being, I don't think that it behooves us to worry about that right now. I'm gonna get Rules working so that they're flexible, interesting, exciting, and powerful -- and if we can get that working, then we'll worry about how to balance them.

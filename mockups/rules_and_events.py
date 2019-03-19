@@ -10,9 +10,10 @@ class Party:
 
 
 class PartyUnit:
-    def __init__(self, unit_name, hp_current):
+    def __init__(self, unit_name):
         self.unit_name = unit_name
-        self.hp_current = hp_current
+        self.hp_current = 10
+        self.atk = 10
         self.party = None
 
     def slap(self, target_unit):
@@ -81,6 +82,21 @@ class SacredProtection(DynamicRule):
         return True
 
 
+class Rage(DynamicRule):
+    """A single unit gains ATK whenever he takes damage."""
+    def __init__(self, party_unit):
+        super().__init__("Rage", 1)
+        self.party_unit = party_unit
+        self.listen_for.append(UnitTakesDamage)
+
+    def _check_event(self, checked_event):
+        if checked_event.damaged_unit is not self.party_unit:
+            return False
+        gain_atk_event = GainATK(self.party_unit, 1)
+        self.party_unit.party.battle.events.append(gain_atk_event)
+        return True
+
+
 class BattleEvent:
     def __init__(self):
         self.neutralized_by = None
@@ -121,6 +137,17 @@ class EventNeutralized(BattleEvent):
                 f"{self.neutralizing_rule.rule_name}!")
 
 
+class GainATK(BattleEvent):
+    def __init__(self, party_unit, gain_amount):
+        super().__init__()
+        self.party_unit = party_unit
+        self.gain_amount = gain_amount
+
+    def follow_through(self):
+        self.party_unit.atk += self.gain_amount
+        print(f"{self.party_unit.unit_name} gained {self.gain_amount} ATK.")
+
+
 class Battle:
     def __init__(self):
         self.parties = []
@@ -155,14 +182,14 @@ class Battle:
 
 
 if __name__ == "__main__":
-    vencabot = PartyUnit("Vencabot", 10)
-    heregoesnothing9 = PartyUnit("HereGoesNothing9", 10)
-    zanzhu = PartyUnit("Zanzhu", 10)
-    overlord_steve = PartyUnit("Overlord Steve", 10)
-    kreichjr = PartyUnit("KReichJr", 10)
-    dixxucker = PartyUnit("dixxucker", 10)
-    ph1ll1p_c = PartyUnit("ph1ll1p_c", 10)
-    kyoto3s = PartyUnit("Kyoto3s", 10)
+    vencabot = PartyUnit("Vencabot")
+    heregoesnothing9 = PartyUnit("HereGoesNothing9")
+    zanzhu = PartyUnit("Zanzhu")
+    overlord_steve = PartyUnit("Overlord Steve")
+    kreichjr = PartyUnit("KReichJr")
+    dixxucker = PartyUnit("dixxucker")
+    ph1ll1p_c = PartyUnit("ph1ll1p_c")
+    kyoto3s = PartyUnit("Kyoto3s")
 
     team_a = Party("team_a")
     team_a_units = [vencabot, heregoesnothing9, zanzhu, overlord_steve]
@@ -179,6 +206,7 @@ if __name__ == "__main__":
     battle.append_party(team_b)
     battle.rules.append(BloodForBlood(team_a))
     battle.rules.append(SacredProtection(dixxucker))
+    battle.rules.append(Rage(dixxucker))
 
     dixxucker.slap(vencabot)
     print(dixxucker.unit_name, dixxucker.hp_current)
