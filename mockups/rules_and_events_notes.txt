@@ -148,3 +148,32 @@ Here's our final note: on Thursday, I'm going to mock-up our current encounter b
 That would be a huge accomplishment.
 
 IF that works, we should definitely move on to figuring out how to balance Rules against each other so that they can't very easily make some super broken combinations. I feel like KG's recommendation that we tag Rules in a certain way to determine how they stack might be the key -- but whatever the solution ends up being, I don't think that it behooves us to worry about that right now. I'm gonna get Rules working so that they're flexible, interesting, exciting, and powerful -- and if we can get that working, then we'll worry about how to balance them.
+
+
+
+
+03/21/19
+
+Roadmap for today's stream:
+
+I want to get our original example, which does NOT work, working in a newly designed DynamicRule system which relies NOT on a queue of 'event' objects but rather on callbacks that are associated with DynamicAttribute objects, which call their callbacks whenever anything changes.
+
+Let's get going.
+
+How are phases supposed to work, again?
+
+Before a change is made to any attribute, we WARN the rules that this is gonna happen. That way, the rules can PREVENT this from happening.
+
+AFTER an attribute changes, we ALSO report this to all of the rules so that they can react.
+
+So, DynamicAttributes need TWO lists of rules, right? They need a list for pre-emptive rules and reactionary rules.
+
+Can we agree that pre-empting is only for preventing an event from happening? I would say yeah, right? Yeah.
+
+Should more than one rule be able to prevent a single event? No. Only the first rule to prevent the event should be triggered.
+
+
+
+WELL, IT WORKED, but I'm not super confident in it. I wish I had more time to test it, but we're already more than half-an-hour late for 3rd Strike.
+
+That means that, next week, our first order of business is to review the code that we just wrote and figure out how it works. We could probably use some documentation, better function and attribute names, etc. Because I'm not super confident in my own understanding of exactly all of the mechanisms that we're working with in this relatively simple example. But it seems to work.
