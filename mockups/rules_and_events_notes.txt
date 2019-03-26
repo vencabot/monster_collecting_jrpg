@@ -177,3 +177,178 @@ Should more than one rule be able to prevent a single event? No. Only the first 
 WELL, IT WORKED, but I'm not super confident in it. I wish I had more time to test it, but we're already more than half-an-hour late for 3rd Strike.
 
 That means that, next week, our first order of business is to review the code that we just wrote and figure out how it works. We could probably use some documentation, better function and attribute names, etc. Because I'm not super confident in my own understanding of exactly all of the mechanisms that we're working with in this relatively simple example. But it seems to work.
+
+
+
+
+03/25/19
+
+We have a very minor bug in our code regarding order-of-operations (which is always the trickiest thing about this system).
+
+If GoodVibe's 'Hench' rule is applied BEFORE Vencabot's 'Invincible' rule, things behave in a way that makes sense to the player (and to the developer): when GoodVibe attacks Vencabot, the damage he would've dealt is doubled, but he can't do damage to Vencabot because he's invincible.
+
+The problem is this: if Vencabot's 'Invincible' rule is applied BEFORE GoodVibe's 'Hench' rule, GoodVibe will not get Hench when attacking Vencabot.
+
+The end result is the same: Vencabot doesn't take damage.
+
+The difference is that, if GoodVibe is going to do damage to Vencabot, all of the Rules that are triggered in this situation are checked in-order. if GoodVibe is going to do damage to Vencabot, 'Invincible' prevents this, neutralizing the event.
+
+BUT ALSO, if GoodVibe is going to do damage to Vencabot, 'Hench' neutralizes the event and then creates a new event to deal double damage.
+
+So, if Hench is applied first, it neutralizes the FIRST damage event and then creates a NEW damage event. And then Invincible neutralizes that SECOND damage event.
+
+However, if Invincible is applied first, it neutralizes the FIRST damage event, and then there's no damage event to trigger Hench.
+
+The problem is, conceptually, abstractly, the player (and the developer) would expect for GoodVibe's 'Hench' to be triggered regardless of whether Vencabot is invincible or not. Either way, Vencabot's not taking any damage -- but GoodVibe should still OUTPUT that double-damage.
+
+Now, obviously, we could phrase 'Hench' in such a way that our existing mechanism makes sense, and maybe that's just gonna have to be the limit, here:
+
+"When GoodVibe deals damage, it's doubled."
+
+It's clear from that definition of Hench that it wouldn't trigger if Vencabot was Invincible, because GoodVibe wouldn't have dealt damage.
+
+But is there a way to make this work in a more intuitive way.
+
+Let's make a new way for Hench to behave. In fact, let's call it something different. Let's make a new Rule just to demonstrate our problem.
+
+What the player expects from 'BloodLust' is that, whenever GoodVibe attacks, he gets attack power.
+
+But the reality is that, when GoodVibe HAS AN ACTIVE DAMAGE EVENT, he gets attack power.
+
+So this can behave a bit unintuitively if his DAMAGE EVENT is PREVENTED before 'BloodLust' can trigger.
+
+Panders brings up a point that may very well be key to our solution, and that's to create another phase. So much of the difficulty we've had has been in the ORDER OF OPERATIONS of our Rules, and the solution has often been to create ANOTHER PHASE for rules to be triggered on. That helps to make it more explicit WHEN rules should be run.
+
+The problem we have, with this NEW system in particular, is that Rules are always triggered WHEN AN ATTRIBUTE HAS CHANGED.
+
+So, when GoodVibe SELECTS an attack, we can't trigger a Rule, because no attributes have been changed, yet.
+
+When goodvibe CHOOSES to attack, nothing has happened for us to react to in terms of an attribute being raised or lowered.
+
+The idea was that we would know that Goodvibe chose to attack because the game reacts to him wanting to LOWER someone's HP.
+
+The HP attribute is being manipulated, and THAT'S what triggers the rule.
+
+The problem is that this CHANGE can be PREVENTED. That's the whole point of the 'pre-attribute-change' phase.
+
+Basically, the way our system works, guys, is that, whenever a unit's attribute -- such as their HP -- is being manipulated, it triggers rules on 3 different phases:
+
+1.) Before the change is made to HP, we ask every rule if they want to prevent that change.
+
+2.) If that change IS prevented, we notify all of our rules that the change was prevented. This might trigger other Rules that may only happen if a another rule takes affect.
+
+3.) If that change is NOT prevented, then we actually implement the change (HP is reduced) and then we notify all of our Rules of the change, in case they want to react to the DAMAGE HAVING BEEN DONE.
+
+We've been through a few different solutions for this 'dynamic rule system,' and the problems always occur when we talk about PREVENTING things from happening before they happen.
+
+So much trouble comes from the fact that we NEED for a PROPOSAL to TRIGGER rules so that they can PREVENT that thing from happening (such as Invincibility).
+
+However, when that thing is prevented from happening, it prevents other Rules from being triggered that would have ALSO prevented that thing from happening.
+
+Our problem here is, with Hench and Invincible, we have TWO RULES that want to prevent damage from happening. Whichever Rule is implemented FIRST will PREVENT the damage from happening, and, therefore, the second Rule will not trigger.
+
+Now, if you're not keeping up with the programming and behind-the-scenes stuff, you might be asking: how does 'Hench' prevent damage. It doubles damage. It doesn't prevent it.
+
+But what happens, internally, is that Hench is triggered by GoodVibe wanting to do 5 damage. THAT DAMAGE IS PREVENTED and Hench creates a NEW EVENT to do 10 damage.
+
+So, if Hench is BEFORE Invincible, then Hench will PREVENT the first damage, which also prevents Invincible from triggering (since it needs a damage event to pre-empt). Then, hench creates a SECOND damage event, which DOES trigger Invincible.
+
+In other words, if Hench is first, then things behave as we expect: GoodVibe chooses to attack, he gets all buff, and then he hits Vencabot really hard with a hench'ed up attack that doesn't do damage because Vencabot is invincible.
+
+ON THE OTHER HAND, if Invincible is first, then it prevents the initial damage from being done -- and since Hench checks AFTER that, it never sees that GoodVibe was doing an attack and, therefore, he never henches out.
+
+This would be kind of solved if GoodVibe could get henched out before even proposing to do HP damage.
+
+Like, if he chooses an attack, then he gets hench.
+
+The problem with this is that it makes the 'damage multiplier' aspect of the Rule a lot dirtier. Because, at this point, before we deal damage, how do we know how to 'double' his damage. The only way I can think of would be to give each unit some kind of 'attack multiplier' attribute, which is sub-ideal. Just adds more complexity. I like the way it works now: when a unit is gonna deal damage, they can see how much damage they're gonna do and we can boost that.
+
+BUT THERE'S ANOTHER PROBLEM. The problem is that, if we have a Rule that says, "When Vencabot chooses to Slap, his ATK goes up," we can currently only have his ATK go up AFTER he slaps and gets damage calculation.
+
+We can't request a new damage calculation with Vencabot's newly-raised attack power. We could do that if we could catch 'slap' before it happens and then raise his attack power and re-slap.
+
+It also strikes me, as I say this out loud, that, if we ONLY TRIGGER RULES BASED ON ATTRIBUTES CHANGING, which is our current system, we can NOT have certain rules trigger when a unit chooses to use a certain move, or a move from a certain class, or anything like that -- which could make for some very reasonable and interesting rules.
+
+Because, there's no indication, in the DynamicEvent, of what Skill was used. We only know that a target unit had an attribute changed by a perpetrator.
+
+But that's not a problem because 'perpetrator' can be a RULE (not just a unit), and I don't see why it couldn't be a SKILL. Perpetrator can be a skill, and then we can use that Skill's 'owner' attribute to figure out what the perpetrating unit is. Then we'll know what skill they were trying to use and we can use that as part of our checks for the rule.
+
+The problem is a problem of ORDER. Order of operations. Especially when we're talking about PREVENTING or NEUTRALIZING or CANCELING things from happening before they happen. That's the problem.
+
+How can you PREVENT something from happening, but make sure that all of the Rules that would have prevented it all get their chance to trigger.
+
+The obvious thing would be to run that 'prevented' event through ALL of the rules that would've prevented it and only prevent the change from happening after that.
+
+The problem with that is the RECURRENCE LIMIT. Let's say that 'Invincible' can only occur once per event phase. If Invincible triggers when GoodVibe tries to do damage to Vencabot, we COULD VERY WELL SAY, "that event is now prevented. However, continue to check other rules that would have been triggered."
+
+That would seemingly solve our problem. HOWEVER.
+
+When Hench is triggered, it CREATES ANOTHER DAMAGE EVENT. Invincible is at its recurrence limit, so IT WOULD NOT BE ABLE TO PREVENT THAT SECOND DAMAGE EVENT.
+
+But I think I have a solution.
+
+The solution is what I just described above: in the 'preemptive phase' of a DynamicAttribute being updated, we will run that event through EVERY Rule, EVEN IF it was prevented.
+
+And, as I described above, that would cause a problem with the recurrence limit. In our example, that would cause Vencabot to take damage even though he's invincible. In fact, I'm going to demonstrate that right now.
+
+The bug works as expected. Both Invincible and Hench are now given the opportunity to prevent the initial damage. The problem is that Hench, after preventing the damage, RE-TRIGGERS a new damage event (double damage), and, at that point, Invincible cannot protect Vencabot because its reached its recurrence limit.
+
+Here's my solution. My solution is to tell preempting rules whether or not the event has already been prevented by the time it reaches them. After that, they can choose what they wanna do. Watch how I fix Hench with this.
+
+So, Hench is apparently fixed, but I feel like we've made a bunch of new bugs by going toward this solution.
+
+Hench's recurrence limit increases whether or not Hench actually deals damage. So, we have, surprise-surprise, an order-of-operations problem.
+
+Let's make an example that doesn't involve invincibility.
+
+I'm gonna make a new rule called ExtraDamage.
+
+When Extra Damage stacks with Hench, you would expect the order to be significant:
+
+Slap does 2 damage.
+That's replaced by 3 damage when Extra triggers.
+That's replaced by 6 damage when Hench triggers.
+
+But if Hench triggers first:
+
+Slap does 2 damage.
+That's replaced by 4 damage when Hench triggers.
+That's replaced by 5 damage when Extra triggers.
+
+That makes sense. That's what you want.
+
+The problem is, neither Hench nor Extra creates a new damage event if the triggering damage event was ALREADY PREVENTED. This wouldn't be an issue if not for the recurrence limit. But, before I lose my train thought, couldn't this be solved by the Rule giving itself a bonus to its recurrence limit at this point.
+
+But let's demonstrate the bug.
+
+Well, that didn't work like I expected, but now I see why it worked and that also means that there's a new FACTOR in this situation than I expected to have which might be a good thing or a bad thing (probably good).
+
+What's happening is that Extra Damage is creating a new hp update (which is a new event), BEFORE the 'for loop' continues in the scope that first triggered Extra Damage. It's kind of abstract.
+
+Basically, before the for loop that Extra Damage was triggered in can 'continue' (iterate), we're already triggering a new set of rules -- because, in our new system, rules are triggered at event-creation (essentially). I'm still thinking in terms of event queues, but that's wrong. Rules are triggered when a DynamicAttribute runs 'update'.
+
+I THINK, although this provides me with a much more complex way to look at the relationship between Rules and the order that they operate, this is over-all a good thing. This actually makes things play out in an order that the player would expect.
+
+so, before we call it quits, let's see how invincible plays with this.
+
+I can already see that we... no, actually? We don't have a bug? it's kind of a bug.
+
+It's the end of the stream, it's time for 3S. By giving DynamicEvents a 'prevented' attribute, we allow Rules to see whether the event that's triggering them is going to follow through or not and make decisions off of that. Maybe they'll say, "Okay, well, the damage that triggered is not going to occur, but I still wanna do SOMETHING." That's their prerogative, now.
+
+I also think that the recurrence_limit isn't going to be a problem for a few reasons. One is that we've already seen that the scoping and recursion situation can solve some of these limit problems. But also, even if they couldn't, we could just have the Rule, itself, decrease its own recurrence counter. There's no reason it couldn't say to the game, "Oh hey, you thought I triggered and raised my recurrence counter. Well, I'm gonna manually lower my recurrence counter so that I can trigger again."
+
+We still have order-of-operations bugs, although they aren't necessarily as severe. For instance, even if Vencabot is invincible, you would want for the damage he's GONNA take to be the FULL damage that GoodVibe would've otherwise done if he WASN'T invincible. That just stands to reason. That's what makes sense.
+
+If GoodVibe would've done 10 damage and Vencabot is Invincible, of course he's taking zero damage -- but you would want for that 10 damage to be absorbed by Invincible.
+
+You wouldn't have wanted only 4 damaged to be absorbed and the rest of the damage 'aborted' before it could even be born. Kind of an abstract problem -- kind of difficult to wrap you around, but the fact of the matter is that 'Invincible' sort of kills the damage BEFORE it can be multiplied -- think of it that way. If Invincible is in the Rule List BEFORE 'Extra Damage' and 'Hench,' it KILLS the damage BEFORE it can be multiplied.
+
+However, if Extra Damage and Hench are BEFORE Invincible, then the damage multiplies and then the multiplied damage is killed by Invincible.
+
+The latter situation is what you expect.
+
+So, if we have Rules that would trigger if GoodVibe is fixin' to do 10 damage, they would NOT trigger if Invincible is higher than Hench and Extra Damage.
+
+Sure, if Vencabot WASN'T invincible, then GoodVibe WOULD'VE BEEN FIXIN' to do 10 damage.
+
+However, if Vencabot IS Invincible, then GoodVibe IS NEVER EVEN FIXIN' to do 10 damage, and that's the problem.
