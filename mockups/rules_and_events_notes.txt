@@ -352,3 +352,151 @@ So, if we have Rules that would trigger if GoodVibe is fixin' to do 10 damage, t
 Sure, if Vencabot WASN'T invincible, then GoodVibe WOULD'VE BEEN FIXIN' to do 10 damage.
 
 However, if Vencabot IS Invincible, then GoodVibe IS NEVER EVEN FIXIN' to do 10 damage, and that's the problem.
+
+The amount of damage that GoodVibe is FIXIN' TO DO shouldn't change based on whether Vencabot is invincible or not, but it does.
+
+But that's a problem for us to solve on Thursday.
+
+
+04/01/19:
+As I recall, the main issue we were facing last time is the same issue that we've always been facing: order of operations, especially in how we deal with 'neutralizing' events or 'preventing' things from happening. How does a rule prevent the very thing that triggered that rule?
+
+My solution, which has been working okay, is to have some rules be triggered 'pre-emptively,' and, at that point, they can opt to 'prevent' the action that triggered them pre-emptively. That works okay until you start considering situations where more than one rule is triggered pre-emptively by the same event. If the first rule PREVENTS the event, then what is the second rule doing?
+
+My solution was to give events a flag that explains whether they've already been prevented or not -- and then, when rules are triggered pre-emptively, they ALL get triggered. So, they can ALL attempt to prevent the same event (and they can read whether or not it's already been prevented), and they can adjust their behavior based on whether or not that event was already prevented -- such as re-incrementing their recurrence counter.
+
+But this still has weaknesses, and I want to list a few here, including reviewing the one that we left on, last week: the 'hench damage'.
+
+Let's examine the hench problem, again:
+
+If GoodVibe is Hench, all of his attacks are supposed to do double damage.
+If Vencabot is Invincible, he never takes any damage.
+
+Both of those Rules are triggered pre-emptively on a 'damage event.' The damage event says, "GoodVibe is going to do 3 damage to Vencabot."
+
+This triggers both Rules:
+Hench sees that event and PREVENTS it, and then creates a NEW damage event which says, "GoodVibe is going to do 6 damage to Vencabot."
+
+'Invincible' sees that first damage event and PREVENTS it entirely.
+
+So, both of these Rules prevent the first damage event. So, the order of operations for these Rules becomes significant.
+
+If 'Invincible' is triggered first, then 'Hench' should not trigger in such a way that it creates a new damage-event. Because, due to the recurrence-limit of 'Invincible,' it wouldn't be able to block the second damage-event.
+
+If 'Hench' is triggered first, there's no problem: Hench prevents the first damage event and creates a second damage-event. Invincible doesn't worry about the first, prevented damage event and goes on to prevent the second one. Vencabot takes no damage.
+
+So my solution, so far, to the problem of 'Invincible' triggering first has been for Hench to check to see if the damage-event that triggered it has already been prevented. If it's already been prevented, then Hench goes off VISUALLY, to satisfy the player, but it doesn't actually complete its task: it doesn't create the second damage-event that would do double damage.
+
+So, in that respect, the problem is solved. However, the issue we have is that this creates internal consistency problems. Let's say that we have a rule that's supposed to trigger whenever GoodVibe is about to do 5 damage or more. If GoodVibe would normally do 3 damage and is henched out, you would expect that, on his next attack, he'd be "about to do 6 damage."
+
+Of course, Vencabot is Invincible, so he's not going to take any damage. The issue is that, if 'Invincible' triggers FIRST, then no damage event is ever CREATED to trigger 'Rule 3' by prepping to do 6 damage. Even though he's Hench, GoodVibe's only Damage Event would've been for 3 damage. It's inconsistent.
+
+It seems to me that the solution to this problem -- and any problem, in our system that relates to order-of-operations and negation of events -- is to create more phases for rules to proc in.
+
+In our first version of this code, we only really had 'one' phase, and our order-of-operation problems were insurmountable.
+
+I created this second version to address those problems by creating more phases, and our problems immediately became much less drastic.
+
+Is the solution, here, to create more phases -- and, if so, how can I manage that and keep it sensible and consistent, internally? How many phases do we need. In an abstract sense, how do we keep an understandable pattern regarding when these phases occur.
+
+In this phase 2 code, I've solved that problem (or so I thought) by having phases be tied to when an attribe (DynamicAttribute) changes. Whenever a DynamicAttribute is asked to change, it generates a few different phases: a pre-emptive to prevent the change, a phase that occurs after prevention and a phase that occurs after the change is made.
+
+That seems sensible, but I'm not sure it's 100% workable. How can we add more phases into this to solve our problem.
+
+First of all, WOULD that solve our problem.
+
+Let's create a 'Hench' example that hypothetically works better:
+
+Hench has to trigger before Invincible, always. That's the problem. What triggers 'Hench' to go off, and what triggers 'Invincible'? If not a proposal to do damage.
+
+I love the idea of 'Hench' being triggered by a proposal to do HP damage because it means that we don't need to fuck around with whatever-skilled-was-used's damage calculation. We just take the final damage and double it. That makes sense to me.
+
+Hench can't trigger if the event that triggered it has already been prevented. That's the problem.
+
+I need to think outside of the box. I need, maybe, to get off of this 'prevent an event before it happens' train. Is there another solution that doesn't evolve going BACK IN TIME and preventing something that's already happened, essentially. The problem I'm having is that the very event that's triggering these rules is the event that we're trying to negate. How can I trigger these rules in a different way where we don't need to 'prevent' something from happening.
+
+I think the real problem we're having, at the end of the day, is that we have two different rules that are pre-emptively responding to and preventing the same event. Because, they can't literally occur simultaneously: one has to occur first. If the first one has already prevented the event, then the second rule's job becomes very confusing.
+
+Let me be clear about a solution we came up with last week. We could totally sell into the notion that order-of-operations is profoundly significant in our game's mechanics, and we can work Rules in such a way that it becomes more clear how they work, internally.
+
+For instance, we could just describe 'Hench' as, "If GoodVibe would've done damage, that damage is doubled." That would be simplest solution: just simply word all of our Rules in such a way that it's communicated to the player that the order of things is important.
+
+Maybe this problem would solve itself if we were to re-examine our 'DynamicAttribute' system and consider what rules COULD NOT WORK under these constraints, and decide on if we're okay with that or if we need to come up with new ways to make Rules work to accommodate these edge-cases.
+
+What's a Rule that wouldn't work if the only way to trigger it was a proposal for something concrete to happen in the game-world. The way that 'DynamicAttributes' work is that something has to CHANGE. Something has to CHANGE, and then Rules start getting triggered. So what are some Rules that would need to trigger without the game world being changed in some way.
+
+You couldn't have a Rule which would prevent the player from accessing their 'Items' menu. Because the Rule couldn't be triggered until an item is used -- then you could say, "Oh, you tried to use an item; let's prevent that from happening."
+
+But, abstractly, that's not really a 'Rule' that would get 'triggered,' anyway. I mean, there are other Rules you could point out which might, for instance, halve a unit's max HP for a while. That Rule wouldn't really be 'triggered'; it's just always active until it wears off. So that's not really a problem. Our system accommodates those situations. You could basically say that some Rules have persistent affects and they're triggered as soon as they're inflicted.
+
+One thing you couldn't do is have a Rule be triggered as soon as the player 'picks' an ability to use. But would we ever want to do that?
+
+The problem, hypothetically, is that, by choosing an ability to use, you have not actually DONE anything. So we can't trigger anything at that point. We can only trigger a rule after you've chosen to EXECUTE that ability. Then, we propose some changes to some DynamicAttributes and that's what triggers our Rules.
+
+So what sorts of Rules can we NOT do because we cannot trigger anything when an ability is chosen. I just can't think of anything that would need to be triggered after an ability is chosen but before it proposes its changes to the game.
+
+So, in that respect, maybe the DynamicAttribute system really is a magic bullet for our problem. So, the only issue we have becomes one of order-or-operations. Maybe the solution is just to word our Rules in such a way that it's clear that order-of-operations is significant.
+
+I'm just stuck on this idea that we could use more phases. But, CAN we cram more phases into this DynamicAttribute process? Right now, it's pretty cut-and-dry:
+
+You have a phase BEFORE a change is made. You have a phase AFTER a change is made.
+
+How many more phases can you logically fit in there?
+
+We're done. We just need to word our Rules in such a way that the player understands that order-of-operations is significant. I'm not convinced there's a better solution.
+
+Our game is going to be a monster-collecting JRPG in the style of Pokemon, or Robopon or Magi-Nation or any number of other clones and genre defining games. Like Pokemon, our battles are going to be one-on-one but with a team 'in the back row' that can be swapped in to replace the unit currently in the 'ring'.
+
+In Pokemon, you have one monster that's fighting and you have 5 'in reserve,' and you can swap them in and out at will, but with tactical repercussions. In Pokemon, when you swap, you lose a turn unless you do so after a KO.
+
+One difference for our game is that each team can take more than one action per turn. In Pokemon, turns go back-and-forth: I get one, you get one, I get one, and so-on. In our game, we're leaning on an equally-common JRPG trope of having an 'AP bar,' and your turn persists as long as you haven't run out of AP.
+
+So, in our title you'll be able to attack maybe 4 times or more with your unit before the enemy gets a turn, or you could attack once, and then swap, and then attack again with your second unit.
+
+But the real gimmick of our game is this 'Dynamic Rule' system where each team will have abilities that will impose new Rules upon the battle.
+
+For instance, if I'm fighting a team that has a healer I might want to use a unit who has an ability to change the battle's rules. Let's say that one of the units on the enemy team is 'Reaperish,' and he's a real bad-ass. He's in the ring a lot and dealing a lot of damage -- and taking a lot of damage -- but he keeps getting healed up by the opponent's healer.
+
+Maybe I have a unit who has an ability that adds a new Dynamic Rule to the battle like this: If Reaperish has his HP restored, the unit who restored his HP takes damage equal to the amount that they restored.
+
+So now, if the healer wants to heal Reaperish, they're gonna take damage. I have a tactical advantage -- and that's the core gimmick of our combat system.
+
+You could think of these 'Dynamic Rules' as being conceptual complex buffs and afflictions from other JRPGs. In other JRPGs, maybe the afflictions are simple as Poison -- "take 3 damage every turn." Or buffs are as simple as "Protect: you have 3 extra defense." We're sort of taking that notion of buffing and nerfing and trying to make it more tactically interesting.
+
+Let's take that example we just described: if a unit heals Reaperish, that unit takes damage equal to the amount that Reaperish was healed.
+
+With our current game-engine, we have a DynamicAttribute system which sort of manages the way that Rules behave. Basically, whenever a 'DynamicAttribute,' such as HP, is changed, we can ask the game's current Rules if they're interested in going off.
+
+So, here's what would happen, internally:
+
+Vencabot uses 'Heal' on Reaperish. It's gonna heal him for 15 health.
+Reaperish's HP 'DynamicAttribute' gets 'updated,' and when you 'update' a DynamicAttribute the first thing it does is ask all of the game's rules if it's okay to update it. If it's not okay, then no change occurs.
+
+So, the DynamicAttribute goes through all of the active rules and says, "Hey, Vencabot is about to heal Reaperish's HP. Do you guys want to prevent this? Do we have any Rules that prevent Reaperish from being healed, or prevent Vencabot from healing somebody?"
+
+In this case, we don't, so we move on to phase 2 of HP being 'updated': the post-update phase. Now, Reaperish's HP has gone up, because we was healed for 15 health. Now, the DynamicAttribute goes through all of the active rules, again, and says, "Vencabot healed Reaperish's HP by 15. Do any of you want to do something about that?"
+
+Our 'No Healing Allowed' rule then says, "Oh shit, somebody raised Reaperish's HP? Well then take the amount that he was healed and update Vencabot's HP downward by that amount."
+
+So Vencabot's HP "DynamicAttribute" does the same thing. It says, "Hey, all the rules in the game: Vencabot's HP is about to be lowered by 15 by 'No Healing Allowed'. Do any of you guys want to prevent that from happening?" If we had a Rule which was like, "No Rules can do direct HP damage," or, "Vencabot is immune to damage done by Rules," then yeah, we would prevent that -- but in our case, no.
+
+So now we enter the second phase of Vencabot's HP being updated: the phase after his HP is actually changed. Then the DynamicAttribute says, "Hey, Vencabot's HP was just lowered by 15 by 'No Healing Allowed'. Do any of you guys want to react to that?"
+
+If we had a Rule in play that was like, "If Vencabot takes damage from a Rule, he gets pissed off and his ATK goes up," we would do that -- and the change to atk power would ALSO ask all of the rules if they want to react in some way.
+
+I think that our DynamicRule system is complete. All we need to be conscious of is the wording of our Rules so that it's clear that order-of-operations is significant. We need to describe the rules to the player in a way that makes sense considering our 'preventative' system.
+
+That being the case, I could probably go back and simplify our code to get rid of the 'rule can trigger even if the event has already been prevented' clause. I think that just makes things more confusing and is gonna cause problems. We can always bring it back later if I'm wrong.
+
+Every unit (Pokemon) comes with a permanent rule attached to them. When you bring that unit into battle, then the battle has that rule.
+
+Furthermore, certain abilities that your 'Pokemon' can use might add new rules to the battle or remove existing rules.
+
+Combat is going to be a tug of war where both sides are trying to make sure that the rules are in their favor while working AROUND rules that are hampering them but which they might not necessarily be able to remove right away.
+
+What if we allow EVERY RULE TO TRIGGER that would've been triggered by an event, even IF it was prevented, but with the caveat that, if a Rule is triggered by an event that was prevented, all that it can do is explain that to the player. To do anything else would almost certainly cause bugs: if this event was prevented, Rules that were triggered by it shouldn't really be able to do anything. But at least they could print a message (or, in the case of the graphical game, display some kind of visual effect to show that the rule failed to trigger).
+
+We still have a problem with multi-prevention. I don't know what I'm talking about.
+
+I like this new code. Why isn't Bloodlust getting a failure message when Vencabot is Invincible? Fix it.
+

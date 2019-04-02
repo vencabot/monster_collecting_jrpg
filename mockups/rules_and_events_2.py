@@ -2,10 +2,10 @@ import dynamic_system
 
 class Invincible(dynamic_system.DynamicRule):
     def __init__(self, target_unit):
-        super().__init__("Invincible")
+        super().__init__("Invincible", "preemption")
         self.target_unit = target_unit
 
-    def _preemption_check(self, dynamic_event):
+    def _check(self, dynamic_event):
         if (
                 not dynamic_event.prevented
                 and dynamic_event.target is self.target_unit
@@ -24,10 +24,10 @@ class Invincible(dynamic_system.DynamicRule):
 
 class Rage(dynamic_system.DynamicRule):
     def __init__(self, target_unit):
-        super().__init__("Rage")
+        super().__init__("Rage", "reaction")
         self.target_unit = target_unit
 
-    def _reaction_check(self, dynamic_event):
+    def _check(self, dynamic_event):
         if (
                 dynamic_event.target is self.target_unit
                 and dynamic_event.attr_name is "hp"
@@ -44,10 +44,10 @@ class Rage(dynamic_system.DynamicRule):
 
 class Hench(dynamic_system.DynamicRule):
     def __init__(self, target_unit):
-        super().__init__("Hench")
+        super().__init__("Hench", "preemption")
         self.target_unit = target_unit
 
-    def _preemption_check(self, dynamic_event):
+    def _check(self, dynamic_event):
         if(
                 dynamic_event.perpetrator is self.target_unit
                 and dynamic_event.attr_name is "hp"
@@ -66,13 +66,18 @@ class Hench(dynamic_system.DynamicRule):
             dynamic_event.target.hp.update(
                     new_hp_value, dynamic_event.perpetrator)
 
+    def _fail(self, dynamic_event):
+        print(
+                f"{self.target_unit.unit_name} failed to do damage, so "
+                "no Hench for them!")
+
 
 class ExtraDamage(dynamic_system.DynamicRule):
     def __init__(self, target_unit):
-        super().__init__("Extra Damage")
+        super().__init__("Extra Damage", "preemption")
         self.target_unit = target_unit
 
-    def _preemption_check(self, dynamic_event):
+    def _check(self, dynamic_event):
         if(
                 dynamic_event.perpetrator is self.target_unit
                 and dynamic_event.attr_name is "hp"
@@ -93,10 +98,10 @@ class ExtraDamage(dynamic_system.DynamicRule):
 
 class BloodLust(dynamic_system.DynamicRule):
     def __init__(self, target_unit):
-        super().__init__("Bloodlust")
+        super().__init__("Bloodlust", "reaction")
         self.target_unit = target_unit
 
-    def _reaction_check(self, dynamic_event):
+    def _check(self, dynamic_event):
         if(
                 dynamic_event.perpetrator is self.target_unit
                 and dynamic_event.attr_name is "hp"
@@ -122,11 +127,11 @@ if __name__ == "__main__":
     party_b.append_unit(goodvibe)
     our_battle.append_party(party_a)
     our_battle.append_party(party_b)
-#    our_battle.dynamic_rules.append(BloodLust(goodvibe))
-    our_battle.dynamic_rules.append(Invincible(vencabot))
-    our_battle.dynamic_rules.append(ExtraDamage(goodvibe))
-    our_battle.dynamic_rules.append(Hench(goodvibe))
-#    our_battle.dynamic_rules.append(Rage(vencabot))
+    our_battle.append_rule(BloodLust(goodvibe))
+    our_battle.append_rule(Invincible(vencabot))
+    our_battle.append_rule(ExtraDamage(goodvibe))
+    our_battle.append_rule(Hench(goodvibe))
+    our_battle.append_rule(Rage(vencabot))
     print(f"Before the slap, Vencabot has {vencabot.hp.value} HP.")
     goodvibe.slap(vencabot)
     print(f"After the slap, Vencabot has {vencabot.hp.value} HP.")

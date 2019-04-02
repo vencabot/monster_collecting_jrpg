@@ -1,13 +1,3 @@
-def limited_recurrence(rule_check):
-    def limited_method(self, dynamic_event):
-        if self.recurrence_counter < self._recurrence_limit:
-            if rule_check(self, dynamic_event):
-                self.recurrence_counter += 1
-                self._trigger(dynamic_event)
-                return True
-            return False
-    return limited_method
-
 class DynamicEvent:
     def __init__(
             self, target, attr_name, new_value, old_value, perpetrator):
@@ -32,17 +22,16 @@ class DynamicAttribute:
         print(f"DIAGNOSTIC: Proposed value change to {new_value}.")
         if new_value == old_value:
             return
-        for dynamic_rule in self.owner.party.battle.dynamic_rules:
-            dynamic_rule.on_preemption(dynamic_event)
+        rules = self.owner.party.battle.dynamic_rules
+        for dynamic_rule in rules["preemption"]:
+            dynamic_rule.check(dynamic_event)
         if dynamic_event.prevented:
-            for dynamic_rule in self.owner.party.battle.dynamic_rules:
-                # It doesn't matter if this was triggered or not.
-                # You can never prevent a prevention.
-                dynamic_rule.on_prevented(dynamic_event)
+            for dynamic_rule in rules["prevention"]:
+                dynamic_rule.check(dynamic_event)
             return
         self.value = new_value
-        for dynamic_rule in self.owner.party.battle.dynamic_rules:
-            dynamic_rule.on_reaction(dynamic_event)
+        for dynamic_rule in rules["reaction"]:
+            dynamic_rule.check(dynamic_event)
 
 
 class BattleUnit:
@@ -72,39 +61,45 @@ class BattleParty:
 class Battle:
     def __init__(self):
         self.parties = []
-        self.dynamic_rules = []
+        self.dynamic_rules = {
+                "preemption": [], "prevention": [], "reaction": []}
 
     def append_party(self, party):
         self.parties.append(party)
         party.battle = self
 
+    def append_rule(self, rule):
+        self.dynamic_rules[rule.check_phase].append(rule)
+
 
 class DynamicRule:
-    def __init__(self, rule_name):
+    def __init__(self, rule_name, check_phase):
         self.rule_name = rule_name
         self.recurrence_counter = 0
         self._recurrence_limit = 1
+        self.check_phase = check_phase
 
-    @limited_recurrence
-    def on_preemption(self, dynamic_event):
-        return self._preemption_check(dynamic_event)
+    def check(self, dynamic_event):
+        if self.recurrence_counter >= self._recurrence_limit:
+            self._at_limit(dynamic_event)
+            return False
+        if dynamic_event.prevented:
+            self._fail(dynamic_event)
+            return False
+        elif self._check(dynamic_event):
+            self.recurrence_counter += 1
+            self._trigger(dynamic_event)
+            return True
 
-    @limited_recurrence
-    def on_prevented(self, dynamic_event):
-        return self._prevented_check(dynamic_event)
-
-    @limited_recurrence
-    def on_reaction(self, dynamic_event):
-        return self._reaction_check(dynamic_event)
-
-    def _preemption_check(self, dynamic_event):
-        return False
-
-    def _prevented_check(self, dynamic_event):
-        return False
-
-    def _reaction_check(self, dynamic_event):
+    def _check(self, dynamic_event):
         return False
 
     def _trigger(self, dynamic_event):
         pass
+
+    def _at_limit(self, dynamic_event):
+        #print(f"{self.rule_name} has reached its limit.")
+        pass
+
+    def _fail(self, dynamic_event):
+        print(f"{self.rule_name} failed to trigger.")
