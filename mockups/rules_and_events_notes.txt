@@ -500,3 +500,142 @@ We still have a problem with multi-prevention. I don't know what I'm talking abo
 
 I like this new code. Why isn't Bloodlust getting a failure message when Vencabot is Invincible? Fix it.
 
+Vencabot also doesn't get a fail message for Rage. Let's fix that.
+
+
+
+04/03/19:
+
+It strikes me that, with our new 'prevention' and 'failure' mechanisms in play, we can change the way that we organize our Rules.
+
+Previously, we split up rules as being related to three different phases:
+A preemption phase
+A prevented phase
+A reaction phase
+
+'Preemption' is for Rules that have to be triggered BEFORE a proposed change.
+
+'Prevented' Rules are ones that only trigger when an event is prevented.
+
+'Reaction' Rules are Rules that have to be triggered AFTER a change takes place.
+
+It strikes, me, though, that, now that we have a flag for whether an event was prevented or not that's ATTACHED to the event, itself, Reaction rules and Prevented rules behave exactly the same. A 'prevented' rule is just a rule that triggers after a change would've happened and checks to see if it was prevented.
+
+So, we can really simplify our phases:
+A 'preemption' phase
+A 'follow-up' phase
+
+This creates a problem. Right now, the _fail method is always triggered when the event that the rule check'd as True is also prevented. So, if we had a Rule that would ONLY trigger if the event was prevented, then we would sort of reverse the _fail and _trigger methods: _fail would have the Rule SUCCEED and would need to increment the recurrence_counter, and _trigger would represent the Rule FAILING and would NOT increment the recurrence_counter. So, how can we get around this?
+
+Well, first of all - on second, let's just fix our code. Let's ignore, for now, the possibility of Rules that only trigger when their event was prevented.
+
+Everything is cleaned up, except that we essentially cannot have Rules that trigger ONLY when the event that triggered them was prevented. Do we even need Rules like that? Let's create some examples where that functionality might come in handy: a Rule that only triggers if a change is PREVENTED.
+
+A rule idea: if Vencabot fails to take damage from an attack, his attacker gets attack power. We'll call this rule "persistent".
+
+What if, instead of simply preventing... damage... that won't work. But what if, instead of preventing damage, 'invincible' would prevent the 'damage' event and create a NEW damage event for '0' damage. That would solve quite a lot of problems, actually. Then this new event for '0' damage could trigger other Rules.
+
+The problem with this is that we don't have 'damage' events. We have events for changing HP. So we would need to change HP to the value that it's currently at, so we wouldn't know if it was a proposed 'hurt' or a proposed 'heal' for 0 delta. Because our rules are triggering on an attribute change, we can't really say that a change from 10 HP to 10 HP is '0 damage'.
+
+I mean, the failure, here, seems to stem from my over-programatization of the _trigger and _fail methods. Because we can't assume that a Rule will _fail just because the event that triggered it was prevented. That might be the very thing that makes the rule succeed. So that's our problem; how can I address this while keeping the code as tidy as possible, because I do like how _trigger is programatized.
+
+Maybe our Rules need some kind of flag to tell the 'check' method when to increment the recurrence_counter. Because some rules might increment it only when 'prevented' is False and some rules might increment it only when 'prevented' is True and some might even increment it either way.
+
+We don't want the recurrence_counter to increment if the Rule did not take affect. Fuck. I was gonna say, maybe we could ONLY increment the recurrence_counter AFTER the Rule takes affect, but that would cause bugs because the Rule could trigger itself -- and since the recurrence_counter wouldn't be incremented at that point, we'd be stuck in an infinite loop.
+
+Here's the solution: move the 'prevented' check to the 'check' method, period. And if 'check' returns False -- that's not gonna work. I was gonna say, if 'check' returns 'False,' then trigger _fail, but that means that '_fail' would trigger for every single time the Rule wouldn't have triggered -- even if the problem wasn't 'prevented' but rather some other aspect of the event not qualifying for the Rule.
+
+Maybe we just need to get rid of _fail and have 'check' provide... its own error messages when necessary? I don't think so.
+
+I could force this to work, easy. All it would need would be to remove the _fail method. I just really like the idea of having this '_fail' method which is called when the Rule WOULD have taken place except that the event that would have triggered it was prevented, already.
+
+When 'check' is called. Maybe. We need. To return. Some information. About why the 'check' failed. Then, if 'check' reports that the failure was due to the event having been prevented, we can run '_fail'. That seems really sloppy, though, and I can't imagine any other situation where I'd want to see why a Rule failed except if it were prevented.
+
+It seems to me like the best way to solve this problem is to bring back the 'prevented' check-phase, where Rules that only trigger on an event's prevention are checked.
+
+The problem with this is that, even Rules that trigger on Reaction must also be checked if the event was prevented so that we can get their fail messages.
+
+So, really, our code would work like this:
+Call pre-emption Rules.
+Make change or don't.
+Call Prevented and Reaction Rules.
+
+So maybe 'check_phase' is the wrong word. It's not really another phase. It's just the behavior the rule: should it succeed on failure. Should it succeed on not-failure. Some Rules might succeed EITHER way, which my current code also doesn't accommodate.
+
+Let's make an example of a Rule that would succeed whether or not the event that triggered it was prevented:
+
+If GoodVibe attacks his opponent, he loses HP.
+
+So, if GoodVibe attacks Vencabot, he proposes an HP loss to Vencabot. If Vencabot is Invincible, that proposal is declined. HOWEVER, just by proposing it, GoodVibe loses HP -- that's the Rule.
+
+So, there would be Rules that would trigger WHETHER OR NOT the event was prevented.
+
+So it seems to me that we need an attribute of a DynamicRule that explains when the Rule can possibly trigger, with three options:
+Only if event is NOT prevented.
+Only if event IS prevented.
+Whether or not event is prevented.
+
+What kind of language can we use to make this attribute clear?
+
+my_rule.on_prevented = True?
+
+Maybe we need TWO attributes, right? Not one attribute with THREE options, but two attributes with two options each:
+
+my_rule.on_prevented = True
+my_rule.on_not_prevented = True
+
+I just don't like the language of 'on_not_prevented'. How do you specify that a Rule will run if the event that triggered was not prevented.
+
+This is the default:
+    my_rule.trigger_on_prevented = False
+    my_rule.fail_on_prevented = True
+
+That's not gonna work.
+
+What would work, but is kind of ugly, is this:
+
+Default:
+    my_rule.trigger_on_not_prevented = True
+    my_rule.trigger_on_prevented = False
+
+Rule that only triggers on prevented:
+    my_rule.trigger_on_not_prevented = False
+    my_rule.trigger_on_prevented = True
+
+A rule that will always work:
+    my_rule.event_not_prevented = True
+    my_rule.event_prevented = True
+
+I'm still iffy about that language, but I think that will solve all of our problems so I'm gonna implement that.
+
+OH NOOOOOOOOOOOOO
+
+GoodVibe's original damage request was prevented so that we could replace with an event for MORE damage.
+
+So even though GoodVibe DID DO DAMAGE, he still triggered Persistence because his firest request to damage was declined so that we could make another request to do more damage.
+
+So there's no way to know that GoodVibe wanted to damage but did not end up doing any damage by the end of the turn.
+
+With our current mechanisms, we can't check that.
+
+So that creates a lot of problems. A LOT OF PROBLEMS. We really can't run Rules in the case that an event is prevented, because we have no way of knowing if that prevented event was replaced by the same type of event.
+
+So, this goes back to a problem we've been having for weeks, and which I made a note of just a couple of days ago but later ignored because I thought I was a genius: you can not trigger rules on a prevention. You just can't, right? It just doesn't work. If an event was prevented, you have to ignore it.
+
+You can't assume that because one damage event was prevented that GoodVibe is not doing damage this turn.
+
+What is our solution to get a Rule like 'Persistence' working? We need Rules like that. That's for us to solve tomorrow. We need for this Rule to work:
+
+If GoodVibe attacks Vencabot and attempts to do HP damage, but that damage is neutralized, GoodVibe gets more attack power.
+
+Right now, we simply can't make that work. We gotta come up with a solution. How do we know that GoodVibe WANTED to do damage (well, obviously, we can check for a HP event that makes it lower), but then DID NOT DO ANY DAMAGE (this is the tricky part).
+
+I just an idea! What if, instead of a 'prevented' flag, we also had a 'replaced' flag? REPLACE an event. If an event was REPLACED, then... find THAT EVENT. event.replaced_by , and that would be point to another event.
+
+Replaced event.prevented with event.neutralized.
+
+Wait another minute. What if a neutralized event was, itself, just an event that changes a value to itself.
+
+What if we got rid of this whole idea of 'prevented' events and, instead, just replaced events with a similar event that doesn't change anything.
+
+NEXT TIME, I want to change DynamicEvent.prevented to DynamicEvent.replaced_by . That will solve a lot of our problems, I think. We'll see.

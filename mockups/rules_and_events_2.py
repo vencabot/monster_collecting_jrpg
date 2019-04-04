@@ -2,7 +2,7 @@ import dynamic_system
 
 class Invincible(dynamic_system.DynamicRule):
     def __init__(self, target_unit):
-        super().__init__("Invincible", "preemption")
+        super().__init__("Invincible", "before")
         self.target_unit = target_unit
 
     def _check(self, dynamic_event):
@@ -24,7 +24,7 @@ class Invincible(dynamic_system.DynamicRule):
 
 class Rage(dynamic_system.DynamicRule):
     def __init__(self, target_unit):
-        super().__init__("Rage", "reaction")
+        super().__init__("Rage", "after")
         self.target_unit = target_unit
 
     def _check(self, dynamic_event):
@@ -44,7 +44,7 @@ class Rage(dynamic_system.DynamicRule):
 
 class Hench(dynamic_system.DynamicRule):
     def __init__(self, target_unit):
-        super().__init__("Hench", "preemption")
+        super().__init__("Hench", "before")
         self.target_unit = target_unit
 
     def _check(self, dynamic_event):
@@ -74,7 +74,7 @@ class Hench(dynamic_system.DynamicRule):
 
 class ExtraDamage(dynamic_system.DynamicRule):
     def __init__(self, target_unit):
-        super().__init__("Extra Damage", "preemption")
+        super().__init__("Extra Damage", "before")
         self.target_unit = target_unit
 
     def _check(self, dynamic_event):
@@ -98,7 +98,7 @@ class ExtraDamage(dynamic_system.DynamicRule):
 
 class BloodLust(dynamic_system.DynamicRule):
     def __init__(self, target_unit):
-        super().__init__("Bloodlust", "reaction")
+        super().__init__("Bloodlust", "after")
         self.target_unit = target_unit
 
     def _check(self, dynamic_event):
@@ -116,6 +116,26 @@ class BloodLust(dynamic_system.DynamicRule):
         self.target_unit.atk.update(self.target_unit.atk.value + 1, self)
 
 
+class Persistence(dynamic_system.DynamicRule):
+    def __init__(self, target_unit):
+        super().__init__("Persistence", "after", False, True)
+        self.target_unit = target_unit
+
+    def _check(self, dynamic_event):
+        if(
+                dynamic_event.perpetrator is self.target_unit
+                and dynamic_event.attr_name is "hp"
+                and dynamic_event.new_value < dynamic_event.old_value):
+            return True
+        return False
+
+    def _trigger(self, dynamic_event):
+        print(
+                f"{self.target_unit.unit_name} has Persistence! They're "
+                "just gonna hit harder!")
+        self.target_unit.atk.update(self.target_unit.atk.value + 1, self)
+
+
 if __name__ == "__main__":
     party_a = dynamic_system.BattleParty("party_a")
     party_b = dynamic_system.BattleParty("party_b")
@@ -128,10 +148,9 @@ if __name__ == "__main__":
     our_battle.append_party(party_a)
     our_battle.append_party(party_b)
     our_battle.append_rule(BloodLust(goodvibe))
-    our_battle.append_rule(Invincible(vencabot))
+#    our_battle.append_rule(Invincible(vencabot))
     our_battle.append_rule(ExtraDamage(goodvibe))
     our_battle.append_rule(Hench(goodvibe))
     our_battle.append_rule(Rage(vencabot))
-    print(f"Before the slap, Vencabot has {vencabot.hp.value} HP.")
+    our_battle.append_rule(Persistence(goodvibe))
     goodvibe.slap(vencabot)
-    print(f"After the slap, Vencabot has {vencabot.hp.value} HP.")
