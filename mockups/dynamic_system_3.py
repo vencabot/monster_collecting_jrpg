@@ -1,12 +1,25 @@
 class DynamicEvent:
     def __init__(
-            self, target, attr_name, new_value, old_value, perpetrator):
+            self, target, attr_name, new_value, old_value,
+            perpetrated_by, replaces=None):
         self.target = target
         self.attr_name = attr_name
         self.new_value = new_value
         self.old_value = old_value
-        self.perpetrator = perpetrator
-        self.prevented = False
+        self.perpetrated_by = perpetrated_by
+        self.replaces = replaces
+        self.replaced_by = None
+
+    def replace_value(self, new_value, perpetrated_by):
+        self.replaced_by = DynamicEvent(
+                self.target, self.attr_name, new_value, self.old_value,
+                perpetrated_by, self)
+
+    def get_original_event(self):
+        original_event = self
+        while original_event.replaces is not None:
+            original_event = original_event.replaces
+        return original_event
 
 class DynamicAttribute:
     def __init__(self, owner, attr_name, value):
@@ -14,25 +27,45 @@ class DynamicAttribute:
         self.attr_name = attr_name
         self.value = value
 
-    def update(self, new_value, perpetrator):
+    def update(self, new_value, perpetrated_by):
         old_value = self.value
         dynamic_event = DynamicEvent(
                 self.owner, self.attr_name, new_value, old_value,
-                perpetrator)
+                perpetrated_by)
         print(f"DIAGNOSTIC: Proposed value change to {new_value}.")
         if new_value == old_value:
             return
         rules = self.owner.party.battle.dynamic_rules
         for dynamic_rule in rules["before"]:
             dynamic_rule.check(dynamic_event)
-        if not dynamic_event.prevented:
-            print(
-                    f"DIAGNOSTIC: {self.owner.unit_name}'s "
-                    f"{self.attr_name} changed from {self.value} to "
-                    f"{new_value}.")
-            self.value = new_value
+            while dynamic_event.replaced_by is not None:
+                dynamic_event = dynamic_event.replaced_by
+        final_value = dynamic_event.new_value
+        print(
+                f"DIAGNOSTIC: {self.owner.unit_name}'s {self.attr_name} "
+                f"changed from {self.value} to {final_value}.")
+        self.value = final_value
         for dynamic_rule in rules["after"]:
             dynamic_rule.check(dynamic_event)
+
+
+class UnitAbility:
+    def __init__(self, ability_name, owner):
+        self.ability_name = ability_name
+        self.owner = owner
+
+    def use(self, targets):
+        pass
+
+
+class Slap(UnitAbility):
+    def __init__(self, owner):
+        super().__init__("Slap", owner)
+
+    def use(self, targets):
+        print(f"{self.owner.unit_name} slapped {targets[0].unit_name}!")
+        targets[0].hp.update(targets[0].hp.value - 2, self)
+        self.owner.mp.update(self.owner.mp.value - 1, self)
 
 
 class BattleUnit:
@@ -40,12 +73,15 @@ class BattleUnit:
         self.unit_name = unit_name
         self.hp = DynamicAttribute(self, "hp", 10)
         self.atk = DynamicAttribute(self, "atk", 5)
+        self.mp = DynamicAttribute(self, "mp", 5)
+        self.abilities = {}
         self.party = None
 
-    def slap(self, target_unit):
-        print(f"{self.unit_name} slapped {target_unit.unit_name}!")
-        new_hp = target_unit.hp.value - 2
-        target_unit.hp.update(new_hp, self)
+    def learn_ability(self, ability_class):
+        new_ability = ability_class(self)
+        if new_ability.ability_name not in self.abilities:
+            self.abilities[new_ability.ability_name] = []
+        self.abilities[new_ability.ability_name].append(new_ability)
 
 
 class BattleParty:
@@ -79,17 +115,6 @@ class DynamicRule:
         self.rule_name = rule_name
         self.recurrence_counter = 0
         self._recurrence_limit = 1
-        # This langauge sucks so bad. I gotta think of a better way to
-        # word this.
-
-        # This boolean explains that the Rule will trigger if the event
-        # that we're checking is not prevented.
-        self._event_not_prevented = event_not_prevented
-
-        # This boolean explains that the Rule will trigger if the event
-        # that we're checking WAS prevented.
-        self._event_prevented = event_prevented
-
         self.check_phase = check_phase
 
     def check(self, dynamic_event):
@@ -97,16 +122,6 @@ class DynamicRule:
             self._at_limit(dynamic_event)
             return False
         elif self._check(dynamic_event):
-            if (
-                    dynamic_event.prevented
-                    and not self._event_prevented):
-                self._fail(dynamic_event)
-                return False
-            if (
-                    not dynamic_event.prevented
-                    and not self._event_not_prevented):
-                self._fail(dynamic_event)
-                return False
             self.recurrence_counter += 1
             self._trigger(dynamic_event)
             return True

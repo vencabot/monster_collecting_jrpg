@@ -639,3 +639,68 @@ Wait another minute. What if a neutralized event was, itself, just an event that
 What if we got rid of this whole idea of 'prevented' events and, instead, just replaced events with a similar event that doesn't change anything.
 
 NEXT TIME, I want to change DynamicEvent.prevented to DynamicEvent.replaced_by . That will solve a lot of our problems, I think. We'll see.
+
+
+
+04/04/19:
+
+Today, I want to change our dynamic_event.prevented attribute to a dynamic_event.replaced_by attribute, which points to another event that has replaced this one. This is supposed to solve the problem of knowing whether or not GoodVibe did damage with his attack.
+
+Previously, we could not know whether or not GoodVibe's attack did damage. We could see that ONE of his HP DynamicAttribute updates was prevented, but that wasn't evidence that the same update wasn't then RE-SENT. So, we couldn't know for sure that 'the damage was neutralized.' In fact, a damage event being prevented is just as much evidence that the attack was INCREASED.
+
+So, because this is probably a pretty common operation -- preventing an update so that the update can be tweaked and re-submitted -- I propose that we do away with the 'prevented' attribute and instead use a 'replaced_by' attribute, and if we want to totally 'neutralize' an event, we can just replace it with an event that does no damage.
+
+So, here's my question: it struck me last night that, because events are mutable objects, we could just change the properties of the event in real time. Do we want to do that, or do we want to 'replace' events with all-new events? We gotta make a list of pros and cons for each approach.
+
+It seems to me, without digging too deeply in, that simply changing the attributes of a dynamic_event mid-phase would cause bugs of some kind. If it doesn't, though, that would seem to be a very clean and object-oriented solution.
+
+So, I guess the real question is: do we ever need access to the original event that was 'replaced'. If so, we gotta go with the 'replaced_by' approach, because, then, we can access the whole history of an event as it's been replaced.
+
+If we never need to know the ORIGINAL state of an event, then I don't see why we shouldn't just change its attributes instead of replacing it.
+
+So, perhaps the thing to do would be to try changing the attributes and see if it causes any bugs. I'm gonna fork this off into a version 3 mockup. this is a pretty big departure from the way that we've been doing business in version 2.
+
+I've got a problem with the 'mutability' idea that would be solved, right away, using the 'replaced_by' idea: in other words, maybe we DO need to see the HISTORY of an event.
+
+Let's say that GoodVibe uses a skill that hypothetically INFLICTS 0 damage. If it does 0 damage, it succeeds, but it would still trigger GoodVibe's persistence.
+
+But, as unlikely as that seems, here's a more likely scenario that 'mutability' can't solve that 'replaced_by' can solve:
+
+What if we have a Rule that says, "If GoodVibe's damage is lowered by a Rule, he gets healed." That seems a reasonable Rule: it's triggered if his damage is lowered.
+
+What's really cool about having an event HISTORY is that we can look at the entire timeline of an event's alterations and see how it's differed over time. For instance, we can see that our CURRENT HP event is replacing an HP event that would have done more damage. And we can see who changed it (perpetrator? No, not really. Might have to add a new attribute). We can safely say that GoodVibe's damage was lowered by a Rule.
+
+That's a good-enough reason, to me, to implement this 'replaced_by' system. We do actually want to have a log of the changes made to an event.
+
+So, if GoodVibe attacks Vencabot and Hench is triggered, so double damage is dealt. Who is the 'perpetrator' of that HP update?
+
+GoodVibe initialized the attack.
+But Hench created the HP update that actually dealt double damage.
+
+One solution to this question would be to have every event's 'perpetrator' be the actual object that created the event. So, GoodVibe would have been the perpetrator of the ORIGINAL damage event. Hench is the perpetrator of the NEW, double-damage event.
+
+So, if you have a Rule that says, "If Vencabot takes damage as the result of a Rule...," Hench would trigger it, because Vencabot did take damage (extra damage) as the result of a rule.
+
+However, if you said, "If Vencabot takes damage from GoodVibe...," that Rule could ALSO trigger, because we could look into the history of our Event and see that the damage was ORIGINALLY perpetrated by GoodVibe.
+
+So, you could say that Hench AUGMENTED the damage, and so Vencabot did take damage as a result of Hench, but he was also attacked by GoodVibe.
+
+Another solution to this problem would be to have a new attribute: "augmented_by". It could be a list of Rules and whatever else has tampered with this event (replaced it in the past).
+
+But that doesn't really work, because we might need to know exactly how a particular Rule has augmented this event (up or down). So we do need for each replacing event to have an attribute which explains effectively WHO is doing the replacing. So, I say we use 'perpetrator,' and if we need to find out who the ORIGINAL perpetrator is, we just walk back through the history of the event.
+
+I just hit a big road-block. I forgot that Rules don't actually directly create events. They just call 'update'. Well, maybe we can just that. After all, this is the whole idea of 'replacing' an event: you're not 'updating' a DynamicAttribute fresh.
+
+So, basically, we're feeding the DynamicEvent to the Rule. There's no reason why the Rule shouldn't create its own DynamicEvent and assign it to the event-that-it-was-fed's 'replaced_by' attribute.
+
+We only want the rules to see the most recent event. If they want to go back in time, that's fine. They can use the 'replaces' attribute to do that.
+
+In general, though, we want to feed the rules the most up-to-date version of the event.
+
+To implement the version 3 changes, we're temporarily getting rid of Rules that only trigger on 'prevention,' such as Persistence.
+
+First, let me celebrate: I think that our Dynamic Rule System is now fully-operational. I don't think we're gonna be able to break it. I think that it's powerful enough to do anything that we want to do with Dynamic Rules. So yippee.
+
+My next project is going to be getting unit 'skills' or 'abilities' working. It's important that, when we talk about 'perpetrating' events, we, from this point forward, consider the perpetrator to be the ABILITY or skill that's doing the damage (or whatever it's doing). That way, we can trigger Rules based on attributes of the ability being used. If we need to know who USED the ability, we can just use ability.owner. It's no big deal, that should be fine.
+
+Before we call it quits, I want to very quickly get 'Slap' working as a prototype ability.
