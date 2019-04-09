@@ -1,0 +1,89 @@
+04/08/19
+
+It's been a while since we talked about game-design. Over the past couple weeks, we've been doing some development -- some actual programming -- regarding the implementation of our game's Dynamic Rule System. Now that it's fully-functional, it's time to start developing other aspects of our game. The problem is that we need to review how we want for these aspects to behave.
+
+I think our first order of business is to start working on 'abilities,' which are the actions your units can take in battle to consume AP. Think of these like the four 'moves' that Pokemon have.
+
+To test the Dynamic Rule System, I created a very simple ability called 'Slap' which I think already nails down some CORE concepts about abilities, but we also had some more in-depth, complicated aspects that I'd like to review and attempt to development.
+
+Let's review what we know about Abilities:
+    * Abilities belong to 'classes'.
+    * Abilities always consume the Leader's AP.
+    * Abilities may consume resources from the unit or carry some cost.
+    * A unit's 'MP' attribute is designed specifically as a resource for
+      abilities to consume.
+    * The use of abilities is the core of our combat gameplay. The idea is
+      to choose them carefully and use them to give yourself an advantage in
+      battle, and to use them over and over until you win.
+    * Aside from dealing direct damage to enemy resources, abilities will
+      also engage the Dynamic Rule System by implementing favorable rules
+      for your party and disfavorable rules for the opponent party.
+    * As a side-effect, some abilities may implement rules that are DIS-
+      FAVORABLE for YOUR party or FAVORABLE for the ENEMY party. This could
+      be the result of an ability 'backfiring' or just as a cost for an
+      otherwise powerful ability.
+
+    * We talked at depth before about how much 'chance' should play a role
+      in the core mechanics of using abilities. One thing that we discussed
+      was the idea of an 'effectiveness' gradient. Maybe this would be a
+      good time to review that.
+    * Every ability has 3 levels of effectiveness: 'glancing' effectiveness,
+      'normal' effectiveness, and 'critical 'effectiveness.
+    * When an ability is used, a dice is rolled to determine effectiveness.
+    * Attributes on both the AGGRESSOR and DEFENDER will have an impact on
+    * How wide the areas are for the dice-roll to land in any of those three
+      levels.
+    * These attributes are 'Skill' on the aggressor and 'Parry' on the
+      defender (these names both suck, let's reconsider as time goes on).
+
+
+I guess the moral of the story, today, is that we need to take our 'Slap' demonstrative ability and give it three effectiveness levels and see how we're gonna handle that dice-roll.
+
+At first, we're not gonna fuck around with 'Skill' and 'Parry' attributes. We're just gonna roll a dice and choose a tier to activate when an ability is used.
+
+Even at first, we want to determine a way to weight this randomness -- and that's something that I've had trouble with in the past: randomness weighting. There's many ways to do it and I've never been 100% satisfied that I've found the best way, programatically.
+
+Enough developing: let's talk about DESIGN again. How are we going to calculate effectiveness. We have to change the weights of 'critical' and 'glancing' based on the interplay between the aggressor's Skill attribute and the defender's Parry attribute.
+
+If an aggressor's Skill attribute is substantially higher than the defender's Parry attribute, we're going to have a HIGHER chance of getting a critical and a LOWER chance of getting a glancing hit.
+
+If the defender's Parry attribute is substantially higher than the aggressor's Skill attribute, we're going to have a LOWER chance of getting a critical and a HIGHER chance of getting a glancing hit.
+
+If they're even... Then we fall-back on some default weighting.
+
+What if there was a MINIMUM CHANCE to GLANCE or CRIT. Let's say that we can simply get a 'interplay' value just from combining our 'parry' and 'skill':
+
+Vencabot has 20 Skill
+Kenny has 25 Parry
+
+Effectiveness multiplier would be -5.
+
+So, as this number goes into the negatives, we reduce our chance to crit UNTIL IT HITS ITS MINIMUM. You're gonna always have a chance to crit, but the chance bottoms out. Once that chance bottoms out, your chance to GLANCE goes UP. So, what we're really talking about is our chance to 'normal' shrinking. The more dramatic our 'effectiveness multiplier' becomes, the smaller our chance to 'normal' becomes.
+
+Positive multipliers would work the opposite way: your chance to 'glance' would go down until IT hits a minimum, and then your chance to crit would start to go up, eating into your chance to 'normal'.
+
+If our multiplier is 0 (Vencabot has 20 Skill and Kenny has 20 Parry), what are our default weights and how far are they from the MINIMUM weights?
+
+I think, because we're working with a multiplier with 0 -- which is probably gonna be somewhat rare -- maybe we should have more dynamism: higher chances to glance and crit than we've been working with.
+
+15% Glance (minimum 5%)
+70% Normal
+15% Crit (minimum 5%)
+
+I wanna make a note that the WHOLE POINT of the 'effectiveness system' is to mitigate saltiness, because, unlike some RPGs where 'crit damage' is a pre-baked calculation, our abilities have THREE DIFFERENT FORMS: a 'glancing' form, a 'normal' form, and a 'crit' form, and all three are unique to every ability.
+
+Therefore, you can always choose to use abilities where there isn't a whole lot of variance between the forms. Or you could choose to use abilities where there's a dramatic difference between the forms. So, it's in the player's hands how much they want to lean or be victim to the random effectiveness.
+
+The downside of having lower 'default' values for Glancing and Crit would be that, as you grow your character to have higher Parry or Skill, there's less Crit and Glancing to TAKE AWAY.
+
+The UPSIDE of having lower 'default' values for Glancing and Crit, is there they can grow MORE. It really depends on how extreme we expect the differences to be between an aggressor's Skill and a defender's Parry -- and what I will say is that, looking at how we've designed growth and attributes so far, it does seem somewhat likely that there could be a very large gap (multiplier). So perhaps it would make more sense to have the 'default' values be somewhat rare and then, as that multiplier goes up, we get higher likelihoods to get 'glancing' or 'crit'.
+
+The next step would be to fine-tune the multiplier, but let's not fuck with that, because that really is dependent on character growth, which we haven't looked at yet: we don't know if a normal level for Skill would be '10' or '10,000'. We don't have a sense of scale.
+
+So let's just mock this up and see where we're at.
+
+For our mock-up, let's assume that '5' is a normal amount for Parry or Skill, and let's say that having twice the value of your opponent's attribute will give you a 50% chance to crit (or glance, depending on if you're attacking or defending).
+
+We made some good progress: the next step will be to create a method which takes this 'effectiveness augmentor' (or whatever you want to call it) and returns weights. Since we're lowering ONE weight to a certain level before we start to RAISE the other weight, there's going to be a little bit of coding involved.
+
+## side note: I forgot to fuck around with 'cure conditions' for our DynamicRule system. So, we're not really complete on that, yet.

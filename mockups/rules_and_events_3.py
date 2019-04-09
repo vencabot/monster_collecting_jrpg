@@ -1,3 +1,4 @@
+import battle_3
 import dynamic_system_3
 
 class Invincible(dynamic_system_3.DynamicRule):
@@ -17,7 +18,7 @@ class Invincible(dynamic_system_3.DynamicRule):
         dynamic_event.replace_value(self.target_unit.hp.value, self)
         original_event = dynamic_event.get_original_event()
         perpetrator = original_event.perpetrated_by
-        if isinstance(perpetrator, dynamic_system_3.UnitAbility):
+        if isinstance(perpetrator, battle_3.UnitAbility):
             attacker_name = perpetrator.owner.unit_name
         elif isinstance(perpetrator, dynamic_system_3.DynamicRule):
             attacker_name = perpetrator.rule_name
@@ -106,7 +107,7 @@ class BloodLust(dynamic_system_3.DynamicRule):
         original_event = dynamic_event.get_original_event()
         perp_is_ability = isinstance(
                 original_event.perpetrated_by,
-                dynamic_system_3.UnitAbility)
+                battle_3.UnitAbility)
         if (
                 perp_is_ability
                 and original_event.perpetrated_by.owner is self.target_unit
@@ -131,7 +132,7 @@ class Persistence(dynamic_system_3.DynamicRule):
         original_event = dynamic_event.get_original_event()
         perp_is_ability = isinstance(
                 original_event.perpetrated_by,
-                dynamic_system_3.UnitAbility)
+                battle_3.UnitAbility)
         if (
                 perp_is_ability
                 and original_event.perpetrated_by.owner is self.target_unit
@@ -169,14 +170,34 @@ class MagicMan(dynamic_system_3.DynamicRule):
         new_hp = self.target_unit.hp.value + mp_damage
         self.target_unit.hp.update(new_hp, self)
 
-if __name__ == "__main__":
-    party_a = dynamic_system_3.BattleParty("party_a")
-    party_b = dynamic_system_3.BattleParty("party_b")
-    vencabot = dynamic_system_3.BattleUnit("Vencabot")
-    goodvibe = dynamic_system_3.BattleUnit("GoodVibe")
-    our_battle = dynamic_system_3.Battle()
 
-    goodvibe.learn_ability(dynamic_system_3.Slap)
+class Slap(battle_3.UnitAbility):
+    def __init__(self, owner):
+        super().__init__("Slap", owner)
+
+    def _use_glancing(self, targets):
+        print(f"{self.owner.unit_name} slapped {targets[0].unit_name}!")
+        targets[0].hp.update(targets[0].hp.value - 1, self)
+        self.owner.mp.update(self.owner.mp.value - 1, self)
+
+    def _use_normal(self, targets):
+        print(f"{self.owner.unit_name} slapped {targets[0].unit_name}!")
+        targets[0].hp.update(targets[0].hp.value - 2, self)
+        self.owner.mp.update(self.owner.mp.value - 1, self)
+
+    def _use_critical(self, targets):
+        print(f"{self.owner.unit_name} slapped {targets[0].unit_name}!")
+        targets[0].hp.update(targets[0].hp.value - 4, self)
+        self.owner.mp.update(self.owner.mp.value - 1, self)
+
+if __name__ == "__main__":
+    party_a = battle_3.BattleParty("party_a")
+    party_b = battle_3.BattleParty("party_b")
+    vencabot = battle_3.BattleUnit("Vencabot")
+    goodvibe = battle_3.BattleUnit("GoodVibe")
+    our_battle = battle_3.Battle()
+
+    goodvibe.learn_ability(Slap)
 
     party_a.append_unit(vencabot)
     party_b.append_unit(goodvibe)
@@ -187,7 +208,7 @@ if __name__ == "__main__":
     our_battle.append_rule(ExtraDamage(goodvibe))
     our_battle.append_rule(Rage(vencabot))
     our_battle.append_rule(Persistence(goodvibe))
-    our_battle.append_rule(Invincible(vencabot))
+    #our_battle.append_rule(Invincible(vencabot))
     our_battle.append_rule(MagicMan(goodvibe))
 
     goodvibe.abilities["Slap"][0].use([vencabot])
