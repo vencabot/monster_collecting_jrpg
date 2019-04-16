@@ -171,44 +171,92 @@ class MagicMan(dynamic_system_3.DynamicRule):
         self.target_unit.hp.update(new_hp, self)
 
 
+class OldManGenes(dynamic_system_3.DynamicRule):
+    def __init__(self, target_leader):
+        super().__init__("Old Man Genes", "after")
+        self.target_leader = target_leader
+        self.is_active = False
+
+    def _check(self, dynamic_event):
+        if (
+                not self.is_active
+                and dynamic_event.target is self.target_leader
+                and dynamic_event.attr_name is "ap"
+                and dynamic_event.new_value < 5):
+            return True
+        return False
+
+    def _trigger(self, dynamic_event):
+        print(
+                f"{self.target_leader.leader_name}'s whole party has "
+                "the old man genes! They need a nap!")
+        for battle_unit in self.target_leader.party.units:
+            battle_unit.atk.update(battle_unit.atk.value * .7, self)
+        self.is_active = True
+
+
 class Slap(battle_3.UnitAbility):
     def __init__(self, owner):
         super().__init__("Slap", owner)
 
     def _use_glancing(self, targets):
+        leader = self.owner.party.leader
         print(f"{self.owner.unit_name} slapped {targets[0].unit_name}!")
         targets[0].hp.update(targets[0].hp.value - 1, self)
         self.owner.mp.update(self.owner.mp.value - 1, self)
+        leader.ap.update(leader.ap.value - 2, self)
 
     def _use_normal(self, targets):
+        leader = self.owner.party.leader
         print(f"{self.owner.unit_name} slapped {targets[0].unit_name}!")
         targets[0].hp.update(targets[0].hp.value - 2, self)
         self.owner.mp.update(self.owner.mp.value - 1, self)
+        leader.ap.update(leader.ap.value - 2, self)
 
     def _use_critical(self, targets):
+        leader = self.owner.party.leader
         print(f"{self.owner.unit_name} slapped {targets[0].unit_name}!")
         targets[0].hp.update(targets[0].hp.value - 4, self)
         self.owner.mp.update(self.owner.mp.value - 1, self)
+        leader.ap.update(leader.ap.value - 2, self)
 
 if __name__ == "__main__":
     party_a = battle_3.BattleParty("party_a")
-    party_b = battle_3.BattleParty("party_b")
-    vencabot = battle_3.BattleUnit("Vencabot")
-    goodvibe = battle_3.BattleUnit("GoodVibe")
-    our_battle = battle_3.Battle()
+    vencabot = battle_3.BattleLeader("Vencabot")
+    kd_alpha = battle_3.BattleUnit("KD_Alpha")
+    mexi = battle_3.BattleUnit("Mexi")
+    
+    party_a.append_leader(vencabot)
+    party_a.append_unit(kd_alpha)
+    party_a.append_unit(mexi)
 
+    party_b = battle_3.BattleParty("party_b")
+    kreichjr = battle_3.BattleLeader("KReichJr")
+    goodvibe = battle_3.BattleUnit("GoodVibe")
+    slade = battle_3.BattleUnit("zxxsladexxz")
+    
+    party_b.append_leader(kreichjr)
+    party_b.append_unit(goodvibe)
+    party_b.append_unit(slade)
     goodvibe.learn_ability(Slap)
 
-    party_a.append_unit(vencabot)
-    party_b.append_unit(goodvibe)
+    our_battle = battle_3.Battle()
     our_battle.append_party(party_a)
     our_battle.append_party(party_b)
+
     our_battle.append_rule(BloodLust(goodvibe))
     our_battle.append_rule(Hench(goodvibe))
     our_battle.append_rule(ExtraDamage(goodvibe))
-    our_battle.append_rule(Rage(vencabot))
+    our_battle.append_rule(Rage(kd_alpha))
     our_battle.append_rule(Persistence(goodvibe))
-    #our_battle.append_rule(Invincible(vencabot))
+    our_battle.append_rule(Invincible(kd_alpha))
     our_battle.append_rule(MagicMan(goodvibe))
+    our_battle.append_rule(OldManGenes(kreichjr))
 
-    goodvibe.abilities["Slap"][0].use([vencabot])
+    goodvibe.abilities["Slap"][0].use([kd_alpha])
+    print()
+    goodvibe.abilities["Slap"][0].use([kd_alpha])
+    print()
+    goodvibe.abilities["Slap"][0].use([kd_alpha])
+    print()
+    goodvibe.abilities["Slap"][0].use([kd_alpha])

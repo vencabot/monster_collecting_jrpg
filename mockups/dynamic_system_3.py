@@ -1,3 +1,5 @@
+import battle_3
+
 class DynamicEvent:
     def __init__(
             self, target, attr_name, new_value, old_value,
@@ -41,9 +43,13 @@ class DynamicAttribute:
             while dynamic_event.replaced_by is not None:
                 dynamic_event = dynamic_event.replaced_by
         final_value = dynamic_event.new_value
+        if isinstance(self.owner, battle_3.BattleUnit):
+            owner_name = self.owner.unit_name
+        elif isinstance(self.owner, battle_3.BattleLeader):
+            owner_name = self.owner.leader_name
         print(
-                f"DIAGNOSTIC: {self.owner.unit_name}'s {self.attr_name} "
-                f"changed from {self.value} to {final_value}.")
+                f"DIAGNOSTIC: {owner_name}'s {self.attr_name} changed "
+                f"from {self.value} to {final_value}.")
         self.value = final_value
         for dynamic_rule in rules["after"]:
             dynamic_rule.check(dynamic_event)

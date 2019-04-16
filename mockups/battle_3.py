@@ -14,16 +14,36 @@ class Battle:
     def append_rule(self, rule):
         self.dynamic_rules[rule.check_phase].append(rule)
 
+    def reset_dynamic_recurrence(self):
+        rules = (
+                self.dynamic_rules["before"]
+                + self.dynamic_rules["after"])
+        for dynamic_rule in rules:
+            dynamic_rule.recurrence_counter = 0
+        print("DIAGNOSTIC: dynamic recurrence counters have been reset")
+
 
 class BattleParty:
     def __init__(self, party_name):
         self.party_name = party_name
         self.units = []
+        self.leader = None
         self.battle = None
 
     def append_unit(self, party_unit):
         self.units.append(party_unit)
         party_unit.party = self
+
+    def append_leader(self, party_leader):
+        self.leader = party_leader
+        party_leader.party = self
+
+
+class BattleLeader:
+    def __init__(self, leader_name):
+        self.leader_name = leader_name
+        self.party = None
+        self.ap = dynamic_system_3.DynamicAttribute(self, "ap", 10)
 
 
 class BattleUnit:
@@ -62,6 +82,7 @@ class UnitAbility:
         elif use_callables[0] == self._use_critical:
             print(f"DIAGNOSTIC: {self.ability_name} was critical.")
         use_callables[0](targets)
+        self.owner.party.battle.reset_dynamic_recurrence()
         
     def _use_glancing(self, targets):
         self._use_normal(targets)

@@ -87,3 +87,64 @@ For our mock-up, let's assume that '5' is a normal amount for Parry or Skill, an
 We made some good progress: the next step will be to create a method which takes this 'effectiveness augmentor' (or whatever you want to call it) and returns weights. Since we're lowering ONE weight to a certain level before we start to RAISE the other weight, there's going to be a little bit of coding involved.
 
 ## side note: I forgot to fuck around with 'cure conditions' for our DynamicRule system. So, we're not really complete on that, yet.
+
+
+
+
+04/15/2019
+
+Let's make a to-do list for what I want to accomplish with the game this week.
+
+So far, we've created a lot of mock-ups for the games most-complex mechanics (at least, seems to me). They've been proofs-of-concept just to demonstrate that some of this stuff is workable. Now, I want to look at battle in a more wholistic way; I want to actually start creating a full battle that can play out from start to finish with respect for the mechanics that we've discussed during our game-design streams.
+
+So, a few things we're gonna need:
+
+We're going to need Leaders, with their own attributes.
+
+We're going to need to flesh out the Battle object with respect for which Units are in the 'ring' and in the back row.
+
+We're going to need to flesh out the Units with more Attributes, including their slots for Dynamics.
+
+Before we implement Leaders, let's flesh out our existing objects: Battles and Units.
+
+I take that back. Let's get a very simple mock-up Leader object and use that for some Dynamics just to prove that it works. We're not gonna fuck around with giving them permanent Dynamics or AP limitations or their own abilities just yet.
+
+## I'm not totally satisfied with the hierarchy of data in our battle so far. The 'BattleParty' needs a list of units, and the BattleUnits need to know their BattleParty. Futhermore, we're introducing a Leader object, which needs to know the Party that it's leading -- but, at the same time, the Party needs to know who its leader is. It'd be nice to come up with some way to make these objects less dependent on each other.
+
+## Let's talk about hierarchy: it seems to me that, so far, the Battle object is the highest-level object we have (of course), and then, below that, we have the Parties. That makes sense to me: the units know what party they're a part of, but not what battle they're apart of (because we're managing state). The units don't need to know what battle they're a part of, because they know which party they belong to and the party knows what battle it belongs to.
+
+## That being the case, the Leader doesn't really need to know what units it's leading or what battle it's a part of. As long as it knows its own BattleParty, it has access to the Battle object and the BattleUnits through that BattleParty. So, the hierarchy of data is sort of like this:
+
+          Battle
+            |
+       BattleParty
+           | |
+BattleLeader BattleUnit
+
+## Because the costs of using Abilities in our game can be so complex, it sort of necessitates not being able to abstract away the code of paying those costs. What I mean is, it would make sense, from an object-oriented standpoint, to give each Ability an 'ap_cost' attribute -- and then, when a BattleUnit tries to use an Ability, it could automatically subtract that AP cost from the Leader.
+
+That makes sense. It would make sense if the gimmick our game wasn't that rules are so dynamic. Because, what if the costs of an ability change based on circumstance? What if you had an ability with a description like such:
+
+Desperate Slap: If used when the leader's AP is at max, it costs 4 AP to use. If used when the leader's AP is below max, it costs 2 AP to use.
+
+In that case -- and it seems very reasonable -- the Leader is punished for using Desperate Slap at the start of their turn. Because of dynamic systems like this one, I feel like we don't really have the luxury of implementing an 'ap_cost' attribute in an object-oriented way. Instead, it seems as though we need to implement the subtraction of costs into the actual code of using every individual Ability. That seems lame, from OOP standpoint, but it does make our mechanics more flexible.
+
+I'm gonna make a new DynamicRule and we're gonna call it "NerdStamina." If the leader's AP drops below 3, every unit on their team loses 30% of their attack power. I'm trying to make a Rule that brings the new 'leaders' into play.
+
+Right now, we've made our mock-up work under the assumption that we would only ever have one action take place in the battle. Now, we're taking more than one action per battle (as you would expect), and I'm finding that we need to reset the Battle's DynamicRule's recurrence_counter's. The question is, when is the best time to do that?
+
+It would be done between player actions.
+
+But how do we calculate that. How do we know when the player has done an action.
+
+Well, it would be after the unit uses an ability. Leaders can also use abilities, including switching units. So... maybe... we need a better way to universally understand that a 'battle action' has taken place. We want to restore the Rules' recurrence_counter's after an action takes place.
+
+Maybe, temporarily, it would just make sense to give the Battle object a 'reset_rule_counters' method that we can call between actions.
+
+Final thoughts for the day: we implented a 'leader' object which has an AP value that we can consume when we use abilities. We made our first rule that cares about the leader and their AP, and we also, for the first time, took advantage of the fact that our DynamicRules are INSTANCES, which means that we can use them to save persistent data about how they've been triggered in the past to alter how they behave when triggered subsequently. So that's kind of cool.
+
+We also implemented a method for our Battle objects to reset the recurrence counters of all of the rules to be called between 'actions'. It'd be nice to have this be automated, but, for that, we'd need a way to know when an action is being used.
+
+I mean, fuck -- we could fix that right now. We should just append 'battle.reset_dynamic_recurrence' to the end of our battle_3.UnitAbility.use method.
+
+For next time, we need to add a lot of attributes for BattleUnits and Battles, at the very least: including a 'ring' in the battle for units to populate and some slots for the BattleUnits to be under the influence of a LIMITED NUMBER of Dynamics. This is something that me and Kenny talked about as a way to balance the Dynamic system: have there be a limit to how many rules a single unit can be subject to.
