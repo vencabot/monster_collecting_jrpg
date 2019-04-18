@@ -1,12 +1,12 @@
 import random
 
-import dynamic_system_3
+import dynamic_system_4
 
 class Battle:
     def __init__(self):
         self.parties = []
         self.dynamic_rules = {"before": [], "after": []}
-        self.active_party = dynamic_system_3.DynamicAttribute(
+        self.active_party = dynamic_system_4.DynamicAttribute(
                 self, "active_party", None)
 
     def append_party(self, party):
@@ -28,7 +28,7 @@ class Battle:
         # This will only work if we're limited to two parties per battle.
         for party in self.parties:
             if party is not self.active_party.value:
-                self.active_party.leader.ap.update(
+                self.active_party.value.leader.ap.update(
                     self.active_party.value.leader.max_ap.value, self)
                 self.active_party.update(party, self.active_party.value)
                 break
@@ -39,7 +39,7 @@ class BattleParty:
         self.party_name = party_name
         self.units = []
         self.leader = None
-        self.point_unit = dynamic_system_3.DynamicAttribute(
+        self.point_unit = dynamic_system_4.DynamicAttribute(
                 self, "point_unit", None)
         self.battle = None
 
@@ -56,18 +56,18 @@ class BattleLeader:
     def __init__(self, leader_name):
         self.leader_name = leader_name
         self.party = None
-        self.max_ap = dynamic_system_3.DynamicAttribute(
+        self.max_ap = dynamic_system_4.DynamicAttribute(
                 self, "max_ap", 10)
-        self.ap = dynamic_system_3.DynamicAttribute(
+        self.ap = dynamic_system_4.DynamicAttribute(
                 self, "ap", self.max_ap.value)
 
 
 class BattleUnit:
     def __init__(self, unit_name):
         self.unit_name = unit_name
-        self.hp = dynamic_system_3.DynamicAttribute(self, "hp", 10)
-        self.atk = dynamic_system_3.DynamicAttribute(self, "atk", 5)
-        self.mp = dynamic_system_3.DynamicAttribute(self, "mp", 5)
+        self.hp = dynamic_system_4.DynamicAttribute(self, "hp", 10)
+        self.atk = dynamic_system_4.DynamicAttribute(self, "atk", 5)
+        self.mp = dynamic_system_4.DynamicAttribute(self, "mp", 5)
         self.abilities = {}
         self.party = None
 

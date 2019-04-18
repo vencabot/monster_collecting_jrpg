@@ -1,7 +1,7 @@
-import battle_3
-import dynamic_system_3
+import battle_4
+import dynamic_system_4
 
-class Invincible(dynamic_system_3.DynamicRule):
+class Invincible(dynamic_system_4.DynamicRule):
     def __init__(self, target_unit):
         super().__init__("Invincible", "before")
         self.target_unit = target_unit
@@ -18,9 +18,9 @@ class Invincible(dynamic_system_3.DynamicRule):
         dynamic_event.replace_value(self.target_unit.hp.value, self)
         original_event = dynamic_event.get_original_event()
         perpetrator = original_event.perpetrated_by
-        if isinstance(perpetrator, battle_3.UnitAbility):
+        if isinstance(perpetrator, battle_4.UnitAbility):
             attacker_name = perpetrator.owner.unit_name
-        elif isinstance(perpetrator, dynamic_system_3.DynamicRule):
+        elif isinstance(perpetrator, dynamic_system_4.DynamicRule):
             attacker_name = perpetrator.rule_name
         print(
                 f"{attacker_name}'s attack failed! "
@@ -28,7 +28,7 @@ class Invincible(dynamic_system_3.DynamicRule):
                 "Invincible!")
 
 
-class Rage(dynamic_system_3.DynamicRule):
+class Rage(dynamic_system_4.DynamicRule):
     def __init__(self, target_unit):
         super().__init__("Rage", "after")
         self.target_unit = target_unit
@@ -48,15 +48,16 @@ class Rage(dynamic_system_3.DynamicRule):
         self.target_unit.atk.update(self.target_unit.atk.value + 1, self)
 
 
-class Hench(dynamic_system_3.DynamicRule):
+class Hench(dynamic_system_4.DynamicRule):
     def __init__(self, target_unit):
         super().__init__("Hench", "before")
         self.target_unit = target_unit
 
     def _check(self, dynamic_event):
         original_event = dynamic_event.get_original_event()
-        if(
-                original_event.perpetrated_by.owner is self.target_unit
+        if (
+                isinstance(original_event.perpetrated_by, battle_4.BattleUnit)
+                and original_event.perpetrated_by.owner is self.target_unit
                 and dynamic_event.attr_name is "hp"
                 and dynamic_event.new_value < dynamic_event.old_value):
             return True
@@ -76,7 +77,7 @@ class Hench(dynamic_system_3.DynamicRule):
                 "no Hench for them!")
 
 
-class ExtraDamage(dynamic_system_3.DynamicRule):
+class ExtraDamage(dynamic_system_4.DynamicRule):
     def __init__(self, target_unit):
         super().__init__("Extra Damage", "before")
         self.target_unit = target_unit
@@ -84,7 +85,8 @@ class ExtraDamage(dynamic_system_3.DynamicRule):
     def _check(self, dynamic_event):
         original_event = dynamic_event.get_original_event()
         if(
-                original_event.perpetrated_by.owner is self.target_unit
+                isinstance(original_event.perpetrated_by, battle_4.BattleUnit)
+                and original_event.perpetrated_by.owner is self.target_unit
                 and dynamic_event.attr_name is "hp"
                 and dynamic_event.new_value < dynamic_event.old_value):
             return True
@@ -98,7 +100,7 @@ class ExtraDamage(dynamic_system_3.DynamicRule):
         dynamic_event.replace_value(new_hp_value, self)
 
 
-class BloodLust(dynamic_system_3.DynamicRule):
+class BloodLust(dynamic_system_4.DynamicRule):
     def __init__(self, target_unit):
         super().__init__("Bloodlust", "after")
         self.target_unit = target_unit
@@ -107,7 +109,7 @@ class BloodLust(dynamic_system_3.DynamicRule):
         original_event = dynamic_event.get_original_event()
         perp_is_ability = isinstance(
                 original_event.perpetrated_by,
-                battle_3.UnitAbility)
+                battle_4.UnitAbility)
         if (
                 perp_is_ability
                 and original_event.perpetrated_by.owner is self.target_unit
@@ -123,7 +125,7 @@ class BloodLust(dynamic_system_3.DynamicRule):
         self.target_unit.atk.update(self.target_unit.atk.value + 1, self)
 
 
-class Persistence(dynamic_system_3.DynamicRule):
+class Persistence(dynamic_system_4.DynamicRule):
     def __init__(self, target_unit):
         super().__init__("Persistence", "after")
         self.target_unit = target_unit
@@ -132,7 +134,7 @@ class Persistence(dynamic_system_3.DynamicRule):
         original_event = dynamic_event.get_original_event()
         perp_is_ability = isinstance(
                 original_event.perpetrated_by,
-                battle_3.UnitAbility)
+                battle_4.UnitAbility)
         if (
                 perp_is_ability
                 and original_event.perpetrated_by.owner is self.target_unit
@@ -149,7 +151,7 @@ class Persistence(dynamic_system_3.DynamicRule):
         self.target_unit.atk.update(self.target_unit.atk.value + 1, self)
 
 
-class MagicMan(dynamic_system_3.DynamicRule):
+class MagicMan(dynamic_system_4.DynamicRule):
     def __init__(self, target_unit):
         super().__init__("Magic Man", "after")
         self.target_unit = target_unit
@@ -171,7 +173,7 @@ class MagicMan(dynamic_system_3.DynamicRule):
         self.target_unit.hp.update(new_hp, self)
 
 
-class OldManGenes(dynamic_system_3.DynamicRule):
+class OldManGenes(dynamic_system_4.DynamicRule):
     def __init__(self, target_leader):
         super().__init__("Old Man Genes", "after")
         self.target_leader = target_leader
@@ -195,7 +197,7 @@ class OldManGenes(dynamic_system_3.DynamicRule):
         self.is_active = True
 
 
-class Slap(battle_3.UnitAbility):
+class Slap(battle_4.UnitAbility):
     def __init__(self, owner):
         super().__init__("Slap", owner)
 
@@ -221,23 +223,23 @@ class Slap(battle_3.UnitAbility):
         leader.ap.update(leader.ap.value - 2, self)
 
 if __name__ == "__main__":
-    our_battle = battle_3.Battle()
+    our_battle = battle_4.Battle()
 
-    party_a = battle_3.BattleParty("party_a")
+    party_a = battle_4.BattleParty("party_a")
     our_battle.append_party(party_a)
-    vencabot = battle_3.BattleLeader("Vencabot")
-    kd_alpha = battle_3.BattleUnit("KD_Alpha")
-    mexi = battle_3.BattleUnit("Mexi")
+    vencabot = battle_4.BattleLeader("Vencabot")
+    kd_alpha = battle_4.BattleUnit("KD_Alpha")
+    mexi = battle_4.BattleUnit("Mexi")
     party_a.append_leader(vencabot)
     party_a.append_unit(kd_alpha)
     party_a.append_unit(mexi)
     party_a.point_unit.update(kd_alpha, vencabot)
 
-    party_b = battle_3.BattleParty("party_b")
+    party_b = battle_4.BattleParty("party_b")
     our_battle.append_party(party_b)
-    kreichjr = battle_3.BattleLeader("KReichJr")
-    goodvibe = battle_3.BattleUnit("GoodVibe")
-    slade = battle_3.BattleUnit("zxxsladexxz")
+    kreichjr = battle_4.BattleLeader("KReichJr")
+    goodvibe = battle_4.BattleUnit("GoodVibe")
+    slade = battle_4.BattleUnit("zxxsladexxz")
     party_b.append_leader(kreichjr)
     party_b.append_unit(goodvibe)
     party_b.append_unit(slade)
@@ -253,6 +255,7 @@ if __name__ == "__main__":
     our_battle.append_rule(MagicMan(goodvibe))
     our_battle.append_rule(OldManGenes(kreichjr))
 
+    our_battle.active_party.update(party_a, our_battle)
     our_battle.next_turn()
 
     party_b.point_unit.value.abilities["Slap"][0].use([kd_alpha])

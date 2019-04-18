@@ -1,4 +1,4 @@
-import battle_3
+import battle_4
 
 class DynamicEvent:
     def __init__(
@@ -23,6 +23,10 @@ class DynamicEvent:
             original_event = original_event.replaces
         return original_event
 
+
+class DynamicObject:
+    def __setattr__(self, name, new_value
+
 class DynamicAttribute:
     def __init__(self, owner, attr_name, value):
         self.owner = owner
@@ -37,15 +41,18 @@ class DynamicAttribute:
         #print(f"DIAGNOSTIC: Proposed value change to {new_value}.")
         if new_value == old_value:
             return
-        if isinstance(self.owner, battle_3.BattleUnit):
+        if isinstance(self.owner, battle_4.BattleUnit):
             battle = self.owner.party.battle
             owner_name = self.owner.unit_name
-        elif isinstance(self.owner, battle_3.BattleParty):
+        elif isinstance(self.owner, battle_4.BattleParty):
             battle = self.owner.battle
             owner_name = f"{self.owner.leader.leader_name}'s party"
-        elif isinstance(self.owner, battle_3.BattleLeader):
+        elif isinstance(self.owner, battle_4.BattleLeader):
             battle = self.owner.party.battle
             owner_name = self.owner.leader_name
+        elif isinstance(self.owner, battle_4.Battle):
+            battle = self.owner
+            owner_name = "da battle"
         rules = battle.dynamic_rules
         for dynamic_rule in rules["before"]:
             dynamic_rule.check(dynamic_event)

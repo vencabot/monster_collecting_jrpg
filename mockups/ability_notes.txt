@@ -148,3 +148,141 @@ We also implemented a method for our Battle objects to reset the recurrence coun
 I mean, fuck -- we could fix that right now. We should just append 'battle.reset_dynamic_recurrence' to the end of our battle_3.UnitAbility.use method.
 
 For next time, we need to add a lot of attributes for BattleUnits and Battles, at the very least: including a 'ring' in the battle for units to populate and some slots for the BattleUnits to be under the influence of a LIMITED NUMBER of Dynamics. This is something that me and Kenny talked about as a way to balance the Dynamic system: have there be a limit to how many rules a single unit can be subject to.
+
+
+04/17/19
+
+First of all, I want to program a 'ring' into the 'Battle' object, so that we know which party members from each team are currently 'active' in the battle.
+
+That means adding a new attribute to the Battle object (or would it be the 'Party' object??? It would be the Party object) and making some new Rules that would only target the unit in the ring.
+
+I've mentioned in the past that a big difficulty with object-oriented programming is knowing how to divide and share responsibility. I think it'd make more sense for the 'ring' attribute to belong to the Party objects, in the long-term. It really is all about how you're deciding to abstract your ideas to make your current and future objects behave.
+
+It would make more sense to give the 'in_ring' attribute to a Party object, because the Battle already has two parties and so figuring out who's in the ring would be as trivial as iterating through the Parties and reading their 'in_ring' attribute. What's cool about this is that it would work even if, hypothetically, we had 3 or 4 or 10 parties in the battle.
+
+Furthermore, if the battle had a 'in_ring' attribute, it would need to be some kind of list, because we'd have two units in the ring for two teams. And then, to figure out which team those units are ON, we'd need to iterate through the in_ring list and read their .party attribute. It's just a little bit sloppier.
+
+It makes more sense to have the 'in_ring' attribute belong to the Party objects.
+
+Now that our BattleParty objects have a method for swapping units into the ring, we're going to expand upon that, later -- fuck it. Let's do it now.
+
+Point_units have been implemented (in-ring units), so now we need to design some Rules that take advantage of this. I want 1 Rule that only affects the point_unit of a certain party, and so we want to change our point_unit mid-fight to see if the rule applies not to a PARTICULAR unit but to whoever is currently in the ring.
+
+I want 1 Rule which only affects units who AREN'T in the ring.
+
+I want 1 Rule which triggers when a painted unit is swapped INTO the ring.
+
+Let's create a 'poison cloud' rule which subtracts HP from both point-units every turn? We don't have turns working yet. We could fix that first? Turns would be implemented at the Battle object level. The Battle would have an attribute: current_turn. Now, would current_turn refer to a Leader? Or a party? It doesn't really matter, but that's exactly why we need to consider this carefully: which would make more sense in the long-term.
+
+The parties can't have a 'next_turn' method, because they don't strictly know (without going through their .battle attribute) what the other party is. So, if we're going to do a 'next_turn' method, it should definitely belong to the Battle object. Only the Battle object knows all of the parties.
+
+I just had a horrible vision, dude. It strikes me that we probably want to have Rules that are triggered whenever leader AP is restored (never mind) by unnatural means, such as when an Ability is used that has a chance to restore AP when it crits. I don't want for these rules to get triggered when the turns roll over and the AP is restored back to maximum.
+
+But that's fine, because DynamicEvents have 'perpetrators' for that very reason. If an AP restoration is perpetrated by an Ability, that would trigger the rule -- and it'd ignore the DynamicEvent if it was perpetrated by a turn-change.
+
+It is REALLY ANNOYING that our 'DynamicAttributes' can't be read directly, because they're objects. To get the value of a DynamicAttribute, we have to use DynamicAttribute.value. That's pretty frustrating. Is there a way around that? I thought about it, before, and I couldn't think of a solution. for now, we'll continue using .value.
+
+The thing to do to re-implement DynamicAttributes in a more readable way would be to override __setattr__ of the OWNER object -- NOT of the DynamicAttribute object, which would no longer even be necessary.
+
+So, in object-oriented programming, Objects have 'attributes,' which are values that belong to that object.
+
+So, if we have a 'protagonist' in a JRPG, he has an 'HP' attribute, and that value is constantly changing, but it belongs to the protagonist.
+
+Because the gimmick of our game is that, wheenver a value changes in battle, it can trigger RULES, we created a new type of object which abstractly represents the same concept as an object attribute: a 'DynamicAttribute'.
+
+This way, we can bind behavior to whenever the DynamicAttribute gets updated. So, instead of saying:
+
+protagonist.hp = protagonist.hp - 10
+
+We would say:
+
+protagonist.hp = DynamicAttribute(self, "hp", 100)
+protagonist.hp.update(protagonist.hp.value - 10, monster)
+
+The problem with this is that we can't just say something simple like:
+print(f"Your protagonist's health is currently at {protagonist.hp}.")
+
+We can't say that because protagonist.hp is NOT an integer. It's a DynamicAttribute. So, instead, we need to say:
+
+print(f"Your protagonist's health is currently at {protagonist.hp.value}.")
+
+Because .value is an attribute of the DynamicAttribute object which refers to its current 'value'.
+
+This works fine, but it's sort of confusing to read because we're intentionally abstracting away the default object-oriented behavior of the language. That's the problem. We're abstractly re-assigning a value, but we're not actually using Python's built-in assignment tools: we made our assignment tools that can trigger Rules. This necessitates an object with a method to do that, and so, when referring to the protagonist's actual HP integer, we need to refer to the 'value' attribute of this DynamicAttribute object -- and that's confusing, because we want to think of 'hp' as an integer.
+
+But I think I have the solution. The solution would be to COMPLETELY GET RID OF the DynamicAttribute object and instead create a DynamicObject class which overrides __setattr__ . Whenever one of its attributes gets changed, it calls the method which has been, up to this point, DynamicAttribute.update().
+
+We don't need an object which abstracts the idea of an 'attribute that can trigger things when changed.'
+
+We need an object which says, 'if you change one of my attributes, things can get triggered'.
+
+The problem with this idea is that, if we just use simple assignment to trigger Rules we don't have any way of knowing who perpetrated the change, and that's super important to our mechanisms.
+
+If I say:
+
+protagonist.hp.update(protagonist.hp.value - 10, monster)
+
+We know that the monster lowered the protagonist's health.
+
+However, if I just say,
+
+protagonist.hp = protagonist.hp - 10
+
+We don't have way of knowing how or why or who lowered that value, and that's super important to our mechanisms.
+
+I'm not gonna have time to fix this today. Let's take a few minutes and think about if there's any solution to this issue. Can we possibly abstract away the DynamicAttribute object by replacing it with true Python object-oriented utilities via the __setattr__ method. Can we possibly have these Rules be triggered by __setattr__ when __setattr__'s only arguments are the NAME of the attribute ("hp") and the NEW VALUE (protagonist.hp - 10).
+
+Is it important that we know WHO changed the protagonist's HP. The obvious answer is YES, obviously. We use DynamicAttribute.update to create these DynamicEvent objects which sort of act as reports to tell the rules what just happened.
+
+With __setattr__, we could create and manage EVERY ASPECT of our current DynamicEvent report EXCEPT FOR the 'perpetrated_by' attribute.
+
+We have to have the full report to make the rules work, and a huge part of that report is not only WHOSE value GOT changed, but WHO initiated that change.
+
+If KReichJr attacks Vencabot and Vencabot's HP gets lowered, we're gonna need for Rules to know that Kenny is the attacker. That's pretty much the whole point of the dynamic system. We have this report that gets generated and which all of our Rules read to decide if they want to trigger or not. The report explains:
+
+Who is the target of this change.
+What attribute got changed.
+What was that attribute's value, before.
+What is that attribute's value, now.
+Who initiated this change.
+
+From __setattr__, we can get ALL of this data except for the last part.
+
+I'm sad to say that it seems like our solution is the best solution for our problem considering our unique needs. In order to trigger rules whenever an attribute is changed, we need to generate this report which we're calling DynamicEvent. To generate that report, we just can't rely on a simple, vanilla, object-oriented attribute assignment.
+
+If we say,
+
+protagonist.hp = protagonist.hp - 10
+
+We just can't load in information about HOW or WHY or WHO lowered that value. We NEED some kind of special object with special methods that simulate 'assignment'. In our case, we're using an object called DynamicAttribute which simulates a vanilla, object-oriented 'attribute' but which you DON'T assign using the assignment operator; instead, you assign it using a special method, 'update,' which requires that you supply the identity of whoever is 'perpetrating' that change.
+
+I was really hoping to negate the necessity for 'protagonist.hp.value,' but it seems that we don't really have that luxury.
+
+I mean, would it make more sense to just give 'DynamicObject' the method 'update(),' and then, when we changed the protagonist's health, it would be like this:
+
+# This is what I want, but it doesn't supply a perpetrator.
+protagonist.hp = protagonist.hp - 10
+
+# We have this. The hp attribute is not an integer, but a DynamicAttribute.
+protagonist.hp.update(protagonist.hp.value - 10, monster)
+
+# We could do this, but it's the same issue, really.
+# This way, we can access protagonist.hp as an integer, but we still can't
+# assign directly to HP. It's the same problem, though; it's unintuitive.
+# If, one time, you forget to call protagonist.update_attr and instead call
+# protagonist.hp =, then Rules won't get triggered.
+# This way makes more sense. It's more clear what's going on. It's saying
+# very explicitly, "update this value but also do some other things (check
+# rules)." Basically, we're creating our own __setattr__ method, except that
+# it takes a perpetrator argument.
+protagonist.update_attr("hp", protagonist.hp - 10, monster)
+
+We gotta play 3rd Strike, but I guess, for our next sit-down with this, it probably would make sense to replace DynamicAttribute with DynamicObject. DynamicObjects can have their attributes updated through a method, 'update_attr', which explicitly checks rules.
+
+protag.hp = protag.hp - perp.damage
+
+That doesn't work because, to override __add__, we would need to override 'integer', in this case.
+
+We gotta end the stream. We'll definitely sleep on it. I still think that the most elegant way is closer to what we've been doing, but maybe we would go toward having DynamicObjects with an update_attr method instead of DynamicAttributes with an update method.
+
+But it's definitely worth looking at subclasses 'int' and seeing if we want to override the behavior of straight-up numbers so that we can add them together and get special information out of it. Worth looking at it.
