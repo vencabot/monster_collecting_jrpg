@@ -286,3 +286,91 @@ That doesn't work because, to override __add__, we would need to override 'integ
 We gotta end the stream. We'll definitely sleep on it. I still think that the most elegant way is closer to what we've been doing, but maybe we would go toward having DynamicObjects with an update_attr method instead of DynamicAttributes with an update method.
 
 But it's definitely worth looking at subclasses 'int' and seeing if we want to override the behavior of straight-up numbers so that we can add them together and get special information out of it. Worth looking at it.
+
+04/18/19
+
+Now that we've replaced the old 'DynamicAttribute' way of handling the rules with the 'DynamicObjects,' we've solved our problem of having to access attribute values using object.attribute_name.value .
+
+So, the old way of updating an attribute in such a way that it would trigger rules was like this:
+
+my_unit.hp.update(new_hp_value, enemy)
+
+The problem with this was that, in order to see how much HP 'my_unit' currently had, we had to access it like this:
+
+my_unit.hp.value
+
+With this NEW way, if we want to update a value in such a way that it would trigger rules, we do it like this:
+
+my_unit.update_w_rules("hp", new_hp_value, enemy)
+
+And then we can access the unit's current HP like this:
+
+my_unit.hp
+
+I think that's a little more elegant. It's a little bit more clear what's going on. It's much easier to access attributes in a sensible way. The only downside is that we STILL can't just use vanilla assignment -- but that's probably for the best, really. I mean, it's very important with object-oriented programming to minimize 'side-effects' -- that's a danger of 'state'. When you start overriding 'addition' and 'subtraction' and, if we could, 'assignment' so that it does OTHER things aside from what you see on the tin, then that's probably not a good idea.
+
+It probably makes sense to use an overt method for triggering rules when a value is changed. That way, anyone looking at the code can tell that's what it's supposed to do. Otherwise, if we COULD override assignment to do the same thing, it might be easier to read AT FIRST:
+
+my_unit.hp = new_value
+
+But then it might be confusing when crazy shit starts happening just because we made an assignment (if we could do that). So having a separate method probably makes sense.
+
+DynamicObjects need to know their own list of Rules. The Rules are subservient to the Battle object. Does the Battle object need to be a DynamicObject.
+
+Well, yes. Yes it does. Let's say that we could somehow re-construe 'active_party' as an attribute of the parties, themselves. Like, party.is_active = boolean. Even if we could do that, I don't think there's a way to have a Rule like this if the Battle is not a DynamicObject:
+
+Status Quo: Whenever a new Rule is added by Party B, Party A gets their health restored.
+
+For this reason, I think it makes sense for the Battle object to be a DynamicObject.
+
+But. A problem arises. So far, our DynamicObject.update_w_rules method assumes that all of DynamicObject's attributes are immutable. It takes the old value and replaces it with a new value. That doesn't really work for mutable objects, such as lists, which might change and require rules to be triggered when a new value is appended to them. Is that going to be a problem?
+
+Well, the first thought is that every attribute of a DynamicObject that's going to trigger rules MUST BE TREATED AS IMMUTABLE. This is a necessity because so much of the 'report' system, based on DynamicEvent, is founded on the idea of comparing the OLD VALUE to the NEW VALUE. We're always gonna need to know what the OLD VALUE was and what the NEW VALUE is. That's super important to the very basis of the Dynamic Rule system.
+
+So, if you have something like a LIST -- like, let's say that you have a Rule that gets triggered whenever an item is added to the leader's inventory. In order to compare the old list to the new list, we need to have two different lists: so, we're talking about mutable objects being treated as immutable. We almost might as well just use tuples.
+
+I'm not sure if that's a problem. I don't necessary THINK that's a problem, except for what I just got done saying about the DynamicObjects needing access to a permanent, mutable reference to the current battle's rules. THAT BEING SAID, we also just found out that the battle's 'list' of rules is actually a dictionary.
+
+So, maybe the dictionary is what gets passed in to DynamicObject and the DICTIONARY never changes. It just contains a before and after phase.
+
+The Battle object has a dictionary, 'Battle.rule_phases'. It's a dictionary of phase-names to the lists of DynamicRules that are checked on that phase.
+
+As a DynamicObject, we could call 'update_w_rules' on it -- BUT WE COULD NOT use that method to change a List of rules, because the Lists of rules are not attributes of our DynamicObject: they're values in a Dict which is an attribute of our object.
+
+So, as of right now, if we wanted for a Rule to trigger when a new rule is added to battle, it would need to work like this:
+
+new_rule_phases = {}
+new_rule_phases["before"] = battle.rule_phases["before"].copy()
+new_rule_phases["after"] = battle.rule_phases["after"].copy()
+new_rule_phases["after"].append(some_new_rule)
+battle.update_w_rules("rule_phases", new_rule_phases, perpetrator)
+
+We have to treat it as being immutable. We have to make a whole new dictionary with whole new lists and replace the old dictionary of lists.
+
+It's kind of ugly, right now, but I think that's mostly because we have this dictionary, "rule_phases," when maybe we just need to use attributes. That's one major reason it looks ugly. Maybe we should do something more like this:
+
+battle.before_rules
+battle.after_rules
+
+Instead of,
+
+battle.rule_phases = {"before": [], "after": []}
+
+Having a dictionary for rule_phases is kind of wasteful, because we're just matching a string to a value -- and that's exactly what object.__dict__ is for. If we're just matching a name to a value, we might as well make it a attribute. It's not like we're going to be dynamically adding in more keys to this dictionary.
+
+On the other hand, I think that having a dictionary of phases makes it more clear how we process the rules. Because attributes have no order (technically, neither do dictionaries, but at least they have a visible order in the source code). We treat both phases equally, just one after the other. So, by having two totally separate attributes, you sort of lose that relationship -- abstractly, they're the same thing, just different phases.
+
+Here's my idea: what we need is a new type of object, 'RuleSet'. RuleSet has attributes:
+
+RuleSet.before
+RuleSet.after
+
+What's cool about RuleSet is that it can be a DynamicObject. So, when RuleSet.before or RuleSet.after is updated, we can trigger Rules. And, by virtue of being a classed object, RuleSet is mutable -- so we can pass in a RuleSet when defining a DynamicObject.
+
+But hang on though. How do we pass the RuleSet as its own RuleSet.
+
+Let's go implement that.
+
+Today, in review, we really drastically changed the way that our dynamic_system library is laid out and the way that it behaves, internally. The result is that its API has effectively changed, although it works mostly similarly. The 'battle' library is completely broken by these changes and needs to be adapted to the new dynamic_system. Also, our actual mock-up at 'rules_and_events' mostly needs to have its example DynamicRules updates to match the method-name changes of dynamic_system.DynamicRule .
+
+It should be a relatively quick porting job, but we don't really have time to do that right now. That'll be our project for Monday: get everything working again, so that it's as effective as it was BEFORE -- but with much cleaner internal code.

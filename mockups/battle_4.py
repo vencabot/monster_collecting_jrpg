@@ -5,7 +5,7 @@ import dynamic_system_4
 class Battle:
     def __init__(self):
         self.parties = []
-        self.dynamic_rules = {"before": [], "after": []}
+        self.rule_phases = {"before": [], "after": []}
         self.active_party = dynamic_system_4.DynamicAttribute(
                 self, "active_party", None)
 
