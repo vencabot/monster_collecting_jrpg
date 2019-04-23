@@ -374,3 +374,103 @@ Let's go implement that.
 Today, in review, we really drastically changed the way that our dynamic_system library is laid out and the way that it behaves, internally. The result is that its API has effectively changed, although it works mostly similarly. The 'battle' library is completely broken by these changes and needs to be adapted to the new dynamic_system. Also, our actual mock-up at 'rules_and_events' mostly needs to have its example DynamicRules updates to match the method-name changes of dynamic_system.DynamicRule .
 
 It should be a relatively quick porting job, but we don't really have time to do that right now. That'll be our project for Monday: get everything working again, so that it's as effective as it was BEFORE -- but with much cleaner internal code.
+
+
+
+04/22/19
+
+We have a problem. Understandably, our new Ruleset object has two attributes -- 'before' and 'after' -- which reference lists of DynamicRules to be checked on those phases.
+
+To this end, we removed the old 'check_phase' attribute from the DynamicRules, themselves. They don't need to know their own check-phase.
+
+But, if the DynamicRule object doesn't have a tag that we can use to find out its check-phase, how do we know which list of Ruleset to add that Rule to at the start of battle (or any other time).
+
+It seems to me like the DynamicRules DO need to have some way to communicate when they're supposed to checked. So... That seems a bit redundant considering that our Rulesets also have 'before' and 'after' lists.
+
+On the DynamicRules, the 'check_phase' attribute could be thought of as a 'tag,' because it's not an attribute in the sense that the Rule, ITSELF, will ever access that attribute. Usually when you have an object and it has attributes you're going to be using those attributes in the methods of that object.
+
+In this case, it's just important that other objects which play with the DynamicRules be able to tell when that Rule is supposed to checked.
+
+Let's review the basics of the 'dynamic rule system' and then talk about how our code is laid out.
+
+In many JRPGs, characters can inflict and be inflicted with 'status changes': 'poison', 'paralyze', etc. Also, they can use 'buffs' to give themselves and their allies a temporary boost to some attribute.
+
+The central gimmick of our game's combat system is that these status changes take on a much more significant role. For one thing, every status change can be complex beyond what we're used to seeing in JRPGs.
+
+Instead of having a vanilla 'poison' attribute, we're talking about having a 'DynamicRule' that says something these along these lines, which some kind of 'rogue' class might have inflicted upon their opponent:
+
+When the inflicted target uses any skill to heal an ally, they take damage equal to the amount that their ally recovered.
+
+That's a 'dynamic rule'. The idea beyond inflicting these 'status changes' is to limit your opponent's options and to strengthen your own team's dynamic. Buffs behave the same way:
+
+Whenever the target gains attack power, they also gain defense.
+
+As you might imagine, implementing a system like this, in OOP (or otherwise), is an interesting challenge -- because we're talking about being able to dynamically alter the rules of the game, itself.
+
+The solution that we've come up with is what I'm going to show on-screen right now.
+
+
+This stream, today, hasn't been a huge success in terms of making progress, and a part of that is, coming back from the weekend, I'm not 100% sure of where the version 4 mock-up begins and the version 3 mock-up ends
+
+The big changes in the version 4 mock-up are as follows:
+
+DynamicAttributes are being traded for DynamicObjects.
+We're implementing 'Ruleset' objects, which manage all of the rules in a battle.
+
+Because of those two changes, we need to re-write all of our existing test DynamicRules: Invincible, Hench, ExtraDamage, Persistence, Rage, MagicMan, OldManGenes.
+
+Where we're at, right now, is how do we append new DynamicRules to this Ruleset.
+
+I think that DynamicRules still need a 'check_phase' attribute. They need this attribute because, when we add the rule to the game, we need to know what phase to append it to. It's kind of sloppy, it's kind of ugly, it's kind of redundant. I don't like it.
+
+One solution, at least as far as REDUNDANCY, is to have the Rules in a Ruleset all be a part of 1 list -- and then, when you're checking the 'before' phase or the 'after' phase, you just use a list comprehension to create those phases.
+
+Let's make a very simple "append rule" method and fix the DynamicRules to have a check_phase attribute.
+
+Just to celebrate Penguin joining the stream (and because I'm on the fence myself), we'll go with having only one list of Rules.
+
+I have a problem. When should the recurrence counters be reset?
+
+The obvious solution would be to reset them once the 'after' phase is completed.
+
+But I'm not sure that's what we want, because the main thing that DynamicRules do is CREATE OTHER UPDATES which, in turn TRIGGER OTHER RULES. So, if one update completes and the recurrence counters get reset, couldn't that cause bugs with other updates happening at the same time? I want to say yes, but I can't prove it.
+
+If I have two rules that read as such:
+"If Vencabot takes damage, he loses attack power."
+"If Vencabot loses attack power, he takes damage."
+
+That's an infinite loop, and that's why we implement the recurrence counter.
+
+Let's draw up an order-of-operations for if the recurrence counters were reset after a successful update.
+
+We propose an event where Vencabot takes damage.
+Nothing triggers in the Before phase.
+In the after Phase, we update Vencabot's attack power.
+We propose a change to Vencabot's attack power.
+Nothing triggers in the Before phase.
+In the after Phase, we update Vencabot's HP.
+In the before phase, nothing happens.
+In the After phase, we try to reduce his attack power, but we're at the recurrence limit.
+Now that Vencabot's attack power has been updated, recurrence counters get reset.
+
+THE BUG HAPPENS RIGHT HERE. If we DID have more Rules than just those two, we would have a problem with recurrence counters being reset after his attack power was updated.
+
+Now that Vencabot's HP has been updated, recurrence counters get reset.
+
+
+But the 'update' happens in the SAME THREAD. So, we don't reach the end of the first 'After' phase until we're done processing this attack power update.
+
+So, we can't reset recurrence_counters after a successful update. We have to reset them once all updates on all phases are complete.
+
+So, this is a job for an object much greater than what we're working with, now. Basically, the recurrence_counters would need to be reset between unit turns -- and, right now, we don't have a mechanism for moving between unit turns or otherwise completing an entire action.
+
+Well, I mean. That's a problem. We could implement this 'recurrence_counter reset' at the end of every Ability in the game. But, the problem with that is that we have actions the player can take which aren't strictly 'UnitAbilities', such as Swapping team members, using items -- attempting to flee from combat or whatever -- which should be able to trigger Rules (and, by extension, reset recurrence_counters).
+
+Basically, we might need some kind of parent object which abstractly represents an entire 'action'. An action that can trigger rules -- and, when it's over, the recurrence_counters get reset.
+
+For now -- for mock-up version 4 -- let's just reset them MANUALLY. We're gonna reset the recurrence_counters manually.
+
+Our dynamic_system_4 library is complete for mock-up 4, as of now.
+battle_4 objects need porting. They still use 'DynamicAttributes' instead of 'DynamicObjects'. That's our project for Wednesday.
+
+Once that's ported over, we'll need to rewrite rules_and_events_4 somewhat drastically especially to change the way that our existing 'test rules' operate.

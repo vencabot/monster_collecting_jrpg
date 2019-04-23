@@ -5,9 +5,7 @@ import dynamic_system_4
 class Battle:
     def __init__(self):
         self.parties = []
-        self.rule_phases = {"before": [], "after": []}
-        self.active_party = dynamic_system_4.DynamicAttribute(
-                self, "active_party", None)
+        self.ruleset = dynamic_system_4.Ruleset()
 
     def append_party(self, party):
         self.parties.append(party)
@@ -15,24 +13,6 @@ class Battle:
 
     def append_rule(self, rule):
         self.dynamic_rules[rule.check_phase].append(rule)
-
-    def reset_dynamic_recurrence(self):
-        rules = (
-                self.dynamic_rules["before"]
-                + self.dynamic_rules["after"])
-        for dynamic_rule in rules:
-            dynamic_rule.recurrence_counter = 0
-        print("DIAGNOSTIC: dynamic recurrence counters have been reset")
-
-    def next_turn(self):
-        # This will only work if we're limited to two parties per battle.
-        for party in self.parties:
-            if party is not self.active_party.value:
-                self.active_party.value.leader.ap.update(
-                    self.active_party.value.leader.max_ap.value, self)
-                self.active_party.update(party, self.active_party.value)
-                break
-
 
 class BattleParty:
     def __init__(self, party_name):

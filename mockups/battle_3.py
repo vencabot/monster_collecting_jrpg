@@ -28,7 +28,7 @@ class Battle:
         # This will only work if we're limited to two parties per battle.
         for party in self.parties:
             if party is not self.active_party.value:
-                self.active_party.leader.ap.update(
+                self.active_party.value.leader.ap.update(
                     self.active_party.value.leader.max_ap.value, self)
                 self.active_party.update(party, self.active_party.value)
                 break

@@ -37,6 +37,7 @@ class DynamicAttribute:
         #print(f"DIAGNOSTIC: Proposed value change to {new_value}.")
         if new_value == old_value:
             return
+        print(f"DIAGNOSTIC: {type(self.owner)}")
         if isinstance(self.owner, battle_3.BattleUnit):
             battle = self.owner.party.battle
             owner_name = self.owner.unit_name
@@ -46,6 +47,9 @@ class DynamicAttribute:
         elif isinstance(self.owner, battle_3.BattleLeader):
             battle = self.owner.party.battle
             owner_name = self.owner.leader_name
+        elif isinstance(self.owner, battle_3.Battle):
+            battle = self.owner
+            owner_name = "da battle"
         rules = battle.dynamic_rules
         for dynamic_rule in rules["before"]:
             dynamic_rule.check(dynamic_event)

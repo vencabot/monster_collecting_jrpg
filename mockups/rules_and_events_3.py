@@ -253,8 +253,6 @@ if __name__ == "__main__":
     our_battle.append_rule(MagicMan(goodvibe))
     our_battle.append_rule(OldManGenes(kreichjr))
 
-    our_battle.next_turn()
-
     party_b.point_unit.value.abilities["Slap"][0].use([kd_alpha])
     print()
     party_b.point_unit.value.abilities["Slap"][0].use([kd_alpha])

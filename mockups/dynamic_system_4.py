@@ -17,10 +17,11 @@ class DynamicObject:
 
 
 class DynamicRule:
-    def __init__(self, rule_name):
+    def __init__(self, rule_name, check_phase):
         self.rule_name = rule_name
         self.recurrence_counter = 0
         self.recurrence_limit = 1
+        self.check_phase = check_phase
 
     def react_to(self, dynamic_event):
         if self.recurrence_counter == self.recurrence_limit:
@@ -46,28 +47,31 @@ class DynamicRule:
 class Ruleset(DynamicObject):
     def __init__(self, before_rules=[], after_rules=[]):
         super().__init__(self)
-        self.before = before_rules
-        self.after = after_rules
+        self.rules = before_rules + after_rules
 
     def run_through_before_phase(self, dynamic_event):
-        for dynamic_rule in self.before:
-            if dynamic_rule.is_at_recurrence_limit():
-                dynamic_rule.at_limit(dynamic_event)
-                continue
-            if dynamic_rule.will_trigger_on(dynamic_event):
-                dynamic_rule.recurrence_counter += 1
-                dynamic_rule.trigger(dynamic_event)
+        before_rules = []
+        for dynamic_rule in self.rules:
+            if dynamic_rule.check_phase == "before":
+                before_rules.append(dynamic_rule)
+        for dynamic_rule in before_rules:
+            dynamic_rule.react_to(dynamic_event)
             dynamic_event = dynamic_event.get_newest_event()
         return dynamic_event
 
     def run_after_phase_for(self, dynamic_event):
+        after_rules = []
+        for dynamic_rule in self.rules:
+            if dynamic_rule.check_phase == "after":
+                after_rules.append(dynamic_rule)
         for dynamic_rule in self.after:
-            if dynamic_rule.is_at_recurrence_limit():
-                dynamic_rule.at_limit(dynamic_event)
-                continue
-            if dynamic_rule.will_trigger_on(dynamic_event):
-                dynamic_rule.recurrence_counter += 1
-                dynamic_rule.trigger(dynamic_event)
+            dynamic_rule.react_to(dynamic_event)
+
+    def reset_recurrence_counters(self):
+        for dynamic_rule in self.rules:
+            dynamic_rule.recurrence_counter = 0
+        print("DIAGNOSTIC: dynamic recurrence counters have been reset")
+
 
 
 class DynamicEvent:
