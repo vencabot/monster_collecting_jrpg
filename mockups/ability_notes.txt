@@ -474,3 +474,248 @@ Our dynamic_system_4 library is complete for mock-up 4, as of now.
 battle_4 objects need porting. They still use 'DynamicAttributes' instead of 'DynamicObjects'. That's our project for Wednesday.
 
 Once that's ported over, we'll need to rewrite rules_and_events_4 somewhat drastically especially to change the way that our existing 'test rules' operate.
+
+
+
+04/24/18
+
+Today, we're porting over the battle_4.py so that it's compatible with dynamic_system_4.py -- and that means, mostly, taking situations where we were using DynamicAttributes and replacing them with situations where we can use DynamicObjects. The other big change is that we're using Rulesets, now, with our Battles.
+
+One thing that I want to point out right away is that we need to temporarily dial-back our features to accommodate the changes for the version 4 mock-up. A lot of the problems that we had with Version 3 which necessitated the move to Version 4 are problems that we're not going to be prepared to handle, yet, until we get our old mock-up battle running, again.
+
+So, that means that we're not fucking around with turn-taking yet -- alternating turns between parties. We're just going with a mock-up where somebody is slapping somebody else 4 times in a row.
+
+So far, in our code -- considering that we now have a 'Ruleset' object -- our Battle object is entirely pointless. Before, the Battle object's main job was to contain the DynamicRules -- but, now, Rulesets do this. Of course, I think, in the very near future, we're going to need more from the Battle object -- especially when it comes to accessing all of the Units that are currently in battle.
+
+For now, though, we could probably do without it.
+
+Maybe, the thing to do -- with respect for where this code is HEADED -- would be to create a DynamicRule, today, which necessitates the use of a Battle object.
+
+The most fundamental purpose of the Battle object would be to -- I don't know. Let's make a list, real quick, of what sorts of data would sensibly be contained in a 'Battle' object -- an object which represents the STATE of the current battle.
+
+A Battle object would have data regarding:
+    * What parties are taking place in the battle.
+    * What the battle's ruleset is.
+    * Outside of the MECHANICAL aspect of battle, it might contain data
+      regarding presentation: what sort of environment the battle takes
+      place in.
+    * Maybe information regarding whose turn it is and methods for in-
+      crementing turns.
+
+If the Battle is, itself, a DynamicObject, then it inherently knows the Ruleset.
+
+It's important to have some object at the top of hierarchy which knows all of the parties in battle.
+
+Lemme dial that back: we only have TWO parties in battle. I'm getting ahead of myself. Sometimes I think that, with how far we've abstracted a lot of our battle code, so far, we could hypothetically easily create battles with more than two parties. I feel like, as long  as we stay on this course of abstraction, that would be trivial. But as soon as we start to INFORM our DECISIONS to maintain the possibility of many-teamed battles, we're going off-course.
+
+We have two parties. It's still important that we have an object at the top of this hierarchy that knows both parties, because we need that in order to have Rules like this:
+
+If Unit A is healed by Ally Unit B, then a random enemy unit takes damage.
+
+That sounds like a very simple rule considering our mechanics so far, but the problem is that Unit B healing Unit A generates a DynamicEvent report -- and, since neither of those units is on the OTHER team, the Rule receiving that report has no way to access the other team.
+
+Maybe I'm going about this wrong. This is a bugbear of object-oriented programming, in general. This is a problem of state. Is it actually wise to be able to access a random unit on Party B when you're only given a unit from Party A. Why should a function be able to mess with Party B if it's only given a unit from Party A as an argument.
+
+Maybe this is not indicative of us needing a top-level object. Maybe it's indicative of the fact that we need to re-assess the way that our functions are doing their jobs. Is there a way that we can better-manage the arguments that we're providing to our functions so that it's more clear how data is being accessed.
+
+Here's what I do know: DynamicRules need to have access to EVERYTHING in a battle. Yeah, they get a report in the way of DynamicEvent and they can use that report to DECIDE what they want to do -- but their access to the battle shouldn't be limited to what they have in that report. That's a problem I just realized that we have. It should go without saying that any DynamicRule should have access to every single object in a battle.
+
+What's cool about this revelation is that it makes you think about how VERY FEW OPERATIONS in battle actually need access to all of this data. It helps us to trim down our state.
+
+Like, why should every Unit have some kind of reference to every other object in battle. I'm pretty sure it would never, EVER need that. I'm starting to think that, really, only TWO things need access to everything in a battle: the RULES and whatever code we use for the INTERFACE. The player needs to be able to do things like TARGET ANY UNIT that they want for an ability. The player needs to be able to CHECK ALL OF THE RULES.
+
+So the PLAYER needs access to all of this stuff. And the RULES need access to all of this stuff.
+
+I'm pretty sure no other object in battle -- be it a 'Party' or a 'Leader Unit' or a 'Battle Unit' actually need to know jack shit. I think we're giving these objects WAY too much access to data. We need to trim down our state.
+
+Let's re-examine the way that DynamicRules are instantiated. Because I want for them to have EXPLICIT ACCESS to everything in a battle.
+
+Before we even start taking DynamicRules apart, let's look at our other battle objects and decide if they fucking EVER need access to their parent objects. Maybe we could have a true hierarchy where slave objects are not even aware of their master object. That would cut down on SO much redundancy.
+
+Why do we have a Party object which has Units and a Leader when we could just have a Leader object which knows its subordinates.
+
+Mock-up version 4: no more Parties. Instead, we just have LeaderUnits, and they have subordinates.
+
+For some reason, we have our Units set up so that they can have more than one ability by the same name. One Unit could know two different moves that are called 'slap,' and they could be both totally different moves.
+
+I'm not sure I'm about it. I had this idea of moves that have VARIATIONS. The idea was that, if "Pikachu" learns 'Thunder Shock' at level 30, then maybe different Pikachus would learn fundamentally different takes on 'Thunder Shock' at level 30, as a way to make each pikachu more unique.
+
+I still think that's a cool idea, but do they REALLY need to all have the same name. If we have 5 variations on Thunder Shock, couldn't we call them different stuff, like, at level 30, a Pikachu might learn:
+
+Super Thunder Shock
+Poisonous Thunder Shock
+Sticky Thunder Shock
+Cruel Thunder Shock
+
+We could give them different names but have them be variations on the same ability. I don't think it's a good idea at ANY point in our development to entertain the notion tha ta single unit might have more than one ability with the same exact name.
+
+So, I'm just going to change the Unit's ability attribute to a list. Yeah, it means that we won't be able to access it, INTERNALLY, by name, any more -- but we can fix that later.
+
+Is it safe to say, for the purpose of managing state, that an object should only manage data that's unique to that object. That sounds right when I say it like that. I mean, internally, there's really no good reason that a unit should need to have a list of its own abilities -- or, if it does, the ability doesn't need access to its owner.
+
+What if we moved UnitAbility.use(targets), to, BattleUnit.use(ability, targets).
+
+Now, the ability doesn't need to know who its owner is, necessarily.
+
+Let me ask a very important question to the future of how our objects are instantiated:
+
+DO WE NEED TO INSTANTIATE ABILITIES. Should they just be classes that are never truly instantiated -- class methods, class attributes. What is unique about one Slap compared to another.
+
+The obvious answer is that, if we want for units to be able to POWER UP or LEVEL UP their abilities, which would not be unusual in a JRPG, then they need to be instantiated.
+
+But I mean, OTHERWISE, no, right? We don't need for there to be 10 different 'slaps' floating around.
+
+I want a structured concept of an 'ability,' but I just want one of them. I want for there to be only one 'Slap'.
+
+Would it make more sense to have a class, Slap, and INSTANTIATE IT ONCE PER BATTLE (or whatever -- per game sitting, per launch -- per state), or would it make more sense to create a CLASS and then just use its CLASS ATTRIBUTES and CLASS METHODS to get our job done -- or is there a third option that I'm not aware of?
+
+With this new approach, an Ability is just three functions:
+
+_use_glancing
+_use_normal
+_use_critical
+
+These functions should have access to each other (so they're probably methods) so that _use_critical can just run _use_normal and then do something extra. It could almost just be one function. It's just that every 'Ability' can occur 3 different ways.
+
+With my education, it just seems like you would want to make a class with class attributes (if necessary) and class methods. And you would never instantiate that class. It's just... the fact that you would never need __init__ is what makes me feel like maybe it shouldn't be a class.
+
+Maybe I just need a dict like:
+
+slap = {"_use_glancing": some_callable, "_use_normal": some_callable, "_use_critical": some_callable}
+
+The problem with this is that the functions can't access each other. Also, in terms of architecture, we now have to define our Abilities like so:
+
+def slap_use_glancing(user, targets):
+    pass
+
+def slap_use_normal(user, targets):
+    pass
+
+def slap_use_critical(user, targets):
+    pass
+
+slap = {"use_glancing": slap_use_glancing, "use_normal": slap_use_normal, "use_critical": slap_use_critical}
+
+
+singleton Slap:
+    def method_1(single, arguments):
+        pass
+
+
+
+
+Abilities should have access to the whole battle. Even if the explicit 'target' is Unit B, the ability might want to splash damage to a random opponent -- or a random unit. We could have an Ability defined as such:
+
+Big Shell: "Hits target for massive damage but at the risk of misfire damage to a random unit on the field."
+
+So yeah, you target a particular unit, or units, or whatever -- but Abilities still need access to the state of the battle.
+
+We have a problem. An interesting problem. We just got done talking for like an hour about how Abilities don't need to be instantiated -- but if Abilities are gonna have access to the current state of the battle, they gotta be instantiated.
+
+Maybe it would make more sense to give the 'battle' object as an argument to use_glancing, use_normal, and use_critical.
+
+But, we have a problem. An architectural problem.
+
+Never mind.
+
+The problem with giving the 'battle' as an argument to use_* is that the Unit doesn't know what battle it's a part of.
+
+Are we being overly cautious? When you're working with object-oriented design I feel like it's a battle between over-relying on state and under-relying on state.
+
+I'm gonna make a hard rule: NO. REDUNDANT. REFERENCES. That's where we're drawing the line.
+
+Right now, with our Rules behaving as they do, ABILITIES CAN BE PERPETRATORS. That way, we can say,
+
+Steel Cheek: If Unit_A is Slapped, they will take 0 damage.
+
+We've lost this rule:
+
+Steel Cheek: If Unit_A is Slapped by Unit B, they will take 0 damage.
+
+Maybe it does make more sense for a report like DynamicEvent to supply more information: the PERPETRATOR and WHAT THEY DID.
+
+Before, because Abilities were instances that knew their owner, we could INFER the actual unit using the ability knowing only the ability that was used. But now we don't have that luxury.
+
+But I kind of like the idea that Abilities are things that you DO, and, as such, they don't really need to be instantiated. So maybe the perpetrator could be the UNIT, and then there's another attribute of this report which explains what Ability was used.
+
+The problem with this is that, historically, 'perpetrators' haven't always been Units, either. For instance, a perp might be a Rule.
+
+If we have a Rule that says,
+
+"If Unit_A takes damage, then they gain attack power," sure, it could be triggered by Unit_B using Slap -- but it could also be triggered by a Rule that says, "Every unit on Party A takes 1 damage every turn."
+
+I mean, it seems like we definitely have a limited number of objects that can be a perpetrator.
+
+Before, only Units, Abilities, and Rules could be perpetrators of a DynamicEvent.
+
+Now, I'm feeling like we have two types of perpetrators: Units and Rules. If the perp is a Unit, we also report what Ability they used.
+
+Maybe a part of solving this problem would necessitate looking at a Rule like this. We couldn't make this rule work, before:
+
+"If Unit_A takes damage from a Rule implemented as a result of Unit_B using Poison Slap."
+
+This requires a report more complex than we've ever fucked with. We need to know what ABILITY implemented the Rule and we need to know what UNIT used that ability.
+
+It'd be ideal if the Rules were, like abilities, just a static class. In our mockup-3 code, the Rules were also instances because they needed to know --
+
+The Rules have to be instances, because they might need things like arbitrary counters, and they definitely have a 'cure condition' which is going to be updating over time.
+
+So, the Rules could save some data regarding what ABILITY SPAWNED THEM and what UNIT used that ability. That's a luxury we can afford because Rules need to be instances.
+
+But that same design doesn't follow for Abilities, which seem to be working more-or-less just fine without being instances.
+
+The good thing is, with this trail of logic, ALL REPORTS WOULD DEFINITELY have a perpetrating unit and a perpetrating ability, right? Maybe not.
+
+So, basically, where we're at is we're re-examining our DynamicEvent report system. I think, we have two options presented to us:
+    * Go back to having 'redundant references' between objects, which means
+      that object A has a reference to object B and object B has a reference
+      to object A. This is what we had before, I've done this with many
+      other projects in the past. It's just mad ugly and can cause some
+      terrible bugs.
+
+    * The other option is to somehow give more information in our
+      DynamicEvent reports and ideally make it uniform in some way.
+
+
+Maybe there is no way to make it uniform. Maybe we just need different kinds of reports depending on what sort of object is abstractly 'perpetrating' the attribute change.
+
+Maybe we need a different format of report of Unit A's HP is lowered by rule Poison vs if Unit A's HP is lowered by being Slapped by Unit B.
+
+Penguin's talking about a 'foreign key' to associate things together.
+
+Maybe he's saying that the Leader doesn't need to know the Subordinate and the Subordinate doesn't need to know the Leader. Instead, they both know the Battle, and the Battle has a dict of leader -> units.
+
+That way, you don't even necessarily have a hierarchy of data: you have a sort of CENTRAL structure that coordinates all of the objects that orbit it.
+
+class Leader:
+    def __init__(self):
+        self.suboordinate = None
+
+class Suboordinate:
+    def __init__(self):
+        self.leader = None
+
+leader = Leader()
+suboordinate = Suboordinate()
+
+suboordinate.leader = leader
+leader.suboordinate = suboordinate
+
+
+At some point in your code, you do:
+
+suboordinate.leader = leader
+
+But you forget to do
+
+leader.suboordinate = suboordinate
+
+To solve this problem, on the leader, I used to have a method:
+
+class Leader:
+    def __init__(self):
+        self.suboordinate = None
+
+    def append_suboordinate(self, suboordinate):
+        self.suboordinate = suboordinate
+        suboordinate.leader = self
