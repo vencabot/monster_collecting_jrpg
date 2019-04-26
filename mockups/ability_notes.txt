@@ -719,3 +719,7 @@ class Leader:
     def append_suboordinate(self, suboordinate):
         self.suboordinate = suboordinate
         suboordinate.leader = self
+
+
+04/25/19
+
