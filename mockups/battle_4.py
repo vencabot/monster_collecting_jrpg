@@ -6,11 +6,11 @@ class DynamicObject:
         
     def update_w_rules(
             self, attr_name, new_value, perpetrated_by=None,
-            w_ability=None, w_rule=None):
+            with_ability=None, triggering_rule=None):
         old_value = self.__dict__[attr_name]
         dynamic_event = DynamicEvent(
                 self, attr_name, new_value, old_value, perpetrated_by,
-                w_ability, w_rule)
+                with_ability, triggering_rule)
         if new_value == old_value:
             return
         final_event = self.ruleset.run_through_before_phase(
@@ -20,13 +20,13 @@ class DynamicObject:
 
 
 class DynamicRule:
-    def __init__(self, rule_name, check_phase, initiator, w_ability):
+    def __init__(self, rule_name, check_phase, initiated_by, with_ability):
         self.rule_name = rule_name
         self.recurrence_counter = 0
         self.recurrence_limit = 1
         self.check_phase = check_phase
-        self.initiator = initiator
-        self.w_ability = w_ability
+        self.initiated_by = initiated_by
+        self.with_ability = with_ability
 
     def react_to(self, dynamic_event):
         if self.recurrence_counter == self.recurrence_limit:
@@ -34,6 +34,8 @@ class DynamicRule:
         elif self.will_trigger_on(dynamic_event):
             self.recurrence_counter += 1
             self.trigger(dynamic_event)
+        else:
+            self.fail(dynamic_event)
 
     def will_trigger_on(self, dynamic_event):
         return False
@@ -46,7 +48,8 @@ class DynamicRule:
         pass
 
     def fail(self, dynamic_event):
-        print(f"{self.rule_name} failed to trigger.")
+        #print(f"{self.rule_name} failed to trigger.")
+        pass
 
 
 class Ruleset(DynamicObject):
@@ -77,31 +80,33 @@ class Ruleset(DynamicObject):
             dynamic_rule.recurrence_counter = 0
         print("DIAGNOSTIC: dynamic recurrence counters have been reset")
 
-# FIX THIS TODAY
+    def add_rule(self, dynamic_rule):
+        self.update_w_rules("rules", self.rules + [dynamic_rule])
+
 class DynamicEvent:
     def __init__(
             self, target, attr_name, new_value, old_value,
-            perpetrated_by, w_ability=None, w_rule=None, replaces=None):
+            perpetrated_by, with_ability=None, triggering_rule=None,
+            original_event=None, replaces=None):
         self.target = target
         self.attr_name = attr_name
         self.new_value = new_value
         self.old_value = old_value
         self.perpetrated_by = perpetrated_by
-        self.w_ability = w_ability
-        self.w_rule = w_rule
+        self.with_ability = with_ability
+        self.triggering_rule = triggering_rule
+        if original_event is not None:
+            self.original_event = original_event
+        else:
+            self.original_event = self
         self.replaces = replaces
         self.replaced_by = None
 
-    def replace_value(self, new_value, perpetrated_by):
+    def replace_value(self, new_value, triggering_rule):
         self.replaced_by = DynamicEvent(
                 self.target, self.attr_name, new_value, self.old_value,
-                perpetrated_by, self.ability, self)
-
-    def get_original_event(self):
-        original_event = self
-        while original_event.replaces is not None:
-            original_event = original_event.replaces
-        return original_event
+                self.perpetrated_by, self.with_ability, triggering_rule,
+                self.original_event, self)
 
     def get_newest_event(self):
         newest_event = self

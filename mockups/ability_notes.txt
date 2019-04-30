@@ -723,3 +723,35 @@ class Leader:
 
 04/25/19
 
+
+
+04/29/19
+
+So, the order of the Rules is significant when determining whether or not they'll trigger, which can be confusing for the player. For instance, if 'Invincible' is triggered before 'Hench,' Hench will not trigger -- because Hench will only trigger if the target_unit was going to do damage.
+
+So, if Invincible triggers first, then the attack isn't going to do damage, which prevents Hench from recognizing that an attack was attempted.
+
+That's fine. We can just word 'Hench's trigger condition as, "If an attack would have done damage, damage is doubled."
+
+That's great, BUT, with our new and improved DynamicEvent report system, we can actually go back in time and see that an attack WAS attempted even if the damage is going to be absorbed.
+
+So, maybe we should use that extra knowledge to make it more clear to the player what's happening.
+
+If KreichJr has a rule on him that says, "If Vencabot attacks KReichJr, Vencabot takes poison damage." I don't want Hench to affect the poison damage. Is there a way, given our current DynamicEvent reporting system, that I can implement this?
+
+What's the difference in DynamicEvents if Vencabot is dealing extra damage from Hench vs if he's dealing extra damage from Poison?
+
+Well, actually, that should work fine -- because the extra damage from Hench REPLACES the original damage. The extra damage from poison ADDS NEW DAMAGE. So, that answers my question about whether or not the 'original event' can have a triggering_rule. The answer is "yes."
+
+In the case of poison, the ORIGINAL EVENT would have a triggering_rule value.
+
+GOOD NEWS! It seems as though our new Dynamic Rule System is fully functional -- not only insofar as being as feature-rich as it was before, but also such that we can implement all new kinds of rules and features (including custom error messages when a rule fails to trigger in a situation where a player might have expected it to trigger).
+
+That means that, next time (Wednesday), we should go about experimenting with Rules that we couldn't have gotten working before, including Rules that are triggered when different Leaders get their turns, or even some example Rules where we maximize the complexity of our reports (DynamicEvent), which would be worded along the lines of:
+
+"Vencabot gains HP when KReichJr triggers Persistence by attacking Zanzhu with Slap three times."
+
+We need to find situations where we'd WANT to trigger Rules where, up to this point, we haven't been able to, such as:
+
+On a turn change.
+When a new Rule is added to the ruleset.
