@@ -755,3 +755,288 @@ We need to find situations where we'd WANT to trigger Rules where, up to this po
 
 On a turn change.
 When a new Rule is added to the ruleset.
+
+
+
+05/01/19
+
+So, last night I was thinking about the way that our Rules are currently working, internally. Right now, they're split up into three main methods which can be overridden when defining a Rule:
+
+'will_trigger_on' is a method that returns True or False depending on whether or not the Rule will trigger on a certain DynamicEvent.
+
+The 'trigger' method is separate from that just so that we have some tidiness, internally. I think it's a bit nicer to be able to see, separately WHAT triggers a Rule and then what it does when it's triggered.
+
+Finally, we have an optional 'fail' method, which is triggered only when will_trigger_on returns False. It can take the same DynamicEvent and return a custom error message (or animation or whatever) depending on WHY the Rule failed to trigger (especially in situations where the player may have expected it to trigger).
+
+That's all well and good, but it strikes me that this rigid structure -- this rigid abstraction -- of Rules either "triggering" or "not triggering" -- this binary -- limits what we can do with our Rules.
+
+For instance, what if I want to have a DynamicRule which gets more severe if a secondary condition is met.
+
+Let's give an example:
+
+Vencabot takes poison damage after every action he takes. If Vencabot is healed by another unit, the poison's severity increases.
+
+So, in this case, we have a sort of double-decker Rule. It's "triggered" in two different situations, with two different results:
+
+Vencabot takes an action. -> He takes damage.
+Vencabot is healed by another unit. -> The poison's severity increases.
+
+With our current mechanisms in place, perhaps the most sensible thing to do would be to split this over two different Rules.
+
+But my thinking, last night, was that it would make sense to de-standardize the whole 3-method DynamicRule override.
+
+Instead, we would have only ONE standard method, which would be called something like, "process_event". You feed it a DynamicEvent, and, instead of returning True or False, it will automatically call any number of methods based on the event that it gets.
+
+That's much simpler. Although it would be nice to have a standard so that all Rules look the same, to some extent, it does sort of limit what we can do with our rules -- and that's been something that we've been butting our heads against for a long time, now. The balance between maintaining clear-to-read 'standards' but also keeping the 'dynamic' part of 'dynamic rule system'.
+
+I think the best compromise would be to have Rules with this one standardized method, "process_event". Then everything else could be unique to that Rule.
+
+But what I didn't think of, last night, was the possibility that we could split these complex Rules over more than one Rule. Right off the bat, I don't think this is the best solution, but I don't want to write it off until I consider the pros and cons thoroughly.
+
+Pros of splitting complex Rules over multiple, simpler rules:
+* We can keep the Rules internally standardized with a simple 'trigger' method. When it triggers, it triggers; it can't trigger in a variety of ways.
+
+* It might be simpler for the player to read. It means that individual rules are easier to parse, and it's easier to understand what's going on when an action takes place because each summary of a rule is simpler.
+
+Vencabot takes damage every time he takes an action. The damage is increased every time his HP is healed.
+
+Vencabot takes damage every time he takes an action. (Poison)
+Vencabot's Poison increases in severity whenever his HP is healed.
+
+The cons of splitting complex Rules over multiple, simpler rules:
+* It means that we need more Rules to describe what might be, conceptually, a single idea.
+
+* It might add problems when we consider that Kenny and I have been working with different ways to balance Rules. The idea that I've settled on is to limit the number of Rules that a single unit can be subject to at once, and that means that, if we have multiple, simpler rules, we're gonna hit that limit a lot faster and may need to reconsider this as a balancing method.
+
+* If we have Rules that are directly impacting Rules, we may need a way to communicate to the player exactly what Rule we're talking about. In the example above, we had to clarify that the first Rule is called 'Poison' so that we could later clarify that Vencabot's 'Poison' is what's going to be increasing in severity.
+
+
+
+Much to my surprise, putting the pros and cons side-by-side makes me realize that there really isn't that big of a difference between the two options. Maybe de-standardizing Rules isn't as much of a benefit as I first expecting. I would say that the REAL difficulty with splitting complex Rules into simpler Rules is that it becomes difficult to decide how to limit rule-stacking on a single unit.
+
+The way to deal with that would be to consider the SECOND Rule in our example ("Vencabot's Poison increases in severity when his HP is healed") to not be stacked on VENCABOT but rather to be stacked on the POISON -- as though Rules, themselves, could have slots where they take on other Rules.
+
+Is that a more elegant solution? Maybe.
+
+Before we go too deep down that rabbit hole, let's consider what I expected to be a standard feature of all Rules: 'trap' conditions and 'cure' conditions.
+
+When we were discussing everything we could explore with the Dynamic Rule System, we talked about how, instead of just 'curing' or 'dispelling' a Rule using some kind of Final Fantasy'esque "Dispel" or "Remedy", Rules should be curable BY those but also by fulfilling conditions, such as, "5 turns pass," or, "Vencabot is swapped to the back row." It could be anything. It could be, "Vencabot's curse is cured when he's attacked 3 times." It could be anything. That would be a 'cure condition'.
+
+'Trap conditions' would be situations where a Rule has NO EFFECT when it's put into play, but it would be THREATENING the affecting team by saying something like, "If Vencabot attacks 3 times, he'll become subject to poison for 10 turns."
+
+In that case, we're limiting what Vencabot can do not BY inflicting poison but by inflicting the THREAT of poison.
+
+So, one option, programming-wise, would be to standardize these 'trap' and 'cure' conditions as a part of the DynamicRule object.
+
+But it was during my meditions about this that it struck me that perhaps it would make more sense to destandardize the DynamicRule object and allow each Rule to decide, on its own, how to process any given Event with any number of conditions and results.
+
+Because, like I mentioned earlier, having a standardized 'trap' and 'cure' conditions doesn't cover the possibility of a condition that increases or decreases the SEVERITY of some effect. Maybe, under a certain condition, the TARGET of an affect is changed. Because these Rules are truly meant to be 'dynamic,' I feel like, to maintain the most freedom, we need to limit how much standardization we do between them.
+
+On the other hand, one thing I've found in some of my previous projects is that, when you refuse to standardize a mechanism so that it can be as FLEXIBLE as possible, what you end up with is a situation where you actually have no objects or anything concrete. Things become so abstract that you're essentially just re-writing the language that you're composing your code in.
+
+So, what we end up with is essentially two possibilities:
+We allow for COMPLEX RULES which take a DynamicEvent and process it FREELY. We do away with the abstraction of the 'triggered' or 'un-triggered' binary and, instead, allow every Rule to do whatever it pleases with a certain Event. That seems reasonable, to me -- and powerful.
+
+Or we could enforce SIMPLICITY on INDIVIDUAL rules, but have them be able to STACK ON EACH OTHER. So, considering things like 'cure conditions,' 'trap conditions', 'severity change conditions,' 'target change conditions' -- all of these things. You could stack them, as MULTIPLE RULES, like this:
+
+Vencabot takes poison damage after every action he takes.
+    - Rule is supressed until he attacks 3 times.
+    - Rule is cured after he is attacked 3 times.
+    - Rule changes target to whoever heals Vencabot.
+
+All four of these rules can only trigger under a single circumstance and have a single effect. So, we can maintain the 'triggered' or 'untriggered' binary. It is quite simple to read. That's an advantage.
+
+I'm starting to see that a problem with THIS mechanism is that, when you have Rules that change the effect of other Rules, it becomes difficult to know what order to process the rules in. How does the first sub-rule -- the trap condition -- suppress poison. For one thing, it wouldn't be written that way. It'd be written such that the Trap Condition is the PRIMARY RULE, and it later 'creates' or 'initiates' the poison rule.
+
+But that doesn't really answer my question about Rules stacking on other Rules. Supposing that we do allow for Rules to stack on other Rules (which I think is very sensible), what if we had a Rule that suppressed another Rule until some condition was met. How would we go about doing that?
+
+The most obvious way to suppress a Rule would be to simply give every DynamicRule a flag -- True or False -- which communicates whether or not it's suppressed. We definitely need more standard attributes for Rules, including their Severity level, which is a mechanism that I do want to be standard across Rules: the ability to raise or reduce severity.
+
+We still have this problem of ORDER of operations when you're talking about Rules which affect other Rules.
+
+I mean, maybe there is no problem there: maybe it's just first-come, first-served like we've been doing. I can't immediately imagine a situation where that would be a problem.
+
+What's cool about THIS method -- keeping Rules simple, individually, but having them stack on each other -- is that it opens up a whole new class of unit abilities where we can manipulate existing rules. Like, we do want to have a class which could have an ability like, "choose a rule to suppress for 3 turns." That makes sense.
+
+Maybe we want a class with an ability like, "change the cure-condition of a rule," or something like that.
+
+I feel like, even if we have super-complex rules, we're going to need to allow rules to stack on rules, and we're going to need to STANDARDIZE some situations.
+
+We can't get away with NOT standardizing things like TRAP CONDITIONS or CURE CONDITIONS, because we need to be able to have abilities which EXTEND trap conditions and SHORTEN cure conditions.
+
+I would say that the MAIN disadvantage of splitting complex Rules into an arbitrary number of SIMPLE Rules is that it becomes a bit more difficult to convey to the player that this 'package' of Rules all conveys a single concept.
+
+But, I don't necessarily think that's a big issue.
+
+To clarify what I mean, I'm imagining a UI for the player to peruse to understand what Rules are in play in the current battle -- and, now that I think about it, this isn't a problem that's unique to 'rules-stacking-on-rules'. Our Dynamic Rule System IS so dynamic, by design, and creating a UI that makes it easy for the players to understand what Rules are in play is going to be a challenge.
+
+Maybe, instead of going into too much code, today -- we've only got another forty minutes, here -- maybe we should begin musing about UI and maybe make some decisions about how this system is going to play out based on that. With DynamicRules being hypothetically so complex, what is an effective way to communicate what Rules are currently in play so that the player can make decisions effectively and understand the flow of battle.
+
+Taking WORKING examples from the genre, you would TYPICALLY have STATUS CHANGES be AFFIXED to a UNIT. Usually, this is communicated with an icon over the unit's head and probably some entry on their 'status' page.
+
+That's how you would handle traditional Poison, and Blind, and Protect, and all of these abstract 'status changes' which are one of the closest things to our idea for DynamicRules.
+
+It's been brought up that DynamicRules also have some similarity to the 'Law' system in Final Fantasy Tactics Advance and its sequel. In those games, the only way to know what Laws are in play are by bringing up a special 'Laws' screen which just lists them, top-to-bottom. But it should be noted that this only works because Laws don't target any individual unit AND there's a very limited number of them per battle. You typically would have less than 10 laws per battle, and they're pretty easy to explain on a single line.
+
+Let me propose an abstraction: CAN WE SAY that EVERY RULE has a TARGET? In the past, I've considered that, and I've usually just defaulted on, "No," you can't strictly say that every Rule has a target.
+
+But maybe, if we think more about it, we'll decide that it isn't true. Maybe every Rule could be said to strictly have a target. That we could, in terms of UI, 'attach' that Rule to.
+
+It goes without saying that some Rules target a specific unit. In our example above, "If Vencabot takes an action, he takes damage," it's clear that this Rule relates strictly to Vencabot. In a UI, we could definitely be forgiven for putting an icon over Vencabot's head or putting some kind of entry on Vencabot's status page that says that he's under the affect of this Rule.
+
+If any unit heals another unit, a random unit on either team will die.
+
+In the past, I've said that this kind of Rule would be said to apply to "the battlefield." So, if "the battlefield" has a status page, we could put that Rule there.
+
+So, what are our targets?
+A Unit.
+A Battlefield.
+A Party (leader?).
+
+That seems fair. I don't think that there's any Rule that I could come up with that couldn't be said to target one of those three things. So, if each of those three things has a 'status' page, we could list the rules that are affecting them there.
+
+If the Unit has a status page where you can view the Rules they're exclusively under the affect of,
+
+And the Party has a status page where you can view the Rules it's exclusively under the affect of,
+
+And the Battlefield has a status page where you can view the Rules it's exclusively under the affect of,
+
+Then we can expect for the player to not have too much difficulty keeping track of what Rules are in play.
+
+Not that we NECESSARILY need Rules this complex if it's going to fuck up our whole UI, but what about a Rule like this:
+
+If Unit A (Party A) and Unit B (Party A) and Unit C (Party B) and Unit D (Party B) heal another unit a COMBINED NUMBER of 4 times, then Unit E (Party A) and Unit F (Party B) are killed.
+
+That's a super-complex rule. It 'targets' 6 different units, split among both parties. I guess that would be a 'battlefield' rule, right? Or could it be said to be a Rule that essentially 'individually' targets those 6 units.
+
+For balance reasons, this would probably need to be a Battlefield rule, and let's talk about Balance real quick.
+
+A few weeks ago, it came to me and Kenny's notice that, by stacking a few VERY SIMPLE RULES, you can break this game -- like, super easily. The example we gave was something like this:
+
+We have a 'priest' unit, and it's casting buffs on our team.
+
+Vencabot takes 20% less damage from physical attacks.
+Vencabot takes 20% less damage from physical attacks for 5 turns.
+Vencabot takes 10% less damage from enemy units A, B, and C.
+
+That all could hypothetically be cast in a single turn. And that's just one example. When you have as many ideas for DynamicRules and the abilities and classes that inflict them as we do, it stands to reason that breaking the game becomes trivial. Any time you can stack Rule A and Rule B on a single unit, you're risking breaking the whole game.
+
+We'd developed this idea for WEEKS before this very simple revelation hit us.
+
+A solution that we came up with, which I think is pretty elegant, is that we need to LIMIT THE NUMBER OF RULES WHICH INDIVIDUALLY TARGET ANY SPECIFIC OBJECT, whether it be a UNIT, a PARTY, or a BATTLEFIELD.
+
+But there's more.
+
+If we did that, STRICTLY, we have a problem where we have to start abstracting Rules as being either 'buffs' or 'nerfs,' which creates this binary that's contrary to the very idea of a Rule's dynamism. Because many Rules are going to have a very serious trade-off, like, "Vencabot does double damage but 1/4 is reflected back at him." Is that a buff or a nerf? I can imagine situations where that'd be inflicted on Vencabot by an ALLY and other situations where it might be inflicted on Vencabot by an ENEMY.
+
+So, what we thought of was this: every kind of object can have a limited number of Rules inflicted upon it BY EACH PARTY.
+
+So, Vencabot can only have one Rule inflicted upon him by his ALLIES and only one inflicted upon him by his ENEMIES at one time. The same would be true of each Party and the Battlefield; there's a limit to how much control EACH PARTY can inflict over each type of object.
+
+This also solves the problem that we would've had regarding 'blocking' if we limited the number of rules that a single object could be under the influence of but we DIDN'T keep track of whether they were inflicted by an ALLY or an ENEMY.
+
+For instance, let's say that we set a 'rule-cap' for each unit at 3 rules.
+
+Well, on the first turn, the party inflicts three 'buffs' on Vencabot. Now, he's immune to 'nerfs' on the enemy turn. That's a problem.
+
+So, intead, we limit the number of rules that can be inflicted on Vencabot by the ALLIES and the ENEMIES.
+
+Speaking of UI, supposing that we're limiting the number of Rules, in battle, based on what object they're affecting, it's fair to say that you would peruse the current rules, in battle, by looking at various 'status screens' for the Unit, the Party, and the Battlefield. And maybe we could put icons over the heads of Units and, for the Party, an icon over the head of the Party Leader -- and, for the battlefield, icons in the corner in something.
+
+I think that, UI-wise, it's not going to be a herculean task to keep track of what-all rules are currently in play. We can manage that.
+
+To step back to our original question, then: yes, Rules can be said to have a specific target. And the three possible target-types would be "unit," "party," and "battlefield". And we would balance Rules -- and the whole Dynamic Rule System -- by limiting the number of Rules that any PARTY can inflict on any of those targets.
+
+It strikes me that we have to add one more possible target type to that list: "unit", "party", "battlefield", and RULE. Because Rules can target other Rules.
+
+SO, maybe we can even STANDARDIZE the SLOTS -- maybe not, but maybe -- that a given Rule has to entertain other Rules.
+
+As a rough draft, a Rule could have THESE SLOTS for other Rules:
+
+A 'cure' condition. This Rule will determine when the parent Rule falls out of play.
+
+A 'trap' condition. This Rule will determine when the parent Rule comes INTO play.
+
+A 'severity increase' condition. This Rule will determine when the parent Rule increases in severity.
+
+A 'severity decrease' condition. This Rule will determine when the parent Rule decreases in severity.
+
+It's a little bit abstract, but I think we would need some sort of wiggle-room for a Rule such as,
+
+"Vencabot takes damage after every action he does. If Vencabot is healed, this curse moves to the unit that healed him."
+
+For sub-rules like that one -- and probably countless others -- I feel like we can't really set aside a standard 'slot,' so maybe it makes sense for us to not have ANY standard slots for sub-rules. We just have parent Rules and sub-rules which affect that Rule. That makes more sense, because then we could have more than one 'severity increase' condition.
+
+Lemme raise another abstract question. If Rules and Sub-Rules are the same object type, it stands to reason that sub-rules could have sub-rules attached to them. WOULD THAT MAKE SENSE?
+
+Well, I would say that it makes sense for a sub-rule like, "If Vencabot is healed, his healer takes on this curse," could take on a sub-rule like, "Is cured after 3 turns." That's a sub-rule with a sub-rule DYNAMICALLY ATTACHED TO IT.
+
+Okay, let's clarify one thing, here: sub-rules SIMPLY CAN NOT be SO dynamic and SO abstract that they can necessarily apply to ANY OTHER RULE. DynamicRules are objects which are invited to have their own, non-standard attributes, and we do want for sub-rules to be able to play with those... right?
+
+What's an example of a DynamicRule which would need its own, non-standard attribute to do its job correctly, and can we make a sub-rule which affects THAT PARENT RULE EXCLUSIVELY which wouldn't work on other Rules.
+
+"Every 3rd turn, Vencabot takes damage."
+
+This Rule needs an internal counter for how many turns have passed since Vencabot last took damage from it. Very simple, but a necessary, non-standard attribute that this Rule instance needs to keep track of.
+
+Now, what if we wanted a sub-rule like this:
+
+"Slow Poison: Every 3rd turn, Vencabot takes damage."
+"If Vencabot's HP is healed, Slow Poison takes affect every 2nd turn."
+
+So now, we have a situation where the SUB-RULE is manipulating the PARENT-RULE in a way that wouldn't necessarily TRANSLATE to other Parent Rules. We could probably abstract this out so that, "If Vencabot's HP is healed, the severity of the parent Rule increases," which we could have wired up in Slow Poison so that, if its severity increases, it takes affect more often.
+
+But that's just one example. I feel like it's safe to say that not every sub-rule is going to be able to apply to every parent rule.
+
+So, what we NEED to do is decide on a LIMITED SET of UNIVERSALLY USEFUL attributes that EVERY RULE needs to take into account. That would maximize the dynamism of these relationships BETWEEN parent and sub-rules.
+
+For instance, if every Rule has a TARGET, we can change that target. This and other considerations I've been making makes it clear that we're going to need to start TAGGING Rules so that we can understand how they work, at a glance, and match them up APPROPRIATELY with other sub-rules.
+
+Every Rule has a TARGET, and it has a flag regarding whether its target is a UNIT, a PARTY, a BATTLEFIELD or ANOTHER RULE.
+
+Every Rule has a SEVERITY LEVEL between 1 and 10. '1' would be 'barely taking affect' and '10' would be 'a very dramatic affect'. So, EVERY RULE would take into account its CURRENT SEVERITY when triggered. This way, we could dynamically change the severity of a Rule and have it play out in interesting ways.
+
+We need a flag that defines whether or not the Rule is currently 'suppressed'. These Rules would be VISIBLE on a status screen because their suppression is TEMPORARY. It's visible, it's in-play, but it will not be triggered. We would neither either a 'suppressed' flag or an 'active' flag, depending on which boolean we want.
+
+We need, like, a 'type' flag? To communicate -- for instance. Let's say that we have a Healer class which has an ability that can REDUCE THE SEVERITY OF A CURE-CONDITION.
+
+Some Rules:
+Vencabot takes 10 damage at every turn change.
+    - Parent Rule is cured after 10 turns.
+
+We would want a Healer class which could use an ability to REDUCE THE SEVERITY of that cure-condition. Boom, the priest casts a spell, and now:
+
+Vencabot takes 10 damage at every turn change.
+    - Parent Rule is cured after 3 turns.
+
+We have reduced the severity of the cure-condition. So, for this Priest's ability to MAKE SENSE, we NEED to TAG the sub-rule with some kind of 'cure_condition' tag. We need to tag rules so that we understand how we can interact with them.
+
+So, these tags SHOULD NOT NECESSARILY BE INDIVIDUAL ATTRIBUTES, because we're gonna need an arbitrary number of tags. So, we can use these tags, as a list, to give other Rules and Abilities an idea of how they can interact with each other.
+
+This idea actually solves a problem I've been having for a LONG TIME about Rules, and that's kind of cool. For instance, let's say that you have a priest ability that says, "Cures Rules that deal HP damage over time." Up to this point, we've had no way of communicating, at the programmatic-level, which Rules "deal HP damage over time." Because that's kind of an abstract idea. For instance, what is "time"? When a unit takes an action? When a turn ends? Also, we really have no way of INTROSPECTING which Rules are doing HP damage.
+
+The idea of 'tags' solves this: we can just tag Rules with, "deals_hp_damage_over_time," and then ANY ABILITY or ANY RULE which excusively targets Rules which deal damage over time now know that this Rule is an applicable target.
+
+So, yeah, Rules need to have a .tags attribute where we can apply tags that other Rules and abilities can look for.
+
+Also, Rules need a get_description() method. We could supply a .description attribute, as a string, but, because Rules are instances with attributes that might change over time, it makes more sense to get_description() and get a string back which might be different every time.
+
+Let's talk about the direction of our coding for tomorrow:
+
+Rules need some standardized attributes:
+    .severity
+    .is_active
+    .tags
+    .get_description()
+    .target_type
+    .affected_by
+
+Instead of having a 'target' attribute, the Objects which ARE the targets have a list of Rules that are targetting them. The 'targets' that a Rule saves, internally, could be totally different from the 'targets' that it has, ABSTRACTLY, for the purpose of balance. But it does need a tag for what kind of target it takes, and that should be standardized.
+
+BattleUnits, BattleLeaders, and Battles need:
+    .affected_by (a dict of parties mapped to the Rules inflicted by them)
+    .rule_limits (a dict of parties mapped to the int limit for that party)
+
+We know that we're limiting the number of Rules that a single Unit can be under the effect of PER PARTY. Vencabot can be affected by two rules inflicted by Party A and two rules inflicted by Party B.
+
+At this point, we should port our existing Rules to take advantage of 'severity'. Then, we need to start coming up with and testing sub-rules and situations where we're dynamically messing with severity and other attributes of Rules.
