@@ -6,11 +6,11 @@ class DynamicObject:
         
     def update_w_rules(
             self, attr_name, new_value, perpetrated_by=None,
-            with_ability=None, triggering_rule=None):
+            with_ability=None, at_effectiveness=None, triggering_rule=None):
         old_value = self.__dict__[attr_name]
         dynamic_event = DynamicEvent(
                 self, attr_name, new_value, old_value, perpetrated_by,
-                with_ability, triggering_rule)
+                with_ability, at_effectiveness, triggering_rule)
         if new_value == old_value:
             return
         final_event = self.ruleset.run_through_before_phase(
@@ -19,14 +19,24 @@ class DynamicObject:
         self.ruleset.run_after_phase_for(final_event)
 
 
-class DynamicRule:
-    def __init__(self, rule_name, check_phase, initiated_by, with_ability):
+class DynamicRule(DynamicObject):
+    def __init__(
+            self, ruleset, rule_name, check_phase, tags, severity,
+            initiated_by, with_ability):
+        super().__init__(ruleset)
         self.rule_name = rule_name
         self.recurrence_counter = 0
         self.recurrence_limit = 1
         self.check_phase = check_phase
+        self.tags = tags
+        self.severity = severity
         self.initiated_by = initiated_by
         self.with_ability = with_ability
+        self.is_active = True
+        self.triggered_counter = 0
+
+    def get_description(self):
+        return f"{self.rule_name}: A rule."
 
     def react_to(self, dynamic_event):
         if self.recurrence_counter == self.recurrence_limit:
@@ -34,6 +44,12 @@ class DynamicRule:
         elif self.will_trigger_on(dynamic_event):
             self.recurrence_counter += 1
             self.trigger(dynamic_event)
+            self.update_w_rules(
+                    "triggered_counter", self.triggered_counter + 1,
+                    dynamic_event.perpetrated_by,
+                    dynamic_event.with_ability,
+                    dynamic_event.at_effectiveness,
+                    dynamic_event.triggering_rule)
         else:
             self.fail(dynamic_event)
 
@@ -86,7 +102,7 @@ class Ruleset(DynamicObject):
 class DynamicEvent:
     def __init__(
             self, target, attr_name, new_value, old_value,
-            perpetrated_by, with_ability=None, triggering_rule=None,
+            perpetrated_by, with_ability, at_effectiveness, triggering_rule,
             original_event=None, replaces=None):
         self.target = target
         self.attr_name = attr_name
@@ -94,6 +110,7 @@ class DynamicEvent:
         self.old_value = old_value
         self.perpetrated_by = perpetrated_by
         self.with_ability = with_ability
+        self.at_effectiveness = at_effectiveness
         self.triggering_rule = triggering_rule
         if original_event is not None:
             self.original_event = original_event
@@ -139,7 +156,7 @@ class BattleUnit(DynamicObject):
         self.mp = 5
         self.abilities = []
 
-    def use(self, ability_class, targets, battle):
+    def use_ability(self, ability_class, targets, battle):
         glancing_chance = 15
         critical_chance = 15
         normal_chance = 100 - glancing_chance - critical_chance

@@ -1040,3 +1040,72 @@ BattleUnits, BattleLeaders, and Battles need:
 We know that we're limiting the number of Rules that a single Unit can be under the effect of PER PARTY. Vencabot can be affected by two rules inflicted by Party A and two rules inflicted by Party B.
 
 At this point, we should port our existing Rules to take advantage of 'severity'. Then, we need to start coming up with and testing sub-rules and situations where we're dynamically messing with severity and other attributes of Rules.
+
+
+
+05/02/19
+
+So, today I'm adding some new features to the DynamicRule objects. In particular, we're adding 'tags' and 'severity' -- and that means changing our existing test rules so that they take advantage of these new features.
+
+So, first, let's go through our existing rules and implement severity, and then we'll test that.
+
+A couple of problems just came to mind regarding the flexibility of rules.
+    1.) Is it possible to record when a ability crits, for rules like,
+        "If Vencabot gets a crit, he loses health."
+    2.) Is it possible to record when a rule triggers, for rules like,
+        "If Rage triggers 3 times, Rage is removed from the ruleset."
+
+These are situations where we would need some kind of 'report' to trigger Rules that we haven't accommodated in our DynamicEvent system. DynamicEvents always and only record when an attribute is changed. That makes sense, for the most part. We could even use it to record turn-changes by having, like, battle.current_turn be a dynamic attribute.
+
+But there are some situations, I feel, where it would make sense to trigger rules when an OBJECT ATTRIBUTE couldn't be said to be strictly CHANGING.
+
+Like, can we change an attribute when getting a crit? Maybe. Sounds kind of hack'ish.
+
+Can we change an attribute when a Rule triggers. Maybe. Sounds kind of hack'ish.
+
+In the latter example, we could just standardize a mechanism where Rules record how many times they've been triggered.
+
+Maybe. It's. Worth. Recording the EFFECTIVENESS of an ability when reporting on it for DynamicEvents.
+
+Right now, DynamicEvents record quite a lot of data about the CAUSE of the event:
+
+DynamicEvent.perpetrated_by : the UNIT who 'perpetrated' the attribute
+                              change.
+
+DynamicEvent.using_ability : the ABILITY that was used to change the
+                             attribute.
+
+DynamicEvent.triggering_rule : the RULE which was triggered by the ability.
+
+So, maybe we just need another report attribute, "with effectiveness".
+
+DynamicEvent.perpetrated_by
+DynamicEvent.using_ability
+DynamicEvent.at_effectiveness
+DynamicEvent.triggering_rule
+
+It seems reasonable, to me, to give every DynamicRule a counter for how many times its been triggered. When this number goes up, we can run other Rules which would trigger when that rule is triggered.
+
+Time for some salty notes.
+
+I just noticed that current DynamicRules aren't given a 'Battle' object as an argument upon instantiation. But, in a previous rant, I established that, just like with Abilities, every Rule must, by definition, have access to a Battle object -- because it needs to be able to change things in the battle.
+
+Or does it?
+
+I mean, Rules are given arbitrary arguments, right now. If a Rule needs access to a Battle, we can give it a Battle. None of our existing Rules require access to a Battle.
+
+Which raises a question: is it okay for every Rule to take arbitrary arguments? I don't think that it's okay for ABILITIES to take arbitrary arguments, because they ALL NEED TO BE 'used' IN THE SAME CONTEXT. In the same way.
+
+But Rules are 'initiated' during Abilities, so, in that 'use_ability' code, we can instantiate Rules however we please.
+
+So, by that logic, Rules don't necessarily need to have Battle arguments and, furthermore, they don't necessarily need to have ANY particular arguments: their instantiation can be completely customized during 'use_ability'.
+
+We're ending our game-dev stream, so let's take some notes about what we accomplished, today:
+
+We enhanced both the DynamicRule and the DynamicEvent objects.
+
+DynamicRules became, themselves, DynamicObjects, which means that when their 'severity' and 'triggered_counter' change values, they can trigger other Rules.
+
+Also, we implemented 'severity' and tags and demonstrated that both are working. We created an ability, "Blood Song," which increases the severity of all rules in the current battle which increase attack power. We used tags to understand which rules raise attack power, and we made sure that these rules will give the target unit more attack power based on how severe the rule currently is.
+
+We added a new report to our DynamicEvent objects, "at_severity". This records whether the 'with_ability' was Glancing, Normal, or Critical. Now, we can trigger certain rules based on whether or not an ability was a crit, such as, "Whenever Vencabot gets a Crit, he loses 10 health."
