@@ -11,8 +11,6 @@ class DynamicObject:
         dynamic_event = DynamicEvent(
                 self, attr_name, new_value, old_value, perpetrated_by,
                 with_ability, at_effectiveness, triggering_rule)
-        if new_value == old_value:
-            return
         final_event = self.ruleset.run_through_before_phase(
                 dynamic_event)
         self.__dict__[attr_name] = final_event.new_value
@@ -32,7 +30,6 @@ class DynamicRule(DynamicObject):
         self.severity = severity
         self.initiated_by = initiated_by
         self.with_ability = with_ability
-        self.is_active = True
         self.triggered_counter = 0
 
     def get_description(self):
@@ -122,8 +119,9 @@ class DynamicEvent:
     def replace_value(self, new_value, triggering_rule):
         self.replaced_by = DynamicEvent(
                 self.target, self.attr_name, new_value, self.old_value,
-                self.perpetrated_by, self.with_ability, triggering_rule,
-                self.original_event, self)
+                self.perpetrated_by, self.with_ability,
+                self.at_effectiveness, triggering_rule, self.original_event,
+                self)
 
     def get_newest_event(self):
         newest_event = self

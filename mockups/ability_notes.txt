@@ -1109,3 +1109,111 @@ DynamicRules became, themselves, DynamicObjects, which means that when their 'se
 Also, we implemented 'severity' and tags and demonstrated that both are working. We created an ability, "Blood Song," which increases the severity of all rules in the current battle which increase attack power. We used tags to understand which rules raise attack power, and we made sure that these rules will give the target unit more attack power based on how severe the rule currently is.
 
 We added a new report to our DynamicEvent objects, "at_severity". This records whether the 'with_ability' was Glancing, Normal, or Critical. Now, we can trigger certain rules based on whether or not an ability was a crit, such as, "Whenever Vencabot gets a Crit, he loses 10 health."
+
+
+
+05/06/19
+
+Today, I want to get Rules stacking upon other Rules. In particular, I want to play with 'cure conditions' and 'trap conditions'. I also want to implement a Rule which temporarily 'seals' or... what was the word I was using? Anyway, a Rule which can subdue other Rules for as long as it's active.
+
+So, we're gonna have rules stacking on rules stacking on rules.
+
+We still don't have a way for Rules to trigger on a turn-change, or 'on any action'. Like a poison that would trigger whenever a unit uses any ability.
+
+I want to make a 'poison' which damages the target every time they use an ability. Then, I want to create a rule which subdues that poison until a certain condition is met.
+
+Poison works. I want to make a new Rule which can SEAL ANY RULE for the length of 3 ACTIONS taken by Party A.
+
+I want to make a new ability which inflicts this Rule upon the battlefield.
+
+I'm gonna make a new ability called Seal Rule.
+
+We have a conundrum. The abstraction of a rule being 'cured' isn't necessarily as simple as removing it from the rule list.
+
+What about situations where a rule being 'cured' would change something attributes back to 'normal'?
+
+Well, actually, that problem ISN'T a problem if you think about rules in the correct way. Rules always DO something when triggered, and they don't do anything if they AREN'T triggered. So, I'm looking at 'seal rule' entirely the wrong way.
+
+Rules DON'T need an 'is_active' attribute. You don't seal a rule by making it 'inactive'. You seal a Rule by PREVENTING IT FROM DOING WHAT IT WANTS TO DO.
+
+You can pretty easily do this by just checking the 'triggering_rule' attribute of a DynamicEvent. If the 'triggering_rule' is the target_rule, you need to prevent it from doing it's thing. So, for a Rule to be sealed by another Rule, the SEALING RULE would definitely have to come after the SEALED RULE in the rule-order.
+
+But that stands to reason; if you're going to initiate a rule to prevent another rule from taking place, it would necessarily come after.
+
+I have a conceptual problem that probably needs addressing. What if I wanted to have a Rule that is as follows:
+
+All Rules which alter HP damage are ineffectual.
+
+I don't know if that sort of Rule is possible with our current setup. Because, if Hench came after this rule in the rule-order, its effect could not be prevented.
+
+You can't prevent a rule that comes later in the rule-order from altering a dynamicevent.
+
+For the first time, we're talking about rules that target other rules, and I'm starting to see some unexpected difficulties arising.
+
+Let's not worry about that for now, because we don't have time; that's a very abstract problem that we're going to need to put a pin in and come back to later.
+
+##### RULES CANNOT PREVENT ANOTHER RULE WHICH COMES LATER IN THE RULE-ORDER FROM ALTERING A DYNAMICEVENT. ######
+
+We can still 'seal' the effect of a Rule that was put into the rule-order beforehand. We just can't, right now, put a rule into play which will pre-emptively alter the affects of a Rule that's added to the ruleset later.
+
+If we want to prevent the effect of a Rule, we have to look at the .triggering_rule attribute of a DynamicEvent and 'prevent' that event from occuring. It seems to me like there's two ways to do this:
+
+1.) Prevent the change all together by doing:
+    dynamic_event.replace_value(dynamic_event.__dict__[dynamic_event.attr_name], self)
+
+That would disable the event by turning the NEW VALUE into whatever the value was ORIGINALLY.
+
+But that's not necessarily what we want to do.
+
+We don't want to replace the event's value with whatever it was ORIGINALLY. We want to replace it with whatever it was going to be BEFORE THE TARGETED RULE KICKED IN.
+
+So, what we really want to do is step backward through the event's timeline until we reach a point before the targeted_rule kicked in and then replace the event's value with THAT value.
+
+So, we need to do OPTION 2 if we can go back in time far enough that the rule hadn't triggered, yet.
+
+We need to do OPTION 1 if we can't: the ORIGINAL EVENT was created by this triggering_rule.
+
+I WANT THE OLD_VALUE OF THE FIRST DYNAMICEVENT WITH TRIGGERING_RULE TARGET_RULE.
+
+I WANT ROLLED_BACK_EVENT TO BE THE FIRST DYNAMICEVENT WITH TRIGGERING_RULE TARGET_RULE.
+
+I WANT TO STOP REPLACING ROLLED_BACK_EVENT AS SOON AS THE EVENT THAT IT REPLACES NO LONGER HAS TRIGGERING_RULE TARGET_RULE.
+
+### OUR DYNAMICRULES NEED TO KNOW THE EFFECTIVENESS OF WITH_ABILITY. ###
+
+
+When Vencabot uses Seal Rule, he does two things:
+He adds a Rule to the Ruleset, "Seal Rule".
+he adds a Rule to the Ruleset, "Fade Rule".
+
+AFTER BOTH OF THESE THINGS HAPPEN, hang on... hang on...
+
+Why isn't Poison triggering twice? Vencabot is effectively 'doing' two things in a single turn. Poison should be triggering twice. I don't WANT it to trigger twice, but I just realized that there's a bug that should be causing it to trigger twice. Because it's NOT triggering twice, that means that our BUG has a BUG.
+
+Nevermind. When we use an ability, we reset the recurrence_counter AFTER the ability is complete. So, Poison CAN'T trigger twice in the time between when an ability STARTS and when an ability ENDS.
+
+WHEN VENCABOT USES SEAL RULE, HE DOES TWO THINGS:
+HE ADDS A RULE TO THE RULESET, "SEAL RULE".
+HE ADDS A RULE TO THE RULESET, "FADE RULE".
+
+AFTER BOTH OF THESE THINGS HAPPEN, POISON TRIGGERS. no, no, no. Poison only triggers after the FIRST event, which is Seal Rule being added.
+
+Vencabot takes Poison Damage.
+
+AFTER THAT, we add Fade Rule.
+
+So, the solution to this problem... I'm not sure that "solution" is the right word... but we could make this behave the way we expect by stealthily adding 'Seal Rule' and then overtly adding 'Fade Rule'.
+
+But actually, the thing to do would be to add them both, overtly, but at the same time.
+
+So, the reason that I decided to add them both overtly, INDIVIDUALLY, is because, when you have a Rule that's triggered whenever a Rule is added to the ruleset, you would expect for it to trigger twice if more than one rule is being added.
+
+But, in this case, CONCEPTUALLY, the rules ARE being added together. So, I'm going to add them both at ONCE, overtly. This would trigger rules that occur whenever a rule is added. If that rule really wants to trigger once for every new rule, it can check, itself, how many rules were just added.
+
+So, the solution is to add both Seal Rule and Fade Rule at the same time.
+
+Everything's working fine. Next time, I want to try to implement THIS rule:
+
+"All effects from Rules which alter HP damage are negated."
+
+That's going to be a challenge.

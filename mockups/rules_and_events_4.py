@@ -78,6 +78,49 @@ class BloodSong(battle_4.UnitAbility):
                 perpetrator, "critical", battle.ruleset.rules, 3)
 
 
+class SealRule(battle_4.UnitAbility):
+    ability_name = "Seal Rule"
+
+    @classmethod
+    def use_glancing(cls, perpetrator, targets, battle):
+        print(
+                f"{perpetrator.unit_name} has sealed the rule "
+                f"'{targets[0].rule_name}'!")
+        seal_rule = test_rules_4.SealRule(
+                battle.ruleset, perpetrator, cls, targets[0])
+        fade_rule = test_rules_4.RuleFade(
+                battle.ruleset, 1, perpetrator, cls, seal_rule) 
+        battle.ruleset.update_w_rules(
+                "rules", battle.ruleset.rules + [seal_rule, fade_rule],
+                perpetrator, cls, "glancing")
+
+    @classmethod
+    def use_normal(cls, perpetrator, targets, battle):
+        print(
+                f"{perpetrator.unit_name} has sealed the rule "
+                f"'{targets[0].rule_name}'!")
+        seal_rule = test_rules_4.SealRule(
+                battle.ruleset, perpetrator, cls, targets[0])
+        fade_rule = test_rules_4.RuleFade(
+                battle.ruleset, 3, perpetrator, cls, seal_rule) 
+        battle.ruleset.update_w_rules(
+                "rules", battle.ruleset.rules + [seal_rule, fade_rule],
+                perpetrator, cls, "normal")
+
+    @classmethod
+    def use_critical(cls, perpetrator, targets, battle):
+        print(
+                f"{perpetrator.unit_name} has sealed the rule "
+                f"'{targets[0].rule_name}'!")
+        seal_rule = test_rules_4.SealRule(
+                battle.ruleset, perpetrator, cls, targets[0])
+        fade_rule = test_rules_4.RuleFade(
+                battle.ruleset, 5, perpetrator, cls, seal_rule) 
+        battle.ruleset.update_w_rules(
+                "rules", battle.ruleset.rules + [seal_rule, fade_rule],
+                perpetrator, cls, "critical")
+
+
 if __name__ == "__main__":
     our_battle = battle_4.Battle()
 
@@ -96,36 +139,24 @@ if __name__ == "__main__":
     penguinpowered.party.append(kreichjr)
     our_battle.leaders.append(penguinpowered)
 
-    kens_rage = test_rules_4.Rage(our_battle.ruleset, kreichjr, 5)
-    our_battle.ruleset.add_rule(kens_rage)
-    our_battle.ruleset.add_rule(
-            test_rules_4.Persistence(our_battle.ruleset, vencabot, 5))
-#    our_battle.ruleset.add_rule(
-#            test_rules_4.Invincible(our_battle.ruleset, kreichjr, 5))
-#    our_battle.ruleset.add_rule(
-#            test_rules_4.Hench(our_battle.ruleset, vencabot, 5))
-#    our_battle.ruleset.add_rule(
-#            test_rules_4.AndOne(our_battle.ruleset, vencabot, 5))
-#    our_battle.ruleset.add_rule(
-#            test_rules_4.OldManGenes(our_battle.ruleset, goodvibe, 5))
+    poison = test_rules_4.Poison(our_battle.ruleset, 3, vencabot)
+    our_battle.ruleset.rules.append(poison)
 
-    print(f"KReich's HP is at {kreichjr.hp}.")
-    print(f"KReich's ATK is at {kreichjr.atk}.")
-    print(f"GoodVibe's AP is at {goodvibe.ap}.")
-    print(f"Vencabot's ATK is at {vencabot.atk}.")
+    print("Vencabot's HP is at ", vencabot.hp)
     print()
     vencabot.use_ability(Slap, [kreichjr], our_battle)
     print()
-    kreichjr.use_ability(BloodSong, [], our_battle)
+    vencabot.use_ability(SealRule, [poison], our_battle)
     print()
     vencabot.use_ability(Slap, [kreichjr], our_battle)
     print()
-    kreichjr.use_ability(BloodSong, [], our_battle)
+    vencabot.use_ability(Slap, [kreichjr], our_battle)
     print()
     vencabot.use_ability(Slap, [kreichjr], our_battle)
     print()
-    print(f"KReich's HP is at {kreichjr.hp}.")
-    print(f"KReich's ATK is at {kreichjr.atk}.")
-    print(f"GoodVibe's AP is at {goodvibe.ap}.")
-    print(f"Vencabot's ATK is at {vencabot.atk}.")
-    print(f"Ken's Rage was triggered {kens_rage.triggered_counter} times.")
+    vencabot.use_ability(Slap, [kreichjr], our_battle)
+    print()
+    print("Vencabot's HP is at ", vencabot.hp)
+
+    for dynamic_rule in our_battle.ruleset.rules:
+        print(dynamic_rule.rule_name)

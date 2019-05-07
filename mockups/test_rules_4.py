@@ -184,3 +184,86 @@ class OldManGenes(battle_4.DynamicRule):
                     dynamic_event.with_ability,
                     dynamic_event.at_effectiveness, self)
 
+
+class Poison(battle_4.DynamicRule):
+    def __init__(self, ruleset, severity, target_unit):
+        super().__init__(
+                ruleset, "Poison", "after", ["hp_damage"], severity, None,
+                None)
+        self.target_unit = target_unit
+
+    def will_trigger_on(self, dynamic_event):
+        if (
+                dynamic_event.perpetrated_by is self.target_unit
+                and not dynamic_event.triggering_rule
+                and dynamic_event.with_ability):
+            return True
+        return False
+
+    def trigger(self, dynamic_event):
+        print(
+                f"{self.target_unit.unit_name} suffered the effects of "
+                f"Poison! They're taking {self.severity} damage!")
+        self.target_unit.update_w_rules(
+                "hp", self.target_unit.hp - self.severity, self.target_unit,
+                dynamic_event.with_ability, dynamic_event.at_effectiveness,
+                self)
+
+
+class SealRule(battle_4.DynamicRule):
+    def __init__(
+            self, ruleset, initiated_by, with_ability, target_rule):
+        super().__init__(
+                ruleset, "Seal Rule", "before", [], 10, initiated_by,
+                with_ability)
+        self.target_rule = target_rule
+
+    def will_trigger_on(self, dynamic_event):
+        if (
+                dynamic_event.triggering_rule is self.target_rule):
+            return True
+        return False
+
+    def trigger(self, dynamic_event):
+        rolled_back_event = dynamic_event
+        while (
+                rolled_back_event.replaces
+                and (
+                    rolled_back_event.replaces.triggering_rule
+                    is self.target_rule)):
+            rolled_back_event = rolled_back_event.replaces
+        dynamic_event.replace_value(rolled_back_event.old_value, self)
+        print(f"The effect of {self.target_rule.rule_name} was sealed!")
+
+
+class RuleFade(battle_4.DynamicRule):
+    def __init__(
+            self, ruleset, severity, initiated_by, with_ability,
+            target_rule):
+        super().__init__(
+                ruleset, "Rule Fade", "after", [], severity, initiated_by,
+                with_ability)
+        self.target_rule = target_rule
+
+    def will_trigger_on(self, dynamic_event):
+        if (
+                dynamic_event.triggering_rule is self.target_rule):
+            return True
+        return False
+
+    def trigger(self, dynamic_event):
+        print(f"{self.target_rule.rule_name} has faded slightly!")
+        self.update_w_rules(
+                "severity", self.severity - 1, self.initiated_by,
+                self.with_ability, "normal", self)
+        if self.severity == 0:
+            print(f"{self.target_rule.rule_name} has faded completely!")
+            new_rules = self.ruleset.rules.copy()
+            new_rules.remove(self.target_rule)
+            self.ruleset.update_w_rules(
+                    "rules", new_rules.copy(), self.initiated_by,
+                    self.with_ability, "normal", self)
+            new_rules.remove(self)
+            self.ruleset.update_w_rules(
+                    "rules", new_rules.copy(), self.initiated_by,
+                    self.with_ability, "normal", self)
