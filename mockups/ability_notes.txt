@@ -1217,3 +1217,224 @@ Everything's working fine. Next time, I want to try to implement THIS rule:
 "All effects from Rules which alter HP damage are negated."
 
 That's going to be a challenge.
+
+
+05/15/19
+
+Back from Texas Showdown. It's been about a week since we last did any programming. Let's first of all create a new text document to contain our 'test abilities'. In the past, we had all of our 'test rules' within the main 'rules_and_events.py' module, but they become so complex and numerous that it made more sense to separate them out.
+
+Now, we're sort of in the same position for Abilities. They're taking up a lot of space in our rules_and_events.py module, so why don't we move them to their own module just to make things a bit tidier.
+
+Why did we decide that Abilities shouldn't be instantiated? I think it was just because we wanted to avoid the problem of 'redundant references,' which is something that I decided was important to the sanity of our architecture. It makes me wonder if the benefits of going with instantiated ability classes would outweigh the problems caused by redundant references -- or even if there's some way that we could implement ability instantiation without needing to rely on redundant references.
+
+What if we reversed the hierarchy of our object tree? Would that make the problem of 'redundant references' a bit easier to deal with? Like, what if, instead of the 'battle' object having parties and the parties having units, we just had a bunch of loose units and THEY had parties and the parties had a battle.
+
+The reason why it's difficult to implement a Rule like "All Rules which damage HP have their effects negated" is that a Rule can only 'prevent' or 'roll back' an event which is triggered BEFORE that Rule is checked.
+
+So, it'd be trivial to implement a Rule like:
+"All preceding Rules which damage HP have their effects negated."
+
+However, inhibiting event-updates that occur AFTER a given rule in the ruleset might be impossible with our current mechanisms.
+
+They have to ALTER HP damage -- not inflict HP damage. Stopping a NEW event, such as damage infliction, is trivial. Stopping an ALTERATION is much more difficult.
+
+But why is that, necessarily? Can we make Events into DynamicObjects so that updating them can trigger rules...? That immediately seems like a bad idea, but maybe it isn't that bad.
+
+Like, it makes sense for DynamicRules to be able to trigger whenever damage is altered. That makes sense, to me. But I feel like we're getting so meta that there's gonna be some weird difficulties that arise from trying to do something like that.
+
+I feel like this would require a re-imagining of our DynamicEvent system, but maybe that's for the best. Maybe this cause is worth fighting for. On the other hand, I really like our current DynamicEvent system -- where you can sort of walk back in time to find the previous versions of events. Could we somehow do both...? Maybe not.
+
+Well now wait a minute. Maybe all we'd really need to do is make DynamicEvent a DynamicObject and then... do:
+
+my_event.update("replaced_by", new_event, etc., etc.)
+
+That would effectively trigger rules whenever an event is replaced. That's what you want.
+
+Before we commit to this notion, let's examine whether or not there are any other benefits -- or pitfalls -- to making DynamicEvents into DynamicObjects.
+
+DynamicEvents are pretty immutable. The only attribute they have which is ever meant to change is 'replaced_by'. Would it make more sense to have some kind of external, 'timeline' object which is just a list of the event's progress? I think that would make a lot more sense.
+
+my_event.timeline = [self]
+
+and then, when you use my_event.replace_value(new_value, triggering_rule)
+
+And then, whenever we update the timeline, we can get the newest version very easily.
+
+Well, no, no, no. That defeats the purpose of what I'm trying to accomplish, here. The idea would be to make the timeline a DynamicObject so that the DynamicEvent could be immutable. Is that something that we could accomplish or that we'd want to accomplish?
+
+If we were to make a 'timeline' into a DynamicObject, would it really have any other attributes that would be interesting to see?
+
+We would never subtract an event from the timeline. Also, let's consider whether or not we really need to know the entire timeline of an events alterations.
+
+This is where things are going to get really abstract and probably where we're going to end this stream so that we can play some 3rd Strike.
+
+Would it make more sense to just have an 'original event' attribute and not worry about a whole timeline. Would any Rule really benefit from being able to see the entire timeline of an event's changing? So far, we've used the 'original_event' attribute to understand what the event was SUPPOSED to do. And, of course, the most up-to-date version of the event is what's going to actually END UP HAPPENING.
+
+Are the events in the middle actually worthwhile?
+
+Yeah, they are. And here's why:
+
+We have a Rule which says, "If Vencabot was going to do 10 damage and that damage is negated, he gets pissed off."
+
+We have another Rule which says, "If Vencabot is going to do 3 damage, he'll do 10 damage instead."
+
+Vencabot slaps dixxucker for 3 damage.
+So, he's going to do 10 damage instead.
+But Dixx is invincible (as you'd expect), so Vencabot does 0 damage.
+
+Our first Rule sees that Vencabot is going to do 0 damage. It checks the ORIGINAL_EVENT to see if Vencabot was going to do 10 damage, but he was only going to do 3 damage, so Vencabot doesn't get pissed off.
+
+That's a bug.
+
+We need to be able to see the ENTIRE TIMELINE of an event's alterations in order to understand that Vencabot was going to do 10 damage but the damage was negated.
+
+And what's cool about this is that it works with any number of rules. We could have a situation like this; here's our ruleset:
+
+If Vencabot is going to do 3 damage, he does 10 instead.
+If Vencabot is going to do 10 damage, he does 5 instead.
+If Vencabot is going to do 5 damage, he does 2 instead.
+If Vencabot is going to do 2 damage, he does 0 instead.
+
+So the final result is that Vencabot does 0 damage, and he was originally gonna do 3 damage.
+
+But we can LOOK THROUGH THE TIMELINE of alterations to this event to see that, AT SOME POINT, he WAS going to do 10 damage. And in the end, he did 0 damage. So we can surmise that, "Vencabot was going to do 10 damage, but that damage was negated."
+
+We do benefit from having the entire timeline at our disposal when it comes to investigating an event to see if a Rule should trigger.
+
+Soooo... Now that I've realized that it makes more sense to have a 'timeline' object, as a List, than to have this tree of "replaced_by" and "replaces" attributes, we should make DynamicEvent into a DynamicObject so that, whenever an event is UPDATED, we can trigger rules to examine that update. Okay.
+
+We'll do that next time. Now, it's time for 3rd Strike.
+
+Tomorrow is going to be quite a big overhaul. Maybe even worthy of moving to mock-up version 5? Before we move to version 5, it might be worth re-examining the hierarchy of our battle objects.
+
+Right now, we have a hierarchy like so:
+
+         Battle
+            |
+         Leaders
+            |
+       BattleUnits
+            |
+        Abilities
+
+I went through a lot of work in mockup version 4 to eliminate what I call "redundant references," which is to say that the hierarchy should only go one direction. For instance, the Abilities do NOT know who their owner is. The BattleUnits do NOT know who their leader is. The leaders do NOT know what battle they're a part of.
+
+The problem with this is that abilities are really dumb. They're never instantiated, even, so we need to feed them all of the information that they require to do their job, including the perpetrator (their owner) and the battle that they're being used in. Also, it means that, INTERNALLY, there's no logic that limits a unit to using only the abilities that it 'knows'.
+
+That's not a major problem, but it's sort of an aesthetic problem with the architecture.
+
+Originally, we were fucking around with having abilities be INSTANTIATED, and then, of course, they could have an attribute which would point toward their owner -- among any other number of attributes.
+
+There really are a lot of advantages to having abilities be instantiated. For instance, they could gain EXP and level up over time. They could have special qualities, such as, "If 'Slash' is used 3 times, it'll be gauranteed a crit." Right now, doing something like that would rely on having a Rule in play -- and that's consistent, at least, but maybe a little bit overkill for something that simple.
+
+On the other hand, if we're not keeping a reference to the ability's owner, it seems like an architectural misstep to necessarily make abilities instantiated.
+
+So, what if... it made more sense to turn the hierarchy UPSIDE DOWN.
+
+     Abilities
+         |
+     BattleUnit
+         |
+    BattleLeader
+         |
+       Battle
+
+Whenever we take measures to avoid 'redundant references,' we're going to have to do some SEARCHING for the objects that we want to find. If we just let the objects reference EACH OTHER, up AND down, it really minimizes the searching that we have to do. I just hate redundant references because of the architectural ugliness that you get from every object being able to directly reference every other object. The 'state' becomes way too entangled. So that's not an option for us.
+
+Right now, with the hierarchy being 'rightside up,' the searching is pretty minimal.
+
+For instance, if an ability is going to target 'the entire enemy team,' we need to look at the perpetrator and then iterate through all of the battle's leaders to see which team they're on.
+
+Once we know what team they're on, we need to iterate through the leaders to find the one that ISN'T that team's leader.
+
+Then, we can afflict every unit on that leader's team.
+
+When I say 'searching,' I mean that we're literally iterating through some lists to find someone in particular that we're looking for -- instead of just KNOWing who they are (having a reference to them directly).
+
+I feel like, if the hierarchy were 'upside down,' we'd have much more searching to do, right? But let's consider WHO is doing the searching.
+
+The UI is doing the searching. It's when we want to TARGET somebody or something. Once we know who are target is, yeah, we have a direct reference to them. So, what sorts of things are we targeting, and how is our UI behaving. Let's examine these ideas real quick.
+
+The UI behaves like this: we have two units in the 'ring', and, when it's your team's turn, you can use an ability from that UNIT or from that LEADER.
+
+So, the UI has a reference to the 'battle' object, but the battle object doesn't know shit anymore if we're upside-down. So... that seems weird.
+
+I guess what I'm trying to do is limit the number of arguments that we need to pass whenever a unit is using an ability. Right now, because I don't want for the ability to know who's using it -- as an attribute, I mean -- we need to pass a TON of arguments to these abilities in order for them to do very basic tasks.
+
+If I want Vencabot to heal Lucian, I need to pass not only Vencabot AND Lucian to the classmethod, but I also need to pass a reference to the BATTLE object. In the case of 'Vencabot's healing ability,' both the PERPETRATOR (Vencabot) and the BATTLE are pretty much ALWAYS GOING TO BE THE SAME.
+
+So it seems like a waste to pass them as arguments every time -- but the alternative is to instantiate the 'ability' and give it attributes including its perpetrator (Vencabot) and the battle. But, to comply with my design philosophy, if the ABILITY has a reference to VENCABOT, then VENCABOT can NOT have a reference to the ability. That's... sort of my thing right now. I'm trying to eliminate every situation where two objects have references to each other.
+
+In the UI, when you're picking an ability to use and the currently selected unit is Vencabot, it makes sense to just say,
+
+print all of the abilities from Vencabot's list of abilities
+
+But, if Vencabot has a reference to all of his abilities, I'd prefer that his abilities not have a reference to him.
+
+And this design philosophy results in this problem where I need to search through pools of objects to find what I'm looking for, because I can't just rely on a reference in many cases.
+
+And for those who weren't here during previous streams, the reason that I've become hesitant to rely on 'redundant references' over the years is that they result in these situations and METHODS where you need to simultaneously and CONSISTENTLY update two attributes at the same time.
+
+For instance, if the unit Vencabot knows who its leader is, WodoWiesel, AND WodoWiesel knows who's on his PARTY, we have to do something like this in order to add Vencabot to Wodo's party:
+
+wodo.party.append(vencabot)
+vencabot.leader = wodo
+
+That seems really simple, but it gets out of hand REALLY quickly. Because the one time that you forget to do BOTH of those things, you end up with a horrifying bug. So what I've found is that it's better to only have the reference go ONE way. It seems to simply things but it means more PROCESSING when you're having to SEARCH the hierarchy for what you need rather than having a direct reference to it -- and it also means a lot more arguments.
+
+         Battle
+           |
+   |-------|----------|
+Leaders   Units   Abilities
+
+
+The problem I see with this (and I'm sure it's because I don't fully understand Luthian's recommendation) is that neither the Leader nor the Units know who belongs to who. No, no, no. The Battle could have a map.
+
+Ohhhhhhh, and then the Leaders wouldn't need to know their units and the units wouldn't need to know their leaders and the abilities wouldn't need to know their owners because the Battle knows all of that stuff, and the Battle is what you supply to the UI so that the player can actually make use of all of this stuff.
+
+So, rather than giving each object a reference to whatever other objects it needs in order to work, we just have a separate object ("battle") which knows all of the relationships.
+
+That makes so much sense. Not only does that simplify the relationships between the objects, but it simplifies the relationship between the UI and the gameplay. Because now you have this 'battle' object which sort of MANAGES the gameplay. It manages things. You could think of the individual objects below it (leader, unit, ability) as being like ARMS of the Battle which the Battle uses to do ITS job. And then, the UI interacts directly with the Battle.
+
+So, in this case, it's not conceptually the UNIT which uses an ability: the battle uses an ability with some given units (a perpetrator and a target, etc.)
+
+Before I call it quits, let me do some more thinking aloud to nail down where we're at, or where we wanna be:
+
+To really understand the most effective way to internally structure our gameplay, we probably need to look harder at the UI and think about what sorts of things the player is really going to be doing -- so let's do that again and think about how we can apply Luthian's solution to that problem.
+
+The battle's ring has two units in it who are fighting directly: one representative from each party, where each party has a leader.
+
+So, when Party A completes their turn, we move to Party B. Here's what the UI presents us with:
+
+A list of abilities that the Leader has access to
+and
+A list of abilities that the ring Unit has access to
+
+When any of those abilities are selected, a target must be selected. An ability entails some character doing something to some character.
+
+So, it's player B's turn. I want access to Leader B's abilities and the abilities of the unit representing party B in the ring.
+
+The Battle could have a map of leaders (which represent parties) to their unit list. But that's the wrong way of thinking, already,  because we don't need to know the whole unit list. I need to know who's currently in the ring.
+
+So, what I kind of need is a map of leaders (which represent parties) to their representative unit. Because, as player B, I can provide my leader. I have a reference to my leader, Leader B. I want to know who's representing my leader in the ring. Then, I can present a list of all of the leader's abilities and all of the unit's abilities.
+
+Well kind of. Because that's still thinking that the leader and the unit have a reference to their own abilities.
+
+So, here's what I'm thinking. The 'Battle' object has these attributes, all of which are maps:
+
+our_battle.ring_units = # a map of LEADER to their representative unit
+our_battle.teams = # a map of LEADER to a LIST of their units
+our_battle.leader_abilities = # a map of LEADER to a LIST of their ABILITIES.
+our_battle.unit_abilities = # a map of UNITS to a LIST of their abilities.
+
+That's kind of sick. I feel like this one object knows EVERYTHING we need to know to make a complete player turn without the individual objects needing to know too much. That's one way to look at managing state.
+
+Previously, I've tried to DIVIDE THE STATE into a bunch of portions that were AS SMALL AS POSSIBLE -- as a way to avoid having a bunch of objects which each had TOO MUCH ACCESS to the state.
+
+But Luthian's alternative solution is to have as small a state as possible in ONE MONOLITHIC OBJECT and keep the state THERE. And then the individual objects have virtually no access to the state.
+
+That probably makes more sense. If you're talking about simplifying the state, maybe the solution isn't to DIVIDE IT UP but rather to CONSOLIDATE IT. You have all of these objects which have their own little micro-states, but you have this one MANAGER which deals with the more involved aspects of the state. That way, you keep things simple. You don't have all of these complex interactions between objects.
+
+I might try something like that for the version 5 mock-up, starting tomorrow. Because I've never used a design quite like that before, I'd be surprised if it was entirely smooth sailing, but I think it's definitely worth looking at.
+
+So, tomorrow, mock-up version 5: we move as much of our state as possible to the 'battle' object. We update DynamicEvents to have a 'timeline' that, when updated, can trigger rules.
