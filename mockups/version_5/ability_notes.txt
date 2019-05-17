@@ -1,0 +1,1729 @@
+04/08/19
+
+It's been a while since we talked about game-design. Over the past couple weeks, we've been doing some development -- some actual programming -- regarding the implementation of our game's Dynamic Rule System. Now that it's fully-functional, it's time to start developing other aspects of our game. The problem is that we need to review how we want for these aspects to behave.
+
+I think our first order of business is to start working on 'abilities,' which are the actions your units can take in battle to consume AP. Think of these like the four 'moves' that Pokemon have.
+
+To test the Dynamic Rule System, I created a very simple ability called 'Slap' which I think already nails down some CORE concepts about abilities, but we also had some more in-depth, complicated aspects that I'd like to review and attempt to development.
+
+Let's review what we know about Abilities:
+    * Abilities belong to 'classes'.
+    * Abilities always consume the Leader's AP.
+    * Abilities may consume resources from the unit or carry some cost.
+    * A unit's 'MP' attribute is designed specifically as a resource for
+      abilities to consume.
+    * The use of abilities is the core of our combat gameplay. The idea is
+      to choose them carefully and use them to give yourself an advantage in
+      battle, and to use them over and over until you win.
+    * Aside from dealing direct damage to enemy resources, abilities will
+      also engage the Dynamic Rule System by implementing favorable rules
+      for your party and disfavorable rules for the opponent party.
+    * As a side-effect, some abilities may implement rules that are DIS-
+      FAVORABLE for YOUR party or FAVORABLE for the ENEMY party. This could
+      be the result of an ability 'backfiring' or just as a cost for an
+      otherwise powerful ability.
+
+    * We talked at depth before about how much 'chance' should play a role
+      in the core mechanics of using abilities. One thing that we discussed
+      was the idea of an 'effectiveness' gradient. Maybe this would be a
+      good time to review that.
+    * Every ability has 3 levels of effectiveness: 'glancing' effectiveness,
+      'normal' effectiveness, and 'critical 'effectiveness.
+    * When an ability is used, a dice is rolled to determine effectiveness.
+    * Attributes on both the AGGRESSOR and DEFENDER will have an impact on
+    * How wide the areas are for the dice-roll to land in any of those three
+      levels.
+    * These attributes are 'Skill' on the aggressor and 'Parry' on the
+      defender (these names both suck, let's reconsider as time goes on).
+
+
+I guess the moral of the story, today, is that we need to take our 'Slap' demonstrative ability and give it three effectiveness levels and see how we're gonna handle that dice-roll.
+
+At first, we're not gonna fuck around with 'Skill' and 'Parry' attributes. We're just gonna roll a dice and choose a tier to activate when an ability is used.
+
+Even at first, we want to determine a way to weight this randomness -- and that's something that I've had trouble with in the past: randomness weighting. There's many ways to do it and I've never been 100% satisfied that I've found the best way, programatically.
+
+Enough developing: let's talk about DESIGN again. How are we going to calculate effectiveness. We have to change the weights of 'critical' and 'glancing' based on the interplay between the aggressor's Skill attribute and the defender's Parry attribute.
+
+If an aggressor's Skill attribute is substantially higher than the defender's Parry attribute, we're going to have a HIGHER chance of getting a critical and a LOWER chance of getting a glancing hit.
+
+If the defender's Parry attribute is substantially higher than the aggressor's Skill attribute, we're going to have a LOWER chance of getting a critical and a HIGHER chance of getting a glancing hit.
+
+If they're even... Then we fall-back on some default weighting.
+
+What if there was a MINIMUM CHANCE to GLANCE or CRIT. Let's say that we can simply get a 'interplay' value just from combining our 'parry' and 'skill':
+
+Vencabot has 20 Skill
+Kenny has 25 Parry
+
+Effectiveness multiplier would be -5.
+
+So, as this number goes into the negatives, we reduce our chance to crit UNTIL IT HITS ITS MINIMUM. You're gonna always have a chance to crit, but the chance bottoms out. Once that chance bottoms out, your chance to GLANCE goes UP. So, what we're really talking about is our chance to 'normal' shrinking. The more dramatic our 'effectiveness multiplier' becomes, the smaller our chance to 'normal' becomes.
+
+Positive multipliers would work the opposite way: your chance to 'glance' would go down until IT hits a minimum, and then your chance to crit would start to go up, eating into your chance to 'normal'.
+
+If our multiplier is 0 (Vencabot has 20 Skill and Kenny has 20 Parry), what are our default weights and how far are they from the MINIMUM weights?
+
+I think, because we're working with a multiplier with 0 -- which is probably gonna be somewhat rare -- maybe we should have more dynamism: higher chances to glance and crit than we've been working with.
+
+15% Glance (minimum 5%)
+70% Normal
+15% Crit (minimum 5%)
+
+I wanna make a note that the WHOLE POINT of the 'effectiveness system' is to mitigate saltiness, because, unlike some RPGs where 'crit damage' is a pre-baked calculation, our abilities have THREE DIFFERENT FORMS: a 'glancing' form, a 'normal' form, and a 'crit' form, and all three are unique to every ability.
+
+Therefore, you can always choose to use abilities where there isn't a whole lot of variance between the forms. Or you could choose to use abilities where there's a dramatic difference between the forms. So, it's in the player's hands how much they want to lean or be victim to the random effectiveness.
+
+The downside of having lower 'default' values for Glancing and Crit would be that, as you grow your character to have higher Parry or Skill, there's less Crit and Glancing to TAKE AWAY.
+
+The UPSIDE of having lower 'default' values for Glancing and Crit, is there they can grow MORE. It really depends on how extreme we expect the differences to be between an aggressor's Skill and a defender's Parry -- and what I will say is that, looking at how we've designed growth and attributes so far, it does seem somewhat likely that there could be a very large gap (multiplier). So perhaps it would make more sense to have the 'default' values be somewhat rare and then, as that multiplier goes up, we get higher likelihoods to get 'glancing' or 'crit'.
+
+The next step would be to fine-tune the multiplier, but let's not fuck with that, because that really is dependent on character growth, which we haven't looked at yet: we don't know if a normal level for Skill would be '10' or '10,000'. We don't have a sense of scale.
+
+So let's just mock this up and see where we're at.
+
+For our mock-up, let's assume that '5' is a normal amount for Parry or Skill, and let's say that having twice the value of your opponent's attribute will give you a 50% chance to crit (or glance, depending on if you're attacking or defending).
+
+We made some good progress: the next step will be to create a method which takes this 'effectiveness augmentor' (or whatever you want to call it) and returns weights. Since we're lowering ONE weight to a certain level before we start to RAISE the other weight, there's going to be a little bit of coding involved.
+
+## side note: I forgot to fuck around with 'cure conditions' for our DynamicRule system. So, we're not really complete on that, yet.
+
+
+
+
+04/15/2019
+
+Let's make a to-do list for what I want to accomplish with the game this week.
+
+So far, we've created a lot of mock-ups for the games most-complex mechanics (at least, seems to me). They've been proofs-of-concept just to demonstrate that some of this stuff is workable. Now, I want to look at battle in a more wholistic way; I want to actually start creating a full battle that can play out from start to finish with respect for the mechanics that we've discussed during our game-design streams.
+
+So, a few things we're gonna need:
+
+We're going to need Leaders, with their own attributes.
+
+We're going to need to flesh out the Battle object with respect for which Units are in the 'ring' and in the back row.
+
+We're going to need to flesh out the Units with more Attributes, including their slots for Dynamics.
+
+Before we implement Leaders, let's flesh out our existing objects: Battles and Units.
+
+I take that back. Let's get a very simple mock-up Leader object and use that for some Dynamics just to prove that it works. We're not gonna fuck around with giving them permanent Dynamics or AP limitations or their own abilities just yet.
+
+## I'm not totally satisfied with the hierarchy of data in our battle so far. The 'BattleParty' needs a list of units, and the BattleUnits need to know their BattleParty. Futhermore, we're introducing a Leader object, which needs to know the Party that it's leading -- but, at the same time, the Party needs to know who its leader is. It'd be nice to come up with some way to make these objects less dependent on each other.
+
+## Let's talk about hierarchy: it seems to me that, so far, the Battle object is the highest-level object we have (of course), and then, below that, we have the Parties. That makes sense to me: the units know what party they're a part of, but not what battle they're apart of (because we're managing state). The units don't need to know what battle they're a part of, because they know which party they belong to and the party knows what battle it belongs to.
+
+## That being the case, the Leader doesn't really need to know what units it's leading or what battle it's a part of. As long as it knows its own BattleParty, it has access to the Battle object and the BattleUnits through that BattleParty. So, the hierarchy of data is sort of like this:
+
+          Battle
+            |
+       BattleParty
+           | |
+BattleLeader BattleUnit
+
+## Because the costs of using Abilities in our game can be so complex, it sort of necessitates not being able to abstract away the code of paying those costs. What I mean is, it would make sense, from an object-oriented standpoint, to give each Ability an 'ap_cost' attribute -- and then, when a BattleUnit tries to use an Ability, it could automatically subtract that AP cost from the Leader.
+
+That makes sense. It would make sense if the gimmick our game wasn't that rules are so dynamic. Because, what if the costs of an ability change based on circumstance? What if you had an ability with a description like such:
+
+Desperate Slap: If used when the leader's AP is at max, it costs 4 AP to use. If used when the leader's AP is below max, it costs 2 AP to use.
+
+In that case -- and it seems very reasonable -- the Leader is punished for using Desperate Slap at the start of their turn. Because of dynamic systems like this one, I feel like we don't really have the luxury of implementing an 'ap_cost' attribute in an object-oriented way. Instead, it seems as though we need to implement the subtraction of costs into the actual code of using every individual Ability. That seems lame, from OOP standpoint, but it does make our mechanics more flexible.
+
+I'm gonna make a new DynamicRule and we're gonna call it "NerdStamina." If the leader's AP drops below 3, every unit on their team loses 30% of their attack power. I'm trying to make a Rule that brings the new 'leaders' into play.
+
+Right now, we've made our mock-up work under the assumption that we would only ever have one action take place in the battle. Now, we're taking more than one action per battle (as you would expect), and I'm finding that we need to reset the Battle's DynamicRule's recurrence_counter's. The question is, when is the best time to do that?
+
+It would be done between player actions.
+
+But how do we calculate that. How do we know when the player has done an action.
+
+Well, it would be after the unit uses an ability. Leaders can also use abilities, including switching units. So... maybe... we need a better way to universally understand that a 'battle action' has taken place. We want to restore the Rules' recurrence_counter's after an action takes place.
+
+Maybe, temporarily, it would just make sense to give the Battle object a 'reset_rule_counters' method that we can call between actions.
+
+Final thoughts for the day: we implented a 'leader' object which has an AP value that we can consume when we use abilities. We made our first rule that cares about the leader and their AP, and we also, for the first time, took advantage of the fact that our DynamicRules are INSTANCES, which means that we can use them to save persistent data about how they've been triggered in the past to alter how they behave when triggered subsequently. So that's kind of cool.
+
+We also implemented a method for our Battle objects to reset the recurrence counters of all of the rules to be called between 'actions'. It'd be nice to have this be automated, but, for that, we'd need a way to know when an action is being used.
+
+I mean, fuck -- we could fix that right now. We should just append 'battle.reset_dynamic_recurrence' to the end of our battle_3.UnitAbility.use method.
+
+For next time, we need to add a lot of attributes for BattleUnits and Battles, at the very least: including a 'ring' in the battle for units to populate and some slots for the BattleUnits to be under the influence of a LIMITED NUMBER of Dynamics. This is something that me and Kenny talked about as a way to balance the Dynamic system: have there be a limit to how many rules a single unit can be subject to.
+
+
+04/17/19
+
+First of all, I want to program a 'ring' into the 'Battle' object, so that we know which party members from each team are currently 'active' in the battle.
+
+That means adding a new attribute to the Battle object (or would it be the 'Party' object??? It would be the Party object) and making some new Rules that would only target the unit in the ring.
+
+I've mentioned in the past that a big difficulty with object-oriented programming is knowing how to divide and share responsibility. I think it'd make more sense for the 'ring' attribute to belong to the Party objects, in the long-term. It really is all about how you're deciding to abstract your ideas to make your current and future objects behave.
+
+It would make more sense to give the 'in_ring' attribute to a Party object, because the Battle already has two parties and so figuring out who's in the ring would be as trivial as iterating through the Parties and reading their 'in_ring' attribute. What's cool about this is that it would work even if, hypothetically, we had 3 or 4 or 10 parties in the battle.
+
+Furthermore, if the battle had a 'in_ring' attribute, it would need to be some kind of list, because we'd have two units in the ring for two teams. And then, to figure out which team those units are ON, we'd need to iterate through the in_ring list and read their .party attribute. It's just a little bit sloppier.
+
+It makes more sense to have the 'in_ring' attribute belong to the Party objects.
+
+Now that our BattleParty objects have a method for swapping units into the ring, we're going to expand upon that, later -- fuck it. Let's do it now.
+
+Point_units have been implemented (in-ring units), so now we need to design some Rules that take advantage of this. I want 1 Rule that only affects the point_unit of a certain party, and so we want to change our point_unit mid-fight to see if the rule applies not to a PARTICULAR unit but to whoever is currently in the ring.
+
+I want 1 Rule which only affects units who AREN'T in the ring.
+
+I want 1 Rule which triggers when a painted unit is swapped INTO the ring.
+
+Let's create a 'poison cloud' rule which subtracts HP from both point-units every turn? We don't have turns working yet. We could fix that first? Turns would be implemented at the Battle object level. The Battle would have an attribute: current_turn. Now, would current_turn refer to a Leader? Or a party? It doesn't really matter, but that's exactly why we need to consider this carefully: which would make more sense in the long-term.
+
+The parties can't have a 'next_turn' method, because they don't strictly know (without going through their .battle attribute) what the other party is. So, if we're going to do a 'next_turn' method, it should definitely belong to the Battle object. Only the Battle object knows all of the parties.
+
+I just had a horrible vision, dude. It strikes me that we probably want to have Rules that are triggered whenever leader AP is restored (never mind) by unnatural means, such as when an Ability is used that has a chance to restore AP when it crits. I don't want for these rules to get triggered when the turns roll over and the AP is restored back to maximum.
+
+But that's fine, because DynamicEvents have 'perpetrators' for that very reason. If an AP restoration is perpetrated by an Ability, that would trigger the rule -- and it'd ignore the DynamicEvent if it was perpetrated by a turn-change.
+
+It is REALLY ANNOYING that our 'DynamicAttributes' can't be read directly, because they're objects. To get the value of a DynamicAttribute, we have to use DynamicAttribute.value. That's pretty frustrating. Is there a way around that? I thought about it, before, and I couldn't think of a solution. for now, we'll continue using .value.
+
+The thing to do to re-implement DynamicAttributes in a more readable way would be to override __setattr__ of the OWNER object -- NOT of the DynamicAttribute object, which would no longer even be necessary.
+
+So, in object-oriented programming, Objects have 'attributes,' which are values that belong to that object.
+
+So, if we have a 'protagonist' in a JRPG, he has an 'HP' attribute, and that value is constantly changing, but it belongs to the protagonist.
+
+Because the gimmick of our game is that, wheenver a value changes in battle, it can trigger RULES, we created a new type of object which abstractly represents the same concept as an object attribute: a 'DynamicAttribute'.
+
+This way, we can bind behavior to whenever the DynamicAttribute gets updated. So, instead of saying:
+
+protagonist.hp = protagonist.hp - 10
+
+We would say:
+
+protagonist.hp = DynamicAttribute(self, "hp", 100)
+protagonist.hp.update(protagonist.hp.value - 10, monster)
+
+The problem with this is that we can't just say something simple like:
+print(f"Your protagonist's health is currently at {protagonist.hp}.")
+
+We can't say that because protagonist.hp is NOT an integer. It's a DynamicAttribute. So, instead, we need to say:
+
+print(f"Your protagonist's health is currently at {protagonist.hp.value}.")
+
+Because .value is an attribute of the DynamicAttribute object which refers to its current 'value'.
+
+This works fine, but it's sort of confusing to read because we're intentionally abstracting away the default object-oriented behavior of the language. That's the problem. We're abstractly re-assigning a value, but we're not actually using Python's built-in assignment tools: we made our assignment tools that can trigger Rules. This necessitates an object with a method to do that, and so, when referring to the protagonist's actual HP integer, we need to refer to the 'value' attribute of this DynamicAttribute object -- and that's confusing, because we want to think of 'hp' as an integer.
+
+But I think I have the solution. The solution would be to COMPLETELY GET RID OF the DynamicAttribute object and instead create a DynamicObject class which overrides __setattr__ . Whenever one of its attributes gets changed, it calls the method which has been, up to this point, DynamicAttribute.update().
+
+We don't need an object which abstracts the idea of an 'attribute that can trigger things when changed.'
+
+We need an object which says, 'if you change one of my attributes, things can get triggered'.
+
+The problem with this idea is that, if we just use simple assignment to trigger Rules we don't have any way of knowing who perpetrated the change, and that's super important to our mechanisms.
+
+If I say:
+
+protagonist.hp.update(protagonist.hp.value - 10, monster)
+
+We know that the monster lowered the protagonist's health.
+
+However, if I just say,
+
+protagonist.hp = protagonist.hp - 10
+
+We don't have way of knowing how or why or who lowered that value, and that's super important to our mechanisms.
+
+I'm not gonna have time to fix this today. Let's take a few minutes and think about if there's any solution to this issue. Can we possibly abstract away the DynamicAttribute object by replacing it with true Python object-oriented utilities via the __setattr__ method. Can we possibly have these Rules be triggered by __setattr__ when __setattr__'s only arguments are the NAME of the attribute ("hp") and the NEW VALUE (protagonist.hp - 10).
+
+Is it important that we know WHO changed the protagonist's HP. The obvious answer is YES, obviously. We use DynamicAttribute.update to create these DynamicEvent objects which sort of act as reports to tell the rules what just happened.
+
+With __setattr__, we could create and manage EVERY ASPECT of our current DynamicEvent report EXCEPT FOR the 'perpetrated_by' attribute.
+
+We have to have the full report to make the rules work, and a huge part of that report is not only WHOSE value GOT changed, but WHO initiated that change.
+
+If KReichJr attacks Vencabot and Vencabot's HP gets lowered, we're gonna need for Rules to know that Kenny is the attacker. That's pretty much the whole point of the dynamic system. We have this report that gets generated and which all of our Rules read to decide if they want to trigger or not. The report explains:
+
+Who is the target of this change.
+What attribute got changed.
+What was that attribute's value, before.
+What is that attribute's value, now.
+Who initiated this change.
+
+From __setattr__, we can get ALL of this data except for the last part.
+
+I'm sad to say that it seems like our solution is the best solution for our problem considering our unique needs. In order to trigger rules whenever an attribute is changed, we need to generate this report which we're calling DynamicEvent. To generate that report, we just can't rely on a simple, vanilla, object-oriented attribute assignment.
+
+If we say,
+
+protagonist.hp = protagonist.hp - 10
+
+We just can't load in information about HOW or WHY or WHO lowered that value. We NEED some kind of special object with special methods that simulate 'assignment'. In our case, we're using an object called DynamicAttribute which simulates a vanilla, object-oriented 'attribute' but which you DON'T assign using the assignment operator; instead, you assign it using a special method, 'update,' which requires that you supply the identity of whoever is 'perpetrating' that change.
+
+I was really hoping to negate the necessity for 'protagonist.hp.value,' but it seems that we don't really have that luxury.
+
+I mean, would it make more sense to just give 'DynamicObject' the method 'update(),' and then, when we changed the protagonist's health, it would be like this:
+
+# This is what I want, but it doesn't supply a perpetrator.
+protagonist.hp = protagonist.hp - 10
+
+# We have this. The hp attribute is not an integer, but a DynamicAttribute.
+protagonist.hp.update(protagonist.hp.value - 10, monster)
+
+# We could do this, but it's the same issue, really.
+# This way, we can access protagonist.hp as an integer, but we still can't
+# assign directly to HP. It's the same problem, though; it's unintuitive.
+# If, one time, you forget to call protagonist.update_attr and instead call
+# protagonist.hp =, then Rules won't get triggered.
+# This way makes more sense. It's more clear what's going on. It's saying
+# very explicitly, "update this value but also do some other things (check
+# rules)." Basically, we're creating our own __setattr__ method, except that
+# it takes a perpetrator argument.
+protagonist.update_attr("hp", protagonist.hp - 10, monster)
+
+We gotta play 3rd Strike, but I guess, for our next sit-down with this, it probably would make sense to replace DynamicAttribute with DynamicObject. DynamicObjects can have their attributes updated through a method, 'update_attr', which explicitly checks rules.
+
+protag.hp = protag.hp - perp.damage
+
+That doesn't work because, to override __add__, we would need to override 'integer', in this case.
+
+We gotta end the stream. We'll definitely sleep on it. I still think that the most elegant way is closer to what we've been doing, but maybe we would go toward having DynamicObjects with an update_attr method instead of DynamicAttributes with an update method.
+
+But it's definitely worth looking at subclasses 'int' and seeing if we want to override the behavior of straight-up numbers so that we can add them together and get special information out of it. Worth looking at it.
+
+04/18/19
+
+Now that we've replaced the old 'DynamicAttribute' way of handling the rules with the 'DynamicObjects,' we've solved our problem of having to access attribute values using object.attribute_name.value .
+
+So, the old way of updating an attribute in such a way that it would trigger rules was like this:
+
+my_unit.hp.update(new_hp_value, enemy)
+
+The problem with this was that, in order to see how much HP 'my_unit' currently had, we had to access it like this:
+
+my_unit.hp.value
+
+With this NEW way, if we want to update a value in such a way that it would trigger rules, we do it like this:
+
+my_unit.update_w_rules("hp", new_hp_value, enemy)
+
+And then we can access the unit's current HP like this:
+
+my_unit.hp
+
+I think that's a little more elegant. It's a little bit more clear what's going on. It's much easier to access attributes in a sensible way. The only downside is that we STILL can't just use vanilla assignment -- but that's probably for the best, really. I mean, it's very important with object-oriented programming to minimize 'side-effects' -- that's a danger of 'state'. When you start overriding 'addition' and 'subtraction' and, if we could, 'assignment' so that it does OTHER things aside from what you see on the tin, then that's probably not a good idea.
+
+It probably makes sense to use an overt method for triggering rules when a value is changed. That way, anyone looking at the code can tell that's what it's supposed to do. Otherwise, if we COULD override assignment to do the same thing, it might be easier to read AT FIRST:
+
+my_unit.hp = new_value
+
+But then it might be confusing when crazy shit starts happening just because we made an assignment (if we could do that). So having a separate method probably makes sense.
+
+DynamicObjects need to know their own list of Rules. The Rules are subservient to the Battle object. Does the Battle object need to be a DynamicObject.
+
+Well, yes. Yes it does. Let's say that we could somehow re-construe 'active_party' as an attribute of the parties, themselves. Like, party.is_active = boolean. Even if we could do that, I don't think there's a way to have a Rule like this if the Battle is not a DynamicObject:
+
+Status Quo: Whenever a new Rule is added by Party B, Party A gets their health restored.
+
+For this reason, I think it makes sense for the Battle object to be a DynamicObject.
+
+But. A problem arises. So far, our DynamicObject.update_w_rules method assumes that all of DynamicObject's attributes are immutable. It takes the old value and replaces it with a new value. That doesn't really work for mutable objects, such as lists, which might change and require rules to be triggered when a new value is appended to them. Is that going to be a problem?
+
+Well, the first thought is that every attribute of a DynamicObject that's going to trigger rules MUST BE TREATED AS IMMUTABLE. This is a necessity because so much of the 'report' system, based on DynamicEvent, is founded on the idea of comparing the OLD VALUE to the NEW VALUE. We're always gonna need to know what the OLD VALUE was and what the NEW VALUE is. That's super important to the very basis of the Dynamic Rule system.
+
+So, if you have something like a LIST -- like, let's say that you have a Rule that gets triggered whenever an item is added to the leader's inventory. In order to compare the old list to the new list, we need to have two different lists: so, we're talking about mutable objects being treated as immutable. We almost might as well just use tuples.
+
+I'm not sure if that's a problem. I don't necessary THINK that's a problem, except for what I just got done saying about the DynamicObjects needing access to a permanent, mutable reference to the current battle's rules. THAT BEING SAID, we also just found out that the battle's 'list' of rules is actually a dictionary.
+
+So, maybe the dictionary is what gets passed in to DynamicObject and the DICTIONARY never changes. It just contains a before and after phase.
+
+The Battle object has a dictionary, 'Battle.rule_phases'. It's a dictionary of phase-names to the lists of DynamicRules that are checked on that phase.
+
+As a DynamicObject, we could call 'update_w_rules' on it -- BUT WE COULD NOT use that method to change a List of rules, because the Lists of rules are not attributes of our DynamicObject: they're values in a Dict which is an attribute of our object.
+
+So, as of right now, if we wanted for a Rule to trigger when a new rule is added to battle, it would need to work like this:
+
+new_rule_phases = {}
+new_rule_phases["before"] = battle.rule_phases["before"].copy()
+new_rule_phases["after"] = battle.rule_phases["after"].copy()
+new_rule_phases["after"].append(some_new_rule)
+battle.update_w_rules("rule_phases", new_rule_phases, perpetrator)
+
+We have to treat it as being immutable. We have to make a whole new dictionary with whole new lists and replace the old dictionary of lists.
+
+It's kind of ugly, right now, but I think that's mostly because we have this dictionary, "rule_phases," when maybe we just need to use attributes. That's one major reason it looks ugly. Maybe we should do something more like this:
+
+battle.before_rules
+battle.after_rules
+
+Instead of,
+
+battle.rule_phases = {"before": [], "after": []}
+
+Having a dictionary for rule_phases is kind of wasteful, because we're just matching a string to a value -- and that's exactly what object.__dict__ is for. If we're just matching a name to a value, we might as well make it a attribute. It's not like we're going to be dynamically adding in more keys to this dictionary.
+
+On the other hand, I think that having a dictionary of phases makes it more clear how we process the rules. Because attributes have no order (technically, neither do dictionaries, but at least they have a visible order in the source code). We treat both phases equally, just one after the other. So, by having two totally separate attributes, you sort of lose that relationship -- abstractly, they're the same thing, just different phases.
+
+Here's my idea: what we need is a new type of object, 'RuleSet'. RuleSet has attributes:
+
+RuleSet.before
+RuleSet.after
+
+What's cool about RuleSet is that it can be a DynamicObject. So, when RuleSet.before or RuleSet.after is updated, we can trigger Rules. And, by virtue of being a classed object, RuleSet is mutable -- so we can pass in a RuleSet when defining a DynamicObject.
+
+But hang on though. How do we pass the RuleSet as its own RuleSet.
+
+Let's go implement that.
+
+Today, in review, we really drastically changed the way that our dynamic_system library is laid out and the way that it behaves, internally. The result is that its API has effectively changed, although it works mostly similarly. The 'battle' library is completely broken by these changes and needs to be adapted to the new dynamic_system. Also, our actual mock-up at 'rules_and_events' mostly needs to have its example DynamicRules updates to match the method-name changes of dynamic_system.DynamicRule .
+
+It should be a relatively quick porting job, but we don't really have time to do that right now. That'll be our project for Monday: get everything working again, so that it's as effective as it was BEFORE -- but with much cleaner internal code.
+
+
+
+04/22/19
+
+We have a problem. Understandably, our new Ruleset object has two attributes -- 'before' and 'after' -- which reference lists of DynamicRules to be checked on those phases.
+
+To this end, we removed the old 'check_phase' attribute from the DynamicRules, themselves. They don't need to know their own check-phase.
+
+But, if the DynamicRule object doesn't have a tag that we can use to find out its check-phase, how do we know which list of Ruleset to add that Rule to at the start of battle (or any other time).
+
+It seems to me like the DynamicRules DO need to have some way to communicate when they're supposed to checked. So... That seems a bit redundant considering that our Rulesets also have 'before' and 'after' lists.
+
+On the DynamicRules, the 'check_phase' attribute could be thought of as a 'tag,' because it's not an attribute in the sense that the Rule, ITSELF, will ever access that attribute. Usually when you have an object and it has attributes you're going to be using those attributes in the methods of that object.
+
+In this case, it's just important that other objects which play with the DynamicRules be able to tell when that Rule is supposed to checked.
+
+Let's review the basics of the 'dynamic rule system' and then talk about how our code is laid out.
+
+In many JRPGs, characters can inflict and be inflicted with 'status changes': 'poison', 'paralyze', etc. Also, they can use 'buffs' to give themselves and their allies a temporary boost to some attribute.
+
+The central gimmick of our game's combat system is that these status changes take on a much more significant role. For one thing, every status change can be complex beyond what we're used to seeing in JRPGs.
+
+Instead of having a vanilla 'poison' attribute, we're talking about having a 'DynamicRule' that says something these along these lines, which some kind of 'rogue' class might have inflicted upon their opponent:
+
+When the inflicted target uses any skill to heal an ally, they take damage equal to the amount that their ally recovered.
+
+That's a 'dynamic rule'. The idea beyond inflicting these 'status changes' is to limit your opponent's options and to strengthen your own team's dynamic. Buffs behave the same way:
+
+Whenever the target gains attack power, they also gain defense.
+
+As you might imagine, implementing a system like this, in OOP (or otherwise), is an interesting challenge -- because we're talking about being able to dynamically alter the rules of the game, itself.
+
+The solution that we've come up with is what I'm going to show on-screen right now.
+
+
+This stream, today, hasn't been a huge success in terms of making progress, and a part of that is, coming back from the weekend, I'm not 100% sure of where the version 4 mock-up begins and the version 3 mock-up ends
+
+The big changes in the version 4 mock-up are as follows:
+
+DynamicAttributes are being traded for DynamicObjects.
+We're implementing 'Ruleset' objects, which manage all of the rules in a battle.
+
+Because of those two changes, we need to re-write all of our existing test DynamicRules: Invincible, Hench, ExtraDamage, Persistence, Rage, MagicMan, OldManGenes.
+
+Where we're at, right now, is how do we append new DynamicRules to this Ruleset.
+
+I think that DynamicRules still need a 'check_phase' attribute. They need this attribute because, when we add the rule to the game, we need to know what phase to append it to. It's kind of sloppy, it's kind of ugly, it's kind of redundant. I don't like it.
+
+One solution, at least as far as REDUNDANCY, is to have the Rules in a Ruleset all be a part of 1 list -- and then, when you're checking the 'before' phase or the 'after' phase, you just use a list comprehension to create those phases.
+
+Let's make a very simple "append rule" method and fix the DynamicRules to have a check_phase attribute.
+
+Just to celebrate Penguin joining the stream (and because I'm on the fence myself), we'll go with having only one list of Rules.
+
+I have a problem. When should the recurrence counters be reset?
+
+The obvious solution would be to reset them once the 'after' phase is completed.
+
+But I'm not sure that's what we want, because the main thing that DynamicRules do is CREATE OTHER UPDATES which, in turn TRIGGER OTHER RULES. So, if one update completes and the recurrence counters get reset, couldn't that cause bugs with other updates happening at the same time? I want to say yes, but I can't prove it.
+
+If I have two rules that read as such:
+"If Vencabot takes damage, he loses attack power."
+"If Vencabot loses attack power, he takes damage."
+
+That's an infinite loop, and that's why we implement the recurrence counter.
+
+Let's draw up an order-of-operations for if the recurrence counters were reset after a successful update.
+
+We propose an event where Vencabot takes damage.
+Nothing triggers in the Before phase.
+In the after Phase, we update Vencabot's attack power.
+We propose a change to Vencabot's attack power.
+Nothing triggers in the Before phase.
+In the after Phase, we update Vencabot's HP.
+In the before phase, nothing happens.
+In the After phase, we try to reduce his attack power, but we're at the recurrence limit.
+Now that Vencabot's attack power has been updated, recurrence counters get reset.
+
+THE BUG HAPPENS RIGHT HERE. If we DID have more Rules than just those two, we would have a problem with recurrence counters being reset after his attack power was updated.
+
+Now that Vencabot's HP has been updated, recurrence counters get reset.
+
+
+But the 'update' happens in the SAME THREAD. So, we don't reach the end of the first 'After' phase until we're done processing this attack power update.
+
+So, we can't reset recurrence_counters after a successful update. We have to reset them once all updates on all phases are complete.
+
+So, this is a job for an object much greater than what we're working with, now. Basically, the recurrence_counters would need to be reset between unit turns -- and, right now, we don't have a mechanism for moving between unit turns or otherwise completing an entire action.
+
+Well, I mean. That's a problem. We could implement this 'recurrence_counter reset' at the end of every Ability in the game. But, the problem with that is that we have actions the player can take which aren't strictly 'UnitAbilities', such as Swapping team members, using items -- attempting to flee from combat or whatever -- which should be able to trigger Rules (and, by extension, reset recurrence_counters).
+
+Basically, we might need some kind of parent object which abstractly represents an entire 'action'. An action that can trigger rules -- and, when it's over, the recurrence_counters get reset.
+
+For now -- for mock-up version 4 -- let's just reset them MANUALLY. We're gonna reset the recurrence_counters manually.
+
+Our dynamic_system_4 library is complete for mock-up 4, as of now.
+battle_4 objects need porting. They still use 'DynamicAttributes' instead of 'DynamicObjects'. That's our project for Wednesday.
+
+Once that's ported over, we'll need to rewrite rules_and_events_4 somewhat drastically especially to change the way that our existing 'test rules' operate.
+
+
+
+04/24/18
+
+Today, we're porting over the battle_4.py so that it's compatible with dynamic_system_4.py -- and that means, mostly, taking situations where we were using DynamicAttributes and replacing them with situations where we can use DynamicObjects. The other big change is that we're using Rulesets, now, with our Battles.
+
+One thing that I want to point out right away is that we need to temporarily dial-back our features to accommodate the changes for the version 4 mock-up. A lot of the problems that we had with Version 3 which necessitated the move to Version 4 are problems that we're not going to be prepared to handle, yet, until we get our old mock-up battle running, again.
+
+So, that means that we're not fucking around with turn-taking yet -- alternating turns between parties. We're just going with a mock-up where somebody is slapping somebody else 4 times in a row.
+
+So far, in our code -- considering that we now have a 'Ruleset' object -- our Battle object is entirely pointless. Before, the Battle object's main job was to contain the DynamicRules -- but, now, Rulesets do this. Of course, I think, in the very near future, we're going to need more from the Battle object -- especially when it comes to accessing all of the Units that are currently in battle.
+
+For now, though, we could probably do without it.
+
+Maybe, the thing to do -- with respect for where this code is HEADED -- would be to create a DynamicRule, today, which necessitates the use of a Battle object.
+
+The most fundamental purpose of the Battle object would be to -- I don't know. Let's make a list, real quick, of what sorts of data would sensibly be contained in a 'Battle' object -- an object which represents the STATE of the current battle.
+
+A Battle object would have data regarding:
+    * What parties are taking place in the battle.
+    * What the battle's ruleset is.
+    * Outside of the MECHANICAL aspect of battle, it might contain data
+      regarding presentation: what sort of environment the battle takes
+      place in.
+    * Maybe information regarding whose turn it is and methods for in-
+      crementing turns.
+
+If the Battle is, itself, a DynamicObject, then it inherently knows the Ruleset.
+
+It's important to have some object at the top of hierarchy which knows all of the parties in battle.
+
+Lemme dial that back: we only have TWO parties in battle. I'm getting ahead of myself. Sometimes I think that, with how far we've abstracted a lot of our battle code, so far, we could hypothetically easily create battles with more than two parties. I feel like, as long  as we stay on this course of abstraction, that would be trivial. But as soon as we start to INFORM our DECISIONS to maintain the possibility of many-teamed battles, we're going off-course.
+
+We have two parties. It's still important that we have an object at the top of this hierarchy that knows both parties, because we need that in order to have Rules like this:
+
+If Unit A is healed by Ally Unit B, then a random enemy unit takes damage.
+
+That sounds like a very simple rule considering our mechanics so far, but the problem is that Unit B healing Unit A generates a DynamicEvent report -- and, since neither of those units is on the OTHER team, the Rule receiving that report has no way to access the other team.
+
+Maybe I'm going about this wrong. This is a bugbear of object-oriented programming, in general. This is a problem of state. Is it actually wise to be able to access a random unit on Party B when you're only given a unit from Party A. Why should a function be able to mess with Party B if it's only given a unit from Party A as an argument.
+
+Maybe this is not indicative of us needing a top-level object. Maybe it's indicative of the fact that we need to re-assess the way that our functions are doing their jobs. Is there a way that we can better-manage the arguments that we're providing to our functions so that it's more clear how data is being accessed.
+
+Here's what I do know: DynamicRules need to have access to EVERYTHING in a battle. Yeah, they get a report in the way of DynamicEvent and they can use that report to DECIDE what they want to do -- but their access to the battle shouldn't be limited to what they have in that report. That's a problem I just realized that we have. It should go without saying that any DynamicRule should have access to every single object in a battle.
+
+What's cool about this revelation is that it makes you think about how VERY FEW OPERATIONS in battle actually need access to all of this data. It helps us to trim down our state.
+
+Like, why should every Unit have some kind of reference to every other object in battle. I'm pretty sure it would never, EVER need that. I'm starting to think that, really, only TWO things need access to everything in a battle: the RULES and whatever code we use for the INTERFACE. The player needs to be able to do things like TARGET ANY UNIT that they want for an ability. The player needs to be able to CHECK ALL OF THE RULES.
+
+So the PLAYER needs access to all of this stuff. And the RULES need access to all of this stuff.
+
+I'm pretty sure no other object in battle -- be it a 'Party' or a 'Leader Unit' or a 'Battle Unit' actually need to know jack shit. I think we're giving these objects WAY too much access to data. We need to trim down our state.
+
+Let's re-examine the way that DynamicRules are instantiated. Because I want for them to have EXPLICIT ACCESS to everything in a battle.
+
+Before we even start taking DynamicRules apart, let's look at our other battle objects and decide if they fucking EVER need access to their parent objects. Maybe we could have a true hierarchy where slave objects are not even aware of their master object. That would cut down on SO much redundancy.
+
+Why do we have a Party object which has Units and a Leader when we could just have a Leader object which knows its subordinates.
+
+Mock-up version 4: no more Parties. Instead, we just have LeaderUnits, and they have subordinates.
+
+For some reason, we have our Units set up so that they can have more than one ability by the same name. One Unit could know two different moves that are called 'slap,' and they could be both totally different moves.
+
+I'm not sure I'm about it. I had this idea of moves that have VARIATIONS. The idea was that, if "Pikachu" learns 'Thunder Shock' at level 30, then maybe different Pikachus would learn fundamentally different takes on 'Thunder Shock' at level 30, as a way to make each pikachu more unique.
+
+I still think that's a cool idea, but do they REALLY need to all have the same name. If we have 5 variations on Thunder Shock, couldn't we call them different stuff, like, at level 30, a Pikachu might learn:
+
+Super Thunder Shock
+Poisonous Thunder Shock
+Sticky Thunder Shock
+Cruel Thunder Shock
+
+We could give them different names but have them be variations on the same ability. I don't think it's a good idea at ANY point in our development to entertain the notion tha ta single unit might have more than one ability with the same exact name.
+
+So, I'm just going to change the Unit's ability attribute to a list. Yeah, it means that we won't be able to access it, INTERNALLY, by name, any more -- but we can fix that later.
+
+Is it safe to say, for the purpose of managing state, that an object should only manage data that's unique to that object. That sounds right when I say it like that. I mean, internally, there's really no good reason that a unit should need to have a list of its own abilities -- or, if it does, the ability doesn't need access to its owner.
+
+What if we moved UnitAbility.use(targets), to, BattleUnit.use(ability, targets).
+
+Now, the ability doesn't need to know who its owner is, necessarily.
+
+Let me ask a very important question to the future of how our objects are instantiated:
+
+DO WE NEED TO INSTANTIATE ABILITIES. Should they just be classes that are never truly instantiated -- class methods, class attributes. What is unique about one Slap compared to another.
+
+The obvious answer is that, if we want for units to be able to POWER UP or LEVEL UP their abilities, which would not be unusual in a JRPG, then they need to be instantiated.
+
+But I mean, OTHERWISE, no, right? We don't need for there to be 10 different 'slaps' floating around.
+
+I want a structured concept of an 'ability,' but I just want one of them. I want for there to be only one 'Slap'.
+
+Would it make more sense to have a class, Slap, and INSTANTIATE IT ONCE PER BATTLE (or whatever -- per game sitting, per launch -- per state), or would it make more sense to create a CLASS and then just use its CLASS ATTRIBUTES and CLASS METHODS to get our job done -- or is there a third option that I'm not aware of?
+
+With this new approach, an Ability is just three functions:
+
+_use_glancing
+_use_normal
+_use_critical
+
+These functions should have access to each other (so they're probably methods) so that _use_critical can just run _use_normal and then do something extra. It could almost just be one function. It's just that every 'Ability' can occur 3 different ways.
+
+With my education, it just seems like you would want to make a class with class attributes (if necessary) and class methods. And you would never instantiate that class. It's just... the fact that you would never need __init__ is what makes me feel like maybe it shouldn't be a class.
+
+Maybe I just need a dict like:
+
+slap = {"_use_glancing": some_callable, "_use_normal": some_callable, "_use_critical": some_callable}
+
+The problem with this is that the functions can't access each other. Also, in terms of architecture, we now have to define our Abilities like so:
+
+def slap_use_glancing(user, targets):
+    pass
+
+def slap_use_normal(user, targets):
+    pass
+
+def slap_use_critical(user, targets):
+    pass
+
+slap = {"use_glancing": slap_use_glancing, "use_normal": slap_use_normal, "use_critical": slap_use_critical}
+
+
+singleton Slap:
+    def method_1(single, arguments):
+        pass
+
+
+
+
+Abilities should have access to the whole battle. Even if the explicit 'target' is Unit B, the ability might want to splash damage to a random opponent -- or a random unit. We could have an Ability defined as such:
+
+Big Shell: "Hits target for massive damage but at the risk of misfire damage to a random unit on the field."
+
+So yeah, you target a particular unit, or units, or whatever -- but Abilities still need access to the state of the battle.
+
+We have a problem. An interesting problem. We just got done talking for like an hour about how Abilities don't need to be instantiated -- but if Abilities are gonna have access to the current state of the battle, they gotta be instantiated.
+
+Maybe it would make more sense to give the 'battle' object as an argument to use_glancing, use_normal, and use_critical.
+
+But, we have a problem. An architectural problem.
+
+Never mind.
+
+The problem with giving the 'battle' as an argument to use_* is that the Unit doesn't know what battle it's a part of.
+
+Are we being overly cautious? When you're working with object-oriented design I feel like it's a battle between over-relying on state and under-relying on state.
+
+I'm gonna make a hard rule: NO. REDUNDANT. REFERENCES. That's where we're drawing the line.
+
+Right now, with our Rules behaving as they do, ABILITIES CAN BE PERPETRATORS. That way, we can say,
+
+Steel Cheek: If Unit_A is Slapped, they will take 0 damage.
+
+We've lost this rule:
+
+Steel Cheek: If Unit_A is Slapped by Unit B, they will take 0 damage.
+
+Maybe it does make more sense for a report like DynamicEvent to supply more information: the PERPETRATOR and WHAT THEY DID.
+
+Before, because Abilities were instances that knew their owner, we could INFER the actual unit using the ability knowing only the ability that was used. But now we don't have that luxury.
+
+But I kind of like the idea that Abilities are things that you DO, and, as such, they don't really need to be instantiated. So maybe the perpetrator could be the UNIT, and then there's another attribute of this report which explains what Ability was used.
+
+The problem with this is that, historically, 'perpetrators' haven't always been Units, either. For instance, a perp might be a Rule.
+
+If we have a Rule that says,
+
+"If Unit_A takes damage, then they gain attack power," sure, it could be triggered by Unit_B using Slap -- but it could also be triggered by a Rule that says, "Every unit on Party A takes 1 damage every turn."
+
+I mean, it seems like we definitely have a limited number of objects that can be a perpetrator.
+
+Before, only Units, Abilities, and Rules could be perpetrators of a DynamicEvent.
+
+Now, I'm feeling like we have two types of perpetrators: Units and Rules. If the perp is a Unit, we also report what Ability they used.
+
+Maybe a part of solving this problem would necessitate looking at a Rule like this. We couldn't make this rule work, before:
+
+"If Unit_A takes damage from a Rule implemented as a result of Unit_B using Poison Slap."
+
+This requires a report more complex than we've ever fucked with. We need to know what ABILITY implemented the Rule and we need to know what UNIT used that ability.
+
+It'd be ideal if the Rules were, like abilities, just a static class. In our mockup-3 code, the Rules were also instances because they needed to know --
+
+The Rules have to be instances, because they might need things like arbitrary counters, and they definitely have a 'cure condition' which is going to be updating over time.
+
+So, the Rules could save some data regarding what ABILITY SPAWNED THEM and what UNIT used that ability. That's a luxury we can afford because Rules need to be instances.
+
+But that same design doesn't follow for Abilities, which seem to be working more-or-less just fine without being instances.
+
+The good thing is, with this trail of logic, ALL REPORTS WOULD DEFINITELY have a perpetrating unit and a perpetrating ability, right? Maybe not.
+
+So, basically, where we're at is we're re-examining our DynamicEvent report system. I think, we have two options presented to us:
+    * Go back to having 'redundant references' between objects, which means
+      that object A has a reference to object B and object B has a reference
+      to object A. This is what we had before, I've done this with many
+      other projects in the past. It's just mad ugly and can cause some
+      terrible bugs.
+
+    * The other option is to somehow give more information in our
+      DynamicEvent reports and ideally make it uniform in some way.
+
+
+Maybe there is no way to make it uniform. Maybe we just need different kinds of reports depending on what sort of object is abstractly 'perpetrating' the attribute change.
+
+Maybe we need a different format of report of Unit A's HP is lowered by rule Poison vs if Unit A's HP is lowered by being Slapped by Unit B.
+
+Penguin's talking about a 'foreign key' to associate things together.
+
+Maybe he's saying that the Leader doesn't need to know the Subordinate and the Subordinate doesn't need to know the Leader. Instead, they both know the Battle, and the Battle has a dict of leader -> units.
+
+That way, you don't even necessarily have a hierarchy of data: you have a sort of CENTRAL structure that coordinates all of the objects that orbit it.
+
+class Leader:
+    def __init__(self):
+        self.suboordinate = None
+
+class Suboordinate:
+    def __init__(self):
+        self.leader = None
+
+leader = Leader()
+suboordinate = Suboordinate()
+
+suboordinate.leader = leader
+leader.suboordinate = suboordinate
+
+
+At some point in your code, you do:
+
+suboordinate.leader = leader
+
+But you forget to do
+
+leader.suboordinate = suboordinate
+
+To solve this problem, on the leader, I used to have a method:
+
+class Leader:
+    def __init__(self):
+        self.suboordinate = None
+
+    def append_suboordinate(self, suboordinate):
+        self.suboordinate = suboordinate
+        suboordinate.leader = self
+
+
+04/25/19
+
+
+
+04/29/19
+
+So, the order of the Rules is significant when determining whether or not they'll trigger, which can be confusing for the player. For instance, if 'Invincible' is triggered before 'Hench,' Hench will not trigger -- because Hench will only trigger if the target_unit was going to do damage.
+
+So, if Invincible triggers first, then the attack isn't going to do damage, which prevents Hench from recognizing that an attack was attempted.
+
+That's fine. We can just word 'Hench's trigger condition as, "If an attack would have done damage, damage is doubled."
+
+That's great, BUT, with our new and improved DynamicEvent report system, we can actually go back in time and see that an attack WAS attempted even if the damage is going to be absorbed.
+
+So, maybe we should use that extra knowledge to make it more clear to the player what's happening.
+
+If KreichJr has a rule on him that says, "If Vencabot attacks KReichJr, Vencabot takes poison damage." I don't want Hench to affect the poison damage. Is there a way, given our current DynamicEvent reporting system, that I can implement this?
+
+What's the difference in DynamicEvents if Vencabot is dealing extra damage from Hench vs if he's dealing extra damage from Poison?
+
+Well, actually, that should work fine -- because the extra damage from Hench REPLACES the original damage. The extra damage from poison ADDS NEW DAMAGE. So, that answers my question about whether or not the 'original event' can have a triggering_rule. The answer is "yes."
+
+In the case of poison, the ORIGINAL EVENT would have a triggering_rule value.
+
+GOOD NEWS! It seems as though our new Dynamic Rule System is fully functional -- not only insofar as being as feature-rich as it was before, but also such that we can implement all new kinds of rules and features (including custom error messages when a rule fails to trigger in a situation where a player might have expected it to trigger).
+
+That means that, next time (Wednesday), we should go about experimenting with Rules that we couldn't have gotten working before, including Rules that are triggered when different Leaders get their turns, or even some example Rules where we maximize the complexity of our reports (DynamicEvent), which would be worded along the lines of:
+
+"Vencabot gains HP when KReichJr triggers Persistence by attacking Zanzhu with Slap three times."
+
+We need to find situations where we'd WANT to trigger Rules where, up to this point, we haven't been able to, such as:
+
+On a turn change.
+When a new Rule is added to the ruleset.
+
+
+
+05/01/19
+
+So, last night I was thinking about the way that our Rules are currently working, internally. Right now, they're split up into three main methods which can be overridden when defining a Rule:
+
+'will_trigger_on' is a method that returns True or False depending on whether or not the Rule will trigger on a certain DynamicEvent.
+
+The 'trigger' method is separate from that just so that we have some tidiness, internally. I think it's a bit nicer to be able to see, separately WHAT triggers a Rule and then what it does when it's triggered.
+
+Finally, we have an optional 'fail' method, which is triggered only when will_trigger_on returns False. It can take the same DynamicEvent and return a custom error message (or animation or whatever) depending on WHY the Rule failed to trigger (especially in situations where the player may have expected it to trigger).
+
+That's all well and good, but it strikes me that this rigid structure -- this rigid abstraction -- of Rules either "triggering" or "not triggering" -- this binary -- limits what we can do with our Rules.
+
+For instance, what if I want to have a DynamicRule which gets more severe if a secondary condition is met.
+
+Let's give an example:
+
+Vencabot takes poison damage after every action he takes. If Vencabot is healed by another unit, the poison's severity increases.
+
+So, in this case, we have a sort of double-decker Rule. It's "triggered" in two different situations, with two different results:
+
+Vencabot takes an action. -> He takes damage.
+Vencabot is healed by another unit. -> The poison's severity increases.
+
+With our current mechanisms in place, perhaps the most sensible thing to do would be to split this over two different Rules.
+
+But my thinking, last night, was that it would make sense to de-standardize the whole 3-method DynamicRule override.
+
+Instead, we would have only ONE standard method, which would be called something like, "process_event". You feed it a DynamicEvent, and, instead of returning True or False, it will automatically call any number of methods based on the event that it gets.
+
+That's much simpler. Although it would be nice to have a standard so that all Rules look the same, to some extent, it does sort of limit what we can do with our rules -- and that's been something that we've been butting our heads against for a long time, now. The balance between maintaining clear-to-read 'standards' but also keeping the 'dynamic' part of 'dynamic rule system'.
+
+I think the best compromise would be to have Rules with this one standardized method, "process_event". Then everything else could be unique to that Rule.
+
+But what I didn't think of, last night, was the possibility that we could split these complex Rules over more than one Rule. Right off the bat, I don't think this is the best solution, but I don't want to write it off until I consider the pros and cons thoroughly.
+
+Pros of splitting complex Rules over multiple, simpler rules:
+* We can keep the Rules internally standardized with a simple 'trigger' method. When it triggers, it triggers; it can't trigger in a variety of ways.
+
+* It might be simpler for the player to read. It means that individual rules are easier to parse, and it's easier to understand what's going on when an action takes place because each summary of a rule is simpler.
+
+Vencabot takes damage every time he takes an action. The damage is increased every time his HP is healed.
+
+Vencabot takes damage every time he takes an action. (Poison)
+Vencabot's Poison increases in severity whenever his HP is healed.
+
+The cons of splitting complex Rules over multiple, simpler rules:
+* It means that we need more Rules to describe what might be, conceptually, a single idea.
+
+* It might add problems when we consider that Kenny and I have been working with different ways to balance Rules. The idea that I've settled on is to limit the number of Rules that a single unit can be subject to at once, and that means that, if we have multiple, simpler rules, we're gonna hit that limit a lot faster and may need to reconsider this as a balancing method.
+
+* If we have Rules that are directly impacting Rules, we may need a way to communicate to the player exactly what Rule we're talking about. In the example above, we had to clarify that the first Rule is called 'Poison' so that we could later clarify that Vencabot's 'Poison' is what's going to be increasing in severity.
+
+
+
+Much to my surprise, putting the pros and cons side-by-side makes me realize that there really isn't that big of a difference between the two options. Maybe de-standardizing Rules isn't as much of a benefit as I first expecting. I would say that the REAL difficulty with splitting complex Rules into simpler Rules is that it becomes difficult to decide how to limit rule-stacking on a single unit.
+
+The way to deal with that would be to consider the SECOND Rule in our example ("Vencabot's Poison increases in severity when his HP is healed") to not be stacked on VENCABOT but rather to be stacked on the POISON -- as though Rules, themselves, could have slots where they take on other Rules.
+
+Is that a more elegant solution? Maybe.
+
+Before we go too deep down that rabbit hole, let's consider what I expected to be a standard feature of all Rules: 'trap' conditions and 'cure' conditions.
+
+When we were discussing everything we could explore with the Dynamic Rule System, we talked about how, instead of just 'curing' or 'dispelling' a Rule using some kind of Final Fantasy'esque "Dispel" or "Remedy", Rules should be curable BY those but also by fulfilling conditions, such as, "5 turns pass," or, "Vencabot is swapped to the back row." It could be anything. It could be, "Vencabot's curse is cured when he's attacked 3 times." It could be anything. That would be a 'cure condition'.
+
+'Trap conditions' would be situations where a Rule has NO EFFECT when it's put into play, but it would be THREATENING the affecting team by saying something like, "If Vencabot attacks 3 times, he'll become subject to poison for 10 turns."
+
+In that case, we're limiting what Vencabot can do not BY inflicting poison but by inflicting the THREAT of poison.
+
+So, one option, programming-wise, would be to standardize these 'trap' and 'cure' conditions as a part of the DynamicRule object.
+
+But it was during my meditions about this that it struck me that perhaps it would make more sense to destandardize the DynamicRule object and allow each Rule to decide, on its own, how to process any given Event with any number of conditions and results.
+
+Because, like I mentioned earlier, having a standardized 'trap' and 'cure' conditions doesn't cover the possibility of a condition that increases or decreases the SEVERITY of some effect. Maybe, under a certain condition, the TARGET of an affect is changed. Because these Rules are truly meant to be 'dynamic,' I feel like, to maintain the most freedom, we need to limit how much standardization we do between them.
+
+On the other hand, one thing I've found in some of my previous projects is that, when you refuse to standardize a mechanism so that it can be as FLEXIBLE as possible, what you end up with is a situation where you actually have no objects or anything concrete. Things become so abstract that you're essentially just re-writing the language that you're composing your code in.
+
+So, what we end up with is essentially two possibilities:
+We allow for COMPLEX RULES which take a DynamicEvent and process it FREELY. We do away with the abstraction of the 'triggered' or 'un-triggered' binary and, instead, allow every Rule to do whatever it pleases with a certain Event. That seems reasonable, to me -- and powerful.
+
+Or we could enforce SIMPLICITY on INDIVIDUAL rules, but have them be able to STACK ON EACH OTHER. So, considering things like 'cure conditions,' 'trap conditions', 'severity change conditions,' 'target change conditions' -- all of these things. You could stack them, as MULTIPLE RULES, like this:
+
+Vencabot takes poison damage after every action he takes.
+    - Rule is supressed until he attacks 3 times.
+    - Rule is cured after he is attacked 3 times.
+    - Rule changes target to whoever heals Vencabot.
+
+All four of these rules can only trigger under a single circumstance and have a single effect. So, we can maintain the 'triggered' or 'untriggered' binary. It is quite simple to read. That's an advantage.
+
+I'm starting to see that a problem with THIS mechanism is that, when you have Rules that change the effect of other Rules, it becomes difficult to know what order to process the rules in. How does the first sub-rule -- the trap condition -- suppress poison. For one thing, it wouldn't be written that way. It'd be written such that the Trap Condition is the PRIMARY RULE, and it later 'creates' or 'initiates' the poison rule.
+
+But that doesn't really answer my question about Rules stacking on other Rules. Supposing that we do allow for Rules to stack on other Rules (which I think is very sensible), what if we had a Rule that suppressed another Rule until some condition was met. How would we go about doing that?
+
+The most obvious way to suppress a Rule would be to simply give every DynamicRule a flag -- True or False -- which communicates whether or not it's suppressed. We definitely need more standard attributes for Rules, including their Severity level, which is a mechanism that I do want to be standard across Rules: the ability to raise or reduce severity.
+
+We still have this problem of ORDER of operations when you're talking about Rules which affect other Rules.
+
+I mean, maybe there is no problem there: maybe it's just first-come, first-served like we've been doing. I can't immediately imagine a situation where that would be a problem.
+
+What's cool about THIS method -- keeping Rules simple, individually, but having them stack on each other -- is that it opens up a whole new class of unit abilities where we can manipulate existing rules. Like, we do want to have a class which could have an ability like, "choose a rule to suppress for 3 turns." That makes sense.
+
+Maybe we want a class with an ability like, "change the cure-condition of a rule," or something like that.
+
+I feel like, even if we have super-complex rules, we're going to need to allow rules to stack on rules, and we're going to need to STANDARDIZE some situations.
+
+We can't get away with NOT standardizing things like TRAP CONDITIONS or CURE CONDITIONS, because we need to be able to have abilities which EXTEND trap conditions and SHORTEN cure conditions.
+
+I would say that the MAIN disadvantage of splitting complex Rules into an arbitrary number of SIMPLE Rules is that it becomes a bit more difficult to convey to the player that this 'package' of Rules all conveys a single concept.
+
+But, I don't necessarily think that's a big issue.
+
+To clarify what I mean, I'm imagining a UI for the player to peruse to understand what Rules are in play in the current battle -- and, now that I think about it, this isn't a problem that's unique to 'rules-stacking-on-rules'. Our Dynamic Rule System IS so dynamic, by design, and creating a UI that makes it easy for the players to understand what Rules are in play is going to be a challenge.
+
+Maybe, instead of going into too much code, today -- we've only got another forty minutes, here -- maybe we should begin musing about UI and maybe make some decisions about how this system is going to play out based on that. With DynamicRules being hypothetically so complex, what is an effective way to communicate what Rules are currently in play so that the player can make decisions effectively and understand the flow of battle.
+
+Taking WORKING examples from the genre, you would TYPICALLY have STATUS CHANGES be AFFIXED to a UNIT. Usually, this is communicated with an icon over the unit's head and probably some entry on their 'status' page.
+
+That's how you would handle traditional Poison, and Blind, and Protect, and all of these abstract 'status changes' which are one of the closest things to our idea for DynamicRules.
+
+It's been brought up that DynamicRules also have some similarity to the 'Law' system in Final Fantasy Tactics Advance and its sequel. In those games, the only way to know what Laws are in play are by bringing up a special 'Laws' screen which just lists them, top-to-bottom. But it should be noted that this only works because Laws don't target any individual unit AND there's a very limited number of them per battle. You typically would have less than 10 laws per battle, and they're pretty easy to explain on a single line.
+
+Let me propose an abstraction: CAN WE SAY that EVERY RULE has a TARGET? In the past, I've considered that, and I've usually just defaulted on, "No," you can't strictly say that every Rule has a target.
+
+But maybe, if we think more about it, we'll decide that it isn't true. Maybe every Rule could be said to strictly have a target. That we could, in terms of UI, 'attach' that Rule to.
+
+It goes without saying that some Rules target a specific unit. In our example above, "If Vencabot takes an action, he takes damage," it's clear that this Rule relates strictly to Vencabot. In a UI, we could definitely be forgiven for putting an icon over Vencabot's head or putting some kind of entry on Vencabot's status page that says that he's under the affect of this Rule.
+
+If any unit heals another unit, a random unit on either team will die.
+
+In the past, I've said that this kind of Rule would be said to apply to "the battlefield." So, if "the battlefield" has a status page, we could put that Rule there.
+
+So, what are our targets?
+A Unit.
+A Battlefield.
+A Party (leader?).
+
+That seems fair. I don't think that there's any Rule that I could come up with that couldn't be said to target one of those three things. So, if each of those three things has a 'status' page, we could list the rules that are affecting them there.
+
+If the Unit has a status page where you can view the Rules they're exclusively under the affect of,
+
+And the Party has a status page where you can view the Rules it's exclusively under the affect of,
+
+And the Battlefield has a status page where you can view the Rules it's exclusively under the affect of,
+
+Then we can expect for the player to not have too much difficulty keeping track of what Rules are in play.
+
+Not that we NECESSARILY need Rules this complex if it's going to fuck up our whole UI, but what about a Rule like this:
+
+If Unit A (Party A) and Unit B (Party A) and Unit C (Party B) and Unit D (Party B) heal another unit a COMBINED NUMBER of 4 times, then Unit E (Party A) and Unit F (Party B) are killed.
+
+That's a super-complex rule. It 'targets' 6 different units, split among both parties. I guess that would be a 'battlefield' rule, right? Or could it be said to be a Rule that essentially 'individually' targets those 6 units.
+
+For balance reasons, this would probably need to be a Battlefield rule, and let's talk about Balance real quick.
+
+A few weeks ago, it came to me and Kenny's notice that, by stacking a few VERY SIMPLE RULES, you can break this game -- like, super easily. The example we gave was something like this:
+
+We have a 'priest' unit, and it's casting buffs on our team.
+
+Vencabot takes 20% less damage from physical attacks.
+Vencabot takes 20% less damage from physical attacks for 5 turns.
+Vencabot takes 10% less damage from enemy units A, B, and C.
+
+That all could hypothetically be cast in a single turn. And that's just one example. When you have as many ideas for DynamicRules and the abilities and classes that inflict them as we do, it stands to reason that breaking the game becomes trivial. Any time you can stack Rule A and Rule B on a single unit, you're risking breaking the whole game.
+
+We'd developed this idea for WEEKS before this very simple revelation hit us.
+
+A solution that we came up with, which I think is pretty elegant, is that we need to LIMIT THE NUMBER OF RULES WHICH INDIVIDUALLY TARGET ANY SPECIFIC OBJECT, whether it be a UNIT, a PARTY, or a BATTLEFIELD.
+
+But there's more.
+
+If we did that, STRICTLY, we have a problem where we have to start abstracting Rules as being either 'buffs' or 'nerfs,' which creates this binary that's contrary to the very idea of a Rule's dynamism. Because many Rules are going to have a very serious trade-off, like, "Vencabot does double damage but 1/4 is reflected back at him." Is that a buff or a nerf? I can imagine situations where that'd be inflicted on Vencabot by an ALLY and other situations where it might be inflicted on Vencabot by an ENEMY.
+
+So, what we thought of was this: every kind of object can have a limited number of Rules inflicted upon it BY EACH PARTY.
+
+So, Vencabot can only have one Rule inflicted upon him by his ALLIES and only one inflicted upon him by his ENEMIES at one time. The same would be true of each Party and the Battlefield; there's a limit to how much control EACH PARTY can inflict over each type of object.
+
+This also solves the problem that we would've had regarding 'blocking' if we limited the number of rules that a single object could be under the influence of but we DIDN'T keep track of whether they were inflicted by an ALLY or an ENEMY.
+
+For instance, let's say that we set a 'rule-cap' for each unit at 3 rules.
+
+Well, on the first turn, the party inflicts three 'buffs' on Vencabot. Now, he's immune to 'nerfs' on the enemy turn. That's a problem.
+
+So, intead, we limit the number of rules that can be inflicted on Vencabot by the ALLIES and the ENEMIES.
+
+Speaking of UI, supposing that we're limiting the number of Rules, in battle, based on what object they're affecting, it's fair to say that you would peruse the current rules, in battle, by looking at various 'status screens' for the Unit, the Party, and the Battlefield. And maybe we could put icons over the heads of Units and, for the Party, an icon over the head of the Party Leader -- and, for the battlefield, icons in the corner in something.
+
+I think that, UI-wise, it's not going to be a herculean task to keep track of what-all rules are currently in play. We can manage that.
+
+To step back to our original question, then: yes, Rules can be said to have a specific target. And the three possible target-types would be "unit," "party," and "battlefield". And we would balance Rules -- and the whole Dynamic Rule System -- by limiting the number of Rules that any PARTY can inflict on any of those targets.
+
+It strikes me that we have to add one more possible target type to that list: "unit", "party", "battlefield", and RULE. Because Rules can target other Rules.
+
+SO, maybe we can even STANDARDIZE the SLOTS -- maybe not, but maybe -- that a given Rule has to entertain other Rules.
+
+As a rough draft, a Rule could have THESE SLOTS for other Rules:
+
+A 'cure' condition. This Rule will determine when the parent Rule falls out of play.
+
+A 'trap' condition. This Rule will determine when the parent Rule comes INTO play.
+
+A 'severity increase' condition. This Rule will determine when the parent Rule increases in severity.
+
+A 'severity decrease' condition. This Rule will determine when the parent Rule decreases in severity.
+
+It's a little bit abstract, but I think we would need some sort of wiggle-room for a Rule such as,
+
+"Vencabot takes damage after every action he does. If Vencabot is healed, this curse moves to the unit that healed him."
+
+For sub-rules like that one -- and probably countless others -- I feel like we can't really set aside a standard 'slot,' so maybe it makes sense for us to not have ANY standard slots for sub-rules. We just have parent Rules and sub-rules which affect that Rule. That makes more sense, because then we could have more than one 'severity increase' condition.
+
+Lemme raise another abstract question. If Rules and Sub-Rules are the same object type, it stands to reason that sub-rules could have sub-rules attached to them. WOULD THAT MAKE SENSE?
+
+Well, I would say that it makes sense for a sub-rule like, "If Vencabot is healed, his healer takes on this curse," could take on a sub-rule like, "Is cured after 3 turns." That's a sub-rule with a sub-rule DYNAMICALLY ATTACHED TO IT.
+
+Okay, let's clarify one thing, here: sub-rules SIMPLY CAN NOT be SO dynamic and SO abstract that they can necessarily apply to ANY OTHER RULE. DynamicRules are objects which are invited to have their own, non-standard attributes, and we do want for sub-rules to be able to play with those... right?
+
+What's an example of a DynamicRule which would need its own, non-standard attribute to do its job correctly, and can we make a sub-rule which affects THAT PARENT RULE EXCLUSIVELY which wouldn't work on other Rules.
+
+"Every 3rd turn, Vencabot takes damage."
+
+This Rule needs an internal counter for how many turns have passed since Vencabot last took damage from it. Very simple, but a necessary, non-standard attribute that this Rule instance needs to keep track of.
+
+Now, what if we wanted a sub-rule like this:
+
+"Slow Poison: Every 3rd turn, Vencabot takes damage."
+"If Vencabot's HP is healed, Slow Poison takes affect every 2nd turn."
+
+So now, we have a situation where the SUB-RULE is manipulating the PARENT-RULE in a way that wouldn't necessarily TRANSLATE to other Parent Rules. We could probably abstract this out so that, "If Vencabot's HP is healed, the severity of the parent Rule increases," which we could have wired up in Slow Poison so that, if its severity increases, it takes affect more often.
+
+But that's just one example. I feel like it's safe to say that not every sub-rule is going to be able to apply to every parent rule.
+
+So, what we NEED to do is decide on a LIMITED SET of UNIVERSALLY USEFUL attributes that EVERY RULE needs to take into account. That would maximize the dynamism of these relationships BETWEEN parent and sub-rules.
+
+For instance, if every Rule has a TARGET, we can change that target. This and other considerations I've been making makes it clear that we're going to need to start TAGGING Rules so that we can understand how they work, at a glance, and match them up APPROPRIATELY with other sub-rules.
+
+Every Rule has a TARGET, and it has a flag regarding whether its target is a UNIT, a PARTY, a BATTLEFIELD or ANOTHER RULE.
+
+Every Rule has a SEVERITY LEVEL between 1 and 10. '1' would be 'barely taking affect' and '10' would be 'a very dramatic affect'. So, EVERY RULE would take into account its CURRENT SEVERITY when triggered. This way, we could dynamically change the severity of a Rule and have it play out in interesting ways.
+
+We need a flag that defines whether or not the Rule is currently 'suppressed'. These Rules would be VISIBLE on a status screen because their suppression is TEMPORARY. It's visible, it's in-play, but it will not be triggered. We would neither either a 'suppressed' flag or an 'active' flag, depending on which boolean we want.
+
+We need, like, a 'type' flag? To communicate -- for instance. Let's say that we have a Healer class which has an ability that can REDUCE THE SEVERITY OF A CURE-CONDITION.
+
+Some Rules:
+Vencabot takes 10 damage at every turn change.
+    - Parent Rule is cured after 10 turns.
+
+We would want a Healer class which could use an ability to REDUCE THE SEVERITY of that cure-condition. Boom, the priest casts a spell, and now:
+
+Vencabot takes 10 damage at every turn change.
+    - Parent Rule is cured after 3 turns.
+
+We have reduced the severity of the cure-condition. So, for this Priest's ability to MAKE SENSE, we NEED to TAG the sub-rule with some kind of 'cure_condition' tag. We need to tag rules so that we understand how we can interact with them.
+
+So, these tags SHOULD NOT NECESSARILY BE INDIVIDUAL ATTRIBUTES, because we're gonna need an arbitrary number of tags. So, we can use these tags, as a list, to give other Rules and Abilities an idea of how they can interact with each other.
+
+This idea actually solves a problem I've been having for a LONG TIME about Rules, and that's kind of cool. For instance, let's say that you have a priest ability that says, "Cures Rules that deal HP damage over time." Up to this point, we've had no way of communicating, at the programmatic-level, which Rules "deal HP damage over time." Because that's kind of an abstract idea. For instance, what is "time"? When a unit takes an action? When a turn ends? Also, we really have no way of INTROSPECTING which Rules are doing HP damage.
+
+The idea of 'tags' solves this: we can just tag Rules with, "deals_hp_damage_over_time," and then ANY ABILITY or ANY RULE which excusively targets Rules which deal damage over time now know that this Rule is an applicable target.
+
+So, yeah, Rules need to have a .tags attribute where we can apply tags that other Rules and abilities can look for.
+
+Also, Rules need a get_description() method. We could supply a .description attribute, as a string, but, because Rules are instances with attributes that might change over time, it makes more sense to get_description() and get a string back which might be different every time.
+
+Let's talk about the direction of our coding for tomorrow:
+
+Rules need some standardized attributes:
+    .severity
+    .is_active
+    .tags
+    .get_description()
+    .target_type
+    .affected_by
+
+Instead of having a 'target' attribute, the Objects which ARE the targets have a list of Rules that are targetting them. The 'targets' that a Rule saves, internally, could be totally different from the 'targets' that it has, ABSTRACTLY, for the purpose of balance. But it does need a tag for what kind of target it takes, and that should be standardized.
+
+BattleUnits, BattleLeaders, and Battles need:
+    .affected_by (a dict of parties mapped to the Rules inflicted by them)
+    .rule_limits (a dict of parties mapped to the int limit for that party)
+
+We know that we're limiting the number of Rules that a single Unit can be under the effect of PER PARTY. Vencabot can be affected by two rules inflicted by Party A and two rules inflicted by Party B.
+
+At this point, we should port our existing Rules to take advantage of 'severity'. Then, we need to start coming up with and testing sub-rules and situations where we're dynamically messing with severity and other attributes of Rules.
+
+
+
+05/02/19
+
+So, today I'm adding some new features to the DynamicRule objects. In particular, we're adding 'tags' and 'severity' -- and that means changing our existing test rules so that they take advantage of these new features.
+
+So, first, let's go through our existing rules and implement severity, and then we'll test that.
+
+A couple of problems just came to mind regarding the flexibility of rules.
+    1.) Is it possible to record when a ability crits, for rules like,
+        "If Vencabot gets a crit, he loses health."
+    2.) Is it possible to record when a rule triggers, for rules like,
+        "If Rage triggers 3 times, Rage is removed from the ruleset."
+
+These are situations where we would need some kind of 'report' to trigger Rules that we haven't accommodated in our DynamicEvent system. DynamicEvents always and only record when an attribute is changed. That makes sense, for the most part. We could even use it to record turn-changes by having, like, battle.current_turn be a dynamic attribute.
+
+But there are some situations, I feel, where it would make sense to trigger rules when an OBJECT ATTRIBUTE couldn't be said to be strictly CHANGING.
+
+Like, can we change an attribute when getting a crit? Maybe. Sounds kind of hack'ish.
+
+Can we change an attribute when a Rule triggers. Maybe. Sounds kind of hack'ish.
+
+In the latter example, we could just standardize a mechanism where Rules record how many times they've been triggered.
+
+Maybe. It's. Worth. Recording the EFFECTIVENESS of an ability when reporting on it for DynamicEvents.
+
+Right now, DynamicEvents record quite a lot of data about the CAUSE of the event:
+
+DynamicEvent.perpetrated_by : the UNIT who 'perpetrated' the attribute
+                              change.
+
+DynamicEvent.using_ability : the ABILITY that was used to change the
+                             attribute.
+
+DynamicEvent.triggering_rule : the RULE which was triggered by the ability.
+
+So, maybe we just need another report attribute, "with effectiveness".
+
+DynamicEvent.perpetrated_by
+DynamicEvent.using_ability
+DynamicEvent.at_effectiveness
+DynamicEvent.triggering_rule
+
+It seems reasonable, to me, to give every DynamicRule a counter for how many times its been triggered. When this number goes up, we can run other Rules which would trigger when that rule is triggered.
+
+Time for some salty notes.
+
+I just noticed that current DynamicRules aren't given a 'Battle' object as an argument upon instantiation. But, in a previous rant, I established that, just like with Abilities, every Rule must, by definition, have access to a Battle object -- because it needs to be able to change things in the battle.
+
+Or does it?
+
+I mean, Rules are given arbitrary arguments, right now. If a Rule needs access to a Battle, we can give it a Battle. None of our existing Rules require access to a Battle.
+
+Which raises a question: is it okay for every Rule to take arbitrary arguments? I don't think that it's okay for ABILITIES to take arbitrary arguments, because they ALL NEED TO BE 'used' IN THE SAME CONTEXT. In the same way.
+
+But Rules are 'initiated' during Abilities, so, in that 'use_ability' code, we can instantiate Rules however we please.
+
+So, by that logic, Rules don't necessarily need to have Battle arguments and, furthermore, they don't necessarily need to have ANY particular arguments: their instantiation can be completely customized during 'use_ability'.
+
+We're ending our game-dev stream, so let's take some notes about what we accomplished, today:
+
+We enhanced both the DynamicRule and the DynamicEvent objects.
+
+DynamicRules became, themselves, DynamicObjects, which means that when their 'severity' and 'triggered_counter' change values, they can trigger other Rules.
+
+Also, we implemented 'severity' and tags and demonstrated that both are working. We created an ability, "Blood Song," which increases the severity of all rules in the current battle which increase attack power. We used tags to understand which rules raise attack power, and we made sure that these rules will give the target unit more attack power based on how severe the rule currently is.
+
+We added a new report to our DynamicEvent objects, "at_severity". This records whether the 'with_ability' was Glancing, Normal, or Critical. Now, we can trigger certain rules based on whether or not an ability was a crit, such as, "Whenever Vencabot gets a Crit, he loses 10 health."
+
+
+
+05/06/19
+
+Today, I want to get Rules stacking upon other Rules. In particular, I want to play with 'cure conditions' and 'trap conditions'. I also want to implement a Rule which temporarily 'seals' or... what was the word I was using? Anyway, a Rule which can subdue other Rules for as long as it's active.
+
+So, we're gonna have rules stacking on rules stacking on rules.
+
+We still don't have a way for Rules to trigger on a turn-change, or 'on any action'. Like a poison that would trigger whenever a unit uses any ability.
+
+I want to make a 'poison' which damages the target every time they use an ability. Then, I want to create a rule which subdues that poison until a certain condition is met.
+
+Poison works. I want to make a new Rule which can SEAL ANY RULE for the length of 3 ACTIONS taken by Party A.
+
+I want to make a new ability which inflicts this Rule upon the battlefield.
+
+I'm gonna make a new ability called Seal Rule.
+
+We have a conundrum. The abstraction of a rule being 'cured' isn't necessarily as simple as removing it from the rule list.
+
+What about situations where a rule being 'cured' would change something attributes back to 'normal'?
+
+Well, actually, that problem ISN'T a problem if you think about rules in the correct way. Rules always DO something when triggered, and they don't do anything if they AREN'T triggered. So, I'm looking at 'seal rule' entirely the wrong way.
+
+Rules DON'T need an 'is_active' attribute. You don't seal a rule by making it 'inactive'. You seal a Rule by PREVENTING IT FROM DOING WHAT IT WANTS TO DO.
+
+You can pretty easily do this by just checking the 'triggering_rule' attribute of a DynamicEvent. If the 'triggering_rule' is the target_rule, you need to prevent it from doing it's thing. So, for a Rule to be sealed by another Rule, the SEALING RULE would definitely have to come after the SEALED RULE in the rule-order.
+
+But that stands to reason; if you're going to initiate a rule to prevent another rule from taking place, it would necessarily come after.
+
+I have a conceptual problem that probably needs addressing. What if I wanted to have a Rule that is as follows:
+
+All Rules which alter HP damage are ineffectual.
+
+I don't know if that sort of Rule is possible with our current setup. Because, if Hench came after this rule in the rule-order, its effect could not be prevented.
+
+You can't prevent a rule that comes later in the rule-order from altering a dynamicevent.
+
+For the first time, we're talking about rules that target other rules, and I'm starting to see some unexpected difficulties arising.
+
+Let's not worry about that for now, because we don't have time; that's a very abstract problem that we're going to need to put a pin in and come back to later.
+
+##### RULES CANNOT PREVENT ANOTHER RULE WHICH COMES LATER IN THE RULE-ORDER FROM ALTERING A DYNAMICEVENT. ######
+
+We can still 'seal' the effect of a Rule that was put into the rule-order beforehand. We just can't, right now, put a rule into play which will pre-emptively alter the affects of a Rule that's added to the ruleset later.
+
+If we want to prevent the effect of a Rule, we have to look at the .triggering_rule attribute of a DynamicEvent and 'prevent' that event from occuring. It seems to me like there's two ways to do this:
+
+1.) Prevent the change all together by doing:
+    dynamic_event.replace_value(dynamic_event.__dict__[dynamic_event.attr_name], self)
+
+That would disable the event by turning the NEW VALUE into whatever the value was ORIGINALLY.
+
+But that's not necessarily what we want to do.
+
+We don't want to replace the event's value with whatever it was ORIGINALLY. We want to replace it with whatever it was going to be BEFORE THE TARGETED RULE KICKED IN.
+
+So, what we really want to do is step backward through the event's timeline until we reach a point before the targeted_rule kicked in and then replace the event's value with THAT value.
+
+So, we need to do OPTION 2 if we can go back in time far enough that the rule hadn't triggered, yet.
+
+We need to do OPTION 1 if we can't: the ORIGINAL EVENT was created by this triggering_rule.
+
+I WANT THE OLD_VALUE OF THE FIRST DYNAMICEVENT WITH TRIGGERING_RULE TARGET_RULE.
+
+I WANT ROLLED_BACK_EVENT TO BE THE FIRST DYNAMICEVENT WITH TRIGGERING_RULE TARGET_RULE.
+
+I WANT TO STOP REPLACING ROLLED_BACK_EVENT AS SOON AS THE EVENT THAT IT REPLACES NO LONGER HAS TRIGGERING_RULE TARGET_RULE.
+
+### OUR DYNAMICRULES NEED TO KNOW THE EFFECTIVENESS OF WITH_ABILITY. ###
+
+
+When Vencabot uses Seal Rule, he does two things:
+He adds a Rule to the Ruleset, "Seal Rule".
+he adds a Rule to the Ruleset, "Fade Rule".
+
+AFTER BOTH OF THESE THINGS HAPPEN, hang on... hang on...
+
+Why isn't Poison triggering twice? Vencabot is effectively 'doing' two things in a single turn. Poison should be triggering twice. I don't WANT it to trigger twice, but I just realized that there's a bug that should be causing it to trigger twice. Because it's NOT triggering twice, that means that our BUG has a BUG.
+
+Nevermind. When we use an ability, we reset the recurrence_counter AFTER the ability is complete. So, Poison CAN'T trigger twice in the time between when an ability STARTS and when an ability ENDS.
+
+WHEN VENCABOT USES SEAL RULE, HE DOES TWO THINGS:
+HE ADDS A RULE TO THE RULESET, "SEAL RULE".
+HE ADDS A RULE TO THE RULESET, "FADE RULE".
+
+AFTER BOTH OF THESE THINGS HAPPEN, POISON TRIGGERS. no, no, no. Poison only triggers after the FIRST event, which is Seal Rule being added.
+
+Vencabot takes Poison Damage.
+
+AFTER THAT, we add Fade Rule.
+
+So, the solution to this problem... I'm not sure that "solution" is the right word... but we could make this behave the way we expect by stealthily adding 'Seal Rule' and then overtly adding 'Fade Rule'.
+
+But actually, the thing to do would be to add them both, overtly, but at the same time.
+
+So, the reason that I decided to add them both overtly, INDIVIDUALLY, is because, when you have a Rule that's triggered whenever a Rule is added to the ruleset, you would expect for it to trigger twice if more than one rule is being added.
+
+But, in this case, CONCEPTUALLY, the rules ARE being added together. So, I'm going to add them both at ONCE, overtly. This would trigger rules that occur whenever a rule is added. If that rule really wants to trigger once for every new rule, it can check, itself, how many rules were just added.
+
+So, the solution is to add both Seal Rule and Fade Rule at the same time.
+
+Everything's working fine. Next time, I want to try to implement THIS rule:
+
+"All effects from Rules which alter HP damage are negated."
+
+That's going to be a challenge.
+
+
+05/15/19
+
+Back from Texas Showdown. It's been about a week since we last did any programming. Let's first of all create a new text document to contain our 'test abilities'. In the past, we had all of our 'test rules' within the main 'rules_and_events.py' module, but they become so complex and numerous that it made more sense to separate them out.
+
+Now, we're sort of in the same position for Abilities. They're taking up a lot of space in our rules_and_events.py module, so why don't we move them to their own module just to make things a bit tidier.
+
+Why did we decide that Abilities shouldn't be instantiated? I think it was just because we wanted to avoid the problem of 'redundant references,' which is something that I decided was important to the sanity of our architecture. It makes me wonder if the benefits of going with instantiated ability classes would outweigh the problems caused by redundant references -- or even if there's some way that we could implement ability instantiation without needing to rely on redundant references.
+
+What if we reversed the hierarchy of our object tree? Would that make the problem of 'redundant references' a bit easier to deal with? Like, what if, instead of the 'battle' object having parties and the parties having units, we just had a bunch of loose units and THEY had parties and the parties had a battle.
+
+The reason why it's difficult to implement a Rule like "All Rules which damage HP have their effects negated" is that a Rule can only 'prevent' or 'roll back' an event which is triggered BEFORE that Rule is checked.
+
+So, it'd be trivial to implement a Rule like:
+"All preceding Rules which damage HP have their effects negated."
+
+However, inhibiting event-updates that occur AFTER a given rule in the ruleset might be impossible with our current mechanisms.
+
+They have to ALTER HP damage -- not inflict HP damage. Stopping a NEW event, such as damage infliction, is trivial. Stopping an ALTERATION is much more difficult.
+
+But why is that, necessarily? Can we make Events into DynamicObjects so that updating them can trigger rules...? That immediately seems like a bad idea, but maybe it isn't that bad.
+
+Like, it makes sense for DynamicRules to be able to trigger whenever damage is altered. That makes sense, to me. But I feel like we're getting so meta that there's gonna be some weird difficulties that arise from trying to do something like that.
+
+I feel like this would require a re-imagining of our DynamicEvent system, but maybe that's for the best. Maybe this cause is worth fighting for. On the other hand, I really like our current DynamicEvent system -- where you can sort of walk back in time to find the previous versions of events. Could we somehow do both...? Maybe not.
+
+Well now wait a minute. Maybe all we'd really need to do is make DynamicEvent a DynamicObject and then... do:
+
+my_event.update("replaced_by", new_event, etc., etc.)
+
+That would effectively trigger rules whenever an event is replaced. That's what you want.
+
+Before we commit to this notion, let's examine whether or not there are any other benefits -- or pitfalls -- to making DynamicEvents into DynamicObjects.
+
+DynamicEvents are pretty immutable. The only attribute they have which is ever meant to change is 'replaced_by'. Would it make more sense to have some kind of external, 'timeline' object which is just a list of the event's progress? I think that would make a lot more sense.
+
+my_event.timeline = [self]
+
+and then, when you use my_event.replace_value(new_value, triggering_rule)
+
+And then, whenever we update the timeline, we can get the newest version very easily.
+
+Well, no, no, no. That defeats the purpose of what I'm trying to accomplish, here. The idea would be to make the timeline a DynamicObject so that the DynamicEvent could be immutable. Is that something that we could accomplish or that we'd want to accomplish?
+
+If we were to make a 'timeline' into a DynamicObject, would it really have any other attributes that would be interesting to see?
+
+We would never subtract an event from the timeline. Also, let's consider whether or not we really need to know the entire timeline of an events alterations.
+
+This is where things are going to get really abstract and probably where we're going to end this stream so that we can play some 3rd Strike.
+
+Would it make more sense to just have an 'original event' attribute and not worry about a whole timeline. Would any Rule really benefit from being able to see the entire timeline of an event's changing? So far, we've used the 'original_event' attribute to understand what the event was SUPPOSED to do. And, of course, the most up-to-date version of the event is what's going to actually END UP HAPPENING.
+
+Are the events in the middle actually worthwhile?
+
+Yeah, they are. And here's why:
+
+We have a Rule which says, "If Vencabot was going to do 10 damage and that damage is negated, he gets pissed off."
+
+We have another Rule which says, "If Vencabot is going to do 3 damage, he'll do 10 damage instead."
+
+Vencabot slaps dixxucker for 3 damage.
+So, he's going to do 10 damage instead.
+But Dixx is invincible (as you'd expect), so Vencabot does 0 damage.
+
+Our first Rule sees that Vencabot is going to do 0 damage. It checks the ORIGINAL_EVENT to see if Vencabot was going to do 10 damage, but he was only going to do 3 damage, so Vencabot doesn't get pissed off.
+
+That's a bug.
+
+We need to be able to see the ENTIRE TIMELINE of an event's alterations in order to understand that Vencabot was going to do 10 damage but the damage was negated.
+
+And what's cool about this is that it works with any number of rules. We could have a situation like this; here's our ruleset:
+
+If Vencabot is going to do 3 damage, he does 10 instead.
+If Vencabot is going to do 10 damage, he does 5 instead.
+If Vencabot is going to do 5 damage, he does 2 instead.
+If Vencabot is going to do 2 damage, he does 0 instead.
+
+So the final result is that Vencabot does 0 damage, and he was originally gonna do 3 damage.
+
+But we can LOOK THROUGH THE TIMELINE of alterations to this event to see that, AT SOME POINT, he WAS going to do 10 damage. And in the end, he did 0 damage. So we can surmise that, "Vencabot was going to do 10 damage, but that damage was negated."
+
+We do benefit from having the entire timeline at our disposal when it comes to investigating an event to see if a Rule should trigger.
+
+Soooo... Now that I've realized that it makes more sense to have a 'timeline' object, as a List, than to have this tree of "replaced_by" and "replaces" attributes, we should make DynamicEvent into a DynamicObject so that, whenever an event is UPDATED, we can trigger rules to examine that update. Okay.
+
+We'll do that next time. Now, it's time for 3rd Strike.
+
+Tomorrow is going to be quite a big overhaul. Maybe even worthy of moving to mock-up version 5? Before we move to version 5, it might be worth re-examining the hierarchy of our battle objects.
+
+Right now, we have a hierarchy like so:
+
+         Battle
+            |
+         Leaders
+            |
+       BattleUnits
+            |
+        Abilities
+
+I went through a lot of work in mockup version 4 to eliminate what I call "redundant references," which is to say that the hierarchy should only go one direction. For instance, the Abilities do NOT know who their owner is. The BattleUnits do NOT know who their leader is. The leaders do NOT know what battle they're a part of.
+
+The problem with this is that abilities are really dumb. They're never instantiated, even, so we need to feed them all of the information that they require to do their job, including the perpetrator (their owner) and the battle that they're being used in. Also, it means that, INTERNALLY, there's no logic that limits a unit to using only the abilities that it 'knows'.
+
+That's not a major problem, but it's sort of an aesthetic problem with the architecture.
+
+Originally, we were fucking around with having abilities be INSTANTIATED, and then, of course, they could have an attribute which would point toward their owner -- among any other number of attributes.
+
+There really are a lot of advantages to having abilities be instantiated. For instance, they could gain EXP and level up over time. They could have special qualities, such as, "If 'Slash' is used 3 times, it'll be gauranteed a crit." Right now, doing something like that would rely on having a Rule in play -- and that's consistent, at least, but maybe a little bit overkill for something that simple.
+
+On the other hand, if we're not keeping a reference to the ability's owner, it seems like an architectural misstep to necessarily make abilities instantiated.
+
+So, what if... it made more sense to turn the hierarchy UPSIDE DOWN.
+
+     Abilities
+         |
+     BattleUnit
+         |
+    BattleLeader
+         |
+       Battle
+
+Whenever we take measures to avoid 'redundant references,' we're going to have to do some SEARCHING for the objects that we want to find. If we just let the objects reference EACH OTHER, up AND down, it really minimizes the searching that we have to do. I just hate redundant references because of the architectural ugliness that you get from every object being able to directly reference every other object. The 'state' becomes way too entangled. So that's not an option for us.
+
+Right now, with the hierarchy being 'rightside up,' the searching is pretty minimal.
+
+For instance, if an ability is going to target 'the entire enemy team,' we need to look at the perpetrator and then iterate through all of the battle's leaders to see which team they're on.
+
+Once we know what team they're on, we need to iterate through the leaders to find the one that ISN'T that team's leader.
+
+Then, we can afflict every unit on that leader's team.
+
+When I say 'searching,' I mean that we're literally iterating through some lists to find someone in particular that we're looking for -- instead of just KNOWing who they are (having a reference to them directly).
+
+I feel like, if the hierarchy were 'upside down,' we'd have much more searching to do, right? But let's consider WHO is doing the searching.
+
+The UI is doing the searching. It's when we want to TARGET somebody or something. Once we know who are target is, yeah, we have a direct reference to them. So, what sorts of things are we targeting, and how is our UI behaving. Let's examine these ideas real quick.
+
+The UI behaves like this: we have two units in the 'ring', and, when it's your team's turn, you can use an ability from that UNIT or from that LEADER.
+
+So, the UI has a reference to the 'battle' object, but the battle object doesn't know shit anymore if we're upside-down. So... that seems weird.
+
+I guess what I'm trying to do is limit the number of arguments that we need to pass whenever a unit is using an ability. Right now, because I don't want for the ability to know who's using it -- as an attribute, I mean -- we need to pass a TON of arguments to these abilities in order for them to do very basic tasks.
+
+If I want Vencabot to heal Lucian, I need to pass not only Vencabot AND Lucian to the classmethod, but I also need to pass a reference to the BATTLE object. In the case of 'Vencabot's healing ability,' both the PERPETRATOR (Vencabot) and the BATTLE are pretty much ALWAYS GOING TO BE THE SAME.
+
+So it seems like a waste to pass them as arguments every time -- but the alternative is to instantiate the 'ability' and give it attributes including its perpetrator (Vencabot) and the battle. But, to comply with my design philosophy, if the ABILITY has a reference to VENCABOT, then VENCABOT can NOT have a reference to the ability. That's... sort of my thing right now. I'm trying to eliminate every situation where two objects have references to each other.
+
+In the UI, when you're picking an ability to use and the currently selected unit is Vencabot, it makes sense to just say,
+
+print all of the abilities from Vencabot's list of abilities
+
+But, if Vencabot has a reference to all of his abilities, I'd prefer that his abilities not have a reference to him.
+
+And this design philosophy results in this problem where I need to search through pools of objects to find what I'm looking for, because I can't just rely on a reference in many cases.
+
+And for those who weren't here during previous streams, the reason that I've become hesitant to rely on 'redundant references' over the years is that they result in these situations and METHODS where you need to simultaneously and CONSISTENTLY update two attributes at the same time.
+
+For instance, if the unit Vencabot knows who its leader is, WodoWiesel, AND WodoWiesel knows who's on his PARTY, we have to do something like this in order to add Vencabot to Wodo's party:
+
+wodo.party.append(vencabot)
+vencabot.leader = wodo
+
+That seems really simple, but it gets out of hand REALLY quickly. Because the one time that you forget to do BOTH of those things, you end up with a horrifying bug. So what I've found is that it's better to only have the reference go ONE way. It seems to simply things but it means more PROCESSING when you're having to SEARCH the hierarchy for what you need rather than having a direct reference to it -- and it also means a lot more arguments.
+
+         Battle
+           |
+   |-------|----------|
+Leaders   Units   Abilities
+
+
+The problem I see with this (and I'm sure it's because I don't fully understand Luthian's recommendation) is that neither the Leader nor the Units know who belongs to who. No, no, no. The Battle could have a map.
+
+Ohhhhhhh, and then the Leaders wouldn't need to know their units and the units wouldn't need to know their leaders and the abilities wouldn't need to know their owners because the Battle knows all of that stuff, and the Battle is what you supply to the UI so that the player can actually make use of all of this stuff.
+
+So, rather than giving each object a reference to whatever other objects it needs in order to work, we just have a separate object ("battle") which knows all of the relationships.
+
+That makes so much sense. Not only does that simplify the relationships between the objects, but it simplifies the relationship between the UI and the gameplay. Because now you have this 'battle' object which sort of MANAGES the gameplay. It manages things. You could think of the individual objects below it (leader, unit, ability) as being like ARMS of the Battle which the Battle uses to do ITS job. And then, the UI interacts directly with the Battle.
+
+So, in this case, it's not conceptually the UNIT which uses an ability: the battle uses an ability with some given units (a perpetrator and a target, etc.)
+
+Before I call it quits, let me do some more thinking aloud to nail down where we're at, or where we wanna be:
+
+To really understand the most effective way to internally structure our gameplay, we probably need to look harder at the UI and think about what sorts of things the player is really going to be doing -- so let's do that again and think about how we can apply Luthian's solution to that problem.
+
+The battle's ring has two units in it who are fighting directly: one representative from each party, where each party has a leader.
+
+So, when Party A completes their turn, we move to Party B. Here's what the UI presents us with:
+
+A list of abilities that the Leader has access to
+and
+A list of abilities that the ring Unit has access to
+
+When any of those abilities are selected, a target must be selected. An ability entails some character doing something to some character.
+
+So, it's player B's turn. I want access to Leader B's abilities and the abilities of the unit representing party B in the ring.
+
+The Battle could have a map of leaders (which represent parties) to their unit list. But that's the wrong way of thinking, already,  because we don't need to know the whole unit list. I need to know who's currently in the ring.
+
+So, what I kind of need is a map of leaders (which represent parties) to their representative unit. Because, as player B, I can provide my leader. I have a reference to my leader, Leader B. I want to know who's representing my leader in the ring. Then, I can present a list of all of the leader's abilities and all of the unit's abilities.
+
+Well kind of. Because that's still thinking that the leader and the unit have a reference to their own abilities.
+
+So, here's what I'm thinking. The 'Battle' object has these attributes, all of which are maps:
+
+our_battle.ring_units = # a map of LEADER to their representative unit
+our_battle.teams = # a map of LEADER to a LIST of their units
+our_battle.leader_abilities = # a map of LEADER to a LIST of their ABILITIES.
+our_battle.unit_abilities = # a map of UNITS to a LIST of their abilities.
+
+That's kind of sick. I feel like this one object knows EVERYTHING we need to know to make a complete player turn without the individual objects needing to know too much. That's one way to look at managing state.
+
+Previously, I've tried to DIVIDE THE STATE into a bunch of portions that were AS SMALL AS POSSIBLE -- as a way to avoid having a bunch of objects which each had TOO MUCH ACCESS to the state.
+
+But Luthian's alternative solution is to have as small a state as possible in ONE MONOLITHIC OBJECT and keep the state THERE. And then the individual objects have virtually no access to the state.
+
+That probably makes more sense. If you're talking about simplifying the state, maybe the solution isn't to DIVIDE IT UP but rather to CONSOLIDATE IT. You have all of these objects which have their own little micro-states, but you have this one MANAGER which deals with the more involved aspects of the state. That way, you keep things simple. You don't have all of these complex interactions between objects.
+
+I might try something like that for the version 5 mock-up, starting tomorrow. Because I've never used a design quite like that before, I'd be surprised if it was entirely smooth sailing, but I think it's definitely worth looking at.
+
+So, tomorrow, mock-up version 5: we move as much of our state as possible to the 'battle' object. We update DynamicEvents to have a 'timeline' that, when updated, can trigger rules.
+
+
+
+
+
+05/16/19
+
+So, today we're beginning work on porting mock-up version 4 to mock-up version 5. In version 5, I want to focus on simplifying and empowering the relationships between objects by using a central registration or "management" object, whose entire job it will be to allow objects to reference each other.
+
+Also, in mock-up 5, we're going away from DynamicEvent.replaced_by and instead moving toward a timeline mechanism where events register themselves in a timeline.
+
+I don't know if I want to necessarily repurpose the existing 'battle' object as this registry or if I want to create a whole new object with a whole new name.
+
+I'm kind of leaning toward the latter, because we need to consider that I'm re-engineering the way that I'm LOOKING at this code.
+
+The idea of the 'battle' object was to organize objects into a hierarcy with the 'battle' at the top. Now that we're flattening things out, I don't necessarily feel like we need this idea of a 'Battle' at the top of things, where everything else occurs inside. Even if we DO need an object like that, I don't know if I'd want for THAT object to be the one that manages all of these relationships.
+
+So, maybe we need another object whose job it is EXPLICITLY to manage the relationships between objects. Something like "BattleRegistry" or something like that.
+
+Let's just do that, for now. We're going to make a new object.
+
+What sorts of attributes would a 'battle' or 'battlefield' need if we have all of our relationships being managed by a third-party 'BattleRegistry' object?
+
+We established that battlefields can have tags that may affect different Rules that are in play. I think that's really all they have, these days. The battlefield could have a 'ring' that's populated by one unit from each team, or alternatively the teams could just have a 'representative' as an attribute of that object.
+
+We do want a Battlefield object, for sure. So, it can have tags. Does it really need anything else? Well, it can have slots for Rules to apply. We've talked before about how we want for objects to start having slots for Rules to occupy.
+
+So, what have I really accomplished with this new object. Now, units don't know their own abilities, internally. Nor do abilities internally know what unit they belong to.
+
+Have I made a terrible mistake? Do we really need this central registry to search for objects? I've been trying to avoid this problem of 'redundant references', and, in a sense, this registry does solve this problem: no two objects now have a direct reference to each other.
+
+But we've sort of created another problem that I wouldn't have imagined, before: NO object has a direct reference to any other object. So we've solved the problem of having too many direct references by disallowing objects to have direct references to each other at all.
+
+That seems sort of contrary to the spirit of OOP.
+
+Like, does it make sense for a unit to not simply have a list called ".abilities" which contains all of their abilities?
+
+Why should I need to ask some database what abilities this unit has. I can just give it an attribute that contains all of its abilities.
+
+The reason why we strayed from that simple design is because it's so difficult to understand if the UNIT owns the ABILITIES or if the ABILITIES own the UNIT. Again, to solve that problem we prevented anybody from owning anybody.
+
+But the reason that I'm really starting to backpedal on this 'BattleRegistry' object because I'm starting to see all of the design trappings that I was trying to avoid in the first place: we need these 'register' methods whose job it is to literally create redundant references. The only difference is that, now, all of these redundant references are housed within the same object -- which, admittedly, does simplify things a bit.
+
+But the problem is that this simplicity seems like a small consolation for not just moving these same REDUNDANT REFERENCES out to their respective objects.
+
+Like, if we're going THIS FAR into redundancy to make objects able to quickly 'search' for each other, why not just give Unit an 'abilities' attribute and the ability an 'owner' attribute? It's pretty much the same thing. It's just that this redundancy, in that example, is split up among multiple objects where-as, with this 'battle registry,' all of this redundancy is at least encapsulated within a single object.
+
+I just feel like it's counter-intuitive. I feel like a Unit should have an attribute which is a list of the abilities it can use. Unit.abilities. Very simple, very obvious. Are we really accomplishing a noble ends by preventing all of these objects from seeing each other DIRECTLY.
+
+Maybe the thing to do would be strike a middle-ground. Maybe we should not create units or abilities DIRECTLY but rather through some kind of manufacturer object whose job it is to manage these redundant relationships upon instantiation.
+
+That doesn't seem like a real solution, because it creates chicken-or-egg problems. Do you 'manufacture' the ABILITY or the UNIT first? The idea would be to simultaneously connect them to one another, but that isn't reasonable.
+
+On the other hand, if we can AVOID having a developer directly instantiate a class -- and, instead, have them 'manufacture' an object through some method I do think that we get more control over these 'redundant relationships'.
+
+So, you could create a Unit and then the unit could 'learn' an ability. That was a solution that we had literally on day 1. In fact, let's go back to the day-1 code (if I still have it) and examine the trappings that we were trying to avoid in the first place.
+
+Looking at the day 1 code, it seems to me that maybe the BIGGEST PROBLEM with redundant references ISN'T that you have two objects which directly reference each other and you need a method to manage that. Maybe the biggest problem is that you don't know which object to put that method ON. Because there is no hierarchy.
+
+So maybe what we need, in the case of our chicken-or-egg example, is to have a delegating third party which can 'register' these objects to each other.
+
+We would make the unit, and it would have no abilities, yet.
+We would make the ability, and it would have no owner, yet.
+Then, we would call: BattleRegistrar.register_ability_to_unit(ability, unit)
+
+So, we don't have a third party object to MANAGE relationships. Instead, we have a third-party object to ESTABLISH relationships. That way, we don't need to answer the question of, "which object should have the method to manage their relationship". We just have one master object whose entire job it is to do that.
+
+I kind of like that, but it suffers from the same problem that we always have with redundant-relationships: we can not allow the developer in question to directly manipulate some attributes, which is against the spirit of OOP and Python in particular.
+
+For instance, if we make a unit and we make an ability and then run:
+
+my_registrar.register_ability_to_unit(ability, unit)
+
+We have to assume -- at the risk of INCREDIBLE BUGGINESS -- that no one will ever manually change ability.owner or unit.abilities . These attributes MUST be manipulated ONLY by the BattleRegistrar. They essentially become 'read only'.
+
+But, on the other hand, is that such an extreme expectation? There's gotta be countless cases, in the real world, where manually updating an attribute will cause your software to bug out. If you're fucking around with some attribute of an object, maybe you have to expect that it's going to bug something out.
+
+I'm going around in circles, man. I would love to simply REGISTER AN ABILITY TO THE GAME by saying unit.abilities.append(ability). That's my end-game. That's what I want.
+
+I just don't think that I can accomplish that because the ABILITY needs to know who its OWNER is. That's the problem that we've been having since day 1. If I were a stronger, more educated programmer, I'm sure that I could think of a design paradigm that would solve this most basic of problems.
+
+But there is no solution, right? Even I can see that. To make things as abstract as I can, we can very basically word the problem like this:
+
+The unit must know what abilities it has access to.
+The ability must know the unit that's using it.
+
+If I want to just do:
+unit.abilities.append(ability)
+
+I can not inform the ability, at that time, the unit that it belongs to.
+
+If I want to do something like, I'm going to need a method of some kind. 100%.
+
+I don't want to override 'append' so that it tampers with 'ability' in some way, to tell it its new owner -- nor do I want to tamper with 'remove' so that it tampers with 'ability' in some way, to tell it that it now has no owner.
+
+We NEED a method whose job it is to manage this relationship. This two-way relationship.
+
+Kenny brings up the idea that we could just use 'init' on the ability class, and then it would change its OWN 'owner' attribute and tamper with its owner's 'abilities' attribute:
+
+def __init__(self, owner):
+    self.owner = owner
+    owner.abilities.append(self)
+
+But that's exactly the situation I'm talking about, above: in the most abstract of senses, if we're going to have two-way relationships -- for any purpose -- we're going to need methods to establish and manage those relationships. We can't just go raw, vanilla Python OOP and say something as PROFOUNDLY CLEAR as "unit.abilities.append(ability)". As much as I would like to, that doesn't solve the problem of giving 'ability' a reference to 'unit'. It gives UNIT a reference to ABILITY, but it doesn't give ABILITY a reference to UNIT.
+
+And we've been spending weeks asking so many questions like, "well, does ABILITY really NEED a reference to 'unit'." That's why, in mock-up version 4, our abilities are just Classes that never get instantiated, and they always take their 'perpetrator' or 'owner' as an argument to all of their class methods. Because we couldn't give 'ability' an 'owner' attribute by using unit.abilities.append.
+
+So, our solution was to go in a more FUNCTIONAL direction, and just have abilities which have no attributes and when you want to use them you need to supply a fuck-ton of arguments.
+
+
+class Unit:
+    def __init__(self):
+        self.abilities = []
+
+class Slap:
+    def __init__(self, owner):
+        self.owner = owner
+
+my_unit = Unit()
+my_unit.abilities.append(Slap(my_unit))
+
+
+
+my_unit = Unit()
+my_ability = Slap(my_unit)
+my_unit.abilities.append(my_ability)
+
+It's still a two-step process, even if you use syntax to condense it onto one line. The thing we're trying to avoid is a situation where a developer establishes ONE HALF OF THE RELATIONSHIP without remembering to establish the SECOND HALF of the relationship.
+
+In the example above, when we instantiate 'Slap' as 'my_ability', my_ability now has an owner: my_unit.
+
+At that point, though, my_unit does NOT have slap as an ability. Slap has my_unit as an OWNER, but my_unit does not have Slap as an ability. That's the nature of SO MANY BUGS that I've experienced in my years of doing OOP. This two-sided relationship where it's understood that both sides have an equal reference to each other when there is no mechanism in play to be certain that this is actually the case.
+
+In the most abstract of senses, IF we're going to fuck around with equivalent two-directional relationships, we NEED some kind of intermediary method or function or even a class to establish these two-way relationships AND we need to trust that the developer in question will USE that intermediary and not just tamper with things directly.
+
+And my profound frustration with that is that it means, when you want to append an ability to my_unit's ability list, you CAN'T just do:
+
+my_unit.abilities.append(ability)
+
+It seems like you SHOULD be able to do that, but, if you did, you would be breaking the game. You absolutely HAVE TO UNDERSTAND that, to append an ability to that list you actually need to do something like,
+
+my_unit.learn_ability(ability)
+
+Or,
+
+my_ability.set_owner(my_unit)
+
+That's where my frustration comes from: immediately, we're looking at 'setter' methods, which I fucking hate. When you SET SOMETHING in PYTHON you should just be able to do it with an assignment operator. We got 'setter' methods, now? Because we need to have side-effects when we're setting things?
+
+So, I've been trying to make all of our relationships ONE-DIRECTIONAL in a strict hierarchy to prevent these sorts of problems, but this DEFIES the very design of our game. It looks nice INTERNALLY, but it's just as simple as the fact that the units NEED TO KNOW what abilities they have and there's no getting around the fact that the ABILITIES need to know who their owner is.
+
+It's not a real solution to just go functional for the abilities and have the unit supply itself as an argument EVERY TIME IT WANTS TO DO SOMETHING WITH AN ABILITY. Like, if you're supplying the same arguments EVERY SINGLE TIME, that's exactly why objects were created. At that point, the ability might as well have a direct reference to its owner -- any time you want to do something with it, you have to supply owner, anyway. We haven't really solved any problem. All we've really done is save ourselves from having to use these methods to establish these two-way relationships. We can't deny that there is a two-way relationship there. We're just disguising as an argument.
+
+So, before we end today's stream, let's enumerate our possible solutions -- like, for real. Let's just lay out the tools that I have access to, with my relatively limited programming experience, and decide which one is the most reasonable to go with:
+
+SOLUTION #1: Just use vanilla Python and expect the dev to manually maintain these two-way relationships.
+
+class Unit:
+    def __init__(self):
+        self.abilities = []
+
+class Ability:
+    def __init__(self):
+        self.owner = None
+
+my_unit = Unit()
+my_ability = Ability()
+my_unit.abilities.append(my_ability)
+my_ability.owner = my_unit
+
+
+SOLUTION #2: Establish methods to manage the relationships between objects.
+
+class Unit:
+    def __init__(self):
+        self.abilites = []
+
+    def learn_ability(self, ability_class):
+        self.abilities.append(ability_class(self))
+
+class Ability:
+    def __init__(self, owner):
+        self.owner = owner
+
+my_unit = Unit()
+my_unit.learn_ability(Ability)
+
+
+SOLUTION #3: We could make all relationships one-directional and rely on arguments to convey information to lower-level classes / objects on a need-to-know basis.
+
+class Unit:
+    def __init__(self):
+        self.abilities = []
+
+class Ability:
+    @classmethod
+    def be_used_by(cls, user):
+        print(user, " used the ability")
+
+my_unit = Unit()
+Ability.be_used_by(my_unit)
+
+
+SOLUTION #4: We could take away all inter-object references ENTIRELY and have all of their relationships be managed by a manager object which can be searched to find anything you need.
+
+class Unit:
+    def __init__(self, manager):
+        self.manager = manager
+
+class Ability:
+    def __init__(self, manager):
+        self.manager = manager
+
+    def report_owner(self):
+        print(self.manager.unit_by_ability[self])
+
+class RelationshipManager:
+    def __init__(self):
+        self.abilities_by_owner = {}
+        self.unit_by_ability = {}
+
+    def register_ability_to(self, ability, unit):
+        self.unit_by_ability[ability] = unit
+        self.abilities_by_owner[unit].append(ability)
+
+    def register_unit(self, unit):
+        self.abilities_by_owner[unit] = []
+
+manager = RelationshipManager()
+my_unit = Unit(manager)
+my_ability = Ability(manager)
+
+manager.register_unit(my_unit)
+manager.register_ability_to(my_ability, my_unit)
+my_ability.report_owner()
+
+
+SOLUTION #5: All objects have their respective direct references to each other, but there's a manager object whose methods ESTABLISH those relationships. So, sort of a fusion between Solution #2 and Solution #4. In solution 4, we have this idea of a 'manager' object. And in solution 2, objects have direct references to each other and they're managed by methods. So now, we just export these methods to an object whose job it is to have these methods. This saves us the problem of having to decide whether Unit should have 'learn_ability' or if Ability should have 'be_learned_by'.
+
+class Unit:
+    def __init__(self):
+        self.abilities = []
+
+class Ability:
+    def __init__(self):
+        self.owner = None
+
+class Manager:
+    def register_ability_to_unit(self, ability, unit):
+        ability.owner = unit
+        unit.abilities.append(ability)
+
+my_unit = Unit()
+my_ability = Ability()
+my_manager = Manager()
+
+manager.register_ability_to(my_ability, my_unit)
+
+
+
+In solution #5, the 'manager' doesn't contain a database the way that it does in solution #4. Instead, all of the relationships are more vanilla OOP: each object has a sensibly-named reference to the objects that it is closely related to and requires access to. However, the methods which establish these relationships do not belong to the objects, themselves: they belong to a third-party object / class / module whose entire job it is to establish these relationships. It's a 3rd party mediator so that we never have to ask the question of which object owns which object and should therefore have the method for managing the relationship.
+
+Five solutions:
+1.) Just manage two-way relationships manually.
+2.) Give one of the objects a method which establishes the two-way
+    relationship.
+3.) Make all relationships one-way and use arguments when needed.
+4.) Manage all relationships between objects through an intermediary
+    instead of having objects own a direct reference to each other.
+5.) Establish all two-way relationships through an intermediary, but allow
+    objects to own a direct reference to each other.
+
+Solution #1 isn't really a solution. I just included it for completeness. We don't want to manage all of these two-way relationships manually.
+
+Solution #2 creates some chicken-or-egg questions. For instance, either a Unit can get a list of its Abilities upon instantiation OR an Ability can know its owner upon instantiation, but not both. So we have to be careful about the order that we instantiate things in.
+
+Solution #3 isn't really a solution, either. We're gonna need two-way relationships, and to disguise them as arguments doesn't really solve any problem.
+
+Solution #4 is a sensible solution except that it defies some of the basic principles of OOP by preventing objects from having a direct reference to each other when it would make a lot of sense for them to have a direct reference to each other. For instance, the 'manager' object knows which abilities belong to which unit, but the unit doesn't know what abilities it owns. Therefore, we can't have a my_unit.abilities list, even though that seems very reasonable.
+
+Solution #5 may be the best of all worlds. It allows us to have a my_unit.abilities list, as you would expect -- and a my_ability.owner reference, as you would expect -- and it allows us to instantiate objects in any order. The real downsides are that it requires this bizarre, 3rd party 'manager' whose entire job it is to manage these relationships. It's basically no different from solution #2 except that having these establishing-methods outsourced to a 3rd party prevents us from having to worry about hierarchy or instantiation order. So, instead of saying, "my_unit.learn_ability(ability_class)", where my_unit MUST be instantiated first and we have to know, as a developer, that my_unit establishes the relationship and not my_ability -- instead of that, we get, "manager.register_ability_to_unit(my_ability, my_unit)," where the instantiation order doesn't matter and you don't need to know which of those two objects establishes their relationship, because NEITHER of them do.
+
+So, I actually -- the more I talk about it, the more solution #5 seems like the solution that we want. Because you could think of this 'manager' object as being a sort of HELPER.
+
+Because really, what we're talking about is solution #1: the developer is expected to entirely manage these two-way relationships on their own. BUT we have this HELPER class / object / module whose job it is to SIMPLY that task. That's what you want.
+
+Okay, so, next Wednesday we're going to truly begin our version 5 mock-up using this design paradigm: vanilla-ass two-way relationships, but with a special manager object whose job it is to simply the establishment of those relationships.
+
+We could call this object something to do with "introducing," right? It introduces objects to each other and establishes their relationships.
