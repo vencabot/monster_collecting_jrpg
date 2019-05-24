@@ -1727,3 +1727,258 @@ Because really, what we're talking about is solution #1: the developer is expect
 Okay, so, next Wednesday we're going to truly begin our version 5 mock-up using this design paradigm: vanilla-ass two-way relationships, but with a special manager object whose job it is to simply the establishment of those relationships.
 
 We could call this object something to do with "introducing," right? It introduces objects to each other and establishes their relationships.
+
+
+
+
+05/22/19
+
+It's been a few days since we put any work into this project, and I'm sort of in a position where I'm going to need to rediscover it.
+
+First, let's look at the significance of our existing classes -- outside of the progress that we've made so far -- and decide on what their purposes really are:
+
+Battle objects include:
+
+Battlefield
+Leader
+Unit
+UnitAbility
+
+The Units in our game represent the 'monsters' that the player is going to be collecting and adding to their team. These units have a variety of attributes that determine their effectiveness in battle as well as a library of abilities that they can use on their turn. They can also be subject to various rules -- either inherent to them ('Unit Dynamics') or which are inflicted upon them by their own team (buffs, probably) or by the enemy team (nerfs, probably).
+
+The UnitAbilities represent the moves that a unit can use on their turn. These can have a huge variety of affects and costs, and they can have three levels of effectiveness which are randomly rolled for when that ability is used. Although we haven't implemented in any of our mock-ups, these Abilities will be managed into libraries that we've been referring to as 'classes' or 'roles'.
+
+The Leader object represents the 'trainer' or the player character in this battle scenario. They have abilities that THEY can use (although we haven't implemented any in our mock-up, yet) including the ability to switch which unit on their team is currently in the ring. They also have attributes (especially 'AP', which determines how many actions can be taken on that party's turn) and also may be subject to certain rules. They have a list of units which represents their entire party. So, previously, we'd had 'leader' and 'party' objects, but I think it's pretty clear that we don't need both. Rather, the 'party' is just a list of units that's an attribute of the leader.
+
+Finally, we have the Battlefield object which represents the current state of the battle. The Battlefield has a 'ring' which can be occupied by one unit from each leader's team. It also has properties and rules which may have an impact on every character in the battle.
+
+So, with these abstractions, we still have some questions to answer when it comes to the turn-to-turn action of the battle. For instance, where do we save information such as whose turn it currently is? In an abstract sense, is it even important that objects at this level are aware of whose turn it is, or is that something that we should think more about as we develop the UI.
+
+The more I think about it, the more I'm convinced that the turn-to-turn action or movement is inseparable from the notion of a UI. Because it implies a 'prompt', right? I mean... We could do something INTERNALLY without prompts that generates error messages when certain units and leaders try to take action when it isn't their turn? But that seems overkill. So, again, I feel like the idea of turn-to-turn motion, from battle start to battle completion, is dependent on some kind of battle UI. Perhaps it's the future UI classes which propel battle.
+
+In terms of the underlying mechanisms, we have these 'Dynamic' classes whose purpose it is to handle the Dynamic Rule System, which is our game's central gimmick:
+
+DynamicObject
+DynamicRule
+Ruleset
+DynamicEvent
+
+DynamicObjects are just very basic extensions of Python's 'object', except that they have a method where you can reassign their attributes but while testing that update against a ruleset.
+
+So, rather than manipulating a unit's 'HP' directly, you can choose to update it using the method 'update_w_rules', which will check the current ruleset to see if anything is supposed to happen before or after this unit's HP is updated.
+
+One weakness of this mechanism is that it relies on attributes being updated in order for rules to be triggered. This has been effective for 100% of the rules that we've imagined so far, but it could be an issue when we would like for Rules to be triggered when some kind of action is taken by the player which, in an abstract sense, may not directly update any attribute of a DynamicObject.
+
+For instance, if we want for all of a party's units to take damage when the leader ends the party's turn, I can't currently imagine a way to handle that.
+
+
+05/23/19
+
+We got cut off, last time, by a Comcast outage. Picking up where we left off, we're examining the weakness of the DynamicRule System, as it stands now, insofar as the only way to trigger rules is to update the value of some attribute of some DynamicObject.
+
+For 99% of use-cases, this is perfectly fine. One situation that I can think of where this isn't going to work (perhaps) is when we want to trigger a rule like,
+
+"When Leader A ends their party's turn, every unit on their team takes damage."
+
+One way to hack around this would be to give Leader A (which is a DynamicObject) some attribute that counts the number of turns they've taken. Then, when that attribute increments, we could inflict damage to their entire team.
+
+But the real reason that I mention rules like this is that I can imagine there being situations in our game where a certain action might have to trigger a rule without necessarily updating an attribute of a DynamicObject.
+
+On the other hand, maybe that's not the case. Maybe we could just hack these sorts of situations using things like a "turn counter." In fact, a turn-counter might not be a bad utility to have in any case.
+
+So... Yeah, maybe this isn't a huge problem. Maybe it does stand to reason that rules could be triggered using DynamicEvents.
+
+But, before we go too far, today, let's reexamine the anatomy of a 'DynamicEvent' and decide how ugly it is or isn't to have all of these optional attributes. Let me show you what I mean:
+
+class DynamicEvent:
+    def __init__(
+            self, target, attr_name, new_value, old_value,
+            perpetrated_by, with_ability, at_effectiveness, triggering_rule,
+            original_event=None, replaces=None):
+        self.target = target
+        self.attr_name = attr_name
+        self.new_value = new_value
+        self.old_value = old_value
+        self.perpetrated_by = perpetrated_by
+        self.with_ability = with_ability
+        self.at_effectiveness = at_effectiveness
+        self.triggering_rule = triggering_rule
+        if original_event is not None:
+            self.original_event = original_event
+        else:
+            self.original_event = self
+        self.replaces = replaces
+        self.replaced_by = None
+
+Before we talk too much about these attributes, I want to point out that one of the core concepts of our version_5 mockup is that we're doing away with dynamic_event.replaces and dynamic_event.replaced_by and instead we're giving them a dynamic_event.timeline attribute, which is a list, organized from earliest-to-latest, containing versions of this same event.
+
+So, what we really have are: target, attr_name, new_value, old_value, perpetrated_by, with_ability, at_effectiveness, triggering_rule.
+
+With these 8 values, I've proposed that we can describe an event in the game in as much detail as we would ever need for Rules to do their job.
+
+First of all, IS IT IMPORTANT THAT WE HAVE AN OLD_VALUE. old_value has no purpose in rules that take place in the 'before' phase, because we can just CHECK the old value of an attribute by looking at target.attr_name .
+
+However, once we're talking about the AFTER phase, old_value does become significant because the target.attr_name has already been updated at that point. So the only way we can know the old value is to look at this attribute of the DynamicEvent.
+
+Is that enough to justify its inclusion? Because, for 'before' rules, it really is redundant. I would say yes. This attribute IS justified because 'after' rules DO need it. The only alternative would be to have a whole different kind of object for reporting to 'after' rules, and it would basically be the same exact DynamicEvent as for the 'before' rules except that it includes old_value. There's no reason that we should make two different kinds of reports in this situation.
+
+The most fundamental attributes of a DynamicEvent are new_value, old_value, target, and attr_name. With these four attributes, we can tell what attribute of WHO is being changed to WHAT. This allows us to trigger basic rules such as, "If Vencabot's HP goes down..." For a rule like that, we just need those first four attributes.
+
+The latter four attributes examine the PERPETRATOR of this change, so that we can create more advanced regarding who DOES WHAT to WHO: perpetrated_by, with_ability, at_effectiveness, triggering_rule .
+
+With these four attributes, we know the unit who USED the ability which instigated this change. We know what ability they USED. We know how EFFECTIVE it was (glancing, normal, or critical), and we know both WHETHER this update was implemented by a RULE and WHAT rule it was, if so.
+
+So, this final attribute -- "triggering_rule" -- is the most bizarre of these report attributes. It's ONLY POPULATED if the change being made to the target's attribute was done BY A RULE. Otherwise, it's 'none'. If the change WAS instigated by a rule, then this attribute points toward that rule instance.
+
+So, in example:
+
+"If Vencabot gains attack power, a random opponent takes damage."
+
+In that example, if Vencabot uses 'charge up' and gains attack power, it's going to cause a random opponent -- KReichJr -- to lose HP. When Kenny loses HP, we're gonna get an event like this:
+
+Kenny's HP went from 10 to 7. This is because Vencabot used Charge Up at Normal effectiveness, triggering our Example Rule.
+
+That's the entire report and is currently the most complex report that we're capable of generating, now. So, Kenny could hypothetically have some rule upon him which says,
+
+"If Kenny is going to take damage as a result of Example Rule, that damage is nullified."
+
+So, from that report, we can tell that, although the damage was, in a sense, triggered by Vencabot using Charge Up, it was actually directly inflicted by the rule Example Rule. So, in this 8-attribute report, we sort of get an entire picture of what instigated this change in Kenny's HP.
+
+We can have very particular rules, this way. For instance, Kenny might be immune to HP damage from 'glancing' effectiveness attacks. Maybe Kenny takes 50% more damage from critical hits. Maybe if Kenny takes damage from a Rule which was triggered by a critical ability, he gains defense or something.
+
+I think, all-in-all, this is a pretty tidy way to organize a report. If I had one hesitation about it, it would be that, in version_5, we're moving toward having Abilities be instances again, and they're going to know who their 'owner' is. As a result, perhaps we don't need both 'perpetrated_by' and 'with_ability'. If we know the ability which caused this update, we know who used it, right? I can hardly imagine a situation where an ability could be used by someone who isn't its owner.
+
+The only situation where this could arise would be if some class did have the ability to use another unit's abilities, be it something like "mirror-move" in Pokemon or some kind of Blue Magic from Final Fantasy -- maybe a unit can temporarily steal another unit's abilities.
+
+If that were the case, though, we could just temporarily instantiate a new ability for that unit, right? That's what we would do.
+
+If abilities know who their owner is -- and supposing that all updates are being done VIA ABILITY -- we don't necessarily need a 'perpetrated_by' attribute.
+
+But, that raises another question. So far, 'with_ability' has always pointed toward an instance of UnitAbility. But what about when a change occurs as the result of, say, a Leader ending their party's turn. What do we have, then, for "with_ability"? Because, outside of that sort of situation, we always have a UnitAbility to reference. Also, supposing that we include some sort of 'inventory' or 'usable items' that a Leader can use (at the cost of AP, probably) instead of having one of their units take an action -- what do we show for 'with_ability' then?
+
+Well, the first thing to point out is that Leaders have 'abilities' that will behave ALMOST IDENTICALLY to 'UnitAbilities'. They may (or may not even) require a 'LeaderAbility' class, but they're capable of doing pretty much the exact same sort of actions as UnitAbilities.
+
+LeaderAbilities can directly attack the opponent. They can buff an ally. They basically can do all of the things that UnitAbilities can do -- but more.
+
+For instance, we might need a LeaderAbility to use inventory items. We might need a LeaderAbility to end the turn prematurely. We might need a LeaderAbility to flee from battle. The LeaderAbilities are more META, right...? But, for instance, I don't see any reason, really, why a Unit wouldn't be able to do all of those same things.
+
+Why wouldn't we be able to have a Unit which has some ability like, "Uses an item from the Leader inventory with a 20% chance of keeping the item afterward." Why shouldn't we be able to have a Unit with an ability like, "Guaranteed critical damage but the party's turn will end."
+
+So, that begs the question: what really is the inherent difference between a Battle.Unit and a Battle.Leader?
+
+Well, Leaders have an AP attribute which determines how many actions their party can take in a single turn. In this respect, Leaders represent the limitations of the party as a WHOLE.
+
+Also, I don't see any reason why a Leader should ever need to have an HP value. Based on the design that we've been sticking to since Day 1, Leaders (like Pokemon trainers) don't take damage directly. Now, in a game like Yugi-Oh!, the 'units' or 'monsters' act as a shield for the 'trainer' or 'leader' and, once all of the units are out of the way, the leader can take HP damage directly -- and the fight is over once the leader has been knocked out.
+
+There's no reason that a leader COULDN'T have HP... It's just that, based on our design so far, we're going with a more traditional monster-collecting-JRPG style where, once all of the units are DOWN, the party is defeated. The 'leader' just stands there and cries about it.
+
+In terms of THEMING, we've sort of described that, when the party is defeated -- just like in Pokemon -- there's the implication that the Leader FLEES and returns to the last safe spot in the game to heal or otherwise reconfigure their party. On the other hand, it could be kind of cool to give the leader HP so that they have the chance, maybe, to use an item to revive a party member even after the entire party is defeated -- and the party is only truly out of the fight once the leader has lost all of its HP.
+
+Really, I'm not all about this 'leaders have HP' idea quite yet. For one thing, it means that, once the entire party is dead, a leader that has no way to revive their party would have to wait for the enemy team to kill them. Unless they just have some inherent 'forfeit' option.
+
+The only REAL appeal that I see for Leaders having HP is that we could make them more uniform with the 'units'. It's sort of seductive to have these two tiers of units: both have the same types of 'abilities'. And both are subject to 'Dynamic Rules'. You could almost even have the player choose an ARBITRARY UNIT to be the leader of their party, which is sort of a trippy idea. Because it never really struck me, until now, just how similar Units and Leaders otherwise are.
+
+As a NOTE, though. Leaders DO need to be balanced differently. They HAVE to be balanced differently:
+
+The core combat gameplay of this JRPG is such that, although each team has 4 Units and 1 Leader, only ONE UNIT can take actions at a time -- the unit in 'the ring', similar to Pokemon. The exception to this, and where I imagine a lot of the game's strategy will come in, is that the LEADER can take actions at any time. And the Leader doesn't take damage.
+
+So, you may have chosen to put a certain Unit in the ring, and now you have access to all of that Unit's abilities. At the same time, though, you ALWAYS have access to your Leader's abilities. So, using your Leader and Unit abilities in tandem is probably key to victory. And what's more is that the player is going to be able to choose from a variety of Leaders, which may have different abilities, which may better-suit different parties.
+
+So, I'm kind of in love with that idea -- and that really does mean that Leader Abilities and Unit Abilities are FUNDAMENTALLY DISTINCT, even if, internally, MECHANICALLY, they are not distinct.
+
+They're distinct in the way that we need to think about BALANCE, because a Leader Ability can be used AT ANY TIME, REGARDLESS of who's in the ring. So those Abilities really shouldn't be anywhere near as focused on directly dealing damage to the enemy party because we don't want for players to just have this Leader Unit, who's immune to damage, just carpet-bombing the enemy team. So, if a Leader has any ability to directly attack or directly buff or otherwise DIRECTLY TAKE PART IN the battle, those abilities need to be very limited.
+
+UNITS ARE MEANT TO DIRECTLY PARTICIPATE IN BATTLE.
+LEADERS ARE MEANT TO HAVE AUXILIARY ABILITIES WHICH GUIDE THE FLOW OF BATTLE?
+
+Like, what traits do Leaders really have?
+
+Again, they ABSTRACTLY REPRESENT the abilities that your team can use, on your turn, BEYOND what the ring-unit is capable of:
+
+Using items.
+Swapping ring-units.
+Fleeing from battle.
+
+All of these basic things that you would expect to be able to do regardless of what unit is in the ring.
+
+Furthermore, different leaders will bring their own RULES into battle, making each leader distinct. Some leaders might have a property where their entire team gets a 15% boost to HP. Some leaders might have a property where their party's 'fire' attacks do more damage or something. So, they have these 'perks' or 'rules' or 'dynamics'.
+
+So, recapping, Leaders, so far, are: generic turn-abilities, party-level dynamics, party-level limitations (AP).
+
+Another thing that I've always imagined that Leaders would have is unique abilities. For instance, we've talked before about how the PLAYER is going to be able to choose their leader. Maybe one of the leaders has an ability to heal a unit's HP.
+
+What this implies is that, REGARDLESS OF WHAT UNIT IS IN THE RING, this team ALWAYS HAS ACCESS TO A HEALING ABILITY. For that reason, the healing ability would need to be somewhat weak -- because we're talking about A HUGE ADVANTAGE, otherwise. We want for these leaders, whose abilities can be used REGARDLESS of what unit is in the ring, to have interesting abilities which can augment their party's strategies. But not necessarily DOMINATE their party's strategies.
+
+In our battle system -- some of the people watching understandably haven't been here since day 1. Let's quickly review the very basics of our battle system.
+
+Each team has 1 leader and 4 units. There are two competing teams.
+
+Each team has 1 'point' unit which is currently "in the ring." Only the unit which is "in the ring" can take actions on that party's turn, along with the leader.
+
+So, so far, exactly like Pokemon. In Pokemon, you have a trainer which can use items and flee from combat and switch Pokemon, and you have a Pokemon which is currently OUT OF ITS BALL and FIGHTING, and you have FIVE OTHER POKEMON which are on your TEAM but they can't be DAMAGED nor can they DO ANYTHING until they take their turn in the ring.
+
+Our game is exactly like Pokemon in all of those respects. Yes, you have a team of FOUR UNITS, but only ONE of those units can act and only that unit can take direct attack, for the most part.
+
+When describing the game's core mechanics, I've been pointing out the SIMILARITIES to Pokemon. The game's main deviation from Pokemon is that, unlike in Pokemon, your team can take MORE THAN ONE ACTION PER TURN.
+
+In Pokemon, when your monster uses an ability, your turn is over and the opponent gets a turn. Likewise, if the Leader (trainer) uses an item or swaps a Pokemon, that also ends the turn.
+
+In our game, when a monster ('unit') uses an ability, the turn isn't over. It just drains AP from the leader. Likewise, when the LEADER uses an ability, it also drains their AP. When the AP is completely drained, the turn is over.
+
+So, unlike in Pokemon, in a single turn, before our opponent can act, we can have our Unit attack, be swapped for another Unit, and have that unit attack.
+
+If our Leader has 10 AP at the start of a turn, our unit can use an attack that costs 3 AP. Now we have 7 AP left. We can swap for 3 AP. Now we have a new unit in the ring and 4 AP left. That new unit can attack, at some AP cost, and, by this point, our AP is probably too low to do anything else, and so our turn ends.
+
+Even with this, we only have one unit in the ring to directly take damage and use abilities. Like with Pokemon, we have a team of 'back-up units,' but they aren't strictly 'in the fight'. It's not like Final Fantasy or Dragon Warrior or whatever else where you have an entire party of ACTIVE units. Only one of our units is active, along with the leader, at a time.
+
+So, the REAL ADVANTAGE of giving our leader HP -- maybe the only advantage -- is that it would allow the leader to potentially stage a comeback after all of their units are defeated. Even if your final unit goes down, you would maybe have a turn to revive them, again.
+
+Another cool advantage of having a leader with HP is that it could give us another abstract win-condition. Let's say that some unit has an ability which has a 1/10 chance to do some damage directly to the enemy leader. Now, the fight could be won before the enemy's party is even defeated. Maybe you could somehow directly attack the leader -- although this would have to be very rare.
+
+It's kind of a cool idea to have this secondary win condition. BUT EVEN THEN. It would be a whole 'nother balancing act to decide HOW MUCH HP a leader should have compared to a unit. Because, although they would both share the name "HP," they're not inherently similar. Because one is just a counter toward that unit being removed from battle and the other is a counter toward that entire party losing the battle. What we'd really be talking about is a sort of 'super LP.' We talked, before, about how units are going to have a secondary HP value called 'LP,' which represents their ability to get back up after being defeated.
+
+When a unit's HP reaches 0, they can't act, anymore, and they lose one LP. When a unit has no more LP, they can no longer be revived. And we talked about how some rare moves or critical hits could directly damage LP even when that unit still has HP remaining. So, you could defeat a unit before even reducing its HP to 0.
+
+We could sort of GO DEEPER and have a 'super LP' attribute which, when diminished to 0, causes that team to lose the battle. You could look at the leader's HP in that light, and, just like some rare attacks could directly damage a unit's LP, some other attacks may directly damage the leader's 'HP', which could bring the whole team closer to losing the fight.
+
+In review of todays' notes:
+    *) DynamicEvents currently have 8 attributes to communicate their event
+       report: 4 representing the TARGET and 4 representing the
+       PERPETRATOR. I would say these attributes are all that we need AND
+       that we may be able to discard the perpetrated_by attribute if our
+       with_ability instance knows its owner.
+
+    *) We're examining the differences between Unit objects and Leader
+       objects. How similar are they? How dissimilar are they? Although
+       both have Abilities which, in the most abstract of senses, could do
+       exactly the same things, those abilities need to be BALANCED
+       drastically differently. Because a Leader can use their abilities at
+       any time, regardless of who's in the ring, we need to think about
+       their abilities much differently than we think about a Unit's
+       abilities.
+
+    *) Can or should Leaders have HP? If they did, it would move our
+       'victory' condition from 'defeat every opponent on the enemy's
+       party' to 'lower the enemy leader's HP to 0'. As with games like
+       Yugi-Oh!, perhaps units can directly attack the leader's HP once
+       they have no more units left. Maybe some rare abilities could even
+       directly wound the leader's HP while they still have units on the
+       field. What are the pros and cons of giving leaders an HP limit?
+
+       Two main 'cons' are that, once all of the Units in the party are
+       downed, now the Leader is awkwardly stuck waiting to lose the fight
+       in many cases. This is sort of a minor problem. That's true of other
+       RPGs and it hasn't been a major issue. The other issue comes with
+       balance: if we have Leaders who have HP, and when that HP reaches 0
+       the fight is over, there's this strategic depth that emerges which
+       demands that some rare abilities can directly damage the leader's
+       HP. Immediately, that begs the question: are these attacks too
+       powerful. Does it diminish the strategy of the game if certain Units
+       can just directly attack the leader (although it wouldn't be easy
+       and would probably require crit)? How do Leaders heal themselves in
+       battle? Is that a thing?
+
+       Pros are that it adds this extra layer to the strategy, and that's
+       immediately attractive. I like the idea of 'LP' on our units. If
+       Leaders had HP, it'd sort of be an extension of that: a secondary
+       route to victory. That's kind of cool.
