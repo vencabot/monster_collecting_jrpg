@@ -1982,3 +1982,115 @@ In review of todays' notes:
        immediately attractive. I like the idea of 'LP' on our units. If
        Leaders had HP, it'd sort of be an extension of that: a secondary
        route to victory. That's kind of cool.
+
+
+05/27/19
+
+It's a fresh week, and I'd say that it's a good time to take inventory of where we are in our project.
+
+We're migrating over to a 'version 5' mock-up, which is bringing us back toward 'redundant references' -- where it's more important for each object to have SENSIBLE ATTRIBUTES rather than worrying about trying to keep objects from having direct references to each other.
+
+Another big change in Version 5 is that we're moving away from DynamicEvent.replaces and DynamicEvent.replaced_by and instead our going with a list of events, which, in order, replace one-another, as DynamicEvent.timeline .
+
+Last time, we did a lot of worrying about the real difference between 'Leader' objects and 'Unit' objects. How similar are they, really?
+
+I think that we should go ahead and give Leaders HP. We could even give leaders MP. Maybe even Str and Def. In fact, is it possible for us to go back and look at what attributes Units have?
+
+On second thought, no, let's not do that. Let's just focus on getting the Dynamic Rule System up-and-running with these Version 5 sensibilities. After that, we can worry about giving the objects all of their game attributes.
+
+What arguments should be required to update_w_rules?
+
+I feel like, ANY TIME AN ATTRIBUTE IS UPDATED, we should have a perpetrated_by object. Probably a with_ability and at_effectiveness, too.
+
+But, what if a unit takes damage from poison when a turn ends.
+
+Well, then the perpetrated_by would be the Leader unit and the ability would be 'end_turn' or whatever.
+
+Should leader abilities be subject to effectiveness? Yes.
+
+Should 'end turn' be a traditional ability? Maybe.
+
+So, let's talk briefly about the way that battles run, internally. Last time, we talked about how, perhaps, battles can not -- or maybe 'should not' -- run without a UI. The UI propels the battle.
+
+I was thinking about this, last night, and I'm not sure that's how I want to handle this. Perhaps battles could be coordinated INTERNALLY in some way and the UI just plugs into it.
+
+So, if we were going to do this, how would we do it? How do we run a battle without a UI?
+
+Basically, I feel like we do need some kind of 'battle' object to keep track of whose turn it is, for one thing. We had this problem before: if we have a 'battle' object, it seems as though we would need to send commands THROUGH the battle object in order for everything to register correctly.
+
+For instance, if Vencabot, the unit, uses some ability and it brings his leader unit down to 0 AP. The battle's turn should go to the other team. Also, if Vencabot tries to act and it isn't his team's turn -- or he isn't the in the ring -- we would need some kind of failure. And that seems like a responsibility that should belong to some higher object.
+
+It almost seems like it makes more sense to PLUG these objects -- units, leaders, battlefields -- into a GAME which RUNS, including some UI. How do we, for instance, automate a battle without a UI? Maybe we can and maybe we should. Yes, we would need some sort of 'battle' object to observe everything that happens and manage some things, but maybe that's for the best.
+
+How much of these responsibilities can we attribute to the 'Battlefield' object? The Battlefield is subject to certain rules and attributes. When we talk about what units are in 'the ring', that could be an attribute of the battlefield or the leaders or both.
+
+But one thing that the 'battlefield' should NOT know which the 'battle' object SHOULD know is whose turn it is. I feel like we need some kind of master object which records whose turn it is.
+
+We've been stuck in a planning phase for a very long time. Some of our ideas are very abstract and difficult to implement. We're almost there to a point that we can get a playable version such that we can start seeing how the game behaves IN ACTION. We've been THEORIZING an awful lot, and I'm concerned that, once the game is playable, we're going to see that certain ideas that we've had are not going to be well-balanced or otherwise immediately FUN. We simply have to get battles working so that we can start to really see what our game needs to be more interesting and more fun. What sorts of ideas we may need to scale back. What ideas we could stand to explore more.
+
+What if we have this 'battle' object, and it somehow manages battle. One thing that we ABSOLUTELY NEED a 'battle' object for is knowing whose turn it is. So, our battle has an 'active_turn' attribute which points to a Leader object. But what else does out 'battle' really need? And what does it really do?
+
+Well, maybe it records win and loss conditions. Maybe, when some Leader reaches 0 HP, the Battle has some method which sends a victory or defeat message and divvies up EXP or whatever.
+
+We could say that this 'Battle' object is the manager of the FLOW of battle. It handles turn transitions. It handles the start and end of battle. INTERNALLY. As something separate from the UI.
+
+Perhaps, therefore, it should also handle Error messages. Nah, we should have error messages be per-object.
+
+So, a focus of mock-up Version 5 is going to be having battles play out, internally, without a UI -- but to completion.
+
+We were talking about what sorts of attributes would belong to the over-all 'battle'. We would need a ruleset, right? Or maybe not, because all of the DynamicObjects already know their own ruleset.
+
+So, until we start giving Units and the Battlefield their own slots for rules, we don't need for the 'Battle' to have some special 'rules' value.
+
+So, until we're ready to implement the 'Battlefield', we don't really need a Battlefield.
+
+Right now, the Battlefield is basically just a vessel for rules and attributes that we have no purpose for, yet.
+
+When we're talking about going back to 'redundant references,' we're talking in a major part about UnitAbility. Let's hash that out, first, and see what impact that has on our methods in our other objects.
+
+Now that they're instantiated, do UnitAbilities need to be DynamicObjects?
+ What sorts of rules would we want to trigger when an attribute of an ability is changed?
+
+Well... abilities... can... maybe... gain EXP? Abilities can keep track of their own internal counters to change their properties. Including a counter which will prevent an ability from being used in some conditions.
+
+Okay. UnitAbilities SHOULD BE DYNAMIC OBJECTS, just to be on  the safe side.
+
+Let's say that we have an ability called 'gun'. And the gun can 'jam'.
+
+Let's say that, when a unit uses 'Gun,' there's a 10% chance that it can jam -- and, when it's jammed, it can't be used anymore.
+
+Maybe there's a rule on the battle (or on the unit) called 'unjamming' or something.
+
+Basically, the rule can say, "If the Gun ability's 'is_jammed' flag changes to True, change it back to False."
+
+So, we might need to know when an ability's attribute changes -- which means that it needs to be a DynamicObject.
+
+Maybe it's sloppy that every DynamicObject has to have a reference to the 'ruleset'. Maybe instead of having OBJECTS BE DYNAMIC, we should have the Battle update these attributes and have the Battle be known by every object.
+
+Because, in a battle, EVERY DYNAMICOBJECT SHOULD SHARE THE SAME RULESET. Right now, we're relying on the programmer to be certain that EVERY DYNAMIC OBJECT SHARES THE SAME RULESET. Maybe it would make sense for there to only be ONE reference to the ruleset and we update attributes THROUGH IT.
+
+Right now, we update_w_rules like this:
+
+target.update_w_rules(attr_name, etc.)
+
+Maybe we need to do something like:
+
+ruleset.update_w_rules(target, attr_name, etc.)
+
+or
+
+battle.update_w_rules(target, attr_name, etc.)
+
+Of course, this relies on every dynamic object having a reference to the same BATTLE which is the same problem we have right now where every object has to have a reference to the same ruleset.
+
+But it probably makes more sense to have every object have a reference to the battle that it's a part of, because then we can give those objects access to more interesting values than just what rules are in play -- including whose turn it is, etc.
+
+I mean, we're talking about a LIBRARY CALLED 'BATTLE', where every object in it is meant to operate within a battle.
+
+Maybe we should leave this for version 6, because, right now, we don't really fully understand what responsibilities this 'battle' object is really going to have. Yeah, let's just move forward with the traditional 'DynamicObjects'. We'll come back to this later; I think we're really onto something. I think that it makes more sense, in the long term, for every object to NOT have a direct reference to a ruleset. And, in doing that, we can get rid of the entire complexity -- the entire abstraction -- of this 'DynamicObject'. That makes sense to me.
+
+We've fleshed out the Version 5 'battle' library, which means that, in our next session (Wednesday), we should have a fully-working battle, again. We're going to need to re-implement some test rules and test abilities, and we're going to need to implement the RelationshipHelper.
+
+At that point, we should be able to start worrying about making a fully-working battle which even starts to throw errors if you try to do things that are impossible (such as using an ability when the unit can't pay the cost).
+
+(Which strikes me: up until now, abilities GET USED and then their COST IS SUBTRACTED. The problem with that is that it allows abilities to be used even if the unit can't past the cost. Maybe abilities need some pre-emptive way to communicate how much they're going to cost? Some kind of can_be_used_when . I like that.)
