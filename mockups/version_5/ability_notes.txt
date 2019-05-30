@@ -2094,3 +2094,30 @@ We've fleshed out the Version 5 'battle' library, which means that, in our next 
 At that point, we should be able to start worrying about making a fully-working battle which even starts to throw errors if you try to do things that are impossible (such as using an ability when the unit can't pay the cost).
 
 (Which strikes me: up until now, abilities GET USED and then their COST IS SUBTRACTED. The problem with that is that it allows abilities to be used even if the unit can't past the cost. Maybe abilities need some pre-emptive way to communicate how much they're going to cost? Some kind of can_be_used_when . I like that.)
+
+
+05/29/19:
+
+Would it make sense for the DynamicEvent to have a reference to the battle's ruleset so that we could implement methods like:
+
+DynamicEvent.check_rules(), which runs the event through all of the current rules. That seems pretty tidy and it raises the question of whether or not we would even need DynamicObjects. If Events had a reference to the Ruleset, what else would even need a reference to the ruleset?
+
+Some abilities would need reference to the ruleset to be able to add a new rule.
+
+But, for instance, Leaders and Units and Battlefields definitely wouldn't need references to the Ruleset, anymore. We basically wouldn't need DynamicObjects.
+
+In fact... Even if an ability was going to add a rule to the ruleset, maybe it would just target the 'battle' or something.
+
+Okay... But here's the thing. Any time that a DynamicEvent is generated, the generating object needs a reference to the ruleset.
+
+But what if only BATTLES COULD GENERATE DYNAMICEVENTS. Battles have a reference to the ruleset. And all of the objects in the battle have a reference to the battle they're a part of. I kind of like this LAYER OF ABSTRACTION, because it means that, again, every object in the game doesn't need a direct reference to the ruleset -- and, furthermore, it means that, when an object wants something to HAPPEN in the battle... it asks the battle to make it happen.
+
+self.battle.create_event(target, new_value, self, effectiveness)
+
+We'll save this for version 6, too. So, the main idea for Version 6 is to examine this "battle" object and have it replace the old idea of DynamicObjects and giving everything a ruleset.
+
+
+Today, we got a lot accomplished in our Version 5 port. We've got the basic battle working again, but there are two major jobs left to be done:
+
+1.) We need to port over ALL of the old Abilities and Rules.
+2.) We need to implement the RelationshipHelper class to make it easier to create leader-unit pairs, etc.

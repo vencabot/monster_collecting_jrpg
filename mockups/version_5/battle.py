@@ -1,23 +1,22 @@
+import random
+
 class DynamicEvent:
     def __init__(
-            self, target, attr_name, new_value, old_value,
-            perpetrated_by, with_ability, at_effectiveness,
-            triggering_rule, timeline=None):
+            self, target, attr_name, new_value, old_value, by_ability,
+            at_effectiveness, triggering_rule, timeline=None):
         self.target = target
         self.attr_name = attr_name
         self.new_value = new_value
         self.old_value = old_value
-        self.perpetrated_by = perpetrated_by
-        self.with_ability = with_ability
+        self.by_ability = by_ability
         self.at_effectiveness = at_effectiveness
         self.triggering_rule = triggering_rule
-        self.timeline = [] if timeline is None else timeline
+        self.timeline = [self] if timeline is None else timeline
 
     def replace_value(self, new_value, triggering_rule):
         new_event = DynamicEvent(
                 self.target, self.attr_name, new_value, self.old_value,
-                self.perpetrated_by, self.with_ability,
-                self.at_effectiveness, triggering_rule)
+                self.by_ability, self.at_effectiveness, triggering_rule)
         self.timeline.append(new_event)
 
 
@@ -26,24 +25,44 @@ class DynamicObject:
         self.ruleset = ruleset
         
     def update_w_rules(
-            self, attr_name, new_value, perpetrated_by, with_ability,
-            at_effectiveness, triggering_rule=None):
+            self, attr_name, new_value, by_ability, at_effectiveness,
+            triggering_rule=None):
         old_value = self.__dict__[attr_name]
+
+        if isinstance(self, Unit):
+            owner_name = self.unit_name
+        elif isinstance(self, Leader):
+            owner_name = self.leader_name
+        elif isinstance(self, DynamicRule):
+            owner_name = self.rule_name
+        print(
+                f"DIAGNOSTIC: Before the event, {owner_name}'s {attr_name} "
+                f"is {old_value}.")
         dynamic_event = DynamicEvent(
-                self, attr_name, new_value, old_value, perpetrated_by,
-                with_ability, at_effectiveness, triggering_rule)
-        for dynamic_rule in ruleset.before_rules:
+                self, attr_name, new_value, old_value, by_ability,
+                at_effectiveness, triggering_rule)
+        self.run_through_before_rules(dynamic_event)
+        self.__dict__[attr_name] = dynamic_event.timeline[-1].new_value
+        self.run_through_after_rules(dynamic_event.timeline[-1])
+        print(
+                f"DIAGNOSTIC: After the event, {owner_name}'s {attr_name} "
+                f"is {self.__dict__[attr_name]}.")
+        print()
+
+    def run_through_before_rules(self, dynamic_event):
+        for dynamic_rule in self.ruleset.before_rules:
             dynamic_rule.react_to(dynamic_event)
             dynamic_event = dynamic_event.timeline[-1]
-        self.__dict__[attr_name] = dynamic_event.new_value
-        for dynamic_rule in ruleset.after_rules:
+
+    def run_through_after_rules(self, dynamic_event):
+        for dynamic_rule in self.ruleset.after_rules:
             dynamic_rule.react_to(dynamic_event)
 
 
 class DynamicRule(DynamicObject):
     def __init__(
             self, ruleset, rule_name, check_phase, tags, severity,
-            initiated_by, with_ability):
+            from_ability, from_effectiveness, from_targets):
         super().__init__(ruleset)
         self.rule_name = rule_name
         self.recurrence_counter = 0
@@ -51,8 +70,9 @@ class DynamicRule(DynamicObject):
         self.check_phase = check_phase
         self.tags = tags
         self.severity = severity
-        self.initiated_by = initiated_by
-        self.with_ability = with_ability
+        self.from_ability = from_ability
+        self.from_effectiveness = from_effectiveness
+        self.from_targets = from_targets
         self.triggered_counter = 0
 
     def react_to(self, dynamic_event):
@@ -63,8 +83,7 @@ class DynamicRule(DynamicObject):
             self.trigger(dynamic_event)
             self.update_w_rules(
                     "triggered_counter", self.triggered_counter + 1,
-                    dynamic_event.perpetrated_by,
-                    dynamic_event.with_ability,
+                    dynamic_event.by_ability,
                     dynamic_event.at_effectiveness,
                     dynamic_event.triggering_rule)
         else:
@@ -97,7 +116,7 @@ class RuleSet(DynamicObject):
         print("DIAGNOSTIC: dynamic recurrence counters have been reset")
 
 
-class Leader:
+class Leader(DynamicObject):
     def __init__(self, ruleset, leader_name):
         super().__init__(ruleset)
         self.leader_name = leader_name
@@ -107,7 +126,7 @@ class Leader:
         self.ap = self.max_ap
 
 
-class Unit:
+class Unit(DynamicObject):
     def __init__(self, ruleset, unit_name, leader):
         super().__init__(ruleset)
         self.unit_name = unit_name
@@ -119,11 +138,12 @@ class Unit:
 
 
 class UnitAbility(DynamicObject):
-    def __init__(self, ability_name, owner):
+    def __init__(self, ruleset, ability_name, owner):
+        super().__init__(ruleset)
         self.ability_name = ability_name
         self.owner = owner
 
-    def use(self, targets):
+    def use_on(self, targets):
         if not self.can_be_used_on(targets):
             return
         glancing_chance = 15
