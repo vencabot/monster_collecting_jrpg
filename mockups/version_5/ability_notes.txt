@@ -2121,3 +2121,57 @@ Today, we got a lot accomplished in our Version 5 port. We've got the basic batt
 
 1.) We need to port over ALL of the old Abilities and Rules.
 2.) We need to implement the RelationshipHelper class to make it easier to create leader-unit pairs, etc.
+
+
+05/30/19
+
+I want to talk about moving away from 'DynamicObjects' and passing a 'battle' argument to the usage of a UnitAbility (or LeaderAbility, later).
+
+Right now, all of our classes are DynamicObjects and they have an 'update_w_rules' method for altering their attributes against a ruleset. Therefore, all objects need to have a reference to the ruleset, which I think is a bit sloppy.
+
+So, consider this:
+
+Neither 'Units' nor 'Leaders' have any methods. Everything that they significantly 'do' in battle is relegated to their respective Ability classes. Therefore, you could think of Units and Leaders as being simple structures for organizing their attributes in an object-oriented way.
+
+If we could move them away from being DynamicObjects, we could create an internal architecture that behaves like this:
+
+Units and Leaders as organized data.
+
+Abilities as motivators for action in our battle.
+
+We have 'Battle' objects as the managers of battle, including managing the ruleset AND UPDATING UNITS, LEADERS, RULES, ABILITIES, ETC.
+
+So, instead of, within an Ability, calling:
+
+some_unit.update_w_rules("hp", new_value, etc.)
+
+We would, in the ability, call this:
+
+some_battle.update_w_rules(some_unit, "hp", new_value, etc.)
+
+That would generate an event which would run through the usual 'rule' gauntlet.
+
+Therefore, only one object would need a permanent reference to the ruleset -- the Battle -- and Ability.use_on would require an argument pointing toward the current battle.
+
+That would minimize our references to the ruleset, and we wouldn't even need any permanent references to the battle. We could just supply the battle as an argument to use_on.
+
+But what if we could simplify things even further by looking at the 'battle' simply as an event generator. What if the event had the methods for running itself through a ruleset, and we ran something like:
+
+some_battle.create_event(some_unit, "hp", new_value, etc.)
+
+That doesn't really many more sense than our other way of doing it.
+
+So, we're pretty early in Version 5. Let's take tonight to translate over to this paradigm.
+
+
+NOTE: In today's stream, we entirely moved away from the old DynamicObjects paradigm and, instead, created this 'Battle' object whose entire job it is to manage the 'dynamic' aspects of battle.
+
+So, when you call an Ability, you give that method a Battle as an argument.
+
+The Ability then uses that Battle's methods for 'updating' unit and leader attributes. The Battle, itself, generates and handles the DynamicEvents. Therefore, no individual object needs a permanent reference to the Battle or any Ruleset; instead, we just supply the Battle as an argument to any Ability that needs to 'do' anything.
+
+This results immediately in some much cleaner code.
+
+Next time, on Monday, I want to finish porting over the old test_abilities and test_rules to Version 5, and I want to implement the RelationshipHelper to shrink the overall size of our test_battle.py .
+
+Also, we should change the name of battle.py to something less generic. We use 'battle' for a LOT of names, already, in all of our libraries.
