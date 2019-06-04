@@ -7,23 +7,24 @@ import test_rules
 test_battle = battle.Battle()
 
 a_leader = battle.Leader("Tosmith84")
-a_unit1 = battle.Unit("signopt200", a_leader)
-a_unit2 = battle.Unit("rageagstthearcademachine", a_leader)
-a_unit3 = battle.Unit("KReichJr", a_leader)
-a_leader.party = [a_unit1, a_unit2, a_unit3]
-a_leader.point_unit = a_unit1
+battle.RelationshipHelper.create_unit_for(a_leader, "signopt200")
+battle.RelationshipHelper.create_unit_for(
+        a_leader, "rageagstthearcademachine")
+battle.RelationshipHelper.create_unit_for(a_leader, "KReichJr")
+a_leader.point_unit = a_leader.party[0]
 
 b_leader = battle.Leader("dixxucker")
-b_unit1 = battle.Unit("goodvibecity", b_leader)
-b_unit2 = battle.Unit("Zanzhu", b_leader)
-b_unit3 = battle.Unit("NydusTemplar", b_leader)
-b_leader.party = [b_unit1, b_unit2, b_unit3]
-b_leader.point_unit = b_unit1
+battle.RelationshipHelper.create_unit_for(b_leader, "goodvibecity")
+battle.RelationshipHelper.create_unit_for(b_leader, "Zanzhu")
+battle.RelationshipHelper.create_unit_for(b_leader, "NydusTemplar")
+b_leader.point_unit = b_leader.party[0]
 
 for unit in a_leader.party + b_leader.party:
-    unit.abilities.append(test_abilities.Slap(unit))
+    battle.RelationshipHelper.create_ability_for(unit, test_abilities.Slap)
 
-rage = test_rules.Rage(8, a_unit1)
+rage = test_rules.Rage(8, a_leader.party[0])
 test_battle.ruleset.after_rules.append(rage)
 
-code.interact(local=locals())
+b_leader.point_unit.abilities[0].use_on([a_leader.point_unit], test_battle)
+
+#code.interact(local=locals())

@@ -2,7 +2,7 @@ import battle
 
 class Slap(battle.UnitAbility):
     def __init__(self, owner):
-        super().__init__("Slap", owner)
+        super().__init__(owner, "Slap")
 
     def can_be_used_on(self, target):
         if self.owner.mp >= 2:

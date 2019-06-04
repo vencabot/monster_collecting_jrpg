@@ -2175,3 +2175,62 @@ This results immediately in some much cleaner code.
 Next time, on Monday, I want to finish porting over the old test_abilities and test_rules to Version 5, and I want to implement the RelationshipHelper to shrink the overall size of our test_battle.py .
 
 Also, we should change the name of battle.py to something less generic. We use 'battle' for a LOT of names, already, in all of our libraries.
+
+
+06/03/19
+
+New day, new stream. Right away, I want to focus on the RelationshipHelper whose job it is to marry objects together. Previously, to avoid having methods whose job it is to marry objects together, we attempted an architecture where every relationship was only one-sided: no two objects had a direct reference to each other.
+
+Since then, I've decided that doesn't really suit the shape of our design, and so we're back to having objects that can directly reference each other -- which means that they need functions to effectively marry them together.
+
+On the other hand, what I've decided to is to put those 'marrying' functions into a separate object. That way, we can keep things tidy and make it more clear, from a design-standpoint, that these functions aren't strictly necessary: they're just convenience functions.
+
+Let's look at which objects need to be married together:
+
+1.) When you make units, they take a leader as an argument. Then, you have to give the leader their party.
+
+2.) When you make abilities, they take an owner as an argument. Then, you need to append the ability to the owner.
+
+I think that's all that we have right now. So, what do our convenience functions look like:
+
+A way to 'create' units directly onto a leader.
+
+A way to create abilities directly onto a unit.
+
+helper.create_unit_for(leader, unit_name)
+helper.create_ability_for(unit, ability_class)
+
+SIDENOTE: Although a lot of the responsibilities from the Ruleset have been moved to the new Battle object, we're leaving the Ruleset as the container for rules so that we can have an object to battle.update_w_rules against when we want to add or subtract rules. That way, we can have rules trigger whenever new rules are added.
+
+So, ending today's stream, the RelationshipHelper seems to work, although it isn't saving us any lines. If it's saving us anything, in the long-term, it's in the way that it clarifies exactly what we're doing.
+
+We're changing this rather impenetrable one-liner:
+
+leader.party.append(Unit(leader, "Signopt"))
+
+To:
+
+battle.RelationshipHelper.create_unit_for(leader, "Signopt")
+
+It's actually longer, but it makes it more clear what's going on: we're creating a unit into this party. It manages the arguments that the unit needs on instantiation.
+
+This makes no sense. This method is pointless.
+
+Will this RelationshipHelper become more useful as the relationships between objects become more complex? The whole point of this RelationshipHelper is to marry two objects together that need a reference to one-another that must be consistent.
+
+For instance, we could very easily break our code in a way that's VERY DIFFICULT TO DEBUG if we did something like this:
+
+a_leader.party.append(Unit(b_leader, "Signopt"))
+
+I mis-typed ONE CHARACTER THERE. Now, a_leader has signopt on their party but Signopt thinks that its leader is b_leader. So, we have a broken relationship.
+
+That's what the relationship-helper is supposed to manage:
+
+battle.RelationshipHelper.create_unit_for(a_leader, "Signopt")
+
+In that example, we don't risk that same bug.
+
+I think, in the long-term, especially as the two-sided relationships between objects becomes more complex, the purpose of this relationship-helper is going to be realized.
+
+For now, it's not really saving us any work or headache, but it's already
+making things a bit more consistent.

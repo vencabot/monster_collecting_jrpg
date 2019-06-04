@@ -119,7 +119,7 @@ class Unit:
 
 
 class UnitAbility:
-    def __init__(self, ability_name, owner):
+    def __init__(self, owner, ability_name="Ability"):
         self.ability_name = ability_name
         self.owner = owner
         self.effectiveness_methods = [
@@ -155,4 +155,10 @@ class UnitAbility:
 
 
 class RelationshipHelper:
-    pass
+    @classmethod
+    def create_unit_for(cls, leader, unit_name):
+        leader.party.append(Unit(unit_name, leader))
+
+    @classmethod
+    def create_ability_for(cls, unit, ability_class):
+        unit.abilities.append(ability_class(unit))
