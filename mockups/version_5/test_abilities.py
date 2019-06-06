@@ -1,6 +1,6 @@
-import battle
+import battlelib
 
-class Slap(battle.UnitAbility):
+class Slap(battlelib.UnitAbility):
     def __init__(self, owner):
         super().__init__(owner, "Slap")
 

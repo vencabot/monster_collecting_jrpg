@@ -2234,3 +2234,35 @@ I think, in the long-term, especially as the two-sided relationships between obj
 
 For now, it's not really saving us any work or headache, but it's already
 making things a bit more consistent.
+
+
+
+
+06/05/19
+
+I'm porting over the old 'seal rule' code. Seal Rule is supposed to UNDO the effect of a particular rule after it triggers. How is this going to behave, in practice?
+
+Let's say that 'Hench' is sealed.
+
+When Vencabot is attacked by Sirius, an HP change event is generated.
+
+When Hench sees that Sirius is going to do damage to Vencabot, it doubles that damage.
+
+Seal Rule gets a copy of ALL events that are being passed through the battle. It checks those events to see if they've been either CREATED BY or TAMPERED WITH by the sealed rule.
+
+Then, it walks back through the event timeline to find a point before that event was tampered with by that particular rule.
+
+My question is this: what if we have a situation where an event is tampered with TWICE before it reaches the check for Seal Rule.
+
+So, if Sirius is under the effect of Hench and And One, he will do double damage and then ahve one damage added to his attack.
+
+So, we have a bug. Because, if this updated event, after going through AndOne, reaches Seal Rule, Seal Rule will not recognize that the event was updated by Hench. It only looks at the most recent update, so it's going to see 'And One'. Not 'Hench'.
+
+EVEN IF we walked back through the timeline to see if 'Hench' was ever triggered, how do we UNDO AN EVENT IN THE MIDDLE of this timeline? We can't. We would need to somehow REDO everything AFTER that mid-timeline event.
+
+So this project is too ambitious for me to approach when we're already late for 3rd Strike.
+
+
+NOTES FOR THURSDAY: We ported over (almost) all of the old rules, and we're going to test them tomorrow. We've tested Rage, Hench, and Invincible. After we're done testing Rules (which I don't think will take terribly long), we're going to port over the old Abilities (there weren't that many) and test those.
+
+After that, we can finally start giving more attributes to units and leaders to better reflect how our game is actually going to play. We've been doing a lot of very BASIC tests to make sure that the Dynamic Rule System is behaving. Now that we're almost done with that, we can actually start to flesh out a real, working battle for our game. We'll hopefully be well into that by next week.
