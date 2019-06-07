@@ -55,9 +55,13 @@ class Invincible(battlelib.DynamicRule):
         return False
 
     def trigger(self, dynamic_event, battle):
+        if dynamic_event.by_ability is not None:
+            attacker_name = dynamic_event.by_ability.owner.unit_name
+        else:
+            attacker_name = dynamic_event.triggering_rule.rule_name
         print(
                 f"{self.target_unit.unit_name} is impervious to "
-                f"{dynamic_event.by_ability.owner.unit_name}'s attack!")
+                f"{attacker_name}'s attack!")
         dynamic_event.replace_value(self.target_unit.hp, self)
 
 
@@ -72,7 +76,8 @@ class Hench(battlelib.DynamicRule):
 
     def will_trigger_on(self, dynamic_event, battle):
         if (
-                dynamic_event.by_ability.owner is self.target_unit
+                dynamic_event.by_ability is not None
+                and dynamic_event.by_ability.owner is self.target_unit
                 and dynamic_event.timeline[0].triggering_rule is None
                 and dynamic_event.attr_name == "hp"
                 and dynamic_event.new_value < dynamic_event.old_value):
@@ -90,7 +95,8 @@ class Hench(battlelib.DynamicRule):
     def fail(self, dynamic_event):
         original_event = dynamic_event.timeline[0]
         if (
-                dynamic_event.by_ability.owner is self.target_unit
+                dynamic_event.by_ability is not None
+                and dynamic_event.by_ability.owner is self.target_unit
                 and original_event.triggering_rule is None
                 and dynamic_event.attr_name == "hp"
                 and original_event.new_value < original_event.old_value
@@ -111,7 +117,8 @@ class AndOne(battlelib.DynamicRule):
 
     def will_trigger_on(self, dynamic_event, battle):
         if (
-                dynamic_event.by_ability.owner is self.target_unit
+                dynamic_event.by_ability is not None
+                and dynamic_event.by_ability.owner is self.target_unit
                 and dynamic_event.timeline[0].triggering_rule is None
                 and dynamic_event.attr_name == "hp"
                 and dynamic_event.new_value < dynamic_event.old_value):
@@ -126,7 +133,8 @@ class AndOne(battlelib.DynamicRule):
     def fail(self, dynamic_event):
         original_event = dynamic_event.timeline[0]
         if (
-                dynamic_event.by_ability.owner is self.target_unit
+                dynamic_event.by_ability is not None
+                and dynamic_event.by_ability.owner is self.target_unit
                 and dynamic_event.attr_name == "hp"
                 and original_event.new_value < original_event.old_value
                 and dynamic_event.new_value >= dynamic_event.old_value):
@@ -147,7 +155,8 @@ class Persistence(battlelib.DynamicRule):
     def will_trigger_on(self, dynamic_event, battle):
         original_event = dynamic_event.timeline[0]
         if (
-                dynamic_event.by_ability.owner is self.target_unit
+                dynamic_event.by_ability is not None
+                and dynamic_event.by_ability.owner is self.target_unit
                 and original_event.triggering_rule is None
                 and dynamic_event.attr_name == "hp"
                 and original_event.new_value < original_event.old_value
@@ -162,7 +171,7 @@ class Persistence(battlelib.DynamicRule):
                 "extra attack power!")
         battle.update_w_rules(
                 self.target_unit, "atk", self.target_unit.atk + 1,
-                dynamic_event.with_ability, dynamic_event.at_effectiveness,
+                dynamic_event.by_ability, dynamic_event.at_effectiveness,
                 self)
 
 
@@ -206,7 +215,8 @@ class Poison(battlelib.DynamicRule):
 
     def will_trigger_on(self, dynamic_event, battle):
         if (
-                dynamic_event.by_ability.owner is self.target_unit
+                dynamic_event.by_ability is not None
+                and dynamic_event.by_ability.owner is self.target_unit
                 and not dynamic_event.triggering_rule):
             return True
         return False
@@ -218,8 +228,7 @@ class Poison(battlelib.DynamicRule):
         battle.update_w_rules(
                 self.target_unit, "hp",
                 self.target_unit.hp - self.severity,
-                dynamic_event.by_ability, dynamic_event.at_effectiveness,
-                self)
+                self.from_ability, "normal", self)
 
 
 #class SealRule(battlelib.DynamicRule):
@@ -261,7 +270,7 @@ class RuleFade(battlelib.DynamicRule):
 
     def will_trigger_on(self, dynamic_event, battle):
         if (
-                isinstance(dynamic_event.target, battlelib.DynamicRule)
+                dynamic_event.target is self.target_rule
                 and dynamic_event.attr_name == "triggered_counter"
                 and dynamic_event.new_value > dynamic_event.old_value):
             return True

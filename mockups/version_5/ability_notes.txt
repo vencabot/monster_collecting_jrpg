@@ -2266,3 +2266,141 @@ So this project is too ambitious for me to approach when we're already late for 
 NOTES FOR THURSDAY: We ported over (almost) all of the old rules, and we're going to test them tomorrow. We've tested Rage, Hench, and Invincible. After we're done testing Rules (which I don't think will take terribly long), we're going to port over the old Abilities (there weren't that many) and test those.
 
 After that, we can finally start giving more attributes to units and leaders to better reflect how our game is actually going to play. We've been doing a lot of very BASIC tests to make sure that the Dynamic Rule System is behaving. Now that we're almost done with that, we can actually start to flesh out a real, working battle for our game. We'll hopefully be well into that by next week.
+
+
+
+06/06/19
+
+Today, we're going to finish testing the OLD rules from Version 4 and then see if we can get 'seal rule' working correctly, because, right now, it's totally bugged out -- and I feel like it's important to our concept that we be able to have rules like that.
+
+I have a question. When we instantiate a Rule, we always need an ability that spawned that rule.
+
+Nevermind. Let's just assume that, sometimes, rules are NOT spawned from abilities (they're inherent to the battle or attached to some unit), and so, whenever we check for a 'from_ability', we need to make sure that it's not None. We have to assume that it can be None.
+
+But here's another question, then. Can we have DynamicEvents that trigger without a by_ability. The answer would appear to be 'yes,' because Rules, themselves, can trigger events. And Rules don't necessarily need to spawn from abilities.
+
+So... can we say that DynamicEvents don't necessarily need to have a populated 'by_ability' field?
+
+I think that we need to say that event.by_ability CAN BE NONE just as well as event.triggering_rule can be none. You could have both, or you could just have one or the other.
+
+So, any time that I check for event.by_ability, I have to first check that it's not None.
+
+Test what happens when a poisoned unit is invincible.
+
+Okay, everything's working EXCEPT FOR SEAL-RULE. And I'm not sure how we're gonna get that to work. I thought we had it working, before, but it turns out that it was bugged all along. So, we need to reconsider the way that 'seal rule' works and re-implement it.
+
+One thing that we can do... is look for when the sealed rule is triggered. But I don't think that, when the rule is triggered, we have any way of knowing what events were produced so that we can edit them.
+
+But what if we did.
+
+What if, whenever... an ability... is used... or an event is triggered... we somehow get a report of what events were generated.
+
+Let's put that idea on the back-burner for now, because it would require reconsidering -- AGAIN -- some of the most fundamental ideas of how our game works.
+
+Let's see if we can find a solution that fits better into the framework that we've already developed.
+
+Dixx points out, "can we just check to see if the rule is sealed BEFORE applying it." That was my first idea for sealing rules, and it requires what's known in object-oriented programming as an "attribute".
+
+That solution would involve giving EVERY RULE an attributed: "sealed". That attribute can return TRUE or FALSE.
+
+By default, some_rule.sealed would return False.
+
+If we use Seal Rule on it, then some_rule.sealed would return True.
+
+We could then use this attribute to say, "It's time to run Poison. Is Poison sealed? True? Then don't run it."
+
+The problem with this is that it requires STANDARDIZING the idea of a rule being 'sealed,' and there's many levels of rules being stacked on rules and affecting how other rules behave -- and we can't standardize them all. That's why I moved away from this idea of having a 'sealed' attribute. It's a bad precedent to set and I thought I had a better solution.
+
+But, I'm glad that Dixx brought that up, because, SINCE WE LAST DEFINED 'SEAL RULE,' we came up with a new technology in our game called 'tags'. Back when we first conceived 'seal rule,' rule tags didn't exist. But now we have this standard ALREADY IN PLACE and ALREADY WIDELY USED and ALREADY KNOWN TO BE SUPER USEFUL.
+
+The cool thing about TAGS is that they address the very problem that I just talked about above with 'standardization'. Tags don't need to be standardized.
+
+Dixx's question is "what's the difference between attributes and tags," and it's an abstract difference that relates to the heart and soul of object-oriented programming.
+
+So, basically, 'tags' is an attribute on rules:
+
+some_rule.tags
+
+And 'tags' is a LIST, and, by it's nature, a LIST is meant to be DYNAMICALLY EXPANDED and CONTRACTED. Things are all-the-time being ADDED TO THEM and REMOVED FROM THEM.
+
+On the other hand, 'attributes' should almost always, whenever possible, be standard to a type of object -- in this case, a "rule". So, my big problem with adding 'sealed' as an attribute to rules would be that it would need to be an attribute of ALL rules and, if we made every 'affect' stacked onto a rule into an attribute we would end up with a ton of junk attributes on our rules that are very rarely used.
+
+ON THE OTHER HAND, it makes perfect sense for us to ADD A TAG (because tags are a list) to a rule and then, when that rule becomes unsealed, we REMOVE THAT TAG. It doesn't suffer the same problem of 'standardization' as if we were to make it an attribute, where it would need to be on that rule all the time even if the flag was False.
+
+In Python, you CAN check all of an object's attributes ESSENTIALLY AS A LIST, but it's meant for what's called 'introspection' or meta-programming and you don't want to fuck with that on a regular basis if you can help.
+
+But let's move forward with the notion of applying a 'sealed' tag to our sealed rules and see how that affects our game.
+
+We have other problems at play which would make it impossible for us to prevent a rule from triggering just because it has the 'sealed' tag. That wouldn't be impossible. It would even be quite reasonable -- but, again, it's a matter of setting a precedent that could become impossible to manage in the longterm.
+
+So, the question really becomes this: CAN WE PREVENT A RULE FROM TRIGGERING WITHOUT LOOKING INTO ITS ATTRIBUTES (INCLUDING ITS TAGS) FOR A PARTICULAR FLAG.
+
+The answer would appear to be 'no,' and that's exactly we had this 'rollback' system for Seal Rule in the first place.
+
+You can't prevent a rule from triggering. It's gonna trigger if its trigger-conditions are met -- and we can't just make one of its conditions, "If I'm not sealed," because, again, the state of 'sealed' is just one of countless states that our game could end up requiring, and we can't just re-write every single rule every time we come up with a new state like this.
+
+So, the question that we need to answer is CAN WE. UNDO. A SELECTED EVENT.
+
+This is the problem that has haunted our development for the past few months that we've been doing this. This question always comes up and the answer is always "no." Often times we think that we have a solution, and it always ends up backfiring.
+
+We've always found, consistently, that we can PREVENT rules from having an affect IN ADVANCE, but we can't come back AFTER a rule has triggered and UNDO it.
+
+The problem, here, is the ORDER of the rules.
+
+If I say, "Vencabot is poisoned."
+
+"Now Vencabot's poison is sealed."
+
+I can not prevent that poison damage because the sealing happened after the poison. But our game necessitates that.
+
+Let's be real, though. The way things are engineered, now, I CAN PREVENT THAT POISON DAMAGE. 100%. I seriously can look at the damage event and say, "Was this damage generated or affected by poison? Then get rid of the damage."
+
+The problem is finding WHEN, in the event's timeline, it was tampered with by the sealed rule and UN-TAMPERING IT. That's what's our current problem.
+
+If we could KNOW WHEN AN EVENT IS UPDATED AND ATTACK ~THEN~, we could UNDO the event update. That would resolve the issue of us having to wait for the event to go ALL THE WAY DOWN THE ASSEMBLY LINE before it reaches us.
+
+(And for the sake of clarity, I think I am going to use this 'assembly line' analogy more often.)
+
+So, let's demonstrate out problem and think through it:
+
+We have two modifiers for damage: Hench (doubles damage) and And One (adds 1 damage).
+
+We want to seal Hench.
+
+Let's see how the assembly line looks:
+
+Vencabot Slaps Dixxucker for 10 damage (triggering no rules).
+|
+Vencabot Slaps Dixxucker for 20 damage (triggering Hench).
+|
+Vencabot Slaps Dixxucker for 21 damage (triggering And One).
+
+At this point, at the end of our assembly line, we want to seal Hench.
+
+I believe that this is something we can't do.
+
+We can look through the timeline of this assembly line and we can SEE that HENCH was triggered in the middle.
+
+But what we CAN'T SEE -- what we have no REPORT FOR -- exactly what And One did. And One happened afterward. We could easily roll back from where we were before Hench:
+
+Vencabot Slaps Dixxucker for 10 damage (triggering no rules).
+
+But we don't have a mechanism in place to then re-apply And One. It would make sense to roll back from Hench if Hench was the most-recent update to the event. The problem is that Seal Rule is occuring AFTER And One.
+
+Maybe one solution would be insert Seal Rule directly after whatever Rule is being Sealed.
+
+Seal Rule is a "before" rule. So, if it's sealing an 'after' rule, it can be at the end of the Before -- no, no, no.
+
+If it's sealing an After rule, it needs to be at the START of the Before list.
+
+If it's sealing a Before rule, it needs to be directly AFTER the rule it's sealing.
+
+That's solution 'A': selectively position 'seal rule' in the rule list. Change it's place in the assembly line so that it always directly follows the rule that it's sealing.
+
+Solution 'B': what if DynamicEvents were effectively DynamicObjects... and we could run Rules when the EVENT is updated.
+
+Like, what if, when you run dynamic_event.replace_value(), it runs the new event through some 'meta rules' list.
+
+That's kind of tidy.
+
+We'll implement one of those two solutions next time. We gotta play third strike.
