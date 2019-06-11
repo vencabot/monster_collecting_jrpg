@@ -62,7 +62,7 @@ class Invincible(battlelib.DynamicRule):
         print(
                 f"{self.target_unit.unit_name} is impervious to "
                 f"{attacker_name}'s attack!")
-        dynamic_event.replace_value(self.target_unit.hp, self)
+        dynamic_event.replace_value(self.target_unit.hp, self, battle)
 
 
 class Hench(battlelib.DynamicRule):
@@ -78,7 +78,7 @@ class Hench(battlelib.DynamicRule):
         if (
                 dynamic_event.by_ability is not None
                 and dynamic_event.by_ability.owner is self.target_unit
-                and dynamic_event.timeline[0].triggering_rule is None
+                and dynamic_event.timeline.events[0].triggering_rule is None
                 and dynamic_event.attr_name == "hp"
                 and dynamic_event.new_value < dynamic_event.old_value):
             return True
@@ -90,10 +90,10 @@ class Hench(battlelib.DynamicRule):
                 "damage doubles!")
         old_damage = dynamic_event.old_value - dynamic_event.new_value
         new_hp_value = dynamic_event.target.hp - old_damage * 2
-        dynamic_event.replace_value(new_hp_value, self)
+        dynamic_event.replace_value(new_hp_value, self, battle)
 
     def fail(self, dynamic_event):
-        original_event = dynamic_event.timeline[0]
+        original_event = dynamic_event.timeline.events[0]
         if (
                 dynamic_event.by_ability is not None
                 and dynamic_event.by_ability.owner is self.target_unit
@@ -119,7 +119,7 @@ class AndOne(battlelib.DynamicRule):
         if (
                 dynamic_event.by_ability is not None
                 and dynamic_event.by_ability.owner is self.target_unit
-                and dynamic_event.timeline[0].triggering_rule is None
+                and dynamic_event.timeline.events[0].triggering_rule is None
                 and dynamic_event.attr_name == "hp"
                 and dynamic_event.new_value < dynamic_event.old_value):
             return True
@@ -128,10 +128,11 @@ class AndOne(battlelib.DynamicRule):
     def trigger(self, dynamic_event, battle):
         print(
                 f"And one! {self.target_unit.unit_name} gets extra damage!")
-        dynamic_event.replace_value(dynamic_event.new_value - 1, self)
+        dynamic_event.replace_value(
+                dynamic_event.new_value - 1, self, battle)
 
     def fail(self, dynamic_event):
-        original_event = dynamic_event.timeline[0]
+        original_event = dynamic_event.timeline.events[0]
         if (
                 dynamic_event.by_ability is not None
                 and dynamic_event.by_ability.owner is self.target_unit
@@ -153,7 +154,7 @@ class Persistence(battlelib.DynamicRule):
         self.target_unit = target_unit
 
     def will_trigger_on(self, dynamic_event, battle):
-        original_event = dynamic_event.timeline[0]
+        original_event = dynamic_event.timeline.events[0]
         if (
                 dynamic_event.by_ability is not None
                 and dynamic_event.by_ability.owner is self.target_unit
@@ -231,32 +232,29 @@ class Poison(battlelib.DynamicRule):
                 self.from_ability, "normal", self)
 
 
-#class SealRule(battlelib.DynamicRule):
-#    def __init__(
-#            self, from_ability, from_effectiveness, from_targets,
-#            target_rule):
-#        super().__init__(
-#                "Seal Rule", "before", [], 10, from_ability,
-#                from_effectiveness, from_targets)
-#        self.target_rule = target_rule
-#
-#    def will_trigger_on(self, dynamic_event, battle):
-#        if (
-#                dynamic_event.triggering_rule is self.target_rule):
-#            return True
-#        return False
+class SealRule(battlelib.DynamicRule):
+    def __init__(
+            self, severity, from_ability, from_effectiveness, from_targets,
+            target_rule):
+        super().__init__(
+                "Seal Rule", "after", [], 10, from_ability,
+                from_effectiveness, from_targets)
+        self.target_rule = target_rule
 
-#    def trigger(self, dynamic_event, battle):
-#        rolled_back_event = dynamic_event
-        # I want to UNDO the event that was
-#        while (
-#                rolled_back_event.replaces
-#                and (
-#                    rolled_back_event.replaces.triggering_rule
-#                    is self.target_rule)):
-#            rolled_back_event = rolled_back_event.replaces
-#        dynamic_event.replace_value(rolled_back_event.old_value, self)
-#        print(f"The effect of {self.target_rule.rule_name} was sealed!")
+    def will_trigger_on(self, dynamic_event, battle):
+        if (
+                isinstance(dynamic_event.target, battlelib.EventTimeline)
+                and dynamic_event.attr_name is "events"
+                and dynamic_event.triggering_rule is self.target_rule):
+            return True
+        return False
+
+    def trigger(self, dynamic_event, battle):
+        sealed_rule_proposition = dynamic_event.target.events[-1]
+        pre_proposition = dynamic_event.target.events[-2]
+        sealed_rule_proposition.replace_value(
+                pre_proposition.new_value, self, battle)
+        print(f"The effect of {self.target_rule.rule_name} was sealed!")
 
 
 class RuleFade(battlelib.DynamicRule):

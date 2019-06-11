@@ -25,23 +25,29 @@ for unit in a_leader.party + b_leader.party:
 rage = test_rules.Rage(8, None, None, None, a_leader.party[0])
 test_battle.ruleset.after_rules.append(rage)
 
-invincible = test_rules.Invincible(5, None, None, None, a_leader.party[0])
-test_battle.ruleset.before_rules.append(invincible)
+#invincible = test_rules.Invincible(5, None, None, None, a_leader.party[0])
+#test_battle.ruleset.before_rules.append(invincible)
 
 hench = test_rules.Hench(5, None, None, None, b_leader.party[0])
 test_battle.ruleset.before_rules.append(hench)
 
-persistence = test_rules.Persistence(5, None, None, None, b_leader.party[0])
-test_battle.ruleset.after_rules.append(persistence)
+seal_hench = test_rules.SealRule(5, None, None, None, hench)
+test_battle.ruleset.after_rules.append(seal_hench)
 
-old_man_genes = test_rules.OldManGenes(5, None, None, None, b_leader)
-test_battle.ruleset.after_rules.append(old_man_genes)
+fade_seal = test_rules.RuleFade(1, None, None, None, seal_hench)
+test_battle.ruleset.after_rules.append(fade_seal)
 
-poison = test_rules.Poison(3, None, None, None, a_leader.party[0])
-test_battle.ruleset.after_rules.append(poison)
+#persistence = test_rules.Persistence(5, None, None, None, b_leader.party[0])
+#test_battle.ruleset.after_rules.append(persistence)
 
-poison_fade = test_rules.RuleFade(2, None, None, None, poison)
-test_battle.ruleset.after_rules.append(poison_fade)
+#old_man_genes = test_rules.OldManGenes(5, None, None, None, b_leader)
+#test_battle.ruleset.after_rules.append(old_man_genes)
+
+#poison = test_rules.Poison(3, None, None, None, a_leader.party[0])
+#test_battle.ruleset.after_rules.append(poison)
+
+#poison_fade = test_rules.RuleFade(2, None, None, None, poison)
+#test_battle.ruleset.after_rules.append(poison_fade)
 
 b_leader.point_unit.mp = 20
 

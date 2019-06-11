@@ -2404,3 +2404,94 @@ Like, what if, when you run dynamic_event.replace_value(), it runs the new event
 That's kind of tidy.
 
 We'll implement one of those two solutions next time. We gotta play third strike.
+
+06/10/19
+
+Solution A isn't a SUPER SOUND SOLUTION because it RELIES on the fact that the 'seal rule' always directly follows the rule that it's sealing. If it were to be moved around for ANY REASON, it would not only cease to work but would cause bugs.
+
+The problem with the 'meta rules list' idea is that these special 'meta rules' would need to take a different shape of 'event' compared to normal rules, and I'd like to keep things standardized.
+
+We could use battle.update_w_rules(some_event, "new_value", so-on and so-forth)
+
+I guess the thing to do... would be... to change the 'replace_value' method to call battle.update_w_rules.
+
+But, for that, Events would need to know the Battle they're a part of.
+
+I don't see any reason why they shouldn't.
+
+It'd be impossible to call update_w_rules on some_event.new_value, because 'new_value' never changes. Instead, we update the timeline. The timeline is the only mutable attribute of a DynamicEvent.
+
+So, we would need to call battle.update_w_rules(self, "timeline", so-on-and-so-forth)
+
+It seems to me that we now have a mechanism where, whenever an Event is updated, we can run some rules.
+
+So, that changes the way that we can look at how 'before' rules work. Now, they can directly target a situation where a rule has altered an event.
+
+Before we get 'Seal Rule' working, let's go back through our existing Rules and see if we can't change how they behave to take advantage of this new mechanism.
+
+We've got a problem. We can't update the timeline to be a brand new list because we rely on the identity of the old list to keep all of the events in the same timeline synchronized.
+
+I could make an EventTimeline object whose only purpose is to store a list as an attribute. That way, we could update the list while still having an identity to point all of the Events to. I mean, that would be a quick-and-dirty solution.
+
+I like it, honestly. I like it because, if we're gonna have a DynamicEvent that gets generated whenever a timeline is updated, the architecture should reflect that.
+
+Right now, we're saying:
+
+"This event's timeline is being updated."
+
+But, really, all of the events share the same timeline. So, that's deceptive. That could be engineered in a way that's more clear.
+
+If we have an EventTimeline object, we can say:
+
+"This timeline is being updated."
+
+That's more clear, anyway.
+
+Seal Rule is now triggered when:
+    A DynamicEvent is fed in where a Timeline is being updated.
+    If that Timeline is being updated by the sealed Rule:
+
+Then what do we do?
+
+For one thing, we could just PREVENT THE UPDATE. That's the easiest thing to do.
+
+The problem with this is that it doesn't leave a paper-trail.
+
+BUT IT DOES.
+
+We just need to. Roll back. The event. It does leave a paper-trail.
+
+Wait, wait, wait. Are we gonna end up having the same 'order of operations' problem that we always have?
+
+I wanna say "no," because now we have this new vector of attack -- this DynamicEvent which targets the timeline. Now, we have a whole extra dimension to examine what's happening in our game. Because we can look at a timeline of timeline changes.
+
+I want to roll the timeline back to what it was before this rule was triggered.
+
+I feel like we're coming up on the same 'order of operations' problem.
+
+We've had this problem since day 1 of this project, literally: "how do you roll back an event." "How do you prevent a proposed change from triggering."
+
+How can I verbalize this problem?
+
+KReich slaps Vencabot.
+KReich is Hench.
+
+The Slap proposes a HP change of -10 to Vencabot.
+Hench sees this event and proposes a new event -- a timeline update -- where the HP change is -20.
+
+Seal Rule looks for this timeline change and changes the timeline, again, so that the HP change is -10.
+
+That makes no sense. We're proposing TWO timeline changes. The original timeline change never actually goes through. That's a huge problem.
+
+Proposing and pre-empting changes to a timeline is a really weird idea. Oh. Well, this should. be. an 'after' rule. An 'after' rule. It takes place AFTER the timeline is changed. Okay. Let's look at it that way:
+
+The Slap proposes an HP change of -10 to Vencabot.
+Hench sees this event and proposes a new event -- a timeline update -- where the HP change is -20.
+
+After the timeline has changed, Seal Rule sees that it changed and changes the timeline, again, so tht the HP change is -10.
+
+On Wednesday, I'm gonna try my DAMNEDEST to break Seal Rule.
+
+Seal Rule is now an AFTER Rule. How are we gonna break it? It's gonna definitely be contingent on two rules simultaneously looking for changes to the timeline. That's what's always broken these sorts of rules in the past, but I feel like, now that I've found a way to make it an AFTER RULE, that's not gonna be the case any more.
+
+But we're gonna dedicate to Wednesday to making sure that I'm right about that. Is there a way to break Seal Rule, now -- or any Rule which depends on looking at a change being made by another rule and preventing it.

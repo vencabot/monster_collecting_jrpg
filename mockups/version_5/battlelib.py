@@ -1,5 +1,9 @@
 import random
 
+class EventTimeline:
+    def __init__(self, original_event):
+        self.events = [original_event]
+
 class DynamicEvent:
     def __init__(
             self, target, attr_name, new_value, old_value, by_ability,
@@ -11,14 +15,21 @@ class DynamicEvent:
         self.by_ability = by_ability
         self.at_effectiveness = at_effectiveness
         self.triggering_rule = triggering_rule
-        self.timeline = [self] if timeline is None else timeline
+        if timeline is None:
+            self.timeline = EventTimeline(self)
+        else:
+            self.timeline = timeline
 
-    def replace_value(self, new_value, triggering_rule):
+    def replace_value(self, new_value, triggering_rule, battle):
         new_event = DynamicEvent(
                 self.target, self.attr_name, new_value, self.old_value,
                 self.by_ability, self.at_effectiveness, triggering_rule,
                 self.timeline)
-        self.timeline.append(new_event)
+        new_timeline_events = self.timeline.events.copy()
+        new_timeline_events.append(new_event)
+        battle.update_w_rules(
+                self.timeline, "events", new_timeline_events, None, None,
+                triggering_rule)
 
 
 class DynamicRule:
@@ -87,13 +98,14 @@ class Battle:
                 target, attr_name, new_value, old_value, by_ability,
                 at_effectiveness, triggering_rule)
         self.run_through_before_rules(dynamic_event)
-        target.__dict__[attr_name] = dynamic_event.timeline[-1].new_value
-        self.run_through_after_rules(dynamic_event.timeline[-1])
+        target.__dict__[attr_name] = (
+                dynamic_event.timeline.events[-1].new_value)
+        self.run_through_after_rules(dynamic_event.timeline.events[-1])
 
     def run_through_before_rules(self, dynamic_event):
         for dynamic_rule in self.ruleset.before_rules:
             dynamic_rule.react_to(dynamic_event, self)
-            dynamic_event = dynamic_event.timeline[-1]
+            dynamic_event = dynamic_event.timeline.events[-1]
 
     def run_through_after_rules(self, dynamic_event):
         for dynamic_rule in self.ruleset.after_rules:
