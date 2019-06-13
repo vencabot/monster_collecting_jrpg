@@ -250,11 +250,11 @@ class SealRule(battlelib.DynamicRule):
         return False
 
     def trigger(self, dynamic_event, battle):
+        print(f"The effect of {self.target_rule.rule_name} was sealed!")
         sealed_rule_proposition = dynamic_event.target.events[-1]
         pre_proposition = dynamic_event.target.events[-2]
         sealed_rule_proposition.replace_value(
                 pre_proposition.new_value, self, battle)
-        print(f"The effect of {self.target_rule.rule_name} was sealed!")
 
 
 class RuleFade(battlelib.DynamicRule):
@@ -269,7 +269,7 @@ class RuleFade(battlelib.DynamicRule):
     def will_trigger_on(self, dynamic_event, battle):
         if (
                 dynamic_event.target is self.target_rule
-                and dynamic_event.attr_name == "triggered_counter"
+                and dynamic_event.attr_name is "triggered_counter"
                 and dynamic_event.new_value > dynamic_event.old_value):
             return True
         return False
@@ -298,4 +298,47 @@ class RuleFade(battlelib.DynamicRule):
             battle.update_w_rules(
                     battle.ruleset, "after_rules", new_rules,
                     self.from_ability, "normal", self)
+
+
+class GrowingPains(battlelib.DynamicRule):
+    def __init__(
+            self, severity, from_ability, from_effectiveness, from_targets,
+            target_unit):
+        super().__init__(
+                "Growing Pains", "after", [], severity, from_ability,
+                from_effectiveness, from_targets)
+        self.target_unit = target_unit
+
+    def will_trigger_on(self, dynamic_event, battle):
+        if (
+                isinstance(dynamic_event.target, battlelib.EventTimeline)
+                and dynamic_event.attr_name is "events"
+                and dynamic_event.target.events[0].by_ability is not None
+                and dynamic_event.target.events[0].attr_name == "hp"):
+            newer_event = dynamic_event.target.events[-1]
+            older_event = dynamic_event.target.events[-2]
+            perpetrator = older_event.by_ability.owner
+            if (
+                    perpetrator is self.target_unit
+                    and newer_event.new_value < older_event.new_value):
+                return True
+            else:
+                if perpetrator is self.target_unit:
+                    print(
+                            "Timeline change perpetrated by: "
+                            f"{dynamic_event.triggering_rule.rule_name}")
+                    print("Newer Event:")
+                    print(newer_event)
+                    print("Older Event:")
+                    print(older_event)
+        return False
+
+    def trigger(self, dynamic_event, battle):
+        print(
+                f"{self.target_unit.unit_name} suffered from growing "
+                "pains!")
+        battle.update_w_rules(
+                self.target_unit, "hp", self.target_unit.hp - 1, None, None,
+                self)
+
 

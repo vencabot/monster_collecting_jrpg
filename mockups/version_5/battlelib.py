@@ -31,6 +31,25 @@ class DynamicEvent:
                 self.timeline, "events", new_timeline_events, None, None,
                 triggering_rule)
 
+    def __str__(self):
+        if self.by_ability:
+            ability_name = self.by_ability.ability_name
+        else:
+            ability_name = "None"
+        if self.triggering_rule:
+            rule_name = self.triggering_rule.rule_name
+        else:
+            rule_name = "None"
+        return (
+            "Event Status:\n"
+            f"    target: {self.target}\n"
+            f"    attr_name: {self.attr_name}\n"
+            f"    new_value: {self.new_value}\n"
+            f"    old_value: {self.old_value}\n"
+            f"    by_ability: {ability_name}\n"
+            f"    at_effectiveness: {self.at_effectiveness}\n"
+            f"    triggering_rule: {rule_name}")
+
 
 class DynamicRule:
     def __init__(
@@ -98,8 +117,14 @@ class Battle:
                 target, attr_name, new_value, old_value, by_ability,
                 at_effectiveness, triggering_rule)
         self.run_through_before_rules(dynamic_event)
-        target.__dict__[attr_name] = (
-                dynamic_event.timeline.events[-1].new_value)
+        new_value = dynamic_event.timeline.events[-1].new_value
+        target.__dict__[attr_name] = new_value
+        if (
+                not isinstance(target, EventTimeline)
+                and attr_name != "triggered_counter"):
+            print(
+                    f"DIAGNOSTIC: {attr_name} updated from {old_value} to "
+                    f"{new_value}.")
         self.run_through_after_rules(dynamic_event.timeline.events[-1])
 
     def run_through_before_rules(self, dynamic_event):

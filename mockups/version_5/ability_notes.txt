@@ -2495,3 +2495,93 @@ On Wednesday, I'm gonna try my DAMNEDEST to break Seal Rule.
 Seal Rule is now an AFTER Rule. How are we gonna break it? It's gonna definitely be contingent on two rules simultaneously looking for changes to the timeline. That's what's always broken these sorts of rules in the past, but I feel like, now that I've found a way to make it an AFTER RULE, that's not gonna be the case any more.
 
 But we're gonna dedicate to Wednesday to making sure that I'm right about that. Is there a way to break Seal Rule, now -- or any Rule which depends on looking at a change being made by another rule and preventing it.
+
+
+06/12/19
+
+Today, we're trying to break Seal Rule. Let's theorize some situations to test that could potentially break a rule like this.
+
+1.) The most obvious thing -- because it's what usually breaks these sorts of rules -- is to have two different rules waiting for the same sort of event such that they might interfere with each other based on the order of their operations.
+
+So, Seal Rule is waiting for a certain other Rule to trigger, and then it effectively UNDOES its effect.
+
+So, let's say that Seal Rule is sealing Hench. And then suppose that we have a Rule that's supposed to trigger whenever a unit's damage is doubled. So, if they're both essentially waiting for Hench, is this going to cause a problem where the second Rule's triggering will prevent Seal Rule from working correctly?
+
+So, the only way to test this is to test it, because we're getting to challenges that are so abstract that it's giving me a headache just to try to imagine. So let's not imagine it: let's just test it. Let's design this new rule:
+
+"If the target's unit's damage is augmented UPWARD, they take damage." What's the name of this rule? "Growing Pains".
+
+It strikes me that a lot of our existing rules could probably be updated to look for event timeline changes, and that might be a more reliable way, over-all, to handle these sorts of rules which take affect based on the affect of other rules.
+
+I hate to say it, but I need a lot more diagnostic code. Not a lot of code, but a lot more output. I'm just gonna make a one-line change to the way that 'update_w_rules' works to add a lot more diagnostic output.
+
+In vanilla Python, you would say:
+
+"Vencabot attacks KReich for 10 damage."
+
+KReichJr.hp = KReichJr.hp - 10
+or
+KReichJr.hp -= 10
+
+In our game, we don't directly modify attributes like this because we want to generate a REPORT that tells the DynamicRules about PROPOSED CHANGES to attributes and FINALIZED CHANGES to attributes.
+
+So, instead of updating Kenny's HP directly through his .hp attribute, we do this:
+
+our_battle.update_w_rules(KReichJr, "hp", KReichJr.hp - 10)
+
+print(KReichJr.hp)
+>> 20
+KReichJr.hp -= 10
+print(KReichJr.hp)
+>> 0
+
+Growing pains is working. The whole point of this was to try to break 'Seal Rule' by having two rules look for the same criteria but in a different order. So, let's examine this new "Growing Pains" scenario theoretically to see where and if it's gonna fail.
+
+In our example, Seal Rule prevented Hench from triggering, the first time, and so Growing Pains did not trigger. Let's examine this situation.
+
+Is it possible for Growing Pains to TRIGGER BEFORE HENCH is sealed.
+
+Both GrowingPains and SealRule are waiting for an update to the event timeline.
+
+When SealRule triggers -- and THIS IS THE CORE DIFFERENCE WHICH I BELIEVE WILL FINALLY SOLVE ALL OF THE PROBLEMS AND BUGS THAT WE USED TO HAVE -- when SealRule triggers to prevent 'Hench' from working, IT DOES NOT, ITSELF, MODIFY THE EVENT TIMELINE.
+
+It CHECKS the Event Timeline, but it DOES NOT NEED TO ALTER THE EVENT TIMELINE IN ORDER TO PREVENT HENCH FROM WORKING.
+
+Instead, SealRule updates the EVENT. The abstraction is so subtle, and that's what makes it so annoying -- but powerful.
+
+It doesn't even add a new event to THIS TIMELINE. It's because it's not looking for the event that CHANGES THE HP. It's looking for the event which CHANGES THE TIMELINE. And whenever the timeline is changed, we get a BRAND NEW EVENT WITH ITS OWN TIMELINE. We events on events, we got timelines on timelines.
+
+So the advantage we have with this new system is that SealRule and GrowingPains are not looking at the same event, really. I don't think so. Let's theorize. I'm pretty sure they're not looking at the same event.
+
+Vencabot creates an event when he attacks Kenny. The event says, "Kenny's HP is changing as a result of Vencabot."
+
+Hench looks at that event and UPDATES THAT EVENT, CREATING A NEW ENTRY IN ITS TIMELINE. It updates it so taht Kenny's HP is reduced twice as much.
+
+SealRule is waiting for an event that says that an event was updated. It sees that the 'hp change' event was updated by Hench, and so it UPDATES THAT EVENT AGAIN, creating a new entry in the 'hp change' timeline, and creating a WHOLE NEW event that says that the timeline was updated.
+
+Where does 'GrowingPains' fit into this? Why didn't GrowingPains trigger when Hench was sealed?
+
+GrowingPains is failing twice when I only expected it to fail once. I think that it's failing twice because it's - no. It's because it's also triggering when Hench is updating the timeline.
+
+It's failing when Hench updates the timeline and when Seal Rule re-updates the timeline.
+
+But the question I have is, why is the timeline the same both times?
+
+I was right about why it's failing twice. Why is it failing on Seal Rule before it fails on Hench? Hench is TRIGGERING first. Hench is FINALIZED first. GrowingPains is looking for a timeline update. But Hench's timeline update completes BEFORE Seal Rules, doesn't it?
+
+Slap proposes an HP change [EVENT0HC created].
+Hench proposes an update to that HP change [EVENT1TC created].
+The update to the HP change event completes [EVENT0HC updated] [EVENT1TC finalized].
+Seal Rule proposes another update to that HP change [EVENT2TC created].
+That update to the HP change event completes [EVENT0HC updated] [EVENT2TC finalized].
+GrowingPains sees
+
+
+
+
+When Hench changes the timeline, Seal Rule is triggered immediately.
+When Seal Rule changes the timeline, GrowingPains is triggered immediately.
+
+Once that process is complete, then Hench's change finally dribbles down to GrowingPains. That's why GrowingPains sees Seal Rule first.
+
+The reason that both times that GrowingPains is triggered it sees the same timeline is because timeline is a mutable object that we're referencing by identity. By the time it sees it the FIRST TIME, Seal Rule has already triggered. so, even though Growing Pains is triggered the SECOND TIME by Hench, the timeline change from Seal Rule has already taken place.
