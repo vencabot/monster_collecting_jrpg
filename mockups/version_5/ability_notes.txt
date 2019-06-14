@@ -2585,3 +2585,29 @@ When Seal Rule changes the timeline, GrowingPains is triggered immediately.
 Once that process is complete, then Hench's change finally dribbles down to GrowingPains. That's why GrowingPains sees Seal Rule first.
 
 The reason that both times that GrowingPains is triggered it sees the same timeline is because timeline is a mutable object that we're referencing by identity. By the time it sees it the FIRST TIME, Seal Rule has already triggered. so, even though Growing Pains is triggered the SECOND TIME by Hench, the timeline change from Seal Rule has already taken place.
+
+
+
+06/13/19
+
+Today, I would like to break Seal Rule if I can figure out a way to do that.
+
+As I was thinking about this problem last night, it struck me that perhaps a rule like "GrowingPains" is never going to break Seal Rule. I even theorized that we could successfully SEAL SealRule using SealRule. Having this extra axis of attack on the DynamicEvent system is really adding so much flexibility to our mechanics.
+
+So, how WOULD you break Seal Rule?
+
+Seal Rule looks for a DynamicEvent that occurs when another DynamicEvent is altered.
+
+It's an After rule. I just can't think of a way to break this. I think that tonight -- the hour that we have -- might be better spent looking at progressing toward our fully-working battle.
+
+I'm afraid that one day I might find a situation where our Dynamic Rule System breaks down. But I can't just keep wasting streams trying to find those weaknesses; the system is just too complex. In fact, we might be well-served at this point to start doing some kind of documentation.
+
+Yeah. Before I start moving toward the fully-working battle, maybe it's time to start documenting the Dynamic Rule System so that another programmer that joins this project (like KReichJr) will have a clearer understanding of how it works.
+
+Tonight, let's look through our battlelib and start looking at how we can commentate our features.
+
+Right now, the biggest difference between our EXISTING mock-up and our FULLY-WORKING BATTLE is that we need a more fully-fleshed-out implementation of the Unit.
+
+If a Ruleset is changed during the processing of a DynamicEvent, how does the change in rule-list length affect the 'for' loop? Is this a bug?
+
+############## LOOK ABOVE ###############
