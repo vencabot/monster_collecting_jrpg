@@ -2611,3 +2611,68 @@ Right now, the biggest difference between our EXISTING mock-up and our FULLY-WOR
 If a Ruleset is changed during the processing of a DynamicEvent, how does the change in rule-list length affect the 'for' loop? Is this a bug?
 
 ############## LOOK ABOVE ###############
+
+
+
+06/19/19
+
+Before we get started, I notice that, at the very end of our last programming stream, I theorized that we might have a bug with the way that we handle iteration through a rule-list. Because, during iteration, the length of the list can change. Let's make sure that we're working on this loop correctly.
+
+To break Rule iteration, we would need an After rule which adds or removes another After Rule. I think that we'd get the better 'breaking' result by removing an after rule during an after rule.
+
+So, we would need two Rules to test with: one generic 'after' rule (could just print a message) and one after rule which REMOVES that rule.
+
+It strikes me that, whenever you update the list of rules, you're almost certainly going to be using Battle.update_w_rules.
+
+What's particular about update_w_rules -- and, by extension, our entire Dynamic Rule System -- is that it doesn't support mutability at all. This has some interesting caveats when you start thinking about updating the list of rules, some of which will actually have ramifications on gameplay.
+
+In particular, IF YOU ADD A RULE ON A TURN, YOU CAN NOT TRIGGER THAT RULE ON THE SAME TURN. Or, you CAN, but it will be somewhat unpredictable (which is kind of a problem).
+
+Basically, whenever an event is being processed through a list of rules, that 'for' loop is fixated on a single list.
+
+If the battle's ruleset is updated during that process, a brand new list is created (that's how 'update_w_rules' works). Therefore, the ongoing processing of the event WILL STILL BE USING THE ORIGINAL LIST OF RULES.
+
+But then, as soon as a new event is being processed, it'll be using the NEW list of rules.
+
+Let's focus on these 'bugs' one at a time. First, I want to make sure that we can't break rule-processing due to the mutability of the rule list. After all, not every update to the rulelist will necessarily be going through update_w_rules (although it SHOULD). We probably need to fail-safe or foolproof this, so let's prove that.
+
+We solved our first, obvious bug. But now we have a new bug, which may itself not be a "bug" and may not need fixing, but it MAY result in behaviors which are somewhat unexpected by the player. And I want to demonstrate that.
+
+So, if we have an after_rule which ADDS a new after_rule, that new after_rule can not be triggered in the same processing phase which triggered the first after_rule.
+
+However, that new after_rule CAN be triggered by NEW events which are the RESULT of another after_rule. So, the problem that we're facing is that there will be situations which may be difficult for the player to discern where new rules are INSTANTLY TRIGGERED and other situations where new rules will NOT be instantly triggered. I would like to demonstrate both scenarios and how confusing this can be.
+
+What I've proven with our first 'salty' example is that, although the same criteria of event triggers both goodvibe BECOMING salty AND his salt giving him ATTACK POWER, he doesn't gain attack power the FIRST time he becomes salty.
+
+You might think that, because him BECOMING salty and him GAINING attack power are both triggered by him taking damage, that the sequence of events would go like this:
+
+GoodVibe takes damage.
+GoodVibe's 'salt' is triggered, meaning that, when he takes damage, he'll now gain attack power.
+He gains attack power (because he took damage).
+
+It doesn't play out that way because when 'Salty' is triggered, it adds a new rule (when he takes damage, he gets attack power), and that new rule can not be triggered on the same phase that it was created.
+
+That's fair, that makes sense -- that's predictable. But what's NOT predictable (maybe) is that, although this new rule can NOT be triggered on the same "phase," it can be triggered on the same TURN or ACTION. Because these ideas, internally, are distinct. We can prove that simply by making GoodVibe take damage TWICE from the same action.
+
+Maybe we have another Rule where, if GoodVibe takes damage, he takes damage again.
+
+I've proven my point.
+
+When GoodVibe is pessimistic, he can GAIN A NEW RULE WHICH GIVES HIM ATTACK POWER WHEN HE LOSES HEALTH, and that rule CAN BE TRIGGERED ON THAT SAME ACTION.
+
+He loses health, which gives him a new rule that's triggered when he loses health.
+His losing health causes him to lose health, again.
+His new rule is triggered, because he just health.
+
+That all happens based on him getting slapped.
+
+However, this won't happen if he's not pessimistic.
+
+He loses health, which gives him a new rule that's triggered when he loses health.
+Nothing happens after that. The new Rule isn't triggered, even though he just health.
+
+Is this a 'bug' worth addressing, or is it pretty clear to the player what the difference is between these two situations? Right now, I'm sort of leaning toward the latter. Even though both 'hits' are triggered by the same 'slap,' it's clear that, in the first example, the damage which TRIGGERED 'salt power' came from his Pessimism -- not from the slap, itself.
+
+So, any time that a new rule is added as the result of another rule, it won't be triggered by that same event. But, if another event is created that WOULD trigger it, by that same action, sure, it can be triggered THEN. It just can't be triggered by the same exact event.
+
+I'll look at this again, tomorrow, but I'm pretty sure that this isn't a bug that's worth worrying about. I think that the behavior will be more-or-less understandable by players. When any new rule is added as the result of some action, it can't be triggered by that same exact event.

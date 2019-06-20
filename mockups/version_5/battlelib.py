@@ -300,13 +300,13 @@ class Battle:
 
     def run_through_before_rules(self, dynamic_event):
         """In this phase, DynamicEvents can be manipulated / rejected."""
-        for dynamic_rule in self.ruleset.before_rules:
+        for dynamic_rule in self.ruleset.before_rules.copy():
             dynamic_rule.react_to(dynamic_event, self)
             dynamic_event = dynamic_event.timeline.events[-1]
 
     def run_through_after_rules(self, dynamic_event):
         """In this phase, rules react to a change which just occurred."""
-        for dynamic_rule in self.ruleset.after_rules:
+        for dynamic_rule in self.ruleset.after_rules.copy():
             dynamic_rule.react_to(dynamic_event, self)
 
 
