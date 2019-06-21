@@ -2676,3 +2676,137 @@ Is this a 'bug' worth addressing, or is it pretty clear to the player what the d
 So, any time that a new rule is added as the result of another rule, it won't be triggered by that same event. But, if another event is created that WOULD trigger it, by that same action, sure, it can be triggered THEN. It just can't be triggered by the same exact event.
 
 I'll look at this again, tomorrow, but I'm pretty sure that this isn't a bug that's worth worrying about. I think that the behavior will be more-or-less understandable by players. When any new rule is added as the result of some action, it can't be triggered by that same exact event.
+
+
+
+
+06/20/19
+
+Today we're going to be doing kind of a short development stream where we look at the 'units' for our battle system and give them the attributes they're going to need in order to satisfy our original design documents.
+
+Units, right now, have a couple of attributes that we've been using for testing:
+
+HP
+ATK
+MP
+
+But they're going to need quite a few more attributes than that in order for our battle system to be considered fully-working. Let's break down what we know, so far, about the attributes that our units are going to need:
+
+HP - The amount of damage that a unit can take before they're 'knocked out' and can no longer act.
+
+ATK - A base value used for attack damage multiplication.
+
+MP - A resource typically consumed by using abilities that represents a limit to how many abilities a single unit can use in battle.
+
+Here are some ideas for other attributes that we've been strongly considering for our combat system:
+
+DEF - A base value used to diminish damage done to this unit. It's meant to have a larger impact on weaker abilities; that way, attacks that hit multiple times for less damage (potentially adding up to MORE damage) will be less effective against units that have high DEF. In order to effectively damage a unit that has high DEF, you need to deal damage in large chunks.
+
+SKL - An offensive value that raises the 'effectiveness' of abilities against another unit.
+
+PRY - A defensive value which lowers the 'effectiveness' of abilities against this unit.
+
+XST - A percentage which temporarily diminishes the maximum attribute values of a unit based on how many encounters they've been through since they last rested. Meant to encourage the player to swap party members to keep them rested.
+
+LP - A value representing the number of times that a unit can be revived after being knocked out. Some attacks can damage LP directly. When LP reaches 0, the unit is 'destroyed' on a semi-permanent basis.
+
+MAX HP
+CUR HP
+
+MAX LP
+CUR LP
+
+MAX MP
+CUR MP
+
+REAL XST
+AUG XST
+
+REAL ATK
+AUG ATK
+
+REAL DEF
+AUG DEF
+
+REAL SKL
+AUG SKL
+
+REAL PRY
+AUG PRY
+
+REAL TAGS
+AUG TAGS
+
+It's been a few months. Let's re-examine some of these ideas that we came up with when we were originally designing our game.
+
+First, let's re-examine the idea of permanently-bound equipment. I still think that's a cool idea; that's probably all that we need to say about it for now. When you capture a new unit, you bind it to some item which will affect that unit's growth. We also discussed the possibility that this equipment would determine the unit's tertiary class and maybe even offer them some extra dynamic. In fact, we should lock that in: I don't think that units, in their most raw form, should have three classes. I think that units should have a Primary Class and a Secondary Class, and the Tertiary Class comes from their equipment, which is universal across any unit.
+
+We talked about how units should have some kind of 'elemental' value which may affect how certain abilities affect them. We've since changed, updated, and improved that idea to this notion of units having 'tags.' Any number of tags.
+
+Units have Dynamics. I think that this should be a list, and any unit can have any number of inherent Dynamics -- including some which may be attributed by their equipment.
+
+Let's talk briefly about the idea of our game's 'class' system, which I've been re-examining on off-stream hours.
+
+I feel like, for the sake of making each unit feel more unique, the abilities that each unit has should be, at the very least, re-named to suit that unit.
+
+But I do like the idea of 'classes' determining what these abilities DO. Like, each unit would have a couple classes, and these classes would determine their abilities. But it's much more to do with what these abilities DO and are USED FOR than anything to do with theming. Because we're gonna have classes that might be shared between My Little Pony and Jason Vorhees, so I feel like we could get caught up in the idea of what these abilities are meant to represent. I think that it makes more sense to say that "warriors have a basic attack ability which does double their base ATK and costs 2 MP." And then every unit would have a different name and potentially graphical affect for this ability.
+
+So, internally, how are we going to architect these units considering these classes?
+
+Maybe. Every. Unit. Should have unique classes designed for THEM which are BASED on universal classes. That way, we could give the unit these 'classes' and their abilities (which, as we discussed above, are TECHNICALLY but not ENTIRELY unique to that unit) still live in those classes, which are, themselves, TECHNICALLY but not ENTIRELY unique to that unit.
+
+On the other hand, if every unit has classes with unique names, then it doesn't really do the player any good to know what these classes are. That's kind of a dumb idea.
+
+I think that units need an Abilities list, and they draw those abilities from some pool that's based on their class. In fact, we discussed that abilities should have permutations? And also I came up with the idea of units only being able to bring so many abilities into any given battle? We need to reexamine these ideas.
+
+When Units are captured, they only know a few abilities from their classes. As they level up, they can learn more of these abilities.
+
+But units can only equip a limited number of abilities at a time. As they level up, they can unlock more slots for these abilities.
+
+What makes more sense, then: giving the unit a maximum number of abilities TOTAL, or giving the unit a maximum number of abilities PER CLASS.
+
+If you give the unit a maximum number of abilities TOTAL to use at once, you're essentially giving them extra incentive to bring in their MOST POWERFUL abilities. Which are almost certainly going to be from their Primary Class.
+
+If you give the unit a maximum number of abilities PER CLASS, you're encouraging them to mix the abilities of their classes together. But, is this the sort of encouragement that we want to give the player? Shouldn't the afforded tactical flexibility of multi-classing be incentive ENOUGH for the player to equip abilities from BOTH or ALL of their classes?
+
+Consider Tertiary Classes. If a Unit is limited in the number of total abilities that they can bring into combat, you're almost never gonna see anyone bring in abilities from their Tertiary Class. The whole idea that we conceived for Tertiary Classes was to have weaker abilities which afford a very small amount of tactical flexibility that might be useful in edge-cases or otherwise when the Leader has little AP remaining or the unit has little MP remaining.
+
+If there's little incentive to bring in these tertiary skills, is that a problem with the SKILL SLOTS (we should give them a limited number of abilities PER CLASS) or is it a problem with the whole idea of TERTIARY CLASSES (we need to make these classes / abilities more interesting to make the player want to take these abilities into combat).
+
+I want to make an argument that the available ability slots should be limited PER CLASS: we could give the player an INTERESTING DECISION TO MAKE when it comes to WHICH class to expand in terms of abilities availble per battle.
+
+Because, the Primary Class has access to that unit's most POWERFUL abilities. What if it cost MORE to unlock new slots for the Primary Class. Then, the player would be encouraged to fuck around with their secondary and tertiary classes despite the fact that those abilities aren't inherently as POWERFUL, NUMERICALLY.
+
+Maybe a system like this would ENCOURAGE the player to EXPERIMENT with the notion of secondary and tertiary classes. Otherwise, they might over-fixate on the NUMERICAL SUPERIORITY of their PRIMARY skills and then find themselves tactically limited in battle and not understand why they're losing. So maybe if we made it more AFFORDABLE to multi-class, players would be more encouraged to do that and, as a result, experience battle more in line with what we expect as game-designers.
+
+With this suggestion, LEARNING tertiary abilities would be cheaper (because the abilities, themselves, are weaker) and buying slots for the tertiary class would be cheaper (because only weak abilities are going into those slots).
+
+Buying abilities for the Primary Class would be potentially more expensive (because this class has access to more powerful abilities), and buying slots for this class would be more expensive (because those slots could potentially be filled with more powerful abilities).
+
+I like that idea. It encourages the player to experiment with their tertiary and secondary classes. It means that you're going into battle and you're always going to have access to your secondary and tertiary classes in some capacity, defining how that unit is used. You can't just load up on Primary Class abilities and only use the best of those and make a unit which is tactically less flexible but more specialized.
+
+That, in itself, could be an interesting decision to offer to our players: do they want for their unit to be more FLEXIBLE or more SPECIALIZED. But I think that, with the way that our gameplay has been designed so far, it makes more sense for us, as game-designers, to maintain some control over how specialized or flexible a unit-type is.
+
+Notes for the new guys:
+
+* Every Unit has three classes: Primary, Secondary, and Tertiary
+
+* Every class has three tiers of abilities: Tier 1, Tier 2, Tier 3.
+
+* Which class 'slot' a particular class is in, on a unit, determines which tiers of abilities that unit has access to.
+
+* If a class is that unit's Primary Class, they can learn abilities from ANY of the tiers.
+
+* If a class is that unit's Secondary Class, they can learn abilities from the first two tiers.
+
+* If a class is that unit's Tertiary Class, they can only learn abilities from the first tier.
+
+This means that, if a class is your Secondary Class, you'll have access to all of the abilities of that class EXCEPT for the most 'powerful' abilities.
+
+If a class is your tertiary class, you only have access to the least 'powerful' abilities in that class.
+
+So, in terms of attributes -- like, programmatic attributes -- we need lists and numbers for how many slots from each class we have.
+
+What's the best way, programatically, to assign things like CLASSES and ABILITIES to a unit? Right now, for our temporary mock-up, units just have a list of abilities. But how are we going to organize that for units in the long-term?
+
+Units need slots for the Rules they're under the affect of. They can only be under the affect of two Ally Rules and two Enemy Rules at the same time. We're gonna really need to examine how that's gonna play out.
