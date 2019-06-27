@@ -2925,3 +2925,76 @@ What's a better name for a sort of 'unit-class instance' than 'PersonalClass'? M
 So, on Wednesday, I feel like we need to put more work into hammering out this 'ability' system. We need to look at the architecture of MetaClasses as well as MetaAbilities. We need to create a working mock-up of a MetaAbility which can randomly spawn linear and non-linear variations into the ability list of UnitClasses.
 
 The complicated part is going to be the MetaAbilities. In fact, I feel like the 'Meta Class' is pretty much just a data structure that organizes the MetaAbilities into tiers. The MetaAbility is going to be rich with attributes and methods for defining the spawning-behavior when a unit learns a randomized variation of that MetaAbility. So, we'll make a mock-up for 'Slap' which allows a unit to learn 'Slap' and get a slightly different slap every time.
+
+
+06/26/19
+
+Today, I want to start mocking up our game's Ability system, where UnitAbilities are organized into MetaAbilities, and MetaAbilities are organized into MetaClasses.
+
+Before we get started with that, let's look at how much we've broken our Units.
+
+HP, MP (and, in our case, LP) are interesting attributes in JRPGs, because they're resources that are meant to be continuously consumed and restored.
+
+So, when you think about something like 'ATK', it basically has two associated values:
+
+It's 'default' or 'base' value, which is what shows up on your character 'status' screen between fights. This value raises as your character levels up.
+
+And it also has a 'current' or 'augmented' value, which is representative of how much ATK your unit has ON THIS TURN IN BATTLE, which may be different from its base ATK due to the results of some status changes -- buffs or nerfs.
+
+But HP and MP aren't this same way. They do have BOTH of those attributes: a 'base' value and an 'augmented' value (such as some status change which temporary lowers a unit's max HP or maybe raises it), but they also have ANOTHER value, which is their CURRENT HP. So, the MAX value is a base value and THAT can be augmented, but there's also a CURRENT value which represents how 'full' the HP or MP is. ATK, DEF, etc., don't have that.
+
+If I want to unify all of the unit attributes into some kind of class which has .base and .aug attributes, we need to look at CURRENT HP and CURRENT MP as their own, SEPARATE values. Because CURRENT HP can ALSO be augmented. So, really, what we're looking at are values which always have a BASE VALUE and an AUGMENTED value -- because, in a game with such an emphasis on 'status changes' (hence the 'Dynamic Rule System'), we're going to see attributes being augmented a lot. I think it's only natural to build this directly into our architecture.
+
+I think we need another layer of classes? We talked about how Units should have ability names which reflect the THEMES of that unit, even if the actual affect of the ability doesn't change. For instance, what one class calls 'Slap' another class might call 'Punch' or 'Shoot' or whatever. Just to better fit the GRAPHICAL or NARRATIVE theme of that class. So, how are we gonna break this up?
+
+Considering that only (?) the NAMES of the abilities and classes are changing, perhaps these could just be aliases that are built into the Unit class. Like, they take a MetaAbility and they rebind its name to something else.
+
+But the downside of this would be that we really COULDN'T add unit-specific abilities even if we wanted to, and I kind of liked the idea that Panders brought up a long time ago of maybe having one or two unique abilities per unit. So it's almost like... we need a MetaClass to extend another MetaClass.
+
+And then, when a MetaAbility is learned... it could intercept the newly born ability and change its name and description or whatever?
+
+Okay, that works. So, we don't NEED a new type of object. We just need for the unit-specific MetaClasses to inherit from some base MetaClass.
+
+Leaders don't need classes or anything. Although, it stands to reason that they should be able to learn new abilities and stuff? But let's not worry about that right now. We can worry about that mock-up or 8 or so. I think that mock-up is probably going to be focused on GROWTH. Unit growth. Once we have a feel for unit growth and such, we can start worrying about the Leader growth. That's really a secondary concern.
+
+So, for now, let's say that Leaders DON'T need classes. They just have abilities and such that are INHERENT to them.
+
+In a future episode, we need to examine how much like units we really want leaders to be. For now, let's just leave them as a very basic structure whose AP is consumed by their team. They're basically just representative of a 'party' and a shared AP pool.
+
+I'm going to rewrite the code, right now, in advance, for determining critical-hit chance. We want for this to be more modular, so that different abilities can override the equation for critical-hit chance.
+
+I think we broke something with the Dynamic Rule System, because Dynamic Events take a target and an attribute name. But now we've got layers to this shit. Now, the 'target' would be an attribute (like HP) and the attr_name would be 'base_val' or 'aug_val'.
+
+That's super duper ugly. Is there any way we can fix this? Not to my knowledge, right away.
+
+The thing that you COULD do is just to flatten out the Unit class and give them attributes like:
+
+some_unit.base_hp
+
+Rather than
+
+some_unit.hp.base_val
+
+Maybe that just makes more sense because of the way that the DynamicRuleSystem is engineered. I wanted to move to
+
+some_unit.hp.base_val
+
+as a way to communicate, ARCHITECTURALLY, the way that unit's attribute values change over the course of a battle. By flattening it out, we lose that sense of structure that's congruent with the way that battles actually play out.
+
+But it could just be a sacrifice that's worth making to keep the DynamicRuleSystem simple (or RELATIVELY SIMPLE).
+
+The thing is, we could update the DynamicRuleSystem to understand 'base_val' and 'aug_val', but there are attributes that are SUBJECT to the DRS which are not UNIT attributes. Like, when a Rule's triggered-counter updates. It doesn't need 'base_val' and 'aug_val', because it's not an attribute of a unit. So, because not all DRS-subject attributes belong to units, it doesn't really make any sense to impart this 'base_val' and 'aug_value' sub-attribute thing into it. So maybe we should just flatten it out.
+
+But the thing -- there's an advantage to having this 'base_val' and 'aug_val' structure to our unit attributes, because we could see, at a glance, which unit attributes have been augmented, for instance.
+
+On the other-other hand, unit attributes are FIXED. They're not going to be dynamically added and removed in battle -- that's what we hve 'tags' for -- so it's not like we're ever going to have more than HP, MP, LP, ATK, DEF, SKL, and PRY to deal with. So in that sense, it's very understandable to flatten things out.
+
+It makes THE MOST SENSE, FOR NOW, TO FLATTEN OUT THE UNIT ATTRIBUTES. We can worry about adding more depth later if we really want to.
+
+So, on Monday, let's work backwards: we want to get a working battle scenario FIRST, where Son of Dixxucker is Slapping Other Son of Dixxucker. Then, we can start looking at organizing 'Slap' into a MetaAbility, and then organize that MetaAbility into a MetaClass.
+
+1.) Get Slap working again.
+2.) Organize Slap into a MetaAbility.
+3.) Organize the MetaAbility into a MetaClass.
+
+Units still need 'Dynamic Rule' slots.

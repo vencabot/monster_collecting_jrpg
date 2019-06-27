@@ -326,26 +326,39 @@ class Unit:
 
     def __init__(
             self, unit_name, leader, hp, lp, mp, atk, defense, skl, pry,
-            primary_class, secondary_class, tertiary_class):
+            tags, primary_class, secondary_class, tertiary_class):
         self.unit_name = unit_name
         self.leader = leader
-        self.max_hp = hp
-        self.cur_hp = hp
-        self.max_lp = lp
-        self.cur_lp = lp
-        self.max_mp = mp
-        self.cur_mp = mp
-        self.real_atk = atk
+
+        self.base_max_hp = hp
+        self.base_max_lp = lp
+        self.base_max_mp = mp
+        self.base_atk = atk
+        self.base_def = defense
+        self.base_skl = skl
+        self.base_pry = pry
+        self.base_tags = tags
+
+        self.aug_max_hp = hp
+        self.aug_max_lp = lp
+        self.aug_max_mp = mp
         self.aug_atk = atk
-        self.real_def = defense
         self.aug_def = defense
-        self.real_skl = skl
         self.aug_skl = skl
-        self.real_pry = pry
         self.aug_pry = pry
+        self.aug_tags = tags.copy()
+
+        self.cur_hp = hp
+        self.cur_lp = lp
+        self.cur_mp = mp
+
         self.primary_class = primary_class
         self.secondary_class = secondary_class
         self.tertiary_class = tertiary_class
+
+
+class MetaClass:
+    class_name = "Default Class"
 
 
 class UnitClass:
@@ -356,7 +369,7 @@ class UnitClass:
         self.metaclass = metaclass
         self.learned_abilities = learned_abilities
         self.equip_limit = equip_limit
-        self.equipped_abilities
+        self.equipped_abilities = equipped_abilities
 
 
 class UnitAbility:
@@ -366,9 +379,20 @@ class UnitAbility:
         """Define ability necessities. Override to give additional state."""
         self.ability_name = ability_name
         self.owner = owner
-        self.effectiveness_methods = [
-                self.use_glancing, self.use_normal, self.use_critical]
+        self.effectiveness_map = {
+                "glancing": self.use_glancing, "normal": self.use_normal,
+                "critical": self.use_critical}
 
+    def roll_for_effectivieness(self, targets, battle):
+        """Return effectiveness str. Override to customize crit chance."""
+        glancing_chance = 15
+        critical_chance = 15
+        normal_chance = 100 - glancing_chance - critical_chance
+        effectiveness_strs = ["glancing", "normal", "critical"]
+        effectiveness_weights = [
+            glancing_chance, normal_chance, critical_chance]
+        return random.choices(effectiveness_strs, effectiveness_weights)[0]
+ 
     def use_on(self, targets, battle):
         """Find 'effectiveness' and use the matching method on targets."""
         if not self.can_be_used_on(targets):
@@ -377,14 +401,9 @@ class UnitAbility:
                     f"    {self.ability_name} cannot be used this "
                     "way.")
             return
-        glancing_chance = 15
-        critical_chance = 15
-        normal_chance = 100 - glancing_chance - critical_chance
-        effectiveness_weights = [
-            glancing_chance, normal_chance, critical_chance]
-        use_callables = random.choices(
-                self.effectiveness_methods, effectiveness_weights)
-        use_callables[0](targets, battle)
+        effectiveness_str = self.roll_for_effectiveness(targets, battle)
+        use_callable = self.effectiveness_map[effectiveness_str]
+        use_callable(targets, battle)
         battle.ruleset.reset_recurrence_counters()
 
     def can_be_used_on(self, targets):
@@ -408,8 +427,8 @@ class RelationshipHelper:
     """Helper class to simplify reciprocal relationships.""" 
 
     @classmethod
-    def create_unit_for(cls, leader, unit_name):
-        leader.party.append(Unit(unit_name, leader))
+    def create_unit_for(cls, leader, unit_type, unit_name):
+        leader.party.append(unit_type(unit_name, leader))
 
     @classmethod
     def create_ability_for(cls, unit, ability_class):
