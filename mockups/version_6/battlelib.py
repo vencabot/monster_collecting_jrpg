@@ -371,11 +371,24 @@ class UnitClass:
         self.equip_limit = equip_limit
         self.equipped_abilities = equipped_abilities
 
+    def learn(self, meta_ability):
+        new_unit_ability = meta_ability.get_unit_ability_for(self)
+        self.learned_abilities.append(new_unit_ability)
+
+
+class MetaAbility:
+    """Handles the semi-randomized processes for learning UnitAbilities."""
+    ability_name = "Ability"
+
+    @classmethod
+    def get_unit_ability_for(cls, unit_class):
+        return UnitAbility("Ability")
+
 
 class UnitAbility:
     """An action which propels the battle toward completion."""
 
-    def __init__(self, owner, ability_name="Ability"):
+    def __init__(self, owner, ability_name):
         """Define ability necessities. Override to give additional state."""
         self.ability_name = ability_name
         self.owner = owner
@@ -383,7 +396,7 @@ class UnitAbility:
                 "glancing": self.use_glancing, "normal": self.use_normal,
                 "critical": self.use_critical}
 
-    def roll_for_effectivieness(self, targets, battle):
+    def roll_for_effectiveness(self, targets, battle):
         """Return effectiveness str. Override to customize crit chance."""
         glancing_chance = 15
         critical_chance = 15

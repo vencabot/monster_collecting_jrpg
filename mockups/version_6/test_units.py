@@ -1,4 +1,5 @@
 import battlelib
+import test_abilities
 
 class DickSucker(battlelib.MetaClass):
     class_name = "Dick Sucker"
@@ -29,3 +30,6 @@ class Dixxucker(battlelib.Unit):
                 primary_class=primary_class,
                 secondary_class=secondary_class,
                 tertiary_class=tertiary_class)
+        primary_class.learn(test_abilities.Slap)
+        slap = primary_class.learned_abilities[0]
+        primary_class.equipped_abilities.append(slap)

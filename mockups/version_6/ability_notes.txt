@@ -2998,3 +2998,47 @@ So, on Monday, let's work backwards: we want to get a working battle scenario FI
 3.) Organize the MetaAbility into a MetaClass.
 
 Units still need 'Dynamic Rule' slots.
+
+
+
+07/01/19
+
+So, we ported Slap over to the new Unit mechanisms. But now we need to start asking some pretty interesting questions, because we're going to be trying to organize 'Slap,' the UnitAbility, into some kind of MetaAbility.
+
+So, let's review what the purpose of the MetaAbilities really are:
+
+MetaAbilities are integral to the process of LEARNING new abilities. That's what they really are. Once an Ability is LEARNED, the MetaAbility really has no importance.
+
+So, what we're looking at is a mechanism where a unit wants to learn a new ability and the MetaAbility handles that transaction: it takes some kind of currency and gives the unit a UnitAbility.
+
+Perhaps, then, the most integral method of a MetaAbility will be something like "learn" or "be learned by," or maybe the unit, itself, has a 'learn' method that takes a MetaAbility as an argument.
+
+So, I think that Units should have a 'Learn' method which takes a MetaAbility as an argument. That being the case, the MetaClass -- well, no. I think it probably makes more sense, from an architectural standpoint, to have the MetaAbility have some kind of 'be_learned_by' method, because it's in that method that the MetaAbility sort of contains its logic for deciding which version of the Ability to give the unit as well as how to randomize that ability's attributes.
+
+Let's just start coding and see what happens.
+
+We have our meta-ability. Now let's talk about... what we call... 'linear variance'. In other words, we can get some Slaps that are better than other slaps.
+
+So, for something like 'Slap,' we can play with the DAMAGE MULTIPLIER, we can play with the COSTS.
+
+So, the MetaAbility handles the linear variance when the UnitAbility is spawned, right?
+
+But why? That seems like an unnecessary extra step, because the UnitAbility, itself, knows its 'owner' upon instantiation. That being the case, shouldn't it be able to provide its own linear variance? Is there any reason it shouldn't?
+
+I wanna say that there is NO REASON to rely on the MetaAbility to handle the LINEAR variation. So let's say that the responsibility of the MetaAbility is to handle the NON-LINEAR variation exclusively.
+
+When you instantiate a UnitAbility, it can handle its own linear variation.
+
+How do you get a random number between .5 and 2?
+
+Ending our game-dev stream for today, we got our first MetaAbility working, and it seems to be behaving correctly. Now, the UnitAbilities, upon instantiation, handle their own 'linear variance,' which is to say that they examine their new owner and use the owner's attributes to decide, within some amount of randomness, what sorts of attributes they should have.
+
+The MetaAbility, Slap, has a method, "get_unit_ability_for," which can return a UnitAbility based on the attributes of the UnitClass that its given as an argument. So, on Wednesday's stream, we should get some non-linear variance working for the Slap MetaAbility, which means that we can not only get different STRENGTHS of slaps, but also different TYPES of slaps. So, we can program in a slap which inflicts poison or a slap which has a chance to take a unit's turn or something like that.
+
+After that, I'm surprisingly well-satisfied with where we're at insofar as architecting the Ability system of our game. I feel like it's where it needs to be in terms of sensibility and stability. It works. It's simple. It's dynamic. It's everything that I want it to be, right now.
+
+So, on Wednesday, it's very likely that we'll start to look into designing these 'MetaClasses,' at which point we can pretty much start designing mock-up unit types and get a real test battle going.
+
+Call me optimistic, but I think that, by the end of our Thursday stream, this week, we should have our first real test battle going -- except that we probably need some kind of mechanism to manage the turn-taking and stuff.
+
+Let me dial it back: by the end of NEXT week, we will DEFINITELY have a fully-working and playable battle.
