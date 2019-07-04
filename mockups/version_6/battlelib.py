@@ -357,25 +357,6 @@ class Unit:
         self.tertiary_class = tertiary_class
 
 
-class MetaClass:
-    class_name = "Default Class"
-
-
-class UnitClass:
-    def __init__(
-            self, owner, metaclass, learned_abilities, equip_limit,
-            equipped_abilities):
-        self.owner = owner
-        self.metaclass = metaclass
-        self.learned_abilities = learned_abilities
-        self.equip_limit = equip_limit
-        self.equipped_abilities = equipped_abilities
-
-    def learn(self, meta_ability):
-        new_unit_ability = meta_ability.get_unit_ability_for(self)
-        self.learned_abilities.append(new_unit_ability)
-
-
 class MetaAbility:
     """Handles the semi-randomized processes for learning UnitAbilities."""
     ability_name = "Ability"
@@ -383,6 +364,54 @@ class MetaAbility:
     @classmethod
     def get_unit_ability_for(cls, unit_class):
         return UnitAbility("Ability")
+
+
+class MetaClass:
+    class_name = "Default Class"
+    abilities_map = {"Ability": MetaAbility}
+
+    @classmethod
+    def get_unit_class_for(cls, unit):
+        return UnitClass(owner=unit, meta_class=cls)
+
+
+class UnitClass:
+    def __init__(
+            self, owner, meta_class, abilities_map=None, equip_limit=2,
+            equipped_map=None):
+        self.owner = owner
+        self.meta_class = meta_class
+        if abilities_map:
+            self.abilities_map = abilities_map
+        else:
+            self.abilities_map = {}
+        self.equip_limit = equip_limit
+        if equipped_map:
+            self.equipped_map = equipped_abilities
+        else:
+            self.equipped_map = {}
+
+    def learn_ability(self, meta_ability):
+        new_ability = meta_ability.get_unit_ability_for(self)
+        if new_ability.ability_name not in self.abilities_map:
+            self.abilities_map[new_ability.ability_name] = []
+        self.abilities_map[new_ability.ability_name].append(new_ability)
+        return new_ability.ability_name
+
+    def equip_ability(self, unit_ability):
+        learned_abilities = []
+        for ability_list in self.abilities_map.values():
+            for ability in ability_list:
+                learned_abilities.append(ability)
+        if unit_ability not in learned_abilities:
+            raise Exception("Cannot equip un-learned ability.")
+        elif len(self.equipped_map) >= self.equip_limit:
+            raise Exception("Cannot equip ability: already at equip-limit.")
+        else:
+            self.equipped_map[unit_ability.ability_name] = unit_ability
+
+    def unequip_ability(self, unit_ability):
+        del self.equipped_map[unit_ability.ability_name]
 
 
 class UnitAbility:

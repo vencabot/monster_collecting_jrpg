@@ -17,7 +17,7 @@ b_leader.point_unit = b_leader.party[0]
 
 print(a_leader.point_unit.unit_name)
 print(a_leader.point_unit.cur_hp)
-print(a_leader.point_unit.primary_class.metaclass.class_name)
+print(a_leader.point_unit.primary_class.meta_class.class_name)
 
-alpha_son_slap = a_leader.point_unit.primary_class.equipped_abilities[0]
-alpha_son_slap.use_on([b_leader.point_unit], test_battle)
+son_slap = list(a_leader.point_unit.primary_class.equipped_map.values())[0]
+son_slap.use_on([b_leader.point_unit], test_battle)
