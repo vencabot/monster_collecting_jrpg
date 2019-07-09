@@ -2,7 +2,7 @@ import random
 
 import battlelib
 
-class Slap(battlelib.MetaAbility):
+class MetaSlap(battlelib.MetaAbility):
     ability_name = "Slap"
 
     @classmethod
@@ -10,10 +10,9 @@ class Slap(battlelib.MetaAbility):
         pass
 
 
-class OpenPalmSlap(battlelib.UnitAbility):
+class DireSlap(battlelib.UnitAbility):
     def __init__(self, owner):
-        super().__init__(
-                owner=owner, ability_name="Open-Palm Slap", tags=[])
+        super().__init__(owner=owner, ability_name="Slap", tags=[])
 
     def linear_variate(self):
         pass
@@ -21,19 +20,39 @@ class OpenPalmSlap(battlelib.UnitAbility):
     def can_be_used_on(self, target):
         return True
 
-    def use_glancing(self, targets, battle):
-        self.use_normal(targets=targets, battle=battle)
+    def use_with_effectiveness(self, targets, battle, effectiveness):
+        if effectiveness == "glancing":
+            print(
+                    f"{self.owner.unit_name} slaps "
+                    f"{targets[0].unit_name}, but they've got the baby-"
+                    "hands!")
+            effectiveness_multiplier = .5
+        elif effectiveness == "normal":
+            print(
+                    f"{self.owner.unit_name} slaps {targets[0].unit_name}!")
+            effectiveness_multiplier = 1
+        else:
+            print(
+                    f"{self.owner.unit_name} really slaps the taste out of "
+                    f"{targets[0].unit_name}'s mouth!")
+            effectiveness_multiplier = 2
+        damage = self.owner.aug_atk * effectiveness_multiplier
+        battle.update_w_rules(
+                target=targets[0],
+                attr_name="hp",
+                new_value=targets[0].hp - damage,
+                by_ability=self,
+                at_effectiveness=effectiveness,
+                triggering_rule=None)
+        battle.update_w_rules(
+                target=self.owner.leader,
+                attr_name="ap",
+                new_value=self.owner.leader.ap - 
 
-    def use_normal(self, targets, battle):
-        print("This ability isn't designed, yet!")
 
-    def use_critical(self, targets, battle):
-        self.use_normal(targets=targets, battle=battle)
-
-
-class SystemShock(battlelib.UnitAbility):
+class DoubleSlap(battlelib.UnitAbility):
     def __init__(self, owner):
-        super().__init__(owner=owner, ability_name="System Shock", tags=[])
+        super().__init__(owner=owner, ability_name="Double Slap", tags=[])
 
     def linear_variate(self):
         pass
@@ -41,20 +60,13 @@ class SystemShock(battlelib.UnitAbility):
     def can_be_used_on(self, target):
         return True
 
-    def use_glancing(self, targets, battle):
-        self.use_normal(targets=targets, battle=battle)
-
-    def use_normal(self, targets, battle):
+    def use_with_effectiveness(self, targets, battle, effectiveness):
         print("This ability isn't designed, yet!")
 
-    def use_critical(self, targets, battle):
-        self.use_normal(targets=targets, battle=battle)
 
-
-class LightningShock(battlelib.UnitAbility):
+class DickSlap(battlelib.UnitAbility):
     def __init__(self, owner):
-        super().__init__(
-                owner=owner, ability_name="Lightning Shock", tags=[])
+        super().__init__(owner=owner, ability_name="Dick Slap", tags=[])
 
     def linear_variate(self):
         pass
@@ -62,15 +74,7 @@ class LightningShock(battlelib.UnitAbility):
     def can_be_used_on(self, target):
         return True
 
-    def use_glancing(self, targets, battle):
-        self.use_normal(targets=targets, battle=battle)
-
-    def use_normal(self, targets, battle):
+    def use_with_effectiveness(self, targets, battle, effectiveness):
         print("This ability isn't designed, yet!")
-
-    def use_critical(self, targets, battle):
-        self.use_normal(targets=targets, battle=battle)
-
-    def calculate_damage(self, targets, battle, effectiveness):
 
 
