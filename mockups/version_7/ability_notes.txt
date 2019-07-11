@@ -3332,3 +3332,218 @@ Let's make a note about balancing AP costs: you can think about it in terms of "
 If Slap costs '3,' then a move that costs '6' would need to be more than twice as useful because it's not ONLY twice as expensive, but it's more of a COMMITMENT. It's less tactically flexible than using two abilities that cost 3. Because I can use one that costs 3 and then decide if I want to use another that costs 4, or two abilities that cost 1 and 2 -- breaking up your abilities gives you more flexibility. So an ability that costs 6 would need to be twice as useful or "good" as an ability that costs 3.
 
 Next time, we need to finish implementing the 'costs' for Slap and we're going to create DoubleSlap and DickSlap.
+
+07/10/19
+
+New day, new design decisions to make. What are we gonna do about multi-hit moves that want to roll for crit more than once? I guess we could just call roll_for_effectiveness manually, right? I'm pretty sure that's a method of UnitAbility, so we would just call self.roll_for_effectiveness.
+
+Comparing a move that hits once to a move that hits twice for the same cost, what should the raw damage calculation comparison be?
+
+We've established that moves that hit ONCE are better against foes with HIGH DEF.
+
+Moves that hit TWICE are better against foes with LOW def.
+
+So, supposing that each type of attack has an advantage against different types of opponents, perhaps a 'double-slap' SHOULD do half as much damage per slap.
+
+Let's run some example numbers:
+
+Attacker's ATK is 20
+Defender's DEF is 7.
+
+Slap does 13 damage.
+
+Double-slap does 6 damage.
+
+That's less than half as much damage.
+
+Defender's DEF is 3.
+
+Slap does 17 damage.
+Double-slap does 14 damage.
+
+Slap still wins.
+
+This is the fallacy. If double-slap does half as much damage per slap, the only way that it can do as much damage as Slap is if the opponent has 0 defense. So, we do need to find some magic-number to help us decide what the multiplier should be for multi-hit attacks to make them compare evenly with single-hit attacks.
+
+I guess, in order to make this calculation, we need to decide on a 'baseline' comparison of ATK and DEF. One thing I've been discovering over the past week is that we need to decide on some 'baseline' values in order to effectively design skills, and this is no different. I don't know, yet, what the 'average' comparison would be between a given unit's ATK and DEF -- and, without knowing that, I can't really find that magic number for what attack multiplier would make multi-hits approximately even with single hits on a 'baseline' unit.
+
+I'm gonna work out Steve's question, here:
+
+Attacker has 20 ATK.
+Defender has 7 DEF.
+
+Double-slap does .75 * ATK per hit.
+
+Slap does 13 damage.
+Double-slap does 16 damage.
+
+Defender has 3 DEF.
+
+Slap does 17 damage.
+Double-Slap does 24 damage.
+
+I guess now is probably the time to start looking at baseline attribute values for a baseline Unit.
+
+Units have what:
+* HP
+* LP
+* MP
+* ATK
+* DEF
+* SKL
+* PRY
+
+One thing we have to think about, when defining this baseline unit, is how many turns we want for them to be able to survive if they're on the front row and not being healed.
+
+If you're under attack and you're NOT swapping the unit out and you're NOT healing them, then they shouldn't be able to survive for more than two turns.
+
+We're talking about getting slapped. We're talking about a unit taking its own ATK power as raw damage 3 times in a turn.
+
+If our baseline unit is going to die halfway through its second turn of being slapped, then its HP needs to follow this equation:
+
+hp = (ATK - DEF) * 5
+50 = (15  - 5)   * 5
+100 = (30 - 10) * 5
+
+Is DEF over-powered, mathematically, compared to ATK? Let's run some example numbers for Slap and Double-slap and see how their damage differs as we invest our points differently. My theory is that, if Defender invents an equal number of points into DEF as Attacker invests into ATK, Defender is getting the better deal.
+
+Attacker has 30 ATK.
+Defender has 10 DEF.
+
+Slap does 20 damage.
+Double-slap, with a multiplier of .66666~ per hit, does 20 damage.
+
+Attacker has 35 ATK.
+Defender has 15 DEF.
+
+Slap does 20 damage.
+Double-slap does 16 damage.
+
+I'm not a mathematician, but this phenomena reflects any situation where you're comparing the SCALE of two values after adding the same AMOUNT to both.
+
+2 is 200% as large as 1.
+But as soon as you add 1 to both, you get 3 vs 2. 3 is only 150% as 2.
+
+So, now that I've said it out loud, maybe here's a solution:
+
+When you add the same amount to two different values, they always come closer in scale. So, if we want attack and defense to be balanced, perhaps the only thing to do is to have the baseline attack and defense values be exactly the same and re-examine our 'base damage' equation to account for this.
+
+We seem to have two options: accept that DEF is over-powered and make it cost more, somehow. Or try to make DEF even with ATK, somehow.
+
+Dixx points out that we could manually design 'soft caps' into our equations, which is a pretty popular way to solve problems like this. But I've always hated that approach in JRPGs. I feel like it just makes the equations overly complicated and unpredictable to the player unless they know, in advance, where the soft-caps are.
+
+Jeefy points out that, if we want to BALANCE ATK against DEF, we could NERF DEF or BUFF ATK. I guess what I'm thinking, right away, is buffing ATK such that a 'baseline' ability has a multiplier greater than '1' when comparing ATK to DEF.
+
+To be clear, the issue that we're talking about is that our current equation for damage -- our current understanding of how damage is calculated -- favors DEF when ATK and DEF are both given the same number of points on level-up.
+
+SIDE-NOTE: aggressive attributes are ATK (used to calculate damage) and SKL (used to calculate which of the three effectiveness levels we get for our ability, "glancing", "normal", "critical").
+
+Our equation for calculating raw damage, right now, for a baseline ability (like Slap), is this:
+
+damage = ATK * 1 - DEF
+
+So, in our current 'baseline' examples, a baseline unit has 30 ATK and 10 DEF.
+
+So, slap does 20 damage.
+
+The reason that we're using this simple equation (where we're just subtracting DEF from the raw damage in order to get the total damage) is so that multi-hits scale BETTER against opponents that have LOW DEF and WORSE against opponents that have high DEF. The goal is to have multi-hits have a separate tactical use compared to single-hits. Single-hits are more effective against units that have high def. Multi-hits are more-effective against units that have low def.
+
+SIDE-NOTE: SKL and PRY are the analogues for a classic JRPG's "ACCURACY" vs "EVASION." Every JRPG has their own names for these values. In our game, it's "SKL" and "PRY". Skill is the aggressor's attribute to make their attacks more likely to land clean. PRY is the defender's attribute to make their opponent's attacks more likely to land 'off'.
+
+Our problem is that, if our Attacker and Defender both invest all of their points into ATK and DEF respectively, and they level up the same number of times, there will come a point where the Attacker cannot harm the Defender -- where-as you might expect that, if they're both raising their attributes by the same amount, the defender would always be taking approximately the same damage.
+
+The calculation between SKL and PRY has RNG in it. An aggressor with a set amount of SKL and a defender with a set amount of PRY will not always result in the same effectiveness when a given skill is used.
+
+Dixx puts forward the idea of a 'tertiary stat' which augments how effective the DEF stat is -- a multiplier. And 'DEF' is just a value that's set in stone per unit. I don't know if that solves our problem.
+
+In fact, when we decided to implement 'DEF,' that was sort of its idea: it's already a tertiary value.
+
+So, my original idea was to have NO DEF in our game, similar to Final Fantasy Tactics, which I've always admired for the fact that it simplified its JRPG trappings by replacing DEF with 'more HP.' The question came up, in one of our early-on design streams, "what is the point of having DEF when you can just have more HP."
+
+And I think it was Dixxucker who raised the idea that a DEF value could create an interesting sliding-scale when you're talking about how individual abilities 'overcome defense.'
+
+And I liked that idea, and we settled on this notion that BIG, HEAVY, SINGLE-HIT ATTACKS would be better at getting 'over' DEF and smaller, multi-hit attacks would be more RAW damage but would have trouble conquering defense.
+
+Therefore, if you observe that your opponent has lower-than-average defense, it would make more sense to use multi-hit attacks for their raw damage.
+
+But if you observe that your opponent has higher-than-average defense, your multi-hits would have trouble cresting OVER that defense value, and so the best way to get damage for your money is to use an equal-costing single-hit attack.
+
+So, basically, DEF is already sort of a tertiary or auxiliary attribute that augments your HP.
+
+Dixx says, "Don't make 1 ATK = 1 DEF," and that's exactly what I'm talking about. I'm saying that one solution, which is the most attractive to me, right now, is to make the 'baseline ability,' Slap, deal some multiple of ATK greater than 1 on "normal" effectiveness.
+
+So, right now, the baseline attack in the game -- which all other attacks are based around -- is Slap, and it does 1 * ATK for its raw damage, which means that, as dixx puts it, ATK = DEF.
+
+So what if, for our most basic attack -- and all attacks that behave similarly -- we raise the mutliplier for how effective 'ATK' is at creating raw damage.
+
+Let's just suppose -- and run some numbers, because I'm lazy and don't want to try to figure out, in an abstract sense, what the result would be without experimentation -- that a 'normal' effectiveness Slap calculates it damage with 1.5 * ATK. Let's see how that changes things. By extension, I guess Double Slap would do *1 damage.
+
+Attacker has 30 ATK.
+Defender has 10 DEF.
+
+Slap now does 35 damage.
+Double-slap now does 40 damage.
+
+Attacker has 40 ATK.
+Defender has 20 DEF.
+
+Slap does 40 damage.
+Double-slap does 40 damage.
+
+To repeat: any time you have two different values and you add the same amount to them, the lower value is going to come closer to the higher value in terms of their respective scale.
+
+So, because DEF is lower than ATK, if you add the same amount to both, DEF is going to always be getting closer to ATK in scale.
+
+It seems to me that we need to make the default ATK and DEF the same value and then create an equation around that which would have our unit die in 5 slaps. We need to adjust the damage of slap and the amount of HP the unit has.
+
+So let's re-examine our equation.
+
+Our old equation was this:
+
+hp = (ATK - DEF) * 5
+
+hp = (damage) * 5
+
+Where damage is some value that we can get from ATK and DEF being exactly the same. In our old equation, if a unit has the same value for ATK and DEF, he cannot damage himself with Slap; he takes 0 damage. Our goal, with this new equation, is to change that. Now, he has the same value for ATK and DEF, and, when he slaps himself, he dies in 5 slaps.
+
+We're trying to design the stats for a 'basic' unit which we can base all other units off of. Other units might favor defense over offense. Other units might favor high HP over both. But, in order for us to decide what 'pros' and 'cons' each unit brings to the table, we need to define what a 'baseline, normal, run-of-the-mill, no exceptional advantages-or-disadvantages' unit looks like.
+
+So, I'm theorizing that it would be for the best for an 'average' 'normal' unit to die in 5 'average' or 'normal' attacks. That means that they would die in a turn-and-a-half of being vulnerable. Meaning that, strategically, if you want for a unit to survive for more than a turn, you probably need to heal them or swap them out before a turn-and-a-half. That's where the number '5' comes from.
+
+So, by my estimation, a 'basic' unit would need enough HP to survive 5 hits of our basic damage calculation.
+
+Our attacker and defender are, at level 1, the same unit. We could talk about a unit 'slapping themselves.' So, our old equation was:
+
+HP = (ATK - DEF) * 5
+
+DEFENDER_HP = (AGGRESSOR_ATK - DEFENDER_DEF) * 5
+
+Our game is going to have lots of different types of units with lots of different advantages and disadvantages.
+
+In order to keep things balance, whenever a unit has a particular advantage in one area it would need to have a disadvantage in another area.
+
+This is true of Abilities and Classes as well: whenever you GIVE SOMETHING to a unit / class / ability, you need to take something away.
+
+Until we establish a 'baseline' for these sorts of ideas, we don't know what qualifies as an advantage or a disadvantage. We need some kind of generic object to represent a unit / class / ability which has no particular advantages or disadvantages so that we can design around these.
+
+To answer Dixx's question about opponent generation in single-player, I figure that we'll be using a similar approach to Pokemon: opponent type at level 1, all their stats multiplied to whatever level they're supposed to be at. Supposing that they continued to invest their points in equal proportion to whatever respective scales they started with.
+
+The idea is to figure out how much damage Slap should do. In order to understand how much damage slap should do, we need to understand how much HP a hypothetical opponent has. And in order to figure that out, we need to figure out how fast we want them to die (5 slaps) and how their def factors into this.
+
+That's what we're stuck on.
+
+I don't think we're going to be scaling anything about the opponents, in singleplayer, based on the player's attributes. That would be Elderscrolls-esque -- scaling opponents based on player. In our case, I always imagined it being more traditional: enemies in a certain area are a certain level, and their attributes are based on their 'base' attributes (but scaled up to their level), and the player has to be strong enough to survive in that area or go get stronger.
+
+Tomorrow, in this timeslot, we need to examine in greater detail the equation for calculating raw damage in consideration of 'ATK' and 'DEF'. What is the most basic way to use those attributes of the attacker and defender respectively to calculate damage in such a way that it scales neatly to different levels and we get our expected behavior for the difference between 'mutli-hit' and 'single-hit' attacks.
+
+Single-hits are supposed to do more damage to an opponent who has above-average DEF than a mutli-hit would.
+
+Multi-hits are supposed to do more damage to an opponent who has below-average DEF than a single-hit would.
+
+Therefore, an opponent who has exactly average defense should take the same damage from an attack that does a single-hit versus an attack that does a multi-hit.
+
+Defender DEF+: single-hit more effective, multi-hit less effective
+Defender DEF-: single-hit less effective, mutli-hit more effective
+Defender DEF=: single-hits and multi-hits do the same damage
+
+Considering this future equation, I believe that we need to have ATK and DEF be equivalent in value if we want for them to cost the same amount to level-up. If they aren't equivalent, we're going to see a problem of scale.
