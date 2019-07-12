@@ -3547,3 +3547,309 @@ Defender DEF-: single-hit less effective, mutli-hit more effective
 Defender DEF=: single-hits and multi-hits do the same damage
 
 Considering this future equation, I believe that we need to have ATK and DEF be equivalent in value if we want for them to cost the same amount to level-up. If they aren't equivalent, we're going to see a problem of scale.
+
+07/11/19
+
+Last night, I was thinking about different equations that we could use for calculating damage to get the effect that we want and I didn't have a whole lot of luck. I feel like this is the sort of thing that's going to require quite a bit of thought -- but I did have one idea that I want to step through, here.
+
+I had this idea where the ATK vs DEF calculation is the factor deciding 'bonus damage.' My gut says that this isn't going to be a fun way to calculate damage, but, based on my early estimations, it seems like it might be more effective than it first appears.
+
+Let's say that a baseline unit has 25 HP and that Slap and Double Slap are supposed to do 5 damage supposing that the attacker and defender have the same value for their attack and defense.
+
+So what if we did something like this:
+
+final_damage = damage_constant_of_ability + (ATK - DEF)
+
+In this example, 'Slap' would have a damage-constant of 5.
+
+I can already see a problem, here, but let's follow-through with what I was thinking, anyway.
+
+If the attacker has 1 more ATK than the defender has DEF, Slap now does 6 damage. If the Defender has 1 more DEF than the attacker has ATK, then Slap does 4 damage.
+
+On the one hand, I feel like this is a pretty good incentive for players to raise their units' ATK and DEF. Because it makes both very strong. Equally strong, even.
+
+The problem is that we start to see a situation where the BONUS DAMAGE dramatically outscales the DAMAGE CONSTANT. If a unit continuously pumps their ATK value at every level-up, they might have a damage bonus of 20 or whatever. At that point, the difference between Slap (5 damage constant) and poke (1 damage constant) is relatively little, but Poke only costs 1 AP, so it becomes a much more attractive option.
+
+That's the problem with this 'bonus damage' idea.
+
+My gut tells me that, whatever we do, it's going to need to rely on some MULTIPLIER. Hang on. I'm getting a Jimmy Neutron brain-blast.
+
+Maybe the difference between ATK and DEF can create some kind of bonus as a multiplier -- not as a sum. I wonder if that would give us better Double-Slap against lower-defense opponents, like we want, but let's test it.
+
+Let's say that Attacker has 15 ATK and Defender has 12 DEF.
+
+So, we would need to find out, mathematically, what percentage higher 15 is over 12.
+
+15 is 125% as big as 12. So, we could say that the 'damage constant' of Slap (5) gets a 25% increase.
+
+Slap does 6.25 damage.
+
+Double-slap does 2.5 base damage. So, double-slap does 6.25 damage.
+
+So, I like this equation. It seems fair, it seems sensible. The problem with it is that it doesn't scale Slap differently to Double Slap depending on whether the opponent has 'low' or 'high' or 'average' DEF.
+
+What I don't like about this is that, with no 'bonus damage' calculation -- no 'subtraction' -- we end up in situations where you would need to have insanely high ATK in order to, for instance, get double-damage on an opponent with moderately high DEF. But maybe that's for the best.
+
+It seems weird to me that, an attacker with 20 ATK hitting a defender with 10 DEF would do 10 damage with Slap.
+
+But, also, an attacker with 100 ATK hitting a defender with 50 DEF would also only do 10 damage with Slap.
+
+I'm not sure that's a bad thing. You could argue that it just helps us keep our HP values in check. I mean, yeah, we could give units 300 HP instead of 25, but the effect is the same, right? If you pump twice as much points into ATK as your opponent put into defense, you're gonna do twice as much damage.
+
+If we want for multi-hits to do more damage against low-defense opponents, we're GONNA NEED some kind of subtraction in our algorithm. Some kind of linear SOMETHING. Or, we could factor in some kind of multiplier for 'number of hits'.
+
+Like, DEF has to create some kind of 'barrier' that an attack has to OVERCOME, you know what I mean? In order for HEAVIER ATTACKS to scale better over high defense than LIGHTER ATTACKS. We have to create some kind of threshold.
+
+Like, we need one more layer. We get our RAW DAMAGE from the ability's damage-constant multiplied by the percentage difference between ATK and DEF. After we get our RAW DAMAGE, we need some sort of threshold layer for that damage to go up against. The threshold layer would also need to be based on the percentage difference between ATK and DEF, I feel like, but it's linear: it involves subtraction.
+
+The threshold, I feel like, would almost certainly need to factor in the ability's damage constant...? To get a sense of scale...? Well, no, that hardly makes sense because the idea is that heavier-hitting attacks would be better at crossing the threshold.
+
+If you have 100 ATK and I have 50 DEF, my DEF is 50% as big as your ATK. How can I make that into a sensible threshold that would allow heavier-hitting attacks to cross the threshold sooner than lighter-hitting attacks?
+
+We could consider Dixx's suggestion of a 'tertiary attribute' that would help with these calculations? Like, what if it was based on Max HP. Like, there's some kind of additional bonus damage (this doesn't really help) based on what percentage of my total HP your raw damage would subtract. That would definitely favor heavier-hitting attacks -- but the problem is that we want to reward multi-hits against opponents that have low DEF. Reward them more than single hits.
+
+Using 'Max HP' as a multiplier for damage taken sort of reminds me of Steamband, which is a game that we're already taking inspiration from insofar as the 'LP' system. But Steamband had these values called 'WP,' or 'Wound Points,' which worked fairly similarly to SaGa's LP or 'life points,' except that, when you took a hit, there was always a chance that you could lose WP, and the percentage of your max HP that was subtracted from that hit was multiplied by .5 to get the percentage chance of losing WP.
+
+So, if you took half of your health in a single hit of damage, you would have, like, a 25% chance of losing WP. So, heavier hits were rewarded with a much higher chance to lose WP.
+
+So maybe we could create some kind of 'bonus damage' system based on what percentage of your health you lost from a single hit. Multi-hits would have a higher damage-constant OVER-ALL (considering the number of hits), but no single hit would do as much of your HP as a heavy attack would, so the heavy attack would get a more substantial bonus?
+
+But the problem with this, at least the way that I'm conceiving it, is that, as long as there is no linear threshold, the bonus damage from the multi-hits would necessary eventually add up to the bonus of the single-hit. I'm no mathematician, but I'm pretty sure that's how multiplication works.
+
+Let's just say that attacks get bonus damage of their damage-constant times the percentage HP they removed from the opponent.
+
+Our example equation is this, for total damage:
+
+raw_damage = damage_constant * (ATK / DEF)
+bonus_damage = raw_damage * (raw_damage / max_hp)
+total_damage = raw_damage + bonus_damage 
+
+So, let's look at an attacker with 10 ATK and a defender with 10 DEF and 25 HP.
+
+raw_damage = 5 * (10 / 10)
+total_damage = 5 + 5 * (5 / 25)
+
+total_damage = 6
+
+Now, let's use double-slap:
+
+raw_damage = 2.5 * (10 / 10)
+bonus_damage = 2.5 * (2.5 / 25)
+total_damage = 2.5 + .25
+
+multi-hit = 2.75 * 2 = 5.5
+
+It penalized double-slap. The only problem is that, at even ATK and DEF, we want for Double Slap to do the same damage as Slap. But what was a success was that our harder-hitting attack ended up doing more damage than our multi-hit because of the bonus it got for doing heavy damage.
+
+So, what we've created here, successfully, is an equation that rewards heavier hits. Could we just solve this problem, now, by giving multi-hits a greater damage-constant to compensate? Right away, I would argue not, because I still think that, if the opponent has LOWER DEFENSE, multi-hits and single-hits are always going to scale the same in this equation... maybe.
+
+Dixx is raising some questions about our old equations, so let's compare them:
+
+Our old way of doing things was for abilities to have a DAMAGE MULTIPLIER which would influence damage directly based on the attack's ATK.
+
+So, if attacker has 10 ATK and Slap has a 'damage multiplier' of 1, then Slap does 10 damage. And then we would subtract the defender's DEF to get the real damage.
+
+In our new system, abilities don't have 'damage multipliers' but rather 'damage constants.' I think that's the core difference. So, now, we say that Slap has a damage constant of 5 -- it does 5 damage supposing that the attacker and defender have the same amount in their respective stats. And then we use the difference between attack and defense to figure out how much to add to or reduce from that value. This way, atk and def always have the same value to the player.
+
+Something we considered, today, was creating a hybrid: the old, linear, subtraction-based system using damage-constants instead of damage-multipliers, and it didn't work. It would've looked like this:
+
+total_damage = damage_constant + (ATK - DEF)
+
+That way, if ATK and DEF are the same, slap does 5 damage (its damage constant). The problem with that is that, the damage constant is quickly made obsolete by the difference between ATK and DEF. If an attacker pumps ATK heavily for every level-up, they might have 20 more ATK than the defender has DEF.
+
+At that point, Slap does 25 damage. The argument could be made that it was the defender's responsibility to raise DEF as much as attacker raised ATK, but the real problem with this is not that the attacker is being rewarded with damage 5x what Slap would have otherwise done; the problem is that the attacker can now use Poke (1 damage-constant) for 1 AP and it'll do 21 damage. That makes it extremely to Slap for that player, but at a much cheaper cost. Also, it means that, while Slap goes from 5 to 25 damage (5x damage), Poke goes from 1 to 21 damage (21x damage).
+
+So, it doesn't work.
+
+And the reason that the original equation of:
+
+total_damage = damage_multiplier * ATK - DEF
+
+doesn't work is because, as both ATK and DEF are raised evenly, the benefit of raising ATK gets much lower compared to the benefit of raising DEF.
+
+total_damage = 1 * 10 - 5
+
+5 damage
+
+total_damage = 1 * 20 - 15
+
+5 damage
+
+This is apparently working fine, but it doesn't serve us correctly for rewarding multi-hits on opponents that have 'lower than average DEF.'
+
+GOOD: w/ 10 atk & 5 def
+    slap
+    total_damage = 1 * 10 - 5 = 5
+
+    double slap
+    total_damage = (.75 * 10 - 5) * 2 = 5
+
+GOOD: w/ 10 atk & 3 def
+    slap
+    total_damage= 1 * 10 - 3 = 7
+
+    double slap
+    total_damage = (.75 * 10 - 3) * 2 = 9 
+
+BAD: w/ 20 atk & 13 def
+    slap
+    total_damage = 1 * 20 - 13 = 7
+
+    double slap
+    total_damage = (.75 * 20 - 13) * 2 = 4
+
+
+
+
+
+
+STRICTLY LINEAR ATK-DEF SCALING, ABILITIES HAVE DAMAGE MULTIPLIERS:
+    total_damage = damage_multiplier * ATK - DEF
+
+    + As long as the difference between ATK and DEF is the same, Slap does
+      the same damage.
+    + As DEF falls lower and ATK stays the same, multi-hits are rewarded
+      more.
+    - Even if the difference between ATK and DEF is the same, Double Slap
+      loses damage. This is because DEF gets closer to ATK in scale. When
+      you raise two values evenly, the lower value gets closer to the
+      higher value in scale.
+
+    GOOD: w/ 10 atk & 5 def
+        slap
+        total_damage = 1 * 10 - 5 = 5
+
+        double slap
+        total_damage = (.75 * 10 - 5) * 2 = 5
+
+    GOOD: w/ 10 atk & 3 def
+        slap
+        total_damage= 1 * 10 - 3 = 7
+
+        double slap
+        total_damage = (.75 * 10 - 3) * 2 = 9 
+
+    BAD: w/ 20 atk & 13 def
+        slap
+        total_damage = 1 * 20 - 13 = 7
+
+        double slap
+        total_damage = (.75 * 20 - 13) * 2 = 4
+
+
+LINEAR ATK-DEF SCALING, ABILITIES HAVE DAMAGE-CONSTANTS
+    total_damage = damage_constant + ATK - DEF
+
+    + If ATK and DEF are the same, then total_damage is equal to damage-
+      constant.
+    + If ATK and DEF are raised evenly, then this is always true.
+    + Which means that ATK and DEF have equal value to the player.
+    - As ATK raises over DEF, the damage-constant is quickly outclassed by
+      the bonus damage.
+    - This means that, for stronger characters, the difference between Slap
+      (5 AP cost for 5 base-damage) and Poke (1 AP cost for 1 base-damage)
+      is significantly less, making Poke extremely overpowered.
+    - The opposite is also true. If DEF outclasses ATK by the damage
+      constant (a very small number), that attack is completely nullified.
+    - In other words, pretty quickly, most of the damage you're getting is
+      from the bonus damage. The damage constant stops mattering.
+
+    GOOD: 10 ATK & 10 DEF
+        slap
+        total_damage = 5 + 10 - 10 = 5
+
+        double slap
+        total_damage = (2.5 + 10 - 10) * 2 = 5
+
+    KIND OF GOOD: 15 ATK & 10 DEF
+        slap
+        total_damage = 5 + 15 - 10 = 10
+
+        double slap
+        total_damage = (2.5 + 15 - 10) * 2 = 15
+
+    KIND OF GOOD: 10 ATK & 13 DEF
+        slap
+        total_damage = 5 + 10 - 13 = 2
+
+        double_slap
+        total_damage = (2.5 + 10 - 13) * 2 = 0
+
+    BAD: 30 ATK & 10 DEF
+        slap
+        total_damage = 5 + 30 - 10 = 25
+
+        double_slap
+        total_damage = (2.5 + 30 - 10) * 2 = 45
+
+BONUS-DAMAGE CALCULATED BY THE PERCENTAGE DIFFERENCE BETWEEN ATK & DEF
+    total_damage = damage_constant + damage_constant * (ATK / DEF)
+
+    + When ATK and DEF are the same, Slap and Double Slap do the same
+      damage, regardless of how high ATK and DEF are.
+    + When ATK is twice DEF, Slap and Double Slap do double damage.
+      Compared to previous equations, this is much more respectful of
+      scale.
+    - It doesn't provide any difference in damage for single or multi-hits
+      based on whether DEF is higher than ATK or vice-versa.
+
+    GOOD: 10 ATK & 10 DEF:
+        slap
+        total_damage = 5 + 5 * (10 / 10) = 10
+
+        double slap
+        total_damage = (2.5 + 2.5 * (10 / 10)) * 2 = 10
+
+    KINDA GOOD: 15 ATK & 10 DEF
+        slap
+        total_damage = 5 + 5 * (15 / 10) = 12.5
+
+    BAD: 15 ATK & 10 DEF
+        double slap
+        total_damage = (2.5 + 2.5 * (15 / 10)) * 2 =  12.5
+
+THE ABOVE BUT WITH DAMAGE BONUS BASED ON SINGLE-HIT DAMAGE
+    raw_damage = damage_constant + damage_constant * (ATK / DEF - 1)
+    bonus_damage = raw_damage * (raw_damage / max_hp)
+    total_damage = raw_damage + bonus_damage
+
+    + Rewards heavier hits with more bonus damage.
+    - It doesn't reward heavier hits less when DEF is higher than ATK.
+    - So, there's still no advantage to multi-hits.
+    - WHENEVER you do MORE DAMAGE with a SINGLE HIT, you get a GREATER
+      BONUS. How can we write an equation that uses this to our advantage?
+    ? But what if the damage-constant for multi-hits was higher?
+
+    KINDA GOOD: ATK 10 & DEF 10 & HP 25
+        slap
+        raw_damage = 5 + 5 * (10 / 10 - 1) = 5
+        bonus_damage = 5 * (5 / 25) = 1
+        total_damage = 5 + 1 = 6
+
+        double slap
+        raw_damage = 2.5 + 2.5 * (10 / 10 - 1) = 2.5
+        bonus_damage = 2.5 * (2.5 / 25) = .25
+        total_damage = (2.5 + .25) * 2 = 5.5
+
+    BAD: ATK 12 & DEF 10 & HP 25
+        slap
+        raw_damage = 5 + 5 * (12 / 10 - 1) = 6
+        bonus_damage = 6 * (6 / 25) = 1.44
+        total_damage = 6 + 1.44 = 7.44
+
+        double slap
+        raw_damage = 2.5 + 2.5 * (12 / 10 - 1) = 3
+        bonus_damage = 3 * (3 / 25) = .36
+        total_damage = (3 + .36) * 2 = 6.72
+
+For next time: what we've been struggling with is creating a damage-calculating equation that satisfies all of these needs:
+
+1.) When DEF and ATK are even, attacks do their 'base' damage.
+2.) When DEF and ATK are even, single-hit attacks and their sibling multi-
+    hit attacks do equal damage.
+3.) When ATK is greater than DEF, multi-hit attacks do more damage than
+    their single-hit siblings.
+4.) When DEF is greater than ATK, single-hit attacks do more damage than
+    their multi-hit siblings.
+
+Many of our equations, tonight, have satisfied many of these requirements -- but none have satisfied all of them.
