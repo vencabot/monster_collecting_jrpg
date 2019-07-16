@@ -3853,3 +3853,797 @@ For next time: what we've been struggling with is creating a damage-calculating 
     their multi-hit siblings.
 
 Many of our equations, tonight, have satisfied many of these requirements -- but none have satisfied all of them.
+
+
+
+07/15/19
+
+After our last stream, Panders came up with an equation that he thinks should meet all of the criteria that I was putting forward during our stream. Afterward, Kenny created a spreadsheet to demonstrate that equation and found it to be very satisfactory.
+
+Let's have a look at it, here.
+
+DMG FORMULA:  ((ATK / DEF) * (Slap Base Damage + (ATK - DEF) / 2)) * NUM_OF_HITS
+
+Let's break this down, theoretically:
+
+So, just like in some of my previous example equations, we're using the 'percentage scale' of ATK over DEFENSE as a multiplier against the base damage.
+
+I think, for the most part, this equation looks like something we've already done:
+
+total_damage = base_damage * (ATK / DEF)
+
+In Pander's equation, the base damage, BEFORE THE MULTIPLIER, is being altered.
+
+total_damage = (base_damage + (ATK - DEF) / 2) * (ATK / DEF)
+
+I think that the profound thing about this equation is that the BASE DAMAGE gets a buff. I think that's what I was missing in my own equations, but let's look a bit deeper.
+
+You could break up the equation like this:
+bonus_damage = (ATK - DEF) / 2
+offense_multiplier = ATK / DEF
+total_damage = (base_damage + bonus_damage) * offense_multiplier
+
+It seems to me that the shortcoming of this equation is in the same vein as the last equation I tried which used linear bonus damage. Will there come a time -- maybe even very quickly -- where the BONUS DAMAGE outweighs the BASE DAMAGE such that WEAKER ABILITIES become more efficient than STRONGER ABILITIES.
+
+To test this, we need to look at another ability: 'Poke'. Poke has a base damage of 1.
+
+There's something wrong with DEF in this equation. It seems like raising DEF is extremely strong.
+
+At 20 ATK vs 10 DEF, the damage of Slap triples and the damage of double-slap quadruples.
+
+At 10 ATK vs 20 DEF, the damage of Slap is reduced 75% and the damage of double-slap is reduced 100%.
+
+This seems to be something to do with the 'bonus damage' going into the negative and quickly overwhelming the base damage. So, the problem I predicted.
+
+We can probably also demonstrate this with 'Poke'.
+
+With 20 ATK, 10 DEF, and an attack with a base-damage of '10,' we get 30 damage.
+
+With a base-damage of '1,' we get 12 damage.
+
+But I still think I can prove my point.
+
+Once you get to 100 ATK vs 50 DEF, going from Slap (5 base damage) to Poke (1 base damage) results in a damage loss of ~30%. Where-as you might expect a damage loss of ~80%.
+
+The difference seems much more extreme when DEF is higher.
+
+How can I examine this issue better?
+
+With +20% ATK over DEF, single-hits do +32% damage and multi-hits do +44% damage. Seems legit.
+
+With +20% DEF over ATK, single-hits do -25% damage and multi-hits do -33% damage.
+
+with +50% ATK over DEF, single-hits do +87% damage and multi-hits do +22% damage.
+
+With +50% DEF over ATK, single-hits do -50% damage and multi-hits do -66% damage.
+
+I guess I feel like, when you have twice as much ATK as they have DEF, Slap should do twice as much damage -- and when you have half as much ATK as they have DEF, Slap should do half damage -- but I don't think that's reasonable because of how we're calculating a 'defensive threshold.' I think that idea is maybe incompatible with the idea of a defensive threshold.
+
+Slap is getting a bonus for every point over ATK that it is.
+
+We're augmenting the base damage based on the DIFFERENCE between ATK and DEF. And then we're multiplying that by the percentage difference if ATK and DEF.
+
+By augmenting the base damage by the DIFFERENCE between ATK and DEF, we're giving a bonus to... any attack when ATK is higher than DEF.
+
+But, compared to the base damage, that bonus is more significant when base_damage is lower.
+
+If we get 2 bonus damage and add that to slap, we get 12 base damage. An increase of 20%.
+
+If we get 2 bonus damage and add that to double-slap, we get 7 base damage. An increase of nearly 50%.
+
+The bonus damage rewards weaker hits more.
+
+The bonus damage scales better for weaker hits.
+
+Does this mean that weaker, and cheaper, abilities become more cost-effective against foes that have lower defense than stronger, more-expensive abilities? It would seem 'yeah,' but maybe that's not necessarily a bad thing. Maybe that's exactly what you expect. When you pay more for heavier-hitting abilities, you're not just paying for the raw damage -- you're paying for the ability to penetrate defense. So as long as you have high ATK, you can get more mileage out of weaker abilities and not need to worry as much about more expensive, harder-hitting abilities.
+
+The thing about the bonus damage is that it ignores scale entirely. And that's by design -- that's exactly what we've been talking about for weeks. That's what it's supposed to do. The higher your ATK is over their DEF, the more damage you get, right? So if I have 100 ATK and you have 50 DEF, my ATK may only be double your defense, but I'm also 50 fucking points higher than you in DEF.
+
+Is that how I want to look at this? Get bonus damage for every point over your DEF I have in ATK?
+
+I'm starting to formulate an idea based on Panders' equation, here. I think the real profundity of Panders' equation is that he augments the BASE DAMAGE as the way to get bonus damage.
+
+But I think my idea won't work -- because, again, it relies on SCALE more than LINEAR ADVANTAGE. I think we NEED an element of linear-advantage in order for us to have this 'defense threshold' idea.
+
+But my idea would be like this:
+
+total_damage = (ATK / DEF) * (base_damage + base_damage * (ATK / DEF))
+
+That would award bonus damage to scale with the base damage and the scale difference between ATK and DEF.
+
+But, whenever I try to do things this way, it seems like Slap and Double-slap always end up doing the same damage.
+
+Let's break it up:
+
+damage_multiplier = (ATK / DEF)
+bonus_damage = base_damage * damage_multiplier
+total_damage = (base_damage + bonus_damage ) * damage_multiplier
+
+10 ATK, 10 DEF
+Slap = 10
+Double Slap = 5
+
+Slap damage = 20
+Double slap damage = 20
+
+20 ATK, 10 DEF
+
+Slap damage = 60
+Double Slap damage = 60
+
+I think this works, but the scale is out of whack. We need to downscale the bonus damage a lot. We need to make the bonus_damage more in-scale with the base damage.
+
+What if bonus_damage = base_damage * damage_multiplier - base_damage
+
+I wonder if the second damage-multiplication is necessary. Maybe yeah.
+
+Equation change:
+
+bonus_damage = base_damage * damage_multiplier - base_damage
+
+This effectively scales bonus damage better for attacks that are weaker.
+
+My problem, cognitively, is that I want everything to scale 'neatly,' but that's contrary to the very notion of what I'm trying to accomplish: the effect of some kind of linear threshold.
+
+The equation has to have some kind of linear factor in order for me to have some kind of linear result. But I'm scared of introducing a linear element because that introduces scale problems.
+
+We're working on a JRPG. In any JRPG, you have damage-calculations based on ATK vs DEF, including some other factors (in our case, simply an ability's base-damage).
+
+We have ATK. We have defense. We have some abilities which are meant to have higher 'base-damage' than others.
+
+What we're trying to accomplish is to have WEAKER ABILITIES SCALE BETTER than STRONGER ABILITIES in the case that the attacker has more ATK than the defender has DEF.
+
+The idea being that, if your opponent has more DEF than you have ATK, weaker abilities will scale MORE POORLY where-as stronger abilities will scale MORE FAVORABLY.
+
+And the opposite is true.
+
+So, when choosing which ability you want to use, you have to consider the difference between your ATK and the enemy's DEF. If you have more ATK than them, it's likely more effecient to hit them with 'weaker' abilities, because they scale better when ATK is greater than DEF.
+
+If the enemy has more DEF than you have ATK, it's more likely that you should use abilities that are 'stronger' to overcome that difference. Because the more DEF the opponent has over your ATK, the shittier your weaker-abilities will scale.
+
+My thing is that, any time we just use a MULTIPLIER for damage, weaker attacks and stronger attacks are going to scale the same way. I feel like we need to introduce a linear element -- in other words, at some point, something's gotta get added or subtracted. We can't just keep multiplying everything.
+
+We're talking about a defensive threshold.
+
+We're talking, in the abstract, about a JRPG system where "stronger attacks are better at 'breaking through defense', but weaker attacks are better at 'doing damage' when you don't need to break through defense."
+
+Both Max and Vex put forth the idea that there's no way to do this without running an 'if' on whether ATK is higher than DEF.
+
+Here's why you don't need to do it with an if:
+
+Let's look at what Max said:
+
+If ATK is greater than DEF, then multiply by > 1. If ATK is lower than DEF, then multiply by < 1.
+
+Here's our requirements, as I understand them, and they may very well be conceptually flawed such that it's not possible:
+
+ATK = Aggressor's offensive power.
+DEF = Defender's defensive power.
+base_damage = the essential 'damage' inherent to the ability
+
+We have two hypothetical abilites: Slap and Double Slap.
+
+Slap has base_damage = 10.
+Double Slap has base_damage = 5
+Double Slap hits twice.
+
+REQUIREMENTS:
+
+1.) If ATK and DEF are equal, then Slap and Double Slap do the same damage.
+
+2.) If ATK > DEF, then Double Slap does more damage than Slap.
+
+3.) If DEF > ATK, then Slap does more damage than Double-Slap.
+
+PANDERS GODLIKE EQUATION:
+
+damage_multiplier = ATK / DEF
+bonus_damage = (ATK - DEF) / scale_factor
+total_damage = (base_damage + bonus_damage) * damage_multiplier / scale_factor
+
+The reason Panders' equation works is that it gives (and takes away) bonus damage based on the linear difference between ATK and DEF.
+
+You get fixed bonus (or penalty) damage based on the linear difference between ATK and DEF.
+
+The reason it works is because it has this linear bonus / penalty applied directly to the base_damage but also scales ALL of the damage based on a multiplier.
+
+It scales ALL damage based on this multiplier, but it also provides this linear boost to base_damage.
+
+The bonus 4th requirement for our equation is that "bonus damage" never becomes so high that it trivializes the base damage.
+
+PANDERS EQUATION:
+damage_multiplier = (ATK / DEF)
+base_damage = some_constant
+bonus_damage = (ATK - DEF) / scale_factor
+pre_multiplied_damage = base_damage + bonus_damage
+total_damage = pre_multiplied_damage * damage_multiplier
+
+
+SPACE_BUTTS UNTESTED EQUATION:
+(base_damage * 0.5) + (base_damage * (ATK / DEF) * 0.5)
+
+
+Quentin's equation
+ATK ** DMG_SCALE / max(ATK, DEF)
+
+I like, in Pander's equation, that, in the end, the damage is multiplied by (ATK / DEF). And because he applies the bonus / penalty as a linear value to base_damage, we see that bonus or penalty be scaled by ATK / DEF.
+
+Do we need a penalty? Can we just bottom-out ATK - DEF at 0? I think we need SOME kind of penalty, right?
+
+If DEF is higher than ATK, you suffer a penalty to your base damage. Why does this impact multi-hits more?
+
+Because the bonus / penalty is a linear value added directly to the base_damage, it always scales more dramatically with lower base_damage.
+
+You guys are talking about making the base_damage of Double Slap a constant, where-as before it was slap_base_damage / number_of_hits.
+
+VEXOS EQUATION
+
+slap_base_dmg = (DEF / ATK + 1) + 8
+double_slap_base_dmg = (ATK / DEF + 1) + 3
+
+Panders calculates bonus damage linearly from the difference between ATK and DEF. He adds that bonus damage directly to the base_damage.
+
+Then the whole thing gets multiplied by the damage-multiplier.
+
+Panders is talking about a way to ADD DAMAGE at the very end, after the multiplier.
+
+bonus_damage = (ATK / DEF) / 2
+damage_multiplier = ATK / DEF
+total_damage (base_damage + bonus_damage) * damage_multiplier
+
+In Panders new equation, at even ATK & DEF, Slap does 12. Double-slap does 14.
+
+BACK TO THE PANDERS RIDDLE
+
+I think the reason that panders' first equation works so well is because it augments the base damage by a linear value that's the result of a comparison between attack and defense.
+
+It adds a value to the base_damage and then multiplies the whole thing by the damage multiplier.
+
+I think, to make it work right, we need to examine that value that is being added to the base_damage.
+
+Panders says that, by adding base damage to the entire damage at the end, higher-damage moves are affected by high defense less. That's totally true.
+
+I'm trying to think of where this breaks down, because I don't think that adding damage at the end is our solution.
+
+Here's a reason that I consider the original panders equation to be broken:
+
+If the defender invests TEN MORE POINTS into DEF than the aggressor has invested into ATK, double-slap does no damage.
+
+This becomes the case once you get into the range of 50 vs 60.
+
+I always keep saying this, and mabye the reason that I can't solve this problem is because I'm trying to marry two ideas that are just not compatible.
+
+I'm trying to combine a LINEAR scale and a scaled-scale. I'm talking about how I want both of these things which maybe can't be had together:
+
+If ATK and DEF are equal, it stands to reason that the ability should do approximately its base damage.
+
+If ATK is double DEF, it stands to reason that the ability should do approximately twice as much damage.
+
+If DEF is double ATk, it stands to reason that the ability should do approximately half as much damage.
+
+BUT.
+
+There needs to be SOME accounting for 'penetration.' The problem is, how do you have penetration make sense while still showing SOME respect for the scale I mention above.
+
+I always keep saying this, and it's a trap that my mentality -- my limited understanding of math -- keeps putting me into. I keep saying, "we need to scale this penetration, as well." That seems to be the only way for '200% ATK does approximately twice as much as 100% ATK' to be married with 'but there is a bonus for the actual difference between ATK and DEF'.
+
+What if we took THE DIFFERENCE between atk and defense and SCALED THAT by the scale of ATK to DEF.
+
+I think I'm onto something, but I always think that.
+
+Panders has this 'scale factor' in his original equation, which is .5. He told me, originally, that we could change this scale-factor to make the the difference more-or-less dramatic.
+
+ATK Advantage is calculated as (ATK - DEF) / DEF
+Double Advantage is calculated as Double - Slap / Slap
+
+
+ATK 15
+DEF 10
+
+ATK +50% advantage
+
+Slap: 26.25
+Double: 37.5
+
+Double +43% advantage
+
+
+ATK 30
+DEF 20
+ATK +50% advantage
+
+Slap: 37.5
+Double: 60
+
+Double +60% advantage
+
+So far, this actually seems to be working. We are keeping more-or-less in-scale with ATK vs DEF, but with a relatively (?) slight bonus being added for the LINEAR DIFFERENCE between ATK and DEF.
+
+In the first test, ATK was only 50% greater than DEF. And it was 5 linear points away. Double-Slap did 43% more damage than Slap.
+
+So, at 50% more ATK than DEF and 5 points of advantage, Double-Slap did 43% more damage than Slap.
+
+
+In the second test, ATK was only 50% greater than DEF. And it was 10 linear points away. Double-Slap did 60% more damage than Slap.
+
+So, at 50% more ATK than DEF and 10 points of advantage, Double-Slap did 60% more damage than Slap.
+
+What I'm getting at is that, although we are getting a JUICY BIT OF BONUS DAMAGE for the LINEAR difference IN POINTS between ATK and DEF, it's still highly appreciative of the SCALE DIFFERENCE between ATK and DEF (50% advantage for ATK)
+
+What I'm getting at is that, although we are getting a JUICY BIT OF BONUS DAMAGE for the LINEAR difference IN POINTS between ATK and DEF, it's still highly appreciative of the SCALE DIFFERENCE between ATK and DEF (50% advantage for ATK).
+
+All other things being equal, when the POINTS ADVANTAGE between ATK and DEF went from 5 to 10, Double-Slap's advantage over Slap went from 48% to 60%.
+
+I want to point out that we can very simply scale how dramatic we want for the effect of 1 point of advantage to be.
+
+So now, let's do the opposite.
+
+ATK: 10
+DEF: 15
+
+DEF ADVANTAGE 50%
+
+Slap: 4.44
+Double: 2.22
+
+SLAP ADVANTAGE 100%
+
+ATK: 20
+DEF: 30
+
+DEF ADVANTAGE 50%
+
+Slap: 2.22
+Double: -1.11111 twice
+
+In Pander's equation, there's a FIXED SCALE FACTOR.
+
+In my adaptation, the SCALE FACTOR is ATK / DEF.
+
+Dixx is inquiring about what impact, exactly, does having more hits do to the equation.
+
+And the answer is (or should be) this:
+
+The weaker an attack gets, the better it scales when ATK is greater than DEF.
+
+So, although stronger attacks won't scale as well when ATK is greater than DEF, the fact that they do MORE BASE DAMAGE will often make them a more attractive option, anyway.
+
+But for moves that hit MORE THAN ONCE, that weaker damage is multiplied by the number of hits. Obviously. As in, Double slap hits twice. Triple Slap hits 3 times.
+
+So, because they're doing the damage MORE THAN ONCE, that BONUS that they get for their superior scaling gets applied more than once.
+
+So, in other words, if Double Slap is half the base_damage of Slap, and Triple slap is 1/3rd the damage of Slap, then, if ATK is higher than DEF:
+
+Double Slap does more than Slap.
+Triple Slap does more than Double Slap.
+
+Because, in terms of scale, Double Slap is not weaker than Slap, and Triple Slap is not weaker than either Double Slap or Slap. Their base damage is perfectly scaled.
+
+Therefore, because each HIT does less damage, those individual hits scale BETTER when ATK is greater than DEF, so the more hits they do, the more total damage they get.
+
+First of all, we have to look at the percentage advantage between ATK and DEF.
+
+And you can look at the difference. Now wait a minute. Do we even need the traditional 'damage multiplier,' then?
+
+What if we just looked at the difference between ATK and DEF and we used that value to scale something. The problem with that is that the numbers get very extreme, very quickly. 10 points of difference means the same scaling at 100 points and 10 points, which isn't kosher.
+
+It's almost like the difference between and atk and def should, itself, scale. Am I literally just re-inventing atk / def?
+
+If ATK is higher than DEF, the weaker an attack is, the better its damage scales.
+
+So we need to take the difference between ATK and DEF and do what with it?
+
+What if we looked at this a totally different way and included a constant representing 'average damage' which would allow us to get a sense for how 'strong' or 'weak' an ability is. Then we could use that to see how it's supposed to scale. I think that's the wrong direction because we need to fixate on the actual impact of 
+
+Everybody looks at RPGs differently. We've all been playing them for our whole lives, and we've all been seeing the numbers cascade down whenever we hit somebody. But we all have our own understanding of how those numbers are calculated.
+
+Here's how I'm looking at it:
+Remember, this game has no equipment. There's no swords.
+
+Abilities have a per-hit 'base damage' that they're "supposed to do, all other things being equal".
+
+When I talk about a 'total_damage_multiplier,' I'm talking about the filter that the damage goes through because of the comparison between the Attacker's ATK and Defenders' DEF.
+
+In other words, I'm talking about, "How much does this damage get reduced as the result of the interaction between ATK and DEF?" And I call it a 'multiplier' because I've been doing it with a very simple, "ATK / DEF", which means that, if I have twice your DEF in ATK, I get double base-damage. To me, that seems like a very elegant way to go about it, because the actual points-difference between ATK and DEF doesn't matter -- rather, the scale matters. So, when you're at the start of the game, getting 1 extra point in ATK might nearly double your damage. Later in the game, you need to invest more to have those same extreme.
+
+To answer Steve's question, 'base_damage' is a value inherent to each individual ability, and, in our case, for the purpose of our testing, we have essentially one base_damage of 10 (Slap) and we have multi-hit variants of Slap whose base damage is just Slap's base_damage divided by the number of hits.
+
+So, Slap has 10 base damage.
+
+Double-Slap has 5 base damage.
+
+Triple-Slap has 3.33 base damage, and so-on.
+
+When an enemy has very high DEF, harder-hitting abilities scale better against them. So, if you use an ability with 5 base-damage it will do less than half of an ability with 10 base-damage, because the 5 is being scaled harder by the enemy's defense.
+
+On the other hand, against an opponent who has low defense (lower defense than we have attack), lower-damage abilities scale BETTER.
+
+DEF > ATK: better scaling for hard-hitting, single-hits.
+DEF < ATK: better scaling for soft-hitting, multi-hits.
+
+We have TWO WAYS to compare ATK and DEF.
+
+We can compare them in terms of their SCALE to one another:
+ATK / DEF
+
+We can compare them linearly in terms of how many points about they are:
+ATK - DEF.
+
+How does this work:
+
+base_damage + base_damage * damage_multiplier
+
+I don't think that scales different for weaker attacks?
+
+base_damage + base_damage * (damage_multiplier - 1)
+
+base_damage = 5
+damage_multiplier = 1.5
+total_damage = 5 + 5 * .5 = 7.5
+
+base_damage * damage_multiplier
+
+What if we took a different approach? Get a basic equation working and then factor in penetration.
+
+IGNORING PENETRATION.
+
+If I have equal offense to your defense, my attack does its base damage.
+
+If I have twice as much offense as you do defense, my attack does double damage.
+
+In Dixx's words, "So, it isn't total ATK and total DEF that matter, but ATK:DEF?"
+
+The answer is that the goal is to have BOTH be significant.
+
+When you compare ATK - DEF, you're comparing how FAR apart they are, right?
+
+Pander's new equation:
+
+raw_damage = (base_damage + ATK) / hits
+
+total_damage = (raw_damage / 2) * damage_multiplier + atk - def
+
+BASE DAMAGE IS A VALUE INHERENT TO THE ABILITY. EVERY ABILITY HAS DIFFERENT BASE_DAMAGE, THAT'S WHAT DETERMINES HOW STRONG IT IS.
+
+BONUS_DAMAGE IS DAMAGE ADDED DIRECTLY TO BASE_DAMAGE.
+
+BONUS_TOTAL_DAMAGE IS DAMAGED ADDED DIRECTLY TO THE FINAL, TOTAL DAMAGE VALUE.
+
+DAMAGE_MULTIPLIER IS A VALUE THAT SCALES DAMAGE. IT'S ON A PERCENTAGE SCALE.
+
+So, in our most essential of equations:
+
+((base_damage + bonus_damage) * damage_multiplier + bonus_total_damage) * number_of_hits
+
+All night we've been fucking around with ways to tamper with bonus_damage and bonus_total_damage and maybe even the damage_multiplier to try to get the results that we're after.
+
+Unlike our most essential equations, panders divides the damage by the number of hits before it hits the damage_multiplier.
+
+ATK: 10
+DEF: 10
+
+ATK ADVANTAGE +0%
+
+Slap: 10
+Double: 10
+
+DOUBLE ADVANTAGE: +0%
+
+When I say that, when defense is greater than attack, lower-base-damage abilities should scale WORSE than higher-base-damage abilities, one thing that definitely needs to happen is that, if base-damage is cut in half, total-damage should be less than half.
+
+In Balls' example, the lower-base-damage ability actually scales BETTER.
+
+Let's talk about game-design. The whole reason we've been stuck for nearly 8 hours now is that we're trying to add a strategic layer to which abilities the player chooses to do their damage in battle depending on the foe they're facing.
+
+You guys all play JRPGs, right?
+
+Consider two moves which have the same exact cost (MP, etc).
+
+Slap: base_damage of 10, hits once
+Double Slap: base_damage of 5, hits twice
+
+The consideration that we want for the player to make is whether they want to use Slap or Double Slap. Seemingly, they're the same.
+
+The thing is, when the enemy has 'high defense' (higher DEF than you have ATK), damage scales differently. It scales such that it favors LARGE, SINGLE HITS.
+
+Likewise, when the enemy has 'low defense' (lower DEF than you have ATK), damage scales such that it favors WEAK, MULTI-HITS.
+
+In the abstract sense, we're talking about 'penetration'. If you have an enemy who has high defense, a move that hits multi-times for less damage each time will have trouble 'penetrating.' On the other hand, when the enemy has 'low defense,' you don't need to worry about penetration, and so you get more total damage from hitting multiple times.
+
+Let's get back to testing Pander's equation.
+
+ATK 10
+DEF 10
+ATK ADVANTAGE 0%
+
+SLAP: 15
+DOUBLE: 15
+DOUBLE ADVANTAGE 0%
+
+
+
+ATK 15
+DEF 10
+ATK ADVANTAGE 50%
+
+Slap: 33.125
+Double: 48.125
+
+Slap and Double Slap are TWO DIFFERENT ABILITIES THAT THE PLAYER CAN CHOOSE FROM.
+
+Both abilities have the same exact cost to the player.
+
+Double Slap hits twice, each time at half the 'base damage' of Slap.
+
+Triple Slap has the same cost as both Slap and Double Slap, but has 1/3rd the 'base damage' of Slap and hits 3 times.
+
+In an RPG, ATK, DEF, and the base_damage of abilities is very dynamic -- and the resultant damage calculations are just as dynamic, based on those values.
+
+In Chimera's example, a wide variety of 'ATK' and 'DEF' values will result in the same exact damage.
+
+
+
+PANDERS EQUATION
+ATK 10
+DEF 10
+ATK ADVANTAGE 0%
+
+SLAP: 10
+DOUBLE: 10
+DOUBLE ADVANTAGE 0%
+
+
+ATK 15
+DEF 10
+ATK ADVANTAGE 50%
+
+SLAP 23.75
+DOUBLE 28.75
+DOUBLE ADVANTAGE 21%
+
+
+
+ATK 30
+DEF 20
+ATK ADVANTAGE 50%
+
+SLAP 40
+DOUBLE 50
+DOUBLE ADVANTAGE 25%
+
+
+
+
+ATK 60
+def 40
+ATK ADVANTAGE 50%
+
+SLAP 72.5
+DOUBLE 92.5
+DOUBLE ADVANTAGE 27.5%
+
+You could almost say that when ATK has a 50% advantage over DEF, Double Slap has between 20-30% advantage over Slap.
+
+
+In panders equation, scaling factor is disabled when def is higher than offense?
+
+ATK 10
+DEF 15
+DEF ADVANTAGE 50%
+
+SLAP 8.33
+DOUBLE 3.33
+SLAP ADVANTAGE (8.33 - 3.33) / 3.33
+SLAP ADVANTAGE 150%
+
+ATK 20
+DEF 30
+DEF ADVANTAGE 50%
+
+SLAP 10
+DOUBLE 0
+SLAP ADVANTAGE ????
+
+
+
+GAME DESIGN:
+* Slap and Double Slap have the same cost to the player to use.
+* Slap has 10 base damage. Double Slap has 5 base damage and hits twice.
+* When aggressor ATK == defender DEF, both do their total base damage (10). 
+
+What we want to accomplish is that, as ATK becomes relatively larger than DEF, Double Slap should become increasingly more cost-effective than Slap in terms of damage.
+
+Likewise, as ATK becomes relatively less than DEF, Slap should become increasingly more cost-effective than Double Slap in terms of damage.
+
+Here's our variables:
+
+base_damage : a value inherent to every attack ability representing the damage it'll do if aggressor ATK is equal to defender DEF.
+
+ATK: aggressor's ATK value
+
+DEF: defender's DEF value
+
+Let's assume that, during damage calculation, we don't know how many hits are lumped into the single ability.
+
+Chimera points out that what we're going for, in terms of player decision-making, is that we want for the player to have to compare their ATK to their opponent's DEF, as well as the costs of HIGHER DAMAGE abilities and LOWER DAMAGE ABILITIES, because, if the enemy's DEF is 'low,' then it is likely more cost-effective to use 'weaker' abilities at a lower cost -- because, at the same cost, weaker abilities become more effective in that situation.
+
+In other words, when enemies have higher DEF than you have ATK, you need to hit for more base damage to sort of 'penetrate' or 'overcome' that defense. As such, if you have an attack, like Double Slap, which hits twice at half base_damage each time, for the same cost, it wouldn't be as effective as Slap because each individual hit would be scaled more harshly because of their relatively low base_damage.
+
+On the other hand, if your character has more ATK than the opponent has DEF, it makes more sense to use Double Slap because each attack is scaled better.
+
+Let me point out why penetration cannot scale by number of hits.
+
+In our game, you can use more than one ability per turn.
+
+So, from now on, let's look at two abilities:
+
+Intead of Slap and Double Slap, let's look at Strong Slap and Weak Slap.
+
+Strong Slap has 10 base_damage and costs 10 AP.
+
+Weak Slap has 5 base_damage and costs 5 AP.
+
+When ATK == DEF, using Weak Slap twice should do the same damage as using Strong Slap once for the same cost.
+
+
+
+
+
+
+Strong Slap
+Weak Slap
+
+
+
+
+Strong Slap has 10 base_damage and costs 10 AP.
+Weak slap has 5 base_damage and costs 5 AP.
+
+The player can choose to use Strong Slap once or Weak Slap twice for the same AP cost.
+
+If the player is going to spend 10 AP, they can use Strong Slap once or Weak Slap twice.
+
+If aggressor ATK == defender DEF, then using Strong Slap once will do the same damage as using Weak Slap twice (for the same cost).
+
+Chimera points out that what we're essentially talking about is rewarding the player with bonus damage based on making the correct choice for which ability to use. The issue is that we're trying to figure out how to deliver that bonus damage in a way that scales correctly.
+
+Whenever we talk about "high defense" or "low defense," we're talking about it being compared to the aggressor's ATK.
+
+The bigger the advantage of ATK over DEF, the more bonus damage Weak Slap gets.
+
+The bigger the advantage of DEF over ATk, the better Strong 
+
+The bonus damage is scaling.
+
+Let's revisit our ESSENTIAL EQUATION.
+
+CONSTANTS
+    ATK = offender attacker
+    DEF = defender defense
+    base_damage = base_damage of the ability in question
+
+VARIABLES (we've been playing with these, and beyond)
+    damage_multiplier = ATK / DEF
+                        Scales the overall damage being done based on the
+                        scale of ATK to DEF.
+    bonus_damage = an amount of damage added directly to base_damage
+    total_bonus_damage = an amount of damage added directly to the total
+                         damage inflicted.
+
+total_damage = base_damage * damage_multiplier
+
+The problem with this equation, as elegant as it is, is that Strong Slap and Weak Slap are always both equally efficient. Any time that you attack with Weak Slap, it's going to do half the damage you would've done with Strong Slap.
+
+total_damage = base_damage ^ damage_multiplier
+
+In Chimera's example below, we assume that the player has made the 'correct' decision regarding which ability is more cost-effective.
+
+total_damage = base_damage + (ATK - DEF) * .2
+
+ATK 100
+DEF 10
+
+Slap goes from 10 to 28 damage.
+
+ATK 50
+DEF 10
+
+Slap goes from 10 to 18.
+
+To break it down using the language we've been using tonight, it's really like this:
+
+bonus_damage = (ATK - DEF) * scale_factor
+total_damage = base_damage + bonus_damage
+
+This requires for the game, itself, to know which is the "right" decision based on cost-effectiveness (AP per base_damage). Which sort of requires us to have a threshold for what qualifies as a "weaker ability" vs a "stronger ability," which isn't the end of the world, either.
+
+Let me propose what I think this solution's "weakness" would be, which relates to something that I'm not sure I communicated since Chimera showed up.
+
+In Chimera's equation, he's using the ATK and DEF values solely to calculate bonus_damage, which isn't a bad thing at all. It's just ~a~ way to go about it.
+
+Let me try to communicate the way that I've been conceptualizing the relationship between ATK and DEF and the value of those attributes to the player:
+
+The SCALE between the two is significant. Hence our "essential equation," which fails most of the other tests that we've been trying to accomplish.
+
+total_damage = base_damage * (ATK / DEF)
+
+This equation makes it such that ANY attack will do twice as much damage if the aggressor has twice as much ATK as the opponent has DEF. Likewise, any attack will do half as much damage when the opponent has twice as much DEF.
+
+Obviously, the problem with this is that Weak Slap and Strong Slap will always be equally effective, because they scale identically. Chimera solves this problem by not using the scale of ATK and DEF for anything.
+
+The way that we've been trying to solve this problem, tonight, is by adding some kind of augment to this 'essential equation' which will factor in the difference between ATK and DEF. So, this 'scale' is still a significant factor -- but it's no longer the ONLY factor.
+
+I like Chimera's equation a lot because I feel like it effectively captures this idea of getting more bonus damage based on the difference between ATK and DEF. There are a few things that I wonder:
+
+First of all, can we have this linear bonus that Chimera is applying also act as a penalty for the 'wrong decision' in such a way, mathematically, that we don't need an 'if' statement to see if the player made the supposed 'correct' decision.
+
+Let me try to describe some equations we had working EARLIER which were almost exactly what we needed but which had shortcomings that we just couldn't overcome.
+
+The way that these equations usually end up is that ATK and DEF are compared to calculate some amount of bonus damage, and then that entire resultant damage (base + bonus) is multiplied by ATK / DEF and then, of course, by the number of hits.
+
+When you add the same bonus damage to a stronger, single hit, the scale of bonus:base damage favors the base damage. What I mean by that is this:
+
+If base_damage 10 gets bonus_damage 2, we've made that attack 20% more effective.
+
+If base_damage 5 gets bonus_damage 2, Weak Slap has received more of a boost, relatively speaking, compared to Strong Slap.
+
+So it's seemed to me that there is a way to reward weaker, multi-hits more, in terms of cost-effectiveness, while devising some way to calculate bonus damage that looks at ATK and DEF the same.
+
+Another idea I want to point out is that Chimera's equation, with lovely simplicity, looks at this whole problem in terms of rewarding the player with bonus damage when they make the right decision.
+
+But the way that I've been conceptualizing it is that, for instance, when an opponent has HIGH defense (higher than your ATK), it isn't that you get bonus damage for attacker with a stronger, single hit (for the same cost) -- but, rather, you get penalized less. You don't GET bonus damage --it's just that, as your base_damage gets lower, your hits get penalized more and more. So, RELATIVELY SPEAKING, higher base_damage hits get penalized less.
+
+It seems to me that there must be a way to compare ATK and DEF and come up with some kind of multiplier and / or bonus|penalty value that would reward lower-base_damage attacks relatively MORE than higher-base_damage attacks when ATK - DEF is positive or ATK / DEF is > 1 -- and which penalizes higher-base_damage attacks ~relatively~ less when ATK - DEF is negative or ATK / DEF is < 1.
+
+It just seems like, when you have these values which can be positive or negative (bonus or a penalty) and you have these multipliers which can be greater than 100% or less than 100% -- and you have these base_damage values where, the lower the value is, the more it's (relatively) impacted by smaller changes, there should be an equation that satisfies all of our requirements without needing to have this god's eye view of "number of hits" or whether or not the player made the "right" decision based on cost-effectiveness. I feel like that's something that could be worked into the equation.
+
+STEVE EQUATION
+damage_multiplier = ATK / DEF
+scaled_damage = base_damage * damage_multiplier
+bonus_total_damage = (steve_constant / base_damage) * damage_multiplier
+total_damage = (scaled_damage + bonus_total_damage) / scale_factor
+
+For Steve's equation to work, he needs to have a number higher than our highest best damage.
+
+STEVE_CONSTANT 11
+SCALE_FACTOR 0.9
+
+ATK 10
+DEF 10
+ATK ADVANTAGE 0%
+
+STRONG 9.99
+WEAK 6.48
+WEAK ADVANTAGE 30%
+
+BALLS EQUATION
+total_damage =  (left_factor * (DEF / ATK) * base_damage ^ (right_factor * (ATK / DEF)) * hits
+
+
+If I had to theorize based on what we've been through, tonight, I would say that the ideal equation exists somewhere in here:
+
+damage_multiplier = ATK / DEF
+bonus_scale_factor = 1
+scaled_damage = base_damage * damage_multiplier
+total_bonus_damage = 1 - damage_multiplier
+total_damage = scaled_damage + total_bonus_damage
+
+What do we know about 'total_bonus_damage'?
+1.) It needs to be 0 when ATK and DEF are the same.
+2.) It needs to be relatively lower as base_damage gets higher.
+
+In Kenny's equation, we're not seeing a cost-effectiveness bonus when using weaker abilities. It's kinda backwards: it seems like, lower-base-damage abilities are more cost-effectiveness against high DEF. And it seems like that amount is almost always the same, so we might want to play with the scale_factor.
+
+If this has one shortcoming (and I'm not even really sure it does), it's that, when DEF is higher than ATK, it scales damage pretty hard.
+
+This is a problem that all of Panders' equations had, and he was trying to come up with a bunch of ways to get around that, but I bet the solution is pretty simple.
+
+It's almost like we need to halve the 'bonus' when it's actually a penalty, which we could do with a MAX() I would think, or something like it.
+
+So, for next time: it seems that we just need to solve the problem of the damage PENALTY seeming to be twice as harsh as the damage BONUS is rewarding. Seems very easy to solve in a variety of ways.
+
+FINAL EQUATION:
+
+damage_multiplier = ATK / DEF
+scaled_damage = base_damage * damage_multiplier
+total_damage = scaled_damage + (damage_multiplier - 1) * scale_factor
