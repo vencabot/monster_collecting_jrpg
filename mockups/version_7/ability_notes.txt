@@ -4647,3 +4647,178 @@ FINAL EQUATION:
 damage_multiplier = ATK / DEF
 scaled_damage = base_damage * damage_multiplier
 total_damage = scaled_damage + (damage_multiplier - 1) * scale_factor
+
+07/24/19
+
+Finally back from DTN and getting back to game-dev. I'm re-examining this equation -- and, while I don't doubt that it works as well as I remember, I can't help but notice that the 'penetration damage' is a value totally independent of the ability's base damage.
+
+The 'penetration damage' is (damage_multiplier - 1) * scale_factor
+
+So, it's based entirely on three values: attacker ATK, defender DEF, and the scale_factor constant.
+
+So, the actual damage of the ability has absolutely no bearing on the penetration damage being factored in.
+
+Is that okay? You could argue that it's like a "bonus for penetration" that rewards the attacker for having more ATK than the defender has DEF, and it penalizes the attacker for having less ATK than the defender has DEF.
+
+So, this idea works okay as long as we consider that a 'baseline' move like 'Slap' has 'baseline' damage which is considered 'normal' or 'average,' and then we apply a scale factor based on that. Because, basically, stronger attacks won't have more penetration and weaker attacks won't have weaker penetration. So this 'average' amount of penetration is going to be uniform to all attacks.
+
+Mathematically speaking, this means that multi-hits are affected much more by penetration than single-hits. And weaker hits are affected much more, RELATIVELY SPEAKING, than stronger hits.
+
+Let's carry on with creating this spreadsheet and examine our options for dealing with or better-undering this 'problem'.
+
+Because of the math for the 'scaled damage,' an attack with half the base damage is always going to do half the scaled damage. So there are two ways that multi-hits differ from single-hits:
+
+1.) Each hit is weaker, and, therefore, the penetration damage is of greater significance to the total damage of that hit.
+2.) This penetration damage is added PER HIT.
+
+Hypothetically speaking, if you had a move that did 10 hits for 1/10th the base_damage per hit, it would be massively more powerful because it'd get the penetration_bonus ten times. But this is what we want. The whole idea of this equation was to reward multi-hits when ATK was higher than DEF -- and to punish them more when ATK is lower than DEF. After all, this 'penetration_bonus' can also be a penalty, and it's also applied for EVERY hit.
+
+I'm starting to think that this problem with the penetration 'penalty' seeming more drastic than the penetration 'bonus' is actually not the issue. I think the issue is a matter of scale and perspective when it comes to imagining how our units' attributes might compare to one another.
+
+An ideal that we've had for the past few streams has been that, very simply, if the attacker has twice as much ATK as the defender has DEF, then the attacker's ability should do twice as much damage. 
+
+Seems simple. Seems sensible.
+
+But if we're talking about small scales where, let's say, hypothetically, an attacker would have 5 ATK and the defender would have 5 DEF -- and if we're dreaming, hypothetically, that a unit can grow a stat by 1 each time they 'level up,' then we're talking about being able to double your ATK pretty quick. And maybe that's the problem that I'm perceiving.
+
+If I'm right, there are two main ways to solve this problem.
+
+1.) Very simple decide, as a family unit, here, what kind of scale we want for unit attributes. Do we start the game with 50 ATK? Or 5? We've been using '10' as our baseline, but that's totally arbitrary; we can make it whatever we want. If it would solve this problem in some way, maybe that's what we need to do: decide on a scale for our unit attributes.
+
+2.) Maybe we need to address the multiplier not necessary by 'number of points put in' (as Kenny put in) but just in general -- like, make it less dramatic. It would be something like: damage_multiplier = (ATK / DEF) * multiplier_scale . In other words, we could make it so that having twice as much ATK as the opponent has DEF doesn't get you twice as much damage. Maybe it gets you 150% as much damage, or something.
+
+We pointed out, today, that the PENETRATION DAMAGE is not affected AT ALL by the base_damage. And base_damage represents the amount of damage done when ATK and DEF are equal. So, if we were to MAGNIFY BASE_DAMAGE, it WOULD NECESSARILY outscale penetration damage. At some point, it would make penetration_damage entirely obsolete.
+
+So, any time we scale BASE_DAMAGE we must also play with the PENETRATION_SCALE to compensate so that penetration isn't completely nullified.
+
+But, THEORETICALLY, we don't need to mess with EITHER base_damage or penetration_scale. Because those values are totally arbitrary. Because we don't have a scale for HP.
+
+As long as the base_damage of our baseline_ability is in scale with the universal penetration_scale, we're good.
+
+Well, let's consider how often a defender will have 50% more DEF than the attacker has DEF.
+
+I think I'm starting to understand the problem with 'scale' here.
+
+Doing 100% more damage means that you're doing double damage.
+
+But doing 100% LESS DAMAGE DOESN'T MEAN THAT YOU'RE DOING HALF DAMAGE.
+
+It's a simple mathematically falacy that I've been falling into.
+
+Our scale factor is literally a straight-up percentage. If I want for double ATK to do double damage and double DEF to do half damage, we can't just use a linear percentage --
+
+because double ATK WILL DO DOUBLE DAMAGE (100% more damage), but DOUBLE DEF WILL COMPLETELY NEUTRALIZE DAMAGE (100% less damage).
+
+So we need for double-ATK to do 100% MORE DAMAGE and double-DEF to do 50% less damage.
+
+Right now we're doing base_damage * (ATK / DEF).
+
+Kulahan says that we can solve our issue by doing base_damage / DEF * ATK.
+
+I think they're the same thing so, no, that doesn't solve our problem; that's the cause of our current problem.
+
+I'm wrong. Kulahan's right.
+
+In any case, our current equation works fine as far as damage multiplication goes. The issue is with the scale of the penetration penalty to the multiplied damage.
+
+If we have twice as much DEF as we do ATK, with a penetration scale of 5, two things happen:
+
+1.) Our base_damage is scaled from 10 to 5.
+2.) We take a penetration penalty of -2.5
+
+These two things combined result in a very extreme penalty. It's a matter of penetration penalty to POST-DAMAGE-SCALING damage.
+
+In other words, at a penalty of -2.5, we've just lost HALF of our scaled damage to the penetration.
+
+Compare that to when you get a penetration BONUS. If we have twice as much ATK as we do DEF, with a penetration scale of 5, two things happen:
+
+1.) Our base_damage is caled from 10 to 20.
+2.) We get a penetration bonus of 5.
+
+So, we get a penetration bonus equal to 1/4 of our scaled damage.
+
+In the same situation, reversed, we take a penalty equal to 1/2 of our scaled damage.
+
+So the reason that it seems like we take more of a PENALTY from penetration than we get a BONUS is because, necessarily, as our scaled_damage goes DOWN, the effect of penetration is RELATIVELY MORE DRAMATIC. The ratio between scaled_damage and penetration bonus / penalty goes UP as scaled_damage goes down. The lower the scaled_damage, the greater the relative impact of penetration. The higher the scaled_damage, the lower the relative impact of penetration.
+
+We could probably come up with a VERY SIMPLE WAY to scale penetration based on scaled_damage so that this issue of scaling is lessened.
+
+I want to point out that the impact of penetration is basically limited to one main value: the relationship between BASE_DAMAGE and PENETRATION_SCALE.
+
+Right now, we have a penetration_scale of 1/2 base_damage.
+
+I'm gonna repeat myself:
+
+Our problem is that, as our scaled_damage goes down our penetration_bonus also goes way down. They go down together. And, because of that, the penetration penalty takes on much, much greater significance as the scaled_damage gets nearer to zero.
+
+In other words, as scaled_damage goes UP toward infinity, penetration becomes less significant. As scaled_damage goes down toward zero, penetration becomes more significant.
+
+I have two gut feelings right away:
+
+1.) Scale the penetration by some factor based on scaled_damage.
+2.) Idea #1 is stupid and is going to result in the same problem with scaling that we always have: the result will be that penetration is uniformed away so that multi-hits do the same damage as single-hits.
+
+Kenny asks to review what the equation for penetration damage, and it's this:
+
+(ATK / DEF - 1) * penetration_scale
+
+So, one thing we've been grappling with, today, is that base_damage has no impact on penetration damage.
+
+What is a proposed equation for scaling the penetration penalty / bonus based on scaled_damage. Is that something that we can do or is it a fallacy to even think that we want to do that.
+
+I'm talking about somehow scaling the penetration bonus to be proportional, somehow, to the scaled_damage. But just saying that makes it clear that my second instinct (above) is true: that I'd be making the damage uniform for both single and multi-hits. You don't WANT to scale the stinking penetration damage to the scaled_damage. That defeats the whole point. But how can we avoid this issue of the penetration penalty becoming so extreme as we lose scaled_damage. Penalty goes up, scaled_damage goes down, so we get this double-whammy of damage reduction. It's more than a 'double-whammy': it's like some kind of exponential damage reduction.
+
+One thing that we could do is literally just use an 'if' fork to change our equation very slightly when DEF is higher than ATK, right?
+
+We could just say, if DEF > ATK, then cut the penetration penalty in half.
+
+You could run the same equation, but the 'if' statement would change the value of 'penetration_scale' before running the equation.
+
+if atk > def:
+    penetration_scale = 5
+else:
+    penetration_scale = 2.5
+
+That's all that you would need to do to curb the ratio between scaled_damage and penalty. Basically, what we're talking about is curbing the ratio between scaled_damage and penalty. You want for the penalty to be less harsh when you're already losing so much damage to the damage scaling.
+
+The idea is that, when DEF is higher, you're LESS INCLINED TO USE MULTI-HITS. When DEF is twice that of ATK, single-hit does 3.75 and double-hit does 2.5. That's a pretty dramatic reduction (but, on the other hand, having twice as much ATK as DEF is pretty dramatic).
+
+Maybe we should try some less-dramatic values and see how halving the penetration_scale for penalties really looks.
+
+Kenny's proposing that we change penetration_scale from being a constant to being the product of some equation involving our multiplier.
+
+What Kenny's really proposing is changing the equation for penetration_bonus to:
+
+(ATK / DEF - 1) * (1 / (DEF / ATK) + 1)
+
+KENNY VARIANT:
+15, 10 -> 16.25, 17.5
+
+10, 15 -> 6.111, 5.555
+
+I think the Kenny Variant is genius and what we're probably going to settle on -- but, just like the old equation, we need to set a scale between base_damage and penetration_scale. It seems that 1/10th might be too extreme.
+
+Theoretical note: the point of penetration is NOT to reward the player for having high ATK. That's what scaled_damage already does. Obviously, when you factor in this damage_multiplier, you're getting a huge benefit for having higher ATK than your opponent has DEF. The point of penetration is to reward or penalize multi-hits.
+
+When I say that I want to make this penetration 'softer,' I'm talking about ONE of two things:
+
+1.) Reduce the OVERALL SCALE OF PENETRATION TO TOTAL DAMAGE.
+2.) Reduce the scale of penetration PENALTY to penetration BONUS.
+
+We have to create some language to differentiate between these two concepts.
+
+I feel like we absolutely need to have a PENETRATION_SCALE constant which we can simply play with to INCREASE and REDUCE the relative impact of PENETRATION DAMAGE to SCALED DAMAGE. That it is to say, how much does penetration really matter in our game.
+
+In the pre-Kenny variant, that's exactly what PENETRATION_SCALE did: it made the penetration bonus and penalty (which, at the time, were pretty much even) more or less of a factor in our damage calculation.
+
+I think we still need that. I think what Kenny has introduced -- this new constant is really, maybe, more like a factor which reduces the impact of a PENALTY compared to a BONUS. Maybe we need to call this PENALTY_SOFTENER or something.
+
+Kenny points out that what he did is make our PENETRATION_SCALE not a flat number -- but I disagree with that. What Kenny really did is essentially scale the scale and add a constant -- and that constant is really what's significant, because it's a new value that we have control over.
+
+BUT it doesn't change the fact that we still need a constant to DIRECTLY scale the impact of penetration damage compared to base damage.
+
+I want to prove that the new 'Kenny constant' is what softens penalty compared to bonus. That's our end-game: soften penalty compared to bonus.
+
+That's our goal for tomorrow. We need to record some observations and see how the Kenny constant affects some kind of relative-softening of penalties compared to bonuses.
+
+
