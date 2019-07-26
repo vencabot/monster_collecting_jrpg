@@ -4822,3 +4822,154 @@ I want to prove that the new 'Kenny constant' is what softens penalty compared t
 That's our goal for tomorrow. We need to record some observations and see how the Kenny constant affects some kind of relative-softening of penalties compared to bonuses.
 
 
+07/25
+
+With the Kenny constant at 0, we see that, as ATK goes higher over DEF, the scale of our penetration also goes up. That's not really what we want. We pretty much only want this 'rescaling' of penetration to happen as ATK goes BELOW DEF.
+
+I don't mind that it's scaling upward as ATK gets higher -- it's just that my fear is that it's going to scale UP just as much as it scales DOWN, which defeats the purpose.
+
+But let's test this.
+
+The whole idea is to soften the penalty as compared to the bonus. If the penalty is being softened by the same amount that the bonus is being enhanced, then we've gotten nowhere.
+
+With a Kenny Constant of 0, for every hit we add at 100% ATK advantage, our damage advantage goes up by 20%. Why? It's because our penetration value is '2', which is 20% of our original damage, '10'. So, for every hit we land, we're gaining another 20% advantage over that value of '10'.
+
+In other words, you could say that, damage advantage is (penetration / original_damage) * hits, basically.
+
+I'm gonna lock in our equation for damage. It looks like this:
+
+damage_scale = (ATK / DEF)
+scaled_damage = base_damage * damage_scale
+base_penetration = (ATK / DEF - 1)
+penetration_scale = (1 / (DEF / ATK) + kenny_constant)
+scaled_penetration = base_penetration * penetration_scale
+total_damage = scaled_damage + scaled_penetration
+
+Before we can advance into the more fun aspects of our game-design, we have one more equation to figure out. As a family unit. After this, I really believe that we're done fucking around with the core algorithms of our game.
+
+We need to come up with an equation which determines chance-to-crit, basically.
+
+For those (if anybody) who are joining the stream since we last talked about how our game handles 'crits,' let's briefly discuss how it works.
+
+In our game, there is no chance to 'miss,' there's no chance to traditionally 'crit', and there is no random damage variation. So, damage is pretty strict. You can't miss, you can't crit, and there is no random variation in damage.
+
+HOWEVER.
+
+Every ability in the game, when used, can have a different affect based on a randomly chosen EFFECTIVENESS from 3 different possible effecitvenessesesseseses.
+
+So, every ability in the game is coded at three levels of effectiveness:
+"Glancing"
+"Normal"
+"Critical"
+
+So, although attacks can't MISS, they can activate at 'Glancing Effectiveness,' which means that their affect is nerfed.
+
+And although attacks can't traditionally CRIT (gain double damage), they can activate at 'Critical Effectiveness,' which means that their affect is enhanced.
+
+So, instead of having 'chance to miss' and 'chance to crit' based on a variety of character attributes such as agility, accuracy, dexterity, luck, etc., we sort of lumped all of these ideas together into a chance to land attacks at certain levels of effectiveness based on two character attributes: SKL and PRY.
+
+So, when the attacker's SKL and the defender's PRY are equal, we need to hit some sort of baseline percentage chance to glance or crit.
+
+As the attacker's SKL grows over the defender's PRY, we need for chance-to-crit to grow and MAYBE for chance-to-glance to diminish. But I think that maybe it would be more fun if chance-to-crit GREW but chance-to-glance stayed at baseline.
+
+Likewise, when the defender's PRY grows over the attacker's SKL, we need for chance-to-glance to grow while chance-to-crit either shrinks or stays the same (and I'm leaning toward having it stay as baseline).
+
+So, if we look at the 'baseline' values for chance-to-crit and chance-to-glance as being their MINIMUM VALUES, that means that, as SKL and PRY get advantage over one another, we're losing chance-to-normal.
+
+So you could say that, when SKL == PRY, chance-to-normal is at its maximum value and chance-to-crit and chance-to-glance are at their minimum values.
+
+How about we also say that chance-to-normal can never fall below the minimum chance-to-crit / chance-to-glance. If chance-to-normal falls TOO LOW, we start lowering the other one so that they can stay equivalent.
+
+So, perhaps a good baseline value would be something like this:
+
+Chance-to-glance: 15%
+Chance-to-normal: 70%
+Chance-to-crit: 15%
+
+And we could say that, when SKL becomes twice as much as PRY, maybe we double our chance to crit:
+
+Chance-to-glance: 15%
+Chance-to-normal: 55%
+Chance-to-crit: 30%
+
+Maybe it makes more sense to say that, when SKL becomes twice as high as PRY, we have a 50% chance to crit:
+
+Chance-to-glance: 15%
+Chance-to-normal: 35%
+Chance-to-crit: 50%
+
+What if we looked at '15% chance' as a sort of minimum for any effectiveness, and we looked at having twice-as-much parry / skill as our sort of ceiling at 70% chance.
+
+So, if I had twice as much SKL as you have PRY, my chance to crit would be 70%:
+
+Chance-to-glance: 15%
+Chance-to-normal: 15%
+Chance-to-crit: 70%
+
+The opposite would be true as well. If I have twice as much PRY as you have SKL, your chance to Glance would be 70% against me:
+
+Chance-to-glance: 70%
+Chance-to-normal: 15%
+Chance-crit: 15%
+
+I like this idea, because it seems very tidy: As either your defensive or offense attribute doubles that of your opponent, you have turned your chance to crit or their chance to glance to what USED to be the chance to normal. That seems real cute to me.
+
+That seems like it'd be pretty easy to figure out, mathematically. We have these minimum and maximum values that these chances can have, and they have a certain amount of leeway to vary.
+
+They can vary within a 55% range, between 15% and 70%.
+
+I think this idea is something that makes more sense to express as Python rather than as an equation, so let's get back to Python and see if I can express this.
+
+In our game, when we're passing a value for 'targets' whenever we want to use an ability -- and it's a list, because we're imagining that abilities are going to be able to take multiple targets; that stands to reason. But then it sort of makes you wonder how we really want to handle crit calculation.
+
+Because, in our game, 'crit' isn't just an amount of damage you do. It changes a lot of things about how the ability is expressed. It seems that, when an ability is FIRST CALLED, we figure out the Effectiveness and we run the appropriate method to use that ability based on that Effectiveness.
+
+But what if we're hitting 3 opponents at the same time and we want to hit them each at a different level of effectiveness? That makes sense to me. Or maybe not. I feel like it would vary based on the ability.
+
+Some abilities that target a group might want to either CRIT THEM ALL AT ONCE or NOT based on a single roll.
+
+Other abilities might want to calculate the crit on a unit-by-unit basis.
+
+Do we have accommodations for both, with the way that our game is currently running?
+
+We sort of have a problem where we haven't dedicated a lot of thought to how abilities that target groups are going to work. So far, all of our mock-up abilities have targeted a single unit. When you start talking about abilities that target a group, I guess there's more going on regarding Effectiveness than we first realized.
+
+It's almost like we can't really roll for effectiveness until the ability is running -- like, so that it can handle its own targets to decide who it wants to crit.
+
+But there are problems with that, too. For instance, we have some Rules which trigger whenever an ability crits. So what happens when an ability hits more than one target and it crits on a couple of them and doesn't on others? Doesn't seem right. Doesn't seem sensible.
+
+Can we say that, if an ability targets a group, it has to either crit them all or not crit any of them? Or is that overly restrictive to how creative we can be with our abilities?
+
+Let's be honest: for one thing, abilities that target groups are going to be an exception in our game. The whole idea of our game's DESIGN is that you're going to be targeting the enemy unit in 'the ring' 99% of the time. Having an affect on units 'outside of the ring' or 'in the back row' is something that we're open to and which I think is exciting but which isn't a core element of how battle is going to be playing out on a turn-by-turn basis.
+
+It strikes me that it might be totally superfluous to allow the player to pick multiple targets. Let me make my case.
+
+Tactically speaking, in our game, it's important that the vast majority of abilities target a single unit -- usually the unit that's in the Ring across from you, Pokemon-style.
+
+Our game's core combat is loosely based on Pokemon, but our teams have even fewer units (Pokemon has 6 in a team, we have 4). Once you start allowing a unit to target monsters in the 'back row', you sort of lose the tactical significance of having those monsters in the back row. They're supposed to be safe back there, and the unit that the team leader has chosen to put into the ring is supposed to be tanking damage. The whole idea -- the core riddle of this 'Pokemon style' of gameplay is that you want to use the abilities of some monster, but, in doing so, that monster is vulnerable.
+
+I do think that it's important, for our game -- even if not in Pokemon -- that units in the back row be subject to some sorts of 'side effects.' Like, maybe we have some huge ability which has a huge cost and which does major damage to the enemy unit in the ring and some minor splash damage to the units in the back row. That's fine.
+
+But what I'm getting at is that the VAST MAJORITY OF ABILITIES WHICH HIT OR AFFECT MORE THAN ONE ENEMY UNIT are going to either affect the ENTIRE BACK ROW or some number of RANDOM UNITS from the back row.
+
+We only have 4 units on a team. So, why is it important that we allow the player the possibility, for some abilities which we haven't even designed yet, to selectively pick more than one target? Like, as soon you've picked two units, you've already picked half of the entire enemy team.
+
+Maybe you should just be able to pick only ONE unit. Most of the time, that'll be the enemy in the ring. Sometimes, it'll be your own unit currently in the ring. Sometimes, you'll be targeting a single ally for a buff or a heal. Sometimes -- rarely -- you might even be targeting a single unit from the enemy back row.
+
+But why would you need to specifically target more than one unit at a time. If your ability is going to AFFECT more than one unit at a time, it's almost certainly going to be an entire TEAM or units picked at RANDOM, or units picked based on them being subject to some RULE or picked based on some CRITERIA. I don't think that we need to allow the player, under any circumstance, to specificially pick two units or more to be the targets of an ability.
+
+I can think of one situation where it might make sense to target more than on unit. Like, what if you have an ability where you have some class that can 'marry' two units together. Like, "If this unit dies, they both die." But, in that case, we wouldn't be critting them individually.
+
+So, maybe we need to maintain the POSSIBILITY to individually target more than one unit. But maybe it's fine to have the crit-chance be calculated in a fixed way for these situations. I feel like, in general, normal, attack abilities are not going to be targeting more than one unit. I think that's going to be extremely rare -- and, in the rare case that it DOES come up, it's probably fine to just calculate crit-chance based on, like, they're average PRY value or whatever.
+
+Before we move on, we also need to talk about how we're going to calculate crit chance for BUFFS or other BENEFICIAL ABILITIES. Like, it stands to reason that your 'PRY' value should be a chance to minimize NEGATIVE EFFECTS. You WANT to have higher PRY.
+
+But if someone is trying to HEAL YOU, how do we calculate the chance to crit?
+
+That's a question for Monday. So, on Monday, we need to address a few different things:
+
+1.) We need to figure out how we're going to calculate chance to crit when both units want for the ability to crit (beneficial abilities).
+
+2.) We need to decide how we want to handle chance-to-crit when an ability is targeting more than one unit (we can probably just average out the PRY of all targets).
+
+3.) We need to implement whatever we decide on into battlelib.UnitAbility.roll_for_effectiveness .
