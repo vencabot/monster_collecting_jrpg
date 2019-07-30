@@ -4973,3 +4973,83 @@ That's a question for Monday. So, on Monday, we need to address a few different 
 2.) We need to decide how we want to handle chance-to-crit when an ability is targeting more than one unit (we can probably just average out the PRY of all targets).
 
 3.) We need to implement whatever we decide on into battlelib.UnitAbility.roll_for_effectiveness .
+
+
+07/29/19:
+
+I think that, in situations where both units want for an ability to crit, the average PRY of the entire enemy party should be used as the 'PRY'. For instance, if you're trying to heal an ally unit, the entire enemy PRY would be working against you in terms of getting a crit.
+
+So, let's start implementing chance-to-crit.
+
+We have a philosophical problem -- or a design problem. The problem is that, in our game, we don't really know for sure which attacks are beneficial and which ones are negative. We could flag abilities as such -- or we could just rely on each ability to contain its own 'chance-to-crit' code.
+
+Some abilities are going to need their own chance-to-crit code ANYWAY because they'll have special conditions to crit. Some abilities might have a higher chance to crit than others. Some might always crit under certain circumstances. So, it stands to reason that, for at least SOME abilities, roll_for_effectiveness is going to need to be overridden.
+
+That being the case, I don't think that we should flag abilities as requiring a particular method for calculatin chance-to-crit. I think we'll just have the default value for roll_for_effectiveness be the one that assumes you're attacking an enemy. And then, if you want to do some beneficial ones, you can just implement your own roll_for_effectiveness -- or we could code them both in, by default, and the coder could pick between them.
+
+So, chance-to-crit equation:
+
+crit_delta = SKL / PRY
+if crit_delta > 1:
+    glance_chance = 15
+    crit_multiplier = min(crit_delta - 1, 1)
+    crit_chance = 55 * crit_multiplier + 15
+else:
+    crit_chance = 15
+    glance_multiplier = min(1 / crit_delta - 1, 1)
+    glance_chance = 55 * glance_multiplier + 15
+normal_chance = 100 - crit_chance - glance_chance
+
+SIDE QUEST
+
+I'm looking at our total_damage equation from last week and seeing that some of Kenny's equations are a bit long-winded and can be simplified to directly reference the damage_multiplier.
+
+He references ATK / DEF quite a few times. Later, he references 1 / (DEF / ATK), which is just ATK / DEF. So, you can rewrite our old code:
+
+damage_scale = (ATK / DEF)
+scaled_damage = base_damage * damage_scale
+base_penetration = (ATK / DEF - 1)
+penetration_scale = (1 / (DEF / ATK) + kenny_constant)
+scaled_penetration = base_penetration * penetration_scale
+total_damage = scaled_damage + scaled_penetration
+
+AS:
+
+damage_scale = ATK / DEF
+scaled_damage = base_damage * damage_scale
+base_penetration = damage_scale - 1
+penetration_scale = damage_scale + kenny_constant
+scaled_penetration = base_penetration * penetration_scale
+total_damage = scaled_damage + scaled_penetration
+
+Because the Kenny Constant we decided on was '1,' it strikes me that scaled_penetration is:
+
+scaled_penetration = (damage_scale - 1) * (damage_scale + 1)
+
+Seems strangely symmetrical.
+
+On Wednesday, we need to reexamine this Kenny damage equation and figure out exactly what the -1 and the +1 are for. How do they impact the resulting damage values? We need to theoretically examine this equation and break it down. It's very easy to understand until we look at the scaled_penetration damage. We could even break it down right now:
+
+damage_scale = ATK / DEF
+    * A multiplier which doubles base_damage when ATK is double DEF and
+      halves base_damage when ATK is half of DEF.
+
+scaled_damage = base_damage * damage_scale
+    * The resultant, scaled damage as described above.
+
+base_penetration = damage_scale - 1
+    * ???????
+
+penetration_scale = damage_scale + kenny_constant
+    * ????????
+
+scaled_penetration = base_penetration * penetration_scale
+    * ????????
+
+total_damage = scaled_damage + penetration_damage
+    * By adding 'penetration damage' to our scaled_damage, we get either a
+      bonus or a penalty which will favor multi-hits when ATK is greater
+      than DEF and single-hits when DEF is greater than ATK.
+    * The additional 'penetration' is the secret sauce in making this
+      mechanic work.
+    * No idea, theoretical, how 'penetration' is really working.

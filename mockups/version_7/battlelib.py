@@ -1,4 +1,5 @@
 import random
+import statistics
 
 class EventTimeline:
     def __init__(self, original_event):
@@ -119,6 +120,8 @@ class RuleSet:
 
 class Battle:
     def __init__(self):
+        self.leader_a = None
+        self.leader_b = None
         self.ruleset = RuleSet()
         
     def update_w_rules(
@@ -265,14 +268,44 @@ class UnitAbility:
     def linear_variate(self):
         pass
 
-    def roll_for_effectiveness(self, targets, battle):
-        glancing_chance = 15
-        critical_chance = 15
-        normal_chance = 100 - glancing_chance - critical_chance
+    def get_mean_pry_enemy_party(self, battle):
+        if self.owner not in battle.leader_a.party:
+            enemy_party = battle.leader_a.party
+        else:
+            enemy_party = battle.leader_b.party
+        return statistics.mean([unit.aug_pry for unit in enemy_party])
+
+    def get_mean_pry_targets(self, targets):
+        return statistics.mean([target.aug_pry for target in targets])
+
+    def roll_for_effectiveness_against_pry(self, mean_pry):
+        crit_delta = self.owner.aug_skl / mean_pry
+        if crit_delta > 1:
+            glance_multiplier = 0
+            crit_multiplier = min(crit_delta - 1, 1)
+        else:
+            crit_multiplier = 0
+            glance_multiplier = min(1 / crit_delta - 1, 1)
+        glance_chance = glance_multiplier * 55 + 15
+        crit_chance = crit_multiplier * 55 + 15
+        normal_chance = 100 - glance_chance - critical_chance
         effectiveness_strs = ["glancing", "normal", "critical"]
         effectiveness_weights = [
             glancing_chance, normal_chance, critical_chance]
         return random.choices(effectiveness_strs, effectiveness_weights)[0]
+
+    def roll_for_effectiveness(self, targets, battle):
+        mean_pry = self.get_mean_pry_targets(targets)
+        return self.roll_for_effectiveness_against_pry(mean_pry)
+
+    def calculate_total_damage(self, target, base_damage):
+        damage_scale = self.owner.aug_atk / target.aug_def
+        scaled_damage = base_damage * damage_scale
+        base_penetration = damage_scale - 1
+        penetration_scale_bonus = 1
+        penetration_scale = damage_scale + penetration_scale_bonus
+        scaled_penetration = base_penetration * penetration_scale
+        return scaled_damage + scaled_penetration
  
     def use_on(self, targets, battle):
         if not self.can_be_used_on(targets):
