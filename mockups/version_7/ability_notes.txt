@@ -5053,3 +5053,205 @@ total_damage = scaled_damage + penetration_damage
     * The additional 'penetration' is the secret sauce in making this
       mechanic work.
     * No idea, theoretical, how 'penetration' is really working.
+
+07/31/19
+
+Let's talk about penetration.
+
+Base penetration is damage_scale - 1. So, if ATK is twice DEF, then damage_scale is 2. Subtract 1 and we have BONUS DAMAGE of 1 point.
+
+If DEF is twice ATK, then damage_scale is .5. Subtract 1 and we have a DAMAGE PENALTY of .5 points.
+
+This is the backbone of our penetration equation. It's the fact that we have this '-1' that gives us our PENALTY when DEF is greater than ATK. Because our 'scale' will never go into negatives. No matter how much higher DEF is than ATK, 'scale' will never go into negatives. But, when DEF is higher than ATK, 'scale' becomes a fractional number, and so subtracting 1 will put it into the negatives, giving us a damage penalty when DEF is greater than ATK.
+
+Therefore, we can say that -1 isn't really a constant that we should want to play with. It's really just there to give us a penalty -- to put into negatives -- considering that, when DEF is greater than ATK, scale is less than 1 (not less than zero).
+
+But, of course, this 'base penetration' isn't applied FLATLY to our total damage. It's scaled by some value. So let's look at that.
+
+So, we scale our base_penetration BY THE DAMAGE_SCALE and then we add some number, called the 'kenny_constant,' which we've settled on as being '1'.
+
+What makes me uncomfortable is that we basically take the damage_scale and multiply it by the damage_scale. That seems weird.
+
+Why +1? Why the Kenny Constant? What does this value really do?
+
+Well, it definitely prevents our base_penetration from being scaled DOWN when DEF is higher than ATK.
+
+When DEF is higher than ATK, our damage_scale falls into values that are less than one. Therefore, if you multiplied base_penetration by these values, you'd end up with a shrunken value -- or a value that's closer to zero. By adding 1-or-greater, we guarantee that our scale is a number GREATER THAN 1, which means that we're always scaling the value UP (or further from zero, since negative values will become even more negative).
+
+So, why is it important that these base_penetration values always get scaled FURTHER FROM ZERO. Also, why do we even use the damage_scale as a sort of basis for this penetration_scale?
+
+We should answer the first question first. It's probably important that we always scale further from zero for the same reason that, for base_penetration, we subtract 1 to make sure that values can go negative.
+
+So -- by adding '1' or any other Kenny Constant to our penetration_scale, we create a situation where, as ATK gets higher over DEF, we grow our scale -- but even when DEF is greater than ATK, our scale is still growing. So it's almost like, as ATK goes up, our penetration_scale goes up?
+
+total_penetration = (damage_scale - 1) * (damage_scale + 1)
+
+'Damage Scale' is a number between 0 and infinity and it represents how our base_damage is being scaled based on the percentage difference between ATK and DEF.
+
+In base_penetration, we have this -1 so that we can get a DAMAGE PENALTY when DEF is greater than ATK. If DEF is twice ATK, then damage_scale is .5. By subtracting 1, we fall into negatives (-.5) whenever DEF is greater than ATK. So, the -1 is just there so that numbers that would normally be LESS THAN 1 become LESS THAN ZERO. It's what allows us to get a penalty whenever DEF is greater than ATK.
+
+What puzzles me is how this whole value ends up being multiplied by the damage_scale (again) plus one.
+
+I kind of understand base_penetration (as described above) although it seems weird that the LOWEST IT CAN GO is -1 and the highest it can go is infinity - 1.
+
+damage_scale is aggressor_atk / defender_def . As such, it can never reach zero. Unless aggressor_atk is zero -- then it can reach zero. But in general, as long as the aggressor has any positive number for ATK (which is always the case), this number can never completely reach zero, let alone go negative.
+
+We've experimented with a number of different 'kenny_constant's, and have found it to be pretty arbitrary. It just seems to affect the SCALE of the penetration damage. But I do want to point out that, by having this value be GREATER THAN 1 AT ALL TIMES, we ensure that the base_penetration is always scaled further from zero rather than nearer to zero. So, +1 guarantees that.
+
+By adding 1 to our penetration_scale, we see that, when ATK is equal to DEF, penetration_scale = 2. So, that seems kind of weird. Does that mean that, when ATK is equal to DEF, we end up with extra damage from the penetration value?
+
+Let's look, again, now that Kenny's here, at how I've changed his equation.
+
+damage_scale = (ATK / DEF)
+scaled_damage = base_damage * damage_scale
+base_penetration = (ATK / DEF - 1)
+penetration_scale = (1 / (DEF / ATK) + kenny_constant)
+scaled_penetration = base_penetration * penetration_scale
+total_damage = scaled_damage + scaled_penetration
+
+AS:
+
+damage_scale = ATK / DEF
+scaled_damage = base_damage * damage_scale
+base_penetration = damage_scale - 1
+penetration_scale = damage_scale + kenny_constant
+scaled_penetration = base_penetration * penetration_scale
+total_damage = scaled_damage + scaled_penetration
+
+The new equation for penetration = (damage_scale - 1) * (damage_scale + 1)
+
+So, when ATK is equal to DEF, our base_penetration = 0, but penetration_scale = 2.
+
+So, we have 0 * 2.
+
+I mentioned, above, that by adding at least 1 as the kenny_constant, we ensure that the penetration_scale is always greater than 1. Otherwise, whenever DEF was greater than ATK, our penetration_scale would become values between 0 and 1, which means that our base_penetration is scaled closer to zero. So, by adding at least 1, as the kenny_constant, we ensure that our values are always scaled away from zero.
+
+So, if we remove the kenny_constant, I would think that would cause our penetration damage to go haywire? Because it would start being scaled toward zero in certain circumstances?
+
+My hypothesis was incorrect. Entirely removing the Kenny Constant doesn't cause anything to go haywire. Even though we now have situations where the 'scale' can be values less than 1, everything still behaves as it should.
+
+So, for the sake of simplifying our equation -- because the 'kenny_constant' is completely arbitrary -- we're going to remove the kenny_constant, for now, (and bring it back, later, to have more fine-grained control over scaling) and examine our penetration equation as such:
+
+(damage_scale - 1) * damage_scale
+
+So, in that respect, damage_scale and penetration_scale are exactly the same. We're scaling base_penetration by the same value that we're scaling base_damage.
+
+base_damage * damage_scale + base_penetration * damage_scale
+=
+(base_damage + base_penetration) * damage_scale
+
+So we basically have a universal damage_scale and the kenny_constant is just there as an additional measure to give us more fine-grained control of how penetration scales -- makes it more or less dramatic.
+
+(damage_scale - 1) * damage_scale
+=
+damage_scale * damage_scale - 1 * damage_scale
+=
+(atk * atk) / (def * def) - (atk / def)
+
+You know, I never considered the fact that, because penetration_damage = base_penetration * penetration_scale , that, maybe, I conceptually had the values labeled backwards?
+
+Because, since they're multiplied by each other, the base_penetration could be thought of as scaling the penetration_scale to get our total value.
+
+In other words, maybe it makes more sense to think of:
+
+damage_scale + kenny_constant
+
+as being our base_penetration.
+
+And maybe it makes more sense to think of:
+
+damage_scale - 1
+
+as our penetration_scale. I mean, that makes more sense, right? That's why we have that -1 to send values, where DEF is higher than ATK, into the negatives. It's a multiplier that creates this penalty?
+
+If we reversed the labels so that I can re-conceptualize this equation, we end up with this:
+
+base_penetration = damage_scale
+penetration_scale = damage_scale - 1
+
+If we look at the equation this way, then we could say that our base penetration damage is always positive, and it's a value between 0 and infinity. The higher our DEF is over our ATK, the less base penetration damage we get -- but it never falls into the negatives.
+
+From this perspective, you could look at base_penetration as bonus damage.
+
+We scale it by a value between -1 and infinity - 1. So, when ATK is below DEF, the multiplier is negative, and thus we get a damage penalty.
+
+I don't think that works for me. I think that it still makes more sense to look at the values as:
+
+base_penetration = damage_scale - 1
+penetration_scale = damage_scale
+
+I talked before about how we can unify this as:
+
+total_damage = (base_damage + base_penetration) * damage_scale
+
+Then I think I understand. base_penetration is a value between -1 and infinity - 1 which goes up when ATK is greater than DEF and goes down when DEF is greater than ATK. As such, we have this bonus / penalty applied to our damage which reflects how overwhelmed our ATK is or isn't by DEF.
+
+So, I have one final question: is it a problem that our base_penetration bottoms out HARD at -1 but has no apparent ceiling?
+
+If that's a problem, can we solve that problem?
+
+Kenny mentioned earlier that values can go 'haywire' when ATK is more than twice DEF, and I can see why that'd be the case: it gives us a BONUS TO DAMAGE that's greater than we could ever be PENALIZED TO DAMAGE.
+
+One solution would be to CAP PENETRATION? So that base_penetration is always between 1 and -1.
+
+My theory is that the '-1' in 'damage_scale - 1' is so that damage_scale can reflect a PENALTY to damage.
+
+damage_scale is always between zero and infinity. Therefore, it can never be negative. However, when DEF is greater than ATK, damage_scale is always less than 1.
+
+Therefore, by subtracting 1, we make it so that, whenever DEF is greater than ATK, we have a value that's between zero and -1. So, we get a damage penalty whenever DEF is greater than ATK.
+
+What strikes me about this is that, if ATK is twice DEF, then base_penetration = 1. But if ATK is 3x DEF, then base_penetration = 2 -- and so-on.
+
+So, we can reach base_penetration damage of much higher than 1 but we can't quite get a damage_penalty of -1.
+
+Our entire damage equation is this:
+
+For one thing, we have no weapons or armor in our game. Creatures / units / monsters or whatever you want to call them have ATK and DEF values, and their abilities each have a base_damage value associated with them. So, some abilities that can be chosen in battle inherently do more damage than others. If it makes you more comfortable, you could think of these abilities as being individual weapons that a unit can use on any given turn. But, basically, you pick an ability to use on that turn and that ability has some base amount of damage that it would be expected to do when the aggressor's ATK is equivalent to the defender's DEF.
+
+So, we have this basic equation for our damage:
+
+total_damage = base_damage * (aggressors_atk / defenders_def)
+
+Using this equation, when the aggressor's atk is equal to the defenders_def, then the ability does its base_damage.
+
+If the aggressor's ATK is twice the defender's DEF, then the ability does twice its normal damage.
+
+If the defender's DEF is twice the attacker's ATK, then the ability does one half of its normal damage.
+
+We're talking about a secondary aspect of our game's damage calculation which is meant to add tactical depth to ability choice. In our game, there are two main types of attacks, we'll say:
+
+abilities that lump all of their damage into a single 'hit' and abilities which divide their damage up over multiple 'hits'.
+
+So, imagine an ability, 'Slap,' which deals a base damage of 10 over a single hit.
+
+Now, imagine an ability, 'Double Slap,' which has the same costs to the player (MP, AP, cost to purchase, whatever), but it dives this base damage of '10' over two hits, each with base damage of 5.
+
+The purpose of our game's 'penetration_damage' calculation is to make these two abilities tactically distinct. In our game, with our current equation (which is working; I'm just trying to figure out, before we settle on it, if there are any issues with it), a single hit for 10 base_damage and a multi-hit for 10 base_damage only do the same total_damage when ATK == DEF.
+
+The idea is that, when ATK > DEF, the player is rewarded for splitting up their base_damage over multiple hits.
+
+When DEF > ATK, the player is penalized for splitting up their base_damage over multiple hits.
+
+base_damage = constant defined by the ability
+damage_scale = atk / def
+scaled_damage = base_damage * damage_scale
+
+base_penetration = atk / def - 1
+
+total_damage = (base_damage + base_penetration) * damage_scale
+
+Look at it like this: as our ATK climbs over our DEF, we get damage added to our base_damage. And when ATK is less than DEF, our base_damage gets penalized.
+
+The reason that multi-hits are penalized MORE is because this atk / def - 1 value its relatively larger -- it makes up a greater percentage of our total basis -- when base_damage is lower.
+
+In other words, if base_damage is 10 and we add 1 penetration, we're adding 10% of our damage.
+
+But, if base_damage is 1 and we add 1 penetration, we're adding 100% of our damage.
+
+So, basically, the LOWER BASE_DAMAGE IS, the more of an impact on the total damage penetration has.
+
+As such, when we take this damage equation and we run it MULTIPLE TIMES -- ONCE FOR EACH 'HIT' -- we get a situation where the TOTAL, SUMMED DAMAGE is affected by how many times penetration is applied.
+
+For Thursday: is it a problem that our greatest PENALTY for penetration is near-but-not-quite -1. And our greatest bonus is hypothetically much higher than 1.
+
+If it's a problem, how can we fix it? Kenny is sort of at the same place I am: it's almost like we need a multiplier for penetration rather than a linear subtraction? But, again, I'm having a lot of trouble keeping all of these disparate concepts in my head at once. We need to run some practical examples to demonstrate this issue, if there is one. I figure that, if the problem's gonna arise, it's gonna arise when we look at HOW MUCH PENALTY WE GET TO DAMAGE WHEN DEF IS 4X ATK compared to how much BONUS we get when ATK IS 4X DEF. It seems to me, theoretically, that our bonuses would be waaaaay more extreme than our penalties. But maybe I'm wrong.
