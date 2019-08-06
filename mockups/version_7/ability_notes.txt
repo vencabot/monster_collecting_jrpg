@@ -5255,3 +5255,332 @@ As such, when we take this damage equation and we run it MULTIPLE TIMES -- ONCE 
 For Thursday: is it a problem that our greatest PENALTY for penetration is near-but-not-quite -1. And our greatest bonus is hypothetically much higher than 1.
 
 If it's a problem, how can we fix it? Kenny is sort of at the same place I am: it's almost like we need a multiplier for penetration rather than a linear subtraction? But, again, I'm having a lot of trouble keeping all of these disparate concepts in my head at once. We need to run some practical examples to demonstrate this issue, if there is one. I figure that, if the problem's gonna arise, it's gonna arise when we look at HOW MUCH PENALTY WE GET TO DAMAGE WHEN DEF IS 4X ATK compared to how much BONUS we get when ATK IS 4X DEF. It seems to me, theoretically, that our bonuses would be waaaaay more extreme than our penalties. But maybe I'm wrong.
+
+08/01/19:
+
+Our issue is this: theoretically speaking, the scale of attack penetration (bonus) is much less limited, APPARENTLY, than def penetration (penalty).
+
+Here's our equation for calculated total penetration damage:
+
+total_penetration = (ATK / DEF - 1) * ATK / DEF
+
+My question is this: what is the significance of the '-1'.
+
+My theory is that its MAIN PURPOSE is to give us a damage penalty whenever DEF is higher than ATK. And when ATK is higher than DEF, we get a damage bonus.
+
+ATK / DEF gives us a number > 1 whenever ATK is higher than DEF. When DEF is higher than ATK, we get a fractional number -- a number between 1 and 0.
+
+But neither of those scenarios gives us a NEGATIVE NUMBER -- or a damage penalty.
+
+By subtracting ONE from ATK / DEF, we ensure that, whenever DEF is greater than ATK, we fall into negative numbers. Normally, if DEF was higher than ATK, we'd get a number between 1 and 0. By subtracting 1, we get a number between 0 and -1 whenever DEF is greater than ATK.
+
+As someone that sucks at math, I want to make a note, here, that we don't need our penalty to be -- scratch that. Basically, what I'm trying to say, is that as a BONUS scales up indefinitely toward infinity, in terms of SCALE (3x our DEF value, 4x our DEF value, 10x our DEF value), our PENALTY scales down toward ZERO. That's only natural, although it seems counter-intuitive to me (.5x our ATK value, .33x our ATK value, .1x our ATK value). In terms of SCALE, that's sensible.
+
+My question is, when you take this SCALE: ATK / DEF. And you try to turn it into a flat number to use as a bonus or a penalty... do you need to do more than just subtract 1 from it to make that work.
+
+ATK / DEF is a scale. It compares their scale to each other. If we're talking about transforming that scale into a linear bonus or penalty, it seems to me like you can't just subtract 1 from it.
+
+But, a problem with my theory is that, in practice, based on the limited testing we've done, it seems to work fine. It seems to work great. I have no complaints with how it's been working, in practice. So, I guess we need to analyze this equation and come up with a scenario to PROVE that it's not working.
+
+Let's examine how the equation is working so far:
+
+When ATK and DEF are equal, our summed damage of all of our hits is always equal to the sum of our base_damage. That's what we want, so it's working great. This is because, when ATK and DEF are equal, ATK / DEF = 1. And then we subtract 1 from that, which gives us 0 penetration damage. So, our total damage is always just our base_damage added up.
+
+That was a part of our goal when coming up with our equation, so that's great. Works fine.
+
+When ATK is higher than DEF, we see that we get a positive penetration bonus and that, as we gain hits, we gain total damage. In other words, the more hits we split our base_damage over, the more total damage we get. That's what we wanted.
+
+When DEF is greater than ATK, we get a penetration PENALTY that's linearly less severe than the equivalent BONUS that we get when ATK is equally higher than DEF -- but having it be linearly less severe not only makes sense but was one of our goals, because as DEF goes up and 'scaled damage' goes DOWN, the penalty becomes relatively MORE of the total damage.
+
+When ATK is greater than DEF, we're ALREADY DOING MORE DAMAGE. We're doing 20 instead of 10. So, if we get a penetration BONUS of 2, then we're adding another 10% on top to give us 22 damage. That seems fair.
+
+But when DEF is greater than ATK, we're ALREADY DOING LESS DAMAGE. We're doing 5 instead of 10. What's interesting about that is that, if we subtract 2 damage by applying a penalty penalty that's equal to the bonus we would've gotten on the opposite end of the scale, we're subtracting almost 50% of our damage by reducing 5 to 3.
+
+So, if we have an equal penalty as we would have a bonus at the opposite end of the scale, it blows the damage way out of proportion.
+
+What I'm getting at is that it's a good thing, it's a necessary thing that our penetration PENALTY would be a fraction of what our bonus would be at the other end of the scale.
+
+First of all, maybe we should answer this question: WHY does this equation work, right now.
+
+For one thing, when you have double ATK over DEF, our base bonus is 1.
+
+And when you have double DEF over ATK, our base bonus is -.5 .
+
+This is represenative of what we were just talking about: our penalty is nowhere near as severe as our bonus would be on the other end of the scale. Furthermore, this bonus / penalty is scaled by ATK / DEF. So, when ATK is greater than DEF, the bonus is scaled upward toward infinity.
+
+When DEF is higher than ATK, our penalty is scaled down toward zero.
+
+So, actually, our total penetration for when ATK is double DEF is 2. We get the base bonus of 1 (2 - 1) and then we multiply that value by ATK / DEF, which is 2. 1 * 2 = 2.
+
+Our total penetration when DEF is double ATK is -.25 . Our base penalty is -.5 (.5 - 1), and then that's multiplied by ATK / DEF, which is .5. So, we cut -.5 in half.
+
+So, double ATK earns you a bonus of 2 damage per hit.
+
+Double DEF earns you a penalty of -.25 damage per hit.
+
+In order to figure out whether or not things are working, I think that we need to understand these values that I've been calculating for this very purpose: 'damage advantage'. Although my stupid ass hasn't come up with a way to actually utilize these values, I knew that they'd be important.
+
+So, basically, I've been calculating the percentage advantage that ATK has over DEF. And I've been calculating how much of an advantage our DAMAGE has over base_damage. The purpose of these two numbers is to compare them to each other -- compare the ATK ADV over the DAMAGE ADV -- and see exactly how large the impact is of penetration. Because, in a world without penetration, these values would be exactly the same: your advantage of ATK over DEF would directly reflect your advantage in damage over base_damage.
+
+Before we can really start to analyze these 'ATK ADV' numbers, I need to understand the relationship between DEF ADV and ATK ADV.
+
+When ATK is 12 and DEF is 10, we have an attack advantage of 20%. That makes sense.
+
+When DEF is 12 and ATK is 10, we have a defense advantage of 20%. That makes sense.
+
+What I'm not prepared to understand, right away, is that, when DEF is 12 and ATK is 10, we don't have a 'atk adv' of -20% -- 20% less ATK than DEF -- instead we have -16.6666 advantage.
+
+The way that I conceptualize our total damage equation is like this:
+
+total_damage = ((base_damage + ATK / DEF - 1) * ATK / DEF) * hits
+
+The reason that ATK advantage isn't -20% when DEF is 20% than ATK is that we are comparing the scale from ATK to DEF. So, if ATK is 10 and DEF is 12. Yeah, DEF is 20% than ATK, but ATK is WHAT PERCENTAGE OF DEF. 10 is 83.333333% of 12. And so we have this negative adv of the difference. -16.6666666% advantage.
+
+Our problem is that our attacks, in our game, get a penetration bonus / penalty of:
+
+(ATK / DEF - 1) * (ATK / DEF)
+
+I'm trying to figure out what the '- 1' is for and whether or not it's going to cause issues at some point.
+
+If ATK / DEF = .25, that means that ATK is 1 and DEF is 4. Def is 4x ATK.
+
+If ATK / DEF = .75, that means that ATK is 3 and DEF is 4. Def is 25% than ATK.
+
+IDEALLY, IN A PERFECT WORLD, OUR DAMAGE PENALTY WHEN DEF IS GREATER THAN ATK SHOULD BE PROPORTIONALLY EQUIVALENT TO OUR DAMAGE BONUS WHEN ATK IS GREATER THAN DEF BY THE SAME AMOUNT.
+
+So, when ATK is 20 and DEF is 10. Let's say that our penetration bonus yields us 2 damage. Let's say that our base_damage is 10. So, we're getting double damage because ATK is twice DEF. We're getting 20 scaled_damage. We're getting a penetration bonus of 2. Our total damage is 22 and our penetration bonus is 10%. We are added 10% of our scaled damage to total_damage.
+
+My question is this: can we say that, in a perfect world, with our ideal equation, this is true:
+
+if DEF is 20 and ATK is 10, and we have a base_damage of 10. Our scaled_damage is 5. So shouldn't. Our. Penetration penalty. Be 10% of 5. So we lose .5 damage. Our total damage is 4.5.
+
+If that's true, there's not going to be any difference for multi-hits.
+
+If you look at it the way that it's described above, you would want to have AS MUCH OF A PENALTY AS YOU HAVE A BONUS ON THE OTHER END OF THE SCALE.
+
+If 2x ATK gets you a 10% bonus, then 2x DEF should get you a 10% penalty. But again, the problem with that is that it doesn't work right for multi-hits. You don't get rewarded or penalized for multi-hits.
+
+If you wanted penetration damage to become linear, you would exclude it from damage_multiplier / damage_scale. And I don't see how that would be a problem? I mean, for the longest time, we didn't even really understand that it WAS being scaled the same as scaled_damage.
+
+So, it would like this...?
+
+total_damage = base_damage * (ATK / DEF) + ATK / DEF
+
+Kenny points out that we could theoretically accomplish this with two equations that would look like this:
+
+if atk > def:
+    total_damage = base_damage * (atk / def) + atk / def
+else:
+    total_damage = base_damage * (atk / def) - def / atk
+
+NOTE: KENNY POINTS OUT THAT PENETRATION DOESN'T SCALE AT ALL WITH BASE_DAMAGE OR SCALED_DAMAGE OR ANY KIND OF DAMAGE. IT'S JUST A LINEAR VALUE BASED ON ATK / DEF AND SO IT REWARDS LOWER BASE_DAMAGE MORE AND HIGHER BASE_DAMAGE LESS.
+
+Our current equations:
+
+if atk > def:
+    total_damage = base_damage * (atk / def) + atk / def
+else:
+    total_damage = base_damage * (atk / def) + (atk / def) * -1
+
+Is it fair to say that the whole point of penetration is that lower base-damage moves get more of a bonus / penalty compared to higher base-damage moves?
+
+The fact that higher base-damage moves get relatively less of a bonus is why you use lower base-damage moves that hit multiple times.
+
+The fact that higher base-damage moves take relatively less of a penalty is why you use them instead of lower base-damage moves.
+
+Kenny's argument is that, as base_damage gets higher, penetration becomes more neglibible. I think that's the point?
+
+When the player is going to be taking a penetration PENALTY, we want for them to choose an attack, like slap, which has a base_damage of 10.
+
+When the player is going to be getting a bonus, we want for them to choose an attack like double-slap, which has a base_damage of 5, and use it twice.
+
+Kenny's right that, as our base_damage and scaled_damage go up, our penetration does not. Seems weird. Is it weird, or is that what we want?
+
+What Kenny's saying is that, if we have a hypothetical move that does 1000 base_damage. And we get a penetration bonus of 1. We are getting virtually no bonus.
+
+If we double-slap that for two hits of 500, we're still getting virtually no bonus. So, tactically speaking, it becomes less important whether you single-hit or multi-hit when we get to extremely high numbers.
+
+Dixx points out that, obviously, this issue isn't as apparent when we just all agree to limit our base_damage to some range. My concern is that, if the equation were actually behaving as it hypothetically 'should,' we shouldn't have to do that. I feel like applying that sort of cap or limit is like a band-aid to cover up a problem that we could probably solve in a relatively simple way if we were smarter.
+
+There are a few ideas that we hit upon, today, that I think profoundly reflect what we're trying to accomplish, maybe. I want to decode them a bit:
+
+I think that the PENALTY that we take from having DEF be 4x ATK should be proportionally equivalent to the BONUS that we get when ATK is 4x DEF. So, if we get a 20% bonus to our damage for having 2x ATK over DEF, we should take a 20% penalty to our damage for having 2x DEF over ATK.
+
+The problem with that is that it doesn't account for multi-hits in any meaningful way.
+
+We also clarified that higher base-damage abilities take relatively LESS OF A BONUS and LESS OF A PENALTY than lower base-damage abilities. Never really thought of it that way, before. So, the more base_damage you have, the more stable your total damage, kind of? In both a good way and a bad way. You WANT more of a bonus, so you WANT lower-base-damage abilities (at proportional cost). But you also want LESS of a penalty, so you want higher-base-damage abilities.
+
+So, it's like, higher base-damage proportional to cost makes your damage more stable or less susceptible to penetration, one way or the other.
+
+But the problem with that is that it doesn't take into account the SCALE of the abilities' base_damage. So, if we have a game where 'slap' does 10 base_damage and 'hyper slap' does 10000 damage, penetration really becomes much less interesting at 10000 damage.
+
+But that's probably fine because we've not only been thinking of 'slap' as being '10 base damage' arbitrarily; we decided early on that slap, and its 10 base_damage, is our 'base-line' or 'average' ability. So, I think it makes sense to set the scale of penetration to that base-line ability. We can get as low, then, as 1 damage and as high, essentially, as 100 damage. I didn't really understand that, by talking about a 'baseline, average ability,' we were effectively setting caps.
+
+Next time, on Monday, let's continue to examine the 'DEF > ATK' and 'ATK > DEF' variants as described above and see if we're getting behavior in line with what we want. My thinking is that, yes, this is pretty much where we want to be and all that we need, unless we can come up with a way to mathematically break these ideas down into one equation, so that, whenever ATK / DEF is less than one, we're multiplying it by -1, and when ATK / DEF is greater than one, we're multiplying it by 1.
+
+
+08/05/19
+
+So, over the weekend, Kenny and I briefly discussed what we're looking for with this 'ideal equation,' and let's review our criteria:
+
+1.) Do we want for the penetration damage to scale, in some capacity, with the over-all damage? Does an attack which does _______ amount of damage deserve to have more penetration damage than an attack which does _______ amount of damage. Kenny pointed out, last time, that if we have some hypothetical attack which does 5000 base damage, doesn't it seem weird that it should get the same amount of penetration damage as an attack with 10 base damage. I theorized that this is a non-issue because of the fact that we're balancing our attacks around a 'baseline' base damage, but I'm not convinced that this entirely resolves this issue.
+
+2.) I wish that we could combine our DEF > ATK formula for penetration with our ATK > DEF formula. I theorized that we could almost certainly do this with some very simple math that we just hadn't thought of, and I was hoping that we could examine that, today, and try to figure out what that very simple equation would be.
+
+And I think that Kenny found that very equation. I knew it would be simple, and I think that he figured it out.
+
+First of all, let's examine what our CURRENT equations are:
+
+Whether ATK is greater than DEF or not, we always use the same, simple calculation for 'scaled damage':
+
+scaled_damage = base_damage * (ATK / DEF)
+
+But, for penetration, we use a different formula depending on whether we want an damage BONUS or a PENALTY:
+
+ATK > DEF:
+penetration = (ATK / DEF)
+total_damage = scaled_damage + penetration
+
+DEF > ATK:
+penetration = -(ATK / DEF)
+total_damage = scaled_damage + penetration
+
+The problem was that, as far as I could tell, we didn't have a mathematical solution for making penetration NEGATIVE when DEF is greater than ATK and POSITIVE when ATK is greater than DEF.
+
+Well, Kenny solved this in the most obvious way possible: just subtract DEF from ATK and use that as your penetration value.
+
+scaled_damage = base_damage * (ATK / DEF)
+penetration = (ATK - DEF) * penetration_scale_factor
+total_damage = scaled_damage + penetration
+
+This solves one of our problems: it unifies our equations in a way that makes sense (although I feel like this has the problem where the penalty is much harsher than the bonus). But it doesn't solve our question of whether or not higher-damage abilities should get more penetration.
+
+So, first of all. Can we solve this problem where penalties are much harsher than bonuses.
+
+One way, I think, would be Kenny's second recommendation: scale the penalty by ATK / DEF.
+
+The upside of this is that, on top of giving us a positive value when ATK is over DEF, we also INCREASE that bonus because ATK / DEF is greater than one.
+
+Also, when DEF is greater than ATK, we get a negative value, yes, but that value is brought closer to 0 because ATK / DEF is between 1 and 0. So, the penalty is being downscaled.
+
+So, Kenny's second recommendation looks kind of like this:
+
+penetration = (ATK - DEF) * penetration_scale_factor * (ATK / DEF)
+or
+total_damage = (base_damage + ATK - DEF) * (ATK / DEF)
+
+We did some testing, and this equation appears ideal -- unless we decide that we want for penetration to scale with scaled_damage (so, the more damage you would've done BEFORE penetration, the greater penetration bonus you get). But, even just writing that, I'm not sure that's possible; I'm not sure that's what we want.
+
+But, in any case, by calculation penetration as:
+
+penetration = (ATK - DEF) * penetration_scale_factor  * (ATK / DEF)
+
+we end up with some very pretty penetration values. For instance, if 10 ATK / 20 DEF results in a -5% penetration penalty, then 20 ATK / 10 DEF results in a +5% penetration bonus. That's godlike. That's what we want.
+
+The thing is, the whole point of penetration is to reward a player for using an ability with relatively HALF base_damage and relatively HALF cost when attacking an opponent with lower DEF than you have ATK.
+
+So, we can balance our values around our 'baseline' base_damage of 10. When I say 'baseline,' I mean that our whole game is balanced around the idea of doing 10 base damage for some reasonable cost. So, when you have an attack that does 5 base damage, it's either going to be roughly half the cost or it's going to have some other perks.
+
+That all  being the case, if we set our penetration_scale_factor around this most basic of abilities, then it'll probably behave 'well' for any ability in the game. And maybe that's what we want. Maybe that's the only way that it could be and still make sense.
+
+But here's my problem hypothetical.
+
+If we then create an ability which does 20 base_damage for twice the cost of Slap (10 base damage).
+
+The REWARD for using Slap as opposed to this Hyper Slap when ATK > DEF is relatively LESS REWARD than when we go from Slap to Double Slap.
+
+Likewise, the PENALTY for using Slap as opposed to this Hyper Slap when DEF > ATK is relatively LESS PENALTY than when we go from Slap to Double Slap.
+
+I'm kind of glad that we introduced this 'Hyper Slap,' because it makes more clear that we have this sense of scale that can go indefinitely high or indefinitely low. Is there a way to ensure that the REWARD or PENALTY for choosing the wrong or right ability at any scale stays PROPORTIONAL.
+
+Well, maybe the key word is 'proportional'. Maybe this penalty or bonus is scaled based on the base_damage's relative value compared to 10...? That seems like it would be a problem. That would break our current mechanism where 'Double Slap' has 5 base damage, and so its penalty is changed proportionally, so the whole ATK - DEF * whatever thing doesn't really work, any more.
+
+Let's establish a situation:
+
+ATK is 15
+DEF is 10
+
+We want for the BONUS that the player gets for choosing Slap instead of Hyper Slap to be PROPORTIONALLY REWARDING compared to if they chose Double Slap over Slap.
+
+Or do we? Do we need it to be proportional. Because, if Hyper Slap costs double that of Slap (which it does), then are they not making the exact same decision as they would if they chose between Hyper Slap and using Double Slap four times. So, does it make sense to think of this 'penetration bonus' as having to be proportional -- like, lemme re-word this. Lemme re-conceive this.
+
+Maybe what I'm saying is tying back to 'more base_damage should get more of a penetration bonus / penalty / whatever'. Because
+
+if you can choose to use Double Slap 4 times
+Or Slap 2 times
+Or Hyper Slap 1 time
+
+I guess what I'm asking is this:
+
+Is it more rewarding to go from using Slap to Double Slap when ATK is 15 and DEF is 10 than it is to go from Hyper Slap to Slap.
+
+My thinking, flawed as it may or may not be, is that the penetration bonus that you get from going from Slap to Double Slap makes up a higher percentage of the total damage than if you go from Hyper Slap to Slap.
+
+Because, with Hyper Slap, you're working on a larger scale, so any reward or penalty would seem to be less relative to your non-bonus'd/penalized damage.
+
+But maybe that thinking falls apart when you consider that you could also go from Hyper Slap to Double Slap. Now, you're Double Slap'ing 4 times, so that bonus adds up even more.
+
+If you compare going from Slap to Double Slap : to going from Hyper Slap to Double Slap, you are definitely getting TWICE the penetration bonus. Because you're using Double Slap TWICE as many times.
+
+So, I think, conceptually, that solves our problem. I think that, conceptually, you're not INTENDED to get as much reward, proportionally, for going from Hyper Slap to Slap as you are going from Slap to Double Slap. That's the fallacy. The fallacy is that you should get proportionally as much reward in that situation.
+
+Because we aren't rewarding the player as much for going from Hyper Slap as we are rewarding them from going from Slap to Double Slap.
+
+We're rewarding the player PROPORTIONALLY for going from Hyper Slap to DOUBLE SLAP as we are rewarding them for going from Slap to Double Slap.
+
+We're not rewarding the player for choosing 'Slap' in that situation. If they have 15 ATK and the enemy has 10 DEF, and they have three abilities available to them, they SHOULDN'T be using Hyper Slap, BUT THEY ALSO SHOULDN'T BE USING SLAP.
+
+You want to reward them for having the best cost to base_damage ratio, where base_damage is the lowest. That's the whole point of our system. So they should obviously be using DOUBLE SLAP.
+
+And yeah, because Hyper Slap costs twice as much as Slap, the player gets TWICE AS MUCH PENETRATION BONUS for using Double Slap as they would've gotten for using Double Slap instead of Slap.
+
+If you can Slap and you choose to Double Slap, you get a certain amount of penetration bonus.
+
+If you can Hyper Slap and you choose to Double Slap, you get DOUBLE that penetration bonus.
+
+Because Hyper Slap costs twice as much as Slap.
+
+So, it IS proportional, in that sense. That's what we want. In that respect, going from Hyper Slap to Slap SHOULDN'T be as proportionally rewarding as going from Slap to Double Slap. The proportional equivalence comes in when going from Hyper Slap to Double Slap. Not from Hyper Slap to Slap.
+
+That's core to our idea that lower-base-damage moves with proportionally equivalent costs are rewarded more when ATK is greater than DEF. Because Slap does more damage than Double Slap, it shouldn't be as proportionally rewarding.
+
+So, the only practical thing to do is dial in penetration_scale to any arbitrary value that we feel makes the most sense around the damage of our most baseline ability.
+
+So, on Wednesday, I want to get back to defining our most base-line of units and designing our most baseline of abilities around that -- or vice-versa. We could even start that, now, for ten minutes.
+
+So, let's talk about what our baseline unit should look like, mathematically:
+
+It's ATK should be equal to its DEF.
+Its PRY should be equal to its SKL.
+
+It needs enough HP to survive as long as we think that a basic, average unit should be able to survive.
+
+And, the baseline-damage of our most basic attack needs to kill our baseline unit as fast as we want it killed.
+
+From that, we need to decide how much resources that baseline unit has insofar as MP. To use this ability to kill another unit in some amount of time which seems fair.
+
+LP... I don't even really know how to think about that, yet.
+
+So:
+
+baseline attack:
+    arbitrary amount of base_damage
+    arbitrary cost
+
+baseline unit:
+    HP: enough to survive the baseline attack for a fair (to be determined)
+        amount of time.
+    LP: ????? Determines how many times the unit can be revived.
+    MP: enough to afford extra-powerful abilities to kill another baseline
+        unit faster than they could with the baseline attack.
+    ATK: arbitrary number equal to DEF.
+    DEF: arbitrary number equal to ATK.
+    SKL: arbitrary number equal to PRY.
+    PRY: arbitrary number equal to SKL.
+
+baseline leader:
+    AP: enough to afford the baseline attack enough times that an enemy
+        baseline unit could survive the number of TURNS that we want them
+        to survive
+
+So, first of all, we need to think about how long we want for our baseline units to survive. Once we know that, we can define their HP and MP and the leader's AP.
