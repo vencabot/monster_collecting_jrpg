@@ -5584,3 +5584,186 @@ baseline leader:
         to survive
 
 So, first of all, we need to think about how long we want for our baseline units to survive. Once we know that, we can define their HP and MP and the leader's AP.
+
+
+
+08/07/19
+
+Today, our goal is to design a baseline unit as far as character attributes are concerned.
+
+So, let's not waste any time. In review of the attributes we need:
+
+HP
+LP
+MP
+ATK
+DEF
+SKL
+PRY
+
+AP
+
+When determining these attributes, what we need to think of is an example strategy in our game -- we gotta imagine how a typical turn will play on.
+
+We know that, on a single turn, a leader has 10 AP.
+
+And we decided that swapping a unit costs 3 AP.
+
+As I recall, we decided that a 'baseline ability,' or an 'average ability,' will cost 3 to 4 AP to use.
+
+So, what does this mean?
+
+It means that, on a single turn, a player can swap twice and use a single ability.
+
+It means that a player can use two abilities and swap once.
+
+It means that a player can use three abilities and not swap.
+
+It means that a player can swap once and use a powerful ability.
+
+It means that a player can't use a powerful ability if they swap twice.
+
+Knowing all of this, how much HP should a unit have? How vulnerable do we want to allow a single unit to be?
+
+I think that 10 'base damage' is good for our baseline, 3-AP-costing ability, because that gives us plenty of room to do less damage as we dip into 2AP and 1AP costs. 10 seems like a pretty good number to establish as a basis.
+
+We also know that the enemy cannot swap out their unit during OUR turn. So, I think that it's safe to say that the opponent needs to have MORE than 30 HP. Because we don't want to be able to KO the opponent in a single turn just by using all of our AP on our most baseline ability.
+
+So, let's say that, as AP cost goes up, damage goes up NON-PROPORTIONALLY. Because you're making more of a commitment by using a higher-AP ability than you would be using a lower-AP ability, so the damage should scale up to reflect that higher commitment.
+
+That being said, if there was a hypothetical ability that would cost 10AP, it would do much more than 30 damage. Much more. But it would cost an entire turn.
+
+I feel like our baseline unit shouldn't be able to afford MUCH MORE than ONE WHOLE TURN OF VULNERABILITY. If they could survive just being left on the field for three whole turns (without ever being swapped out), then there'd be very little urgency to move units in and out of the ring. On the other hand, I don't think that it should be trivial to kill a unit in a single turn of vulnerability. So, maybe we should say that a unit should be able to survive almost two turns of vulnerability.
+
+If Slap (10 base damage, 3 AP cost) is an 'average damage, average cost, average commitment' ability, then we can probably assume that an average, aggressive unit could, if used on a turn without character swapping, be expected to do ~50-60 damage. But that's with a relatively high commitment, because we're talking about them using all of their AP for direct damage and not swapping at all.
+
+So it seems to me that a baseline unit should have somewhere between 70 and 80 HP.
+
+If we give our baseline unit 75 HP, they could probably just BARELY be killed IN A SINGLE TURN by a unit with very high ATK and especially devastating abilities, if that aggressive is ALREADY IN THE RING WHEN THE TURN STARTS and never leaves the ring for that turn. That's very high commitment, that's not going to happen unless the player makes some very risky moves, and I'd say, then, that it's reasonable that the opposing unit would be killed or nearly killed in a single turn.
+
+Maybe it makes more sense to lower the baseline HP to between 60 and 70.
+
+Because, if you slap three times, with average ATK, you're doing 30 damage. So 60 already seems pretty high -- that's two whole turns of being slapped. And if you use ALL 10 OF YOUR AP on attacks, you're looking at around 40 damage unless you invest in abilities which are extra-high-cost in which case you could probably get as high as 60 or barely above -- but that's base_damage. So, if you also have extra high ATK, you could probably get to 70 or 80.
+
+I feel like, then, '70' is high HP, and '60' is sort of average'ish to low? So maybe 65 is a good midpoint where there's urgency but you're unlikely to be one-shotted. Maybe '60' is a nice, rounder number where we can be comfortable knowing that a unit is in very little risk of being one-shotted.
+
+Way less risk, for instance, compared to Pokemon, where one-shots happen constantly. I mean, keep in mind that we're sort of punishing the opponent for leaving this unit vulnerable, in the ring, at the end of the turn. And, if I want to do anything OTHER than attack (inflict status, heal or buff, etc.), then I can't even really be expected to do 40 damage -- with an aggressive, high ATK unit.
+
+So, let's work with 60 for now. That seems urgent, it seems tense, it seems fair. An average, all-attack turn would deal between 30 and 40 damage. So I feel like 60 is pretty durable.
+
+I mentioned, above, that the values for ATK, DEF, SKL, and PRY are all ARBITRARY, because ATK and DEF get their value in RELATION TO EACH OTHER. Likewise, SKL and PRY get their value IN RELATION TO EACH OTHER. So, their exact values are not as important as the fact that, for a baseline unit, they're equal.
+
+That being said, we haven't talked a whole lot about character growth in our game, but here's some things we need to understand about setting a baseline value for these attributes:
+
+1.) Units vary in their attributes. So we need to have a HIGH ENOUGH BASELINE that some units can have 'high ATK,' and some can have 'low DEF,' right. Just like we chose 10 base_damage for slap because I feel like it's just high enough for us to have a lot of variance BELOW the baseline, maybe 10 is a good baseline for ATK, DEF, SKL, PRY, because it's still high enough that we have 9 degrees of variation BELOW the baseline.
+
+But that might cause an issue with this second consideration:
+
+2.) Character growth. If we set a baseline value that's TOO LOW, we need to be careful about how the unit can grow their attributes. For instance, if we set a baseline of 10 for all of our attributes, that means that, if we give a player '1' to their stats whenever they 'level up,' and if they level up somewhat often, we're talking about them doubling their stats pretty quickly or otherwise outclassing their opponent's attributes pretty quickly.
+
+But, in that respect, maybe 10 is still a nice number compared to something like 5.
+
+Let's consider, briefly, the typical 'arms race' of a JRPG -- as your heroes are leveling up and the opponents are leveling up, this 'baseline' should be expected to raise. It's a matter of keeping up with the Joneses.
+
+Let's also consider 'nerf' and 'buff' abilities. If we have '10' baseline ATK, that means that the LOWEST % WE COULD BUFF ATK would be 10%. But maybe that's fine. Maybe that's a good and decent and god-fearing percentage for a minimum ATK buff from an ability. And then you could say that an 'average' buff would be +2, and a 'good' buff would be +3.
+
+10's a good baseline.
+
+So, what do we know so far?
+
+Baseline Ability, "Slap":
+10 base damage
+3 AP cost
+
+Baseline Unit, "Bobbo":
+HP: 60
+LP: ???
+MP: ???
+ATK: 10
+DEF: 10
+SKL: 10
+PRY: 10
+
+Let's look at HP again.
+
+I've repeatedly pointed out that, with Slap, we can deal 30 base_damage to another baseline unit in a single turn.
+
+But I do want to stress that we can only do that 30 damage IF OUR UNIT IS ALREADY IN THE RING WHEN OUR TURN STARTS AND WE'RE COMFORTABLE LEAVING THAT UNIT IN THE RING WHEN THE TURN ENDS AND WE WANT TO SPEND ALL OF OUR AP SIMPLY ON DEALING HP DAMAGE.
+
+So, that 30 damage is a PRETTY HUGE AND UNUSUAL COMMITMENT.
+
+Now, another thing I've mentioned is that, if you know that you want to spend all of your AP in a single turn on doing HP damage, you could almost certainly get more than 30 because you would trade the flexibility of attacking 3 times for the raw damage of spending all of your AP on a single ATK.
+
+So, I'm thinking 50 damage from a single, fully-committed, aggressive turn from another baseline unit.
+
+That's a huge commitment. Is 60 HP too much HP. Do we want for this baseline unit to die in a single turn if the opponent is willing to hit this hard.
+
+Maybe not. Maybe 60 is what we want.
+
+I'm happy with this. But now we need to think about MP and LP. Let's review what these attributes represent:
+
+MP is a per-unit currency for using abilities. Because this currency is consumed over the course of a battle, we can expect that abilities which require an MP cost (not all will) on top of their AP cost will be above-average in terms of their effectiveness.
+
+Now, we have a problem when it comes to deciding on a baseline MP value, and that's that we don't have any abilities, yet, established as a baseline, which have an MP cost.
+
+In fact, it stands to reason that we should consider this MP cost as we continually examine this base HP value. Because, we theorized that, on a single, hyper-aggressive turn, a baseline unit COULD deal 50 damage to the opponent. And, therefore, with 60 base HP, a unit COULD one-shot a baseline unit if the aggressive unit was especially geared toward ATK.
+
+But there's more to this to consider. How much damage are we REALLY doing on a single turn when you consider that we can also burn MP to do it. And, by extension, how much MP do we want for a single, baseline unit to have.
+
+Well, let's consider that we want for a single unit to be able to survive a turn and a half of vulnerability against a hyper-aggressive opponent.
+
+Each team has 4 units.
+
+And some units are going to be especially balanced toward a high MP value for using special attacks which will become exhausted.
+
+So, in the course of a single fight, a baseline unit should be able to use HOW MANY baseline, MP-burned abilities. First of all, how many turns is an 'average' fight going to last?
+
+4-unit teams, each unit lasts 1 and 1/2 turns against a hyper-aggressive unit.
+
+Therefore, if all units are hyper-aggressive then we get about 6 back-and-forth turns?
+
+But all units are not going to be hyper-aggressive, so we're looking at longer battles. Now, whenever you swap once, you're cutting your aggressive potential by 33% approximately. We're expecting the player to swap units, on average, probably once a turn.
+
+I would say that we're looking at fights that are AT LEAST 10 back-and-forth turns? Probably between 10 and 20 back-and-forth turns?
+
+If we have, let's say 15 back-and-forth turns. How many of those turns do we expect a unit to MP burn? When do we want for them to run out of MP? This is where you balance MP cost and max MP.
+
+Let's think about a mage, first. They've sacrificed other attributes to have above-average MP -- and even then, if they use a lot of MP every turn, we obviously want for them to run dry. That's the whole point of MP: the running dry part. We would want for them to use no more than 2 MP burns on a single turn, across, what, like 6 turns? That seems really generous -- those are small MP burns.
+
+Also keep in mind that moves which cost MP also cost AP -- every ability in the game, pretty much, costs AP. So we don't need to balance MP cost around per-turn usage -- that's what AP is for.
+
+So, if we have MP burns which start at 1MP, that would be a very minor MP burn. But even then, you wouldn't want for a baseline unit to do that for every action on every turn -- that defies the point of MP. So, that's almost where we want to start balancing this baseline. So, it's almost like '1MP' is, like, the average, normal MP cost for things. And once you get to 2MP, you're talking about a pretty serious boost -- and at 3 and 4 and 5, you're talking about stuff that's exclusive to 'mages'.
+
+So, it seems to me, then, that 5MP would make sense for a baseline value. An average, baseline unit can MP-burn 5 times in a fight for a little boost to their effectiveness. And they could use a greater boost a couple times. And they could use mage-exclusive abilities ONCE per battle, supposing they're not a mage.
+
+But, this falls into our danger-zone for character growth. Like, they could double their MP and get access to higher MP-cost abilities MUCH MORE OFTEN by simply raising their MP by 1 point 5 times.
+
+Because, you know, MP cost for abilities isn't going to scale up as the game goes on. So, actually, it seems like we'd want for it to be either VERY EXPENSIVE to raise MP by one point or to set the baseline MUCH HIGHER so that, in order to be able to use abilities more often, you need to raise your MP by quite a large amount.
+
+I'm attracted, sexually, to the idea of having a baseline 'cost' for growing any given attribute. Whether it be HP or ATK or DEF or WHATEVER (probably with the exclusion of LP, which might not be raisable at all). That being said, MP seems especially powerful BECAUSE, unlike every other attribute in the game which becomes a matter of 'keeping up with the joneses' or an 'arms race,' with MP you're only competing with the FIXED COSTS OF YOUR ABILITIES. Those costs are FIXED, so you do want to have a higher baseline so that, by the end of the single-player game, you don't have unlimited use of your best, highest-costing abilities.
+
+So, let's compare MP to HP -- both are a consumable resource. What if we gave the baseline unit 50 MP instead of 5.
+
+Then, the most basic MP burn goes from 1 to 10. Now, you gotta put ten points into MP in order to get one more of those MP burns.
+
+And if a mage ability costs, say, 30 MP, then you could give a mage 90MP. Then, they can use a really powerful mage ability twice and still meter-burn a couple times.
+
+I think that it makes sense, then, to put the basic max MP value at 50. That gives flexibility for ability costs and has a nice, wide scale for units that have lower-than-average MP and higher-than-average MP, as well as a nice scale for units which have DRAMATICALLY HIGHER-THAN-AVERAGE MP to put certain abilities outside of the reach of units which have average MP.
+
+And then, in order to gain another usage of a baseline, mp-burn ability, you have to invest quite a number of points.
+
+Review of our baseline unit:
+
+HP: 60
+LP: ????
+MP: 50
+ATK: 10
+DEF: 10
+SKL: 10
+PRY: 10
+
+Maybe, before we start 3rd strike, we should examine LP quickly. LP is a value which represents how many times a unit can be knocked out before the player has to rest to revitalize them.
+
+This is actually too broad of a subject to cover in 5 or 10 minutes, so we'll leave that for tomorrow.
+
+Tomorrow, Thursday, we'll examine LP in depth and come up with a fitting baseline value for our baseline unit.
