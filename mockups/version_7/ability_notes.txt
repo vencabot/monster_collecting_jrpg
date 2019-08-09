@@ -5767,3 +5767,184 @@ Maybe, before we start 3rd strike, we should examine LP quickly. LP is a value w
 This is actually too broad of a subject to cover in 5 or 10 minutes, so we'll leave that for tomorrow.
 
 Tomorrow, Thursday, we'll examine LP in depth and come up with a fitting baseline value for our baseline unit.
+
+
+08/08/19:
+
+Today, we're going to be focused on 'LP' and thinking about what it really means for our game. This is a topic that we've covered quite a few times during our game-dev discussions in the past, but it couldn't hurt to review it now that we're working on developing our baseline unit. We've gotta decide how MUCH LP is appropriate and, in order to do that, we really need to examine the purpose of LP in our game.
+
+So, without getting all abstract, let's just cut right to a couple examples of how LP has been used in games, in the past, where I've enjoyed it a lot:
+
+The first game that I played with a mechanic like this was 'SaGa Frontier'. In those games, 'LP' is a currency that your units have to represent their health, similar to 'HP.' The difference is that LP could be thought of as a more dire version of 'HP'. A unit might have 200 HP but only 4 LP.
+
+Whenever a unit is KO'd, they lose 1 LP. And once a unit has no LP left, they cannot be revived. In SaGa Frontier, this means that they can't be revived until the player rests at an inn.
+
+Other ways to lose LP might be from taking a critical hit (very frustrating), or being struck while you're down. In SaGa Frontier, when you're knocked out, your unconscious body is lying on the field until you're revived -- and any hit that your body takes while knocked down costs 1 LP.
+
+So, it's a mechanic to give the player one more resource to manage which represents long-term exhaustion over the course of many fights or something that must be desperately protected as one's own life. I feel like it adds a sense of urgency to defending yourself, more-so than you get in most JRPGs.
+
+Another game I've played which has a very similar mechanic that I've enjoyed is Steamband. In Steamband, on top of having HP, your player character has 'WP' or 'wound points'. And it works very similar to LP except that, in Steamband, once you go unconscious, it's game over -- but, just like in SaGa Frontier, when you take certain critical hits or certain special attacks, you'll lose WP -- and, once your WP hits zero, it's game over, even if you still have HP remaining.
+
+So, I want to take this idea into our monster-collecting JRPG. I want for each of our units to have an 'LP' value which represents their ability to be revived, and I want for it to deplete whenever they get knocked out or from certain, rare, special attacks which may come at great cost to the user but have a chance of depleting LP directly.
+
+We've also toyed around with the idea of having units lose LP when they're attacked while on the ground (ala SaGa Frontier), but what I really want to examine, tonight, is the CONSEQUENCES of losing all of your LP.
+
+So, we need to answer some questions about LP:
+
+1.) How do you restore LP that's been consumed in combat?
+2.) What is the consequence, exactly, for losing all of your LP?
+
+That second question is one that we've been waffling on since we began developing our gameplay ideas. In the beginning, we sort of understood that once LP was depleted to 0, that was more-or-less it for that unit; it was dead on a semi-permanent basis. And by 'semi-permanent,' I mean that the player would need to wait some extended amount of time or accomplish some Herculean task in order to bring that unit back from the dead. This way, no unit is permanently dead, which can be extremely frustrating, but that unit is effectively LOST.
+
+That was our original idea for LP. A semi-permanent loss of the unit from the team.
+
+Since then, I've sort of softened, but the question is how soft should we go with this mechanic? How dire should it be? How forgiving should it be? A lot of that ties into how often we expect the player to run out of LP and what sorts of abilities are going to attack LP; we're talking about the sorts of decisions that we expect for the player to make based on LP. Game design.
+
+One thing that I want to re-examine as a part of this puzzle is the idea of the 'deck'. The unit deck.
+
+When a player is at their 'hub' or their 'inn' or their 'rest point' -- wherever they're safe and refreshing their units -- the player can define a 'deck' of ten units to bring with them on their adventure. And from that deck of ten, at any time BETWEEN BATTLES, they can swap units into their 4 man battle team.
+
+So, in battle, you can only use 4 units. One in the ring at a time, but 4 total available in that battle. But, between fights, you can swap units into and out of that 4-man team from a deck of 10 that you've brought with you.
+
+So, at any point in the game, the player might have collected a HUNDRED different units. But they can only bring ten of those units with them into a dungeon. And, of those ten, they can only bring 4 into battle at any given time.
+
+The reason that I think this idea is closely tied to the idea of 'LP,' is that, when a unit is getting low on LP, they can be swapped out of the battle team and replaced with any of the remaining units from the deck.
+
+Another reason that a unit might be swapped out of the battle team is that they're high on 'exhaustion,' which is a mechanic that we've talked about implementing to punish units for taking part in too many battles. Basically, after every battle, a unit's max attributes temporarily go down, until the next time that player 'rests'. So, the more battles you take part in, the weaker your unit is going to become.
+
+The final (?) reason that you'd swap a unit out of your battle team is that you want to approach an encounter with a different strategy that requires another unit.
+
+I'm struck.
+
+If the main two reasons to swap a unit out of the battle team with another unit from the deck is that they're A.) low on LP, or B.) high on exhaustion, we're talking about a situation where the deck may be composed as such:
+
+Battle Team: Unit A, Unit B, Unit C, Unit D
+Remaining Deck: Clones of Unit A, B, C, and D, and then a couple spares of the most vital of those units.
+
+That seems sub-ideal. We want for the player to employ a variety of strategies based on the opponent that they're fighting, and I wonder if having these layered mechanics representing exhaustion doesn't only serve to incentivize bringing 'back up units'.
+
+So, I also want to point out that, the player picks their battle team from the deck BEFORE EACH ENCOUNTER. Not 'between encounters,'  but rather during a special phase that takes place directly before an encounter. And, based on which team gets 'initiative,' a player might be able to see what team the enemy has selected before they choose their units.
+
+So, that's one way that we can encourage players to bring a flexible deck with them into a dungeon: if they know what units they're about to fight, they can pick and choose units from their team that are especially apt at fighting those units.
+
+But, the point stands: looking at these mechanisms, maybe we're doing TOO MUCH to discourage the player from using certain units in particular. Like, if you're swapping units just because they're high on exhaustion or low on MP, again, you're really being driven toward this idea of bringing 'spares'.
+
+But that was never really the idea. The idea behind 'exhaustion' and 'LP' was to encourage the player to think carefully about their deck so that they could mix-and-match units from those 10 in a variety of ways. We wanted to disrupt the idea of the deck mostly just containing 'two teams and change,' but that's almost like what we're DRIVING THE PLAYER TOWARD.
+
+How can we solve this problem?
+
+One way would be to actively disallow clones in the team; maybe a limit of one unit-type per deck. But that seems a little heavy-handed, although sensible.
+
+I mean, in Pokemon, who would bring an entire team of Pikachus?
+
+But, in Pokemon, you wouldn't bring an entire team of Pikachus because you want to have some tactical coverage.
+
+So, maybe that's reason enough to have a diverse deck. Maybe we just need to think about the variety of enemies we have in our dungeon.
+
+But even then, if the player can't see what they're about to fight before the actual encounter, they can't make an intelligent decision on what units to bring into that fight if the dungeon has a high variety of enemy types.
+
+In Pokemon, you typically know what sorts of enemies you're going to be fighting in a particular dungeon before you get there. They're all going to conform to two or three different 'types'. So, when you're creating your team, you can choose carefully.
+
+But the difference is that, in Pokemon, you use your entire team in every battle. No matter who you're fighting, you always have access to your entire 'deck'. That being the case, the parallel would be, in our game, if you could always know what your opponent's team is going to be before you pick your units.
+
+And maybe you should, in single-player.
+
+So, what we're really talking about when we're talking about encouraging deck variety is 'counter-picking'. We're talking about counter-picking.
+
+We want for counter-picking to be strong in our game because we don't want for the same strategies to work against every team. We want for the player to have to constantly change up their strategies; think on their toes. Plan in-the-moment. We don't want for them to just create a team that can follow a flow-chart and steamroll a bunch of different opponents.
+
+That's where 'exhaustion' and 'LP' came in, originally: as one more measure to discourage the player from over-relying on a single team. But, yeah, where does that leave the possibility that the player might just stock 'spares' into their deck to account for exhaustion and LP.
+
+One option, which may very well be as or more sensible than limiting the player to 'one of each unit-type per deck' would be to literally only allow the player to CAPTURE one of each unit-type. Maybe capturing additional monsters of that type will power-up your current monster of that type or maybe you just can't catch another one.
+
+Again, in Pokemon, how interesting is it really to farm multiples of the same monster? I've never done it, although I know that some do it for trading purposes or breeding purposes. In general, I feel like you only really WANT one of each type of monster. You don't need to be able to capture multiples.
+
+And, that being the case -- and considering that, in our game, you can easily, when resting / between battles (haven't decided yet) swap out that unit's abilities. Units EQUIP their abilities and they can learn a ton of them and easily equip and unequip them. So, a single unit could effectively be a good fit for multiple different strategies; you don't need to capture two of the same unit to give them slightly different 'builds'.
+
+Although we have discussed this idea of having one piece of 'equipment' which is permanently or semi-permanently bound to the unit, and which may affect character growth.
+
+Just to follow-through, even if you can't capture two of the same unit type, you could still theoretically create a team of 'spares' by finding other units with very similar abilities. That being said, they certainly wouldn't have the same mix of abilities and Unit Dynamics, which would make them much less effective, you would HOPE, at high-level team building. And again, at that point, you're working pretty hard to game the system so that you can bring spares into a dungeon -- and, as long as the dungeon has an effective mix of enemy types, maybe you'd only be shooting yourself in the foot by doing that.
+
+So, let's rule out the possibility that a player might just bring 'spare' units to accommodate the LP and Exhaustion systems.
+
+But here's a second question: do LP and Exhaustion fit the same purpose -- and, if so, do we need them both? Is it interesting to have both? Could we just use 'LP'?
+
+So, for EVERY FIGHT that a unit takes part in, in a single dungeon, they become more 'exhausted,' which means that their overall stats are getting lower.
+
+This is meant to encourage the player to swap units out of their battle team: so that they don't become too exhausted when they end up being necessary.
+
+To answer Sinatra's question, units will EFFECTIVELY be taking more damage as they become more exhausted, because A.) their DEF is being gradually lowered, so they're literally taking more damage, and B.) their max HP is being lowered, so they're taking more damage RELATIVE to how much HP they have.
+
+So it's actually a double-whammy. You are definitely taking more damage -- you are definitely being killed in fewer hits -- as you become more exhausted.
+
+We also have 'LP,' whose function in our game-design is kind of similar -- maybe too similar. Units have a limited number of 'life points,' and, whenever they're KO'd in battle or whenever they're struck by certain, rare abilities or by certain rare critical hits, they lose 1 LP.
+
+Once a unit has zero LP remaining, they cannot be revived (until some criteria is met -- certainly, they cannot be revived while within the dungeon).
+
+So, this is another measure meant to affect how the player chooses which units to bring into battle. As the dungeon wears on, you might find that some of your favorite units are getting low on LP, and so bringing them into the next encounter might be a pretty big risk.
+
+The main difference, right now, between these two mechanics is that exhaustion is a CERTAINTY. Whenever you finish an encounter, all of the units that were in that encounter take a fixed amount of exhaustion.
+
+On the other hand, LP is something that you can STRATEGIZE AROUND, to an extent (working hard to protect it, don't get knocked down), and which is also somewhat random (it might be extremely difficult to completely prevent LP loss from something like an enemy ability which has a very low chance of inflicting direct LP damage). So, compared to exhaustion, LP is much less predictable and much more based on player decision-making during battle.
+
+So, we see that these two concepts serve a SIMILAR PURPOSE but not necessarily the exact same purpose.
+
+We can also consider that there might be some rare or expensive ways to HEAL exhaustion and to HEAL LP in a dungeon, and so you might find that, in a single dungeon, your decision-making might end up being influenced more by exhaustion or LP, depending on circumstance. So, that's kind of a nice layer.
+
+Finally, we have an option to examine: we could have 'LP' restore either entirely or partially after each encounter.
+
+What if, as long as a unit ends the encounter with >0 LP, they gain one LP back?
+
+Or what if LP is entirely restored between encounters.
+
+In that latter option, we totally lose LP as an incentive to include or not include a unit in a particular battle. We can't say, "this guy is low on LP, so let's not bring him into this battle,' because his LP is always being restored between each battle.
+
+But the argument could be made that this purpose is already well met by the 'exhaustion' system.
+
+So, we could look at the decision-making around 'protecting LP' as taking place entirely within the confines a single battle. In that case, we could afford each unit much less LP, for instance.
+
+I really like the idea, now that I've mentioned it, about LP either NECESSARILY BEING PARTIALLY RESTORED or having a CHANCE to be partially restored after every encounter. That adds an awesome risk-reward to bringing low-LP units into battle.
+
+Maybe you WANT to bring a low-LP unit into a battle where you're confident that they won't lose their remaining LP, because that would be a way for them to get some LP back if they survive.
+
+So, in general, the more I think about it, the more interesting both Exhaustion and LP become when you consider that there COULD be ways to restore it, within a dungeon. Not because it makes the game 'softer' or less dire, but because it adds dynamism and depth to the decisions that you're making.
+
+And, for another thing, it removes some of the overlap of the purposes of Exhaustion and LP -- because one might be getting restored and one, in this dungeon, might not be.
+
+Maybe by making Exhaustion and LP less FINAL or FIXED we're actually add tactical depth to the game. Maybe there are some rare, expensive abilities or status changes or treasures to find in the dungeon which CAN restore exhaustion and LP. And, like I mentioned, maybe we could even implement something where units will certainly or with some chance restore LP after each encounter that they take part in.
+
+Or maybe they regain LP or Exhaustion when they DON'T take part in an encounter.
+
+So, we've discussed a lot about game-design, tonight, but we haven't gotten much closer to what was our original goal: deciding how much LP a unit should have, literally. As a number. And I feel like we can't come up with that number until we really nail down some of these OPTIONS that we have about how LP is going to work.
+
+Superking mentions that we could use LP restoration as a REWARD for, say, that battle's 'MVP'. My only problem with this is that, for one, you need to decide which unit is the MVP or what actions are worth rewarding a unit for -- and that seems like an impossible task in a tactical game. Because, every action you would take, ideally, would be one that you've slaved over as the most ideal tactical move.
+
+Just as a loose example, Disgaea 1 on PS2 (and I believe a couple of the later Disgaeas) had a problem where the only way to level up was to kill a unit. This meant that healers had a HUGE problem with leveling up, because, although they were tactically significant to your team -- even necessary -- they weren't engineered to kill any units. So, if the only way to get rewarded is to kill a unit, then we see that healers are never going to level up.
+
+That's my hesitation about rewarding an 'MVP' or rewarding certain types of actions; I feel like it could end up favoring certain unit types over others. Ideally, like I mentioned, every action that you take should have tactically weight whether it be dealing huge damage or just waiting. Doing nothing. We can't write an AI that would be able to tell when the unit or player makes an especially clutch move.
+
+Maybe, after every encounter, one unit from the winning team will CERTAINLY have 1 LP restored, and that unit is picked at random (from the team 4). Every unit would have a 25% chance of getting an LP restored -- and maybe that number goes up if some of the units are already at max LP. Maybe if you put a unit which only has 2 LP remaining onto a team that has all of their LP, then that's a guaranteed way to restore 1 LP to that desperate unit.
+
+Even if we don't come to a conclusion about how harsh or flexible LP and Exhaustion should be, one thing that I do want to take from today's session is that I'm CONFIDENT that neither LP or Exhaustion should be unrestorable. I feel like having an ebb and flow to these mechanics can only make them more interesting. I think that it's important that, compared to HP, for instance, these attributes be much HARDER to restore -- but I think that, seeing them change in BOTH DIRECTIONS is going to add tactical interest to our game. I think that, once the player rights off that LP and Exhaustion are never going to be restored, that's one less thing for them to think about -- yeah, they would have to make decisions around that gradually creep toward death... but I think that you could actually leverage these to make a more interesting risk / reward scenario if you leave the player with the possibility that they could actually recover from these attributes.
+
+And another thing that I kind of want to write OFF is the possibility that LP could be completely restored between matches (the way that HP and MP are). I can see how LP could still work if it was restored completely between encounters, but I just think that it makes much more sense to leave it as something that the player has to deal with on an ongoing basis throughout the dungeon.
+
+So, LP and Exhaustion are the ONLY considerations that a player needs to make regarding the STATE OF THEIR TEAM between encounters. And we know, for sure, that these values are going to become increasingly troublesome to the player as the dungeon wears on.
+
+I think we also want to seriously consider giving the player LP BACK for taking part in battles, which is a stark contrast to Exhaustion, which does the opposite: it penalizes the player for taking a unit into a battle.
+
+At the same time, by taking that unit into the battle, you're risking LOSING LP.
+
+Another option we have (I know, we've got a lot of options and not a lot of certainty about which way to go) is to reward every unit that does NOT take part in battle with 1 LP per battle.
+
+One reason we would do this is to add some certainty to the healing of LP, which would allow us to take LP from the player more freely. We can lower the amount of LP that our units have or take more from them if the player knows that they can restore that LP by doing a thing (leaving that unit out of the next few fights).
+
+And something I want to point out, here, is the VISERCAL nature of battle. The DRAMA of battle.
+
+For instance, I think that it's important that HP and MP be completely restored between battles. This is so that the player understands that these are resources meant to be CONSUMED. We want for players to get to LOW HP. We want for them to spend ALL OF THEIR MP as a part of their battle-to-battle strategy. If the player understands that there are no consequences AFTER THE BATTLE for consuming their resources, they're more likely to play fast and loose with those resources, which makes gameplay more exciting, I think.
+
+So, understand that -- accepting that -- maybe it does make the most sense to expect a player to lose a LOT OF LP in a battle, and, therefore, we need to provide some stable way for them to get it back. It certainly will not be like HP or MP, which is certainly restored after every battle, but maybe there is some tactical consideration that the player can make to restore their LP. Maybe we shouldn't base it around luck at all. Maybe it's more INTERESTING if the player can CERTAINLY restore their LP, somehow, so that they can be more comfortable SPENDING it.
+
+In review, we want for LP (and maybe exhaustion) to ebb and flow between battles, but it's worth noting that it might actually make more sense for LP to ebb and flow MORE DRAMATICALLY on a battle-by-battle basis rather than LESS DRAMATICALLY. Rather than it being a SLOW DECLINE TOWARD DEATH, maybe it should fluctuate enough that units are effectively in-the-game and out-of-the-game relatively freely. So that we have MORE situations where a unit is down to one or two LP and the player is sweating about it. Then, they win the fight and, through some measure, they can consistently restore that LP and then do it again.
+
+So, the question that we're going to answer, first of all, on Monday, is this: how does the player restore LP and Exhaustion. That's what we gotta know. Tonight, we've come up with a bunch of different ideas about how to do it. On Monday, let's talk more about it and nail it down. How often does it happen? How much control does the player have over it?
