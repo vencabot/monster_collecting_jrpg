@@ -5948,3 +5948,162 @@ So, understand that -- accepting that -- maybe it does make the most sense to ex
 In review, we want for LP (and maybe exhaustion) to ebb and flow between battles, but it's worth noting that it might actually make more sense for LP to ebb and flow MORE DRAMATICALLY on a battle-by-battle basis rather than LESS DRAMATICALLY. Rather than it being a SLOW DECLINE TOWARD DEATH, maybe it should fluctuate enough that units are effectively in-the-game and out-of-the-game relatively freely. So that we have MORE situations where a unit is down to one or two LP and the player is sweating about it. Then, they win the fight and, through some measure, they can consistently restore that LP and then do it again.
 
 So, the question that we're going to answer, first of all, on Monday, is this: how does the player restore LP and Exhaustion. That's what we gotta know. Tonight, we've come up with a bunch of different ideas about how to do it. On Monday, let's talk more about it and nail it down. How often does it happen? How much control does the player have over it?
+
+
+08/12/19
+
+Last Thursday we were discussing 'LP' and 'Exhaustion' and their relationship to one another. We need to figure out how LP is going to be moving back and forth, in our game, so that we can decide how much LP we ened to give a baseline unit. Approximately how much LP is the right amount of LP to encourage our players to make the sorts of decisions that we want for them to be making?
+
+We can't answer that question until we really understand how LP is going to be used. We've got some loose ideas, but it's about time that we started to nail things down.
+
+Here's a thought that I think is really significant: whenever a unit survives an encounter, they should get 1 LP back. This makes sense for two primary reasons: one is that, when you can reliably get LP back, you can spend it a little bit more freely. Which is what we want: we want for players to take risks, we want for them to expend their resources. We don't want for them to hoard their LP.
+
+Another reason that it makes sense is that -- it's a similar idea. It's that, if you get 1 LP back at the end of every match that you survive, that means that you can actually DIE ONCE PER MATCH and still exit the match with the same amount of LP that you went into it with. Again, this encourages the players to play a little bit faster and looser with their HP. It means that a unit can get KO'd once per match without a hugely significant consequence. But after that, you start getting into territory where your deaths are even riskier -- and, if you're in a fight trying to RECOVER LP, then you can't die at all in that encounter. I think it adds some interesting tactical considerations to how you expend your HP in battle.
+
+I'm quite happy with that. And what it means, in a sense, is that players are effectively AFFORDED one KO per battle, and any more KOs than that becomes a much bigger deal. So, we can use that information, along with how many battles we want for a unit to be able to survive depending on how defensively the player is playing, to figure out a good baseline value for LP.
+
+Also, on this same note, I feel like it might be cool to have an ebb to 'exhaustion' as well, and maybe it'd be something like this: for every encounter that you're a part of, you gain 5% exhaustion, but for every time that your unit is left out of two encounters in a row, they gain back 10% exhaustion. That way, we don't have a direct correlation between LP and Exhaustion. If we gave exhaustion back after every encounter that a unit didn't take part in, we'd see situations where every encounter that you joined to GAIN LP would result in more EXHAUSTION, and every time that you rested to gain back EXHAUSTION, you wouldn't gain back LP -- so we have a sort of teeter-totter that I'd like to avoid to make things more dramatic.
+
+So, maybe only reward the unit with exhaustion restoration after two back-to-back skipped fights. That way, we have this interesting investment where a unit might be left out of ONE fight, but they would be hugely beneficial in the NEXT fight -- so the player has to decide whether they want to bring that unit in and sacrifice the exhaustion recovery or risk trying to do the fight without that unit.
+
+What if, by leaving the unit out of three consecutive fights -- what if, the more fights you leave the unit of, the more reward they get in terms of Exhaustion restoration?
+
+What if we say that every fight that a unit takes part in, they gain 5% exhaustion.
+
+If they're left out of a single fight, maybe they gain back 3% exhaustion.
+
+If they're left out of two fights, maybe they gain back 8% exhaustion.
+
+If they're left out of three fights, maybe they gain back 15% exhaustion.
+
+That way, the only way to gain back 3 fights worth of exhaustion is to skip three consecutive fights. And if you skip two fights after doing one fight, you've fully recovered. But if you only skip one fight, you don't fully recover your exhaustion.
+
+That being said, is 5% the right amount of exhaustion -- supposing that, at 100% exhaustion, your units are dead. Let's say that 5% exhaustion means that your units have lost 5% of their max attributes. So, at 100% exhaustion, all of your stats would be zero.
+
+If you take part in four fights in a row, you've lost 20% of your max stats. Is that a harsh-enough penalty?
+
+But it seems like 10% of your max stats per fight is way too harsh.
+
+10% is way too harsh, because we don't want for exhaustion to be the exclusive deciding factor as to who a player brings into battle. We just want for it to be an influencing factor.
+
+The MAIN FACTOR OF WHO A PLAYER BRINGS INTO BATTLE SHOULD BE WHATEVER TEAM THEY THINK IS THE BEST TACTICAL FIT FOR TAKING ON THE ENEMY TEAM, supposing that they rolled initiative and therefore have an idea of what units are on the enemy team. That should be the MAIN deciding factor.
+
+Exhaustion management and LP should be secondary factors that tempt the player or maybe even, at some point, FORCE the player to strategize on-the-fly with a sub-ideal team.
+
+Let's just go with 'every encounter that a unit takes part in adds 5% to their exhaustion'. And then, if they're left out of two or more fights, they gain back 7% exhaustion per fight they're left out of.
+
+I'm happy with those numbers for exhaustion. So let's wrap up LP and get back on track with designing our baseline unit.
+
+So, like we mentioned above: a unit is effectively AFFORDED one LP per encounter. Because, if they're alive at the end of that encounter, they get that LP back. So, that brings up some interesting ideas about resurrection, actually:
+
+We haven't really settled on how our game's 'inventory' or 'item management' is going to work. So far, it hasn't really been super core to our design. We've sort of assumed that any HP restoration would be done by some kind of 'healer' unit. But with teams of 4, that means that every team needs at least 1 healer -- and, looking at LP the way that we've been looking at it, it seems like resurrection is EXTREMELY important. Because, if your unit is knocked down, you want for that unit to be revived before the end of the encounter so that they can get their LP back.
+
+Maybe we can give them LP back even if they're knocked down at the end of the fight? I don't really see how that could do harm.
+
+But back to this thought train about resurrection. In a game as tactically dense as we hope for our game to be, it seems, suddenly, that the function of the healer becomes incredibly significant. Like, if a healer gets knocked down, who's going to revive them? And if the healer can't be revived, that may very well be game, right?
+
+This problem is addressed in other JRPGs by allowing every unit to have access to 'items,' but I've always been suspicious of this design because I feel like it sometimes diminishes the significance of having a 'healer' unit. Like, what purpose does a healer really serve when every unit has access to healing items which are sometimes very effective at healing?
+
+Traditionally, healers have better access to group-healing and they also have unlimited use of what would normally consume items for as long as the player has a way to restore their MP. But, it's worth mentioning that, in JRPGs where the player is given way too much money, it's sometimes trivial to have huge storage of healing items and then you can get away with not necessarily having a healer on your team.
+
+So, I don't see the harm in giving LP back to every unit that takes part in a battle even IF they get knocked down -- because there are a lot of ways to lose LP. You can take a crit from certain abilities and lose an LP, and that sucks. If you do get revived and you get knocked down AGAIN, you lose LP, and that sucks. If a unit is attacked while they're already knocked down, we've talked about them losing LP for that, too. So, holding onto your LP isn't going to be easy, and so, if you get knocked down before a fight is over, and you're never revived, I don't think that we necessarily need to punish the player for that; I feel like, if we give that unit an LP back, anyway, it only serves to encourage the player to play until their units are knocked out, which is what we want.
+
+In a game where every unit has abilities from three different classes, it stands to reason that abilities which recover HP or even revive units might not be extremely rare. Also, like I mentioned above, I'm not against having some kind of 'inventory' in our game, including items which may revive units. It's just that we haven't discussed it, much. But it seems to me, after this discussion, that it might actually be pretty important to have some tertiary way for units to be revived, perhaps at some great cost (consumable item that the player has limited access to).
+
+WodoWiesel puts forth a good question: do we want to reward our players for playing LOOSELY (intuitively) or are there going to be mechanics in play that makes using up all of your HP (and other resources) a more 'effective' course of action.
+
+The answer is both -- or that's the idea. As a gamer, myself, I have a habit of playing EXTREMELY CONSERVATIVELY, and people that know me know that about me. And in many games, I find that's the IDEAL WAY TO PLAY if you WANT TO WIN. But it's often not the MOST FUN or EXCITING way to play -- but it is the most effective way to win.
+
+After examining the mechanics of many RPGs and other games over the past few years, it strikes me that there are certain design tropes which I think OVER-REWARD CONSERVATIVE PLAY, and one of those tropes is whenever you have resources which GRADUALLY DEPLETE and the player isn't given a clear understanding of WHEN those resources are going to be REPLENISHED. When a player has resources that are DEPLETING and they don't KNOW when they're going to be replenished, it encourages the player to always be FRUGAL with their resources. Even when an enemy could be dispatched more QUICKLY or in a more FUN WAY, or even when the player has to play sort of CHEESY in order to conserve their resources, the player can feel like they HAVE to conserve their resources, because THEY DON'T KNOW if they're going to be fighting a BOSS soon, or if the next 'rest point' is going to be a hundred miles away.
+
+And it often turns out that, when the player DOES find that 'rest point,' it's actually VERY NEARBY. So why was the player playing so conservatively? They got to the rest point with nearly all of their resources intact -- and it's because they don't KNOW where that rest point, and they don't want to die / lose. There are parts in that same game where the rest points are MUCH FURTHER APART, forcing the player to play more conservatively -- but the player never knows if they're in one of those parts.
+
+So, what I've found, and what I'm trying to incorporate into this game, is that, if the game designers are CLEAR with what resources the player has to SPEND, then the player can be more EFFECTIVE and more EFFICIENT with their TIME, if nothing else -- by spending those resources to dispatch enemies. By being clear with the player about when their resources are going to be replenished, the player becomes REWARDED for spending those resources -- because, just by the very nature of JRPG resource economics, the player is supposed to rewarded for spending their resources:
+
+You spend some MP, you get more damage.
+
+You leave a unit on the field to attack, sacrificing some of it's HP when it's attacked in return, you deal good damage to the enemy.
+
+Whenever you SPEND a resource, you should be REWARDED for it -- that seems obvious.
+
+But for as obvious as that seems, TONS of JRPGs and other games get this wrong. When you have some amount of resources and you have a bunch of ways to spend those resources, but you don't know when you're going to get those resources back, you're often PUNISHED for using your resources -- because, when you ACTUALLY NEED THEM, you won't have them. You spent them already. And on what? Something that you DIDN'T REALLY NEED.
+
+Yes, I could've beaten that opponent by just turtling and waiting and biding my time, looking for an opening, and exploiting it. I wanted to kill the enemy faster. I wanted to be more conservative with my TIME than my resources. I wanted to be more aggressive -- but I was punished for it.
+
+So, if we tell the player that all of their resources (MP, HP) are going to be completely restored at the end of the battle. And if we tell them that they're going to get 1 LP back at the end of the battle -- NOW that player is LIBERATED to spend ALL of their MP and spend ALL of their HP and even to DIE once in battle, because they know that they're getting all of that back. They know EXACTLY when they're getting all of that back, so it makes NO SENSE to save it.
+
+To answer Wodo's question, finally, the answer is both: we want to reward the player for taking risks, because they understand and can better manage those risks when they know how much resources they can really spend.
+
+In some JRPGs, you know how much resources you HAVE, but you don't really know how much you can spend. In our game, you know that you can spend it ALL, and that means that the player can start looking at strategies like:
+
+I want to end this fight SOONER so that I can do more fights per hour.
+
+I want to kill this enemy NOW before it gets a lucky crit on me.
+
+I want to kill this enemy NOW before I find out that it has some killer ability.
+
+I want to kill this enemy now before my status change timer ticks down and I continue taking poison damage.
+
+When you tell the player, "here's the resources you can spend," it liberates not only them as a player but it liberates US as game-designers to start hitting them with more risky situations or situations which encourage them to take risks.
+
+Consider the classical status change, "poison". In most JRPGs, it's a very minor nuisance -- but THEORETICALLY, it could be so much more. The idea of poison is that you're LOSING HP FOR EVERY TURN THAT YOU TAKE. So why is it that, in most JRPGs, there isn't this pressure to end fights SOONER? Doesn't it make sense that a status change like poison would make the player want to go for riskier plays and to expend more resources to avoid taking more turns of damage from poison.
+
+And the answer is that, in most JRPGs where poison is a factor, they can't make poison that scary for all of the reasons that I mentioned above: because of their game design, the player is expected to have to play conservatively. They don't know how long the dungeon is. They don't know when the next save point is going to be. They don't know if there's going to be a boss before the next time they can rest. So the player has to play very slow and careful with their resources or risk dying or losing -- and for that reason, the game devs sort of had to nerf things like poison to the point that they become virtually inconsequential.
+
+Because our players can burn ALL of their resources in a single battle, that frees US UP as game-devs to create more dramatic CONSEQUENCES FOR DECISIONS, which I believe correlates to FUN in game design, and it means that our players can have these encounters which are faster-paced, more loose, and where that may very also be the most EFFECTIVE way to play.
+
+So, with that discussion out of the way, let's look at how much LP the average, baseline unit really needs.
+
+We know that they get 1 LP back for every fight.
+
+We know that a unit can lose LP in a variety of ways.
+
+Let's imagine a scenario where a unit has 5 max LP and decide, WITH THE POWER OF IMAGINATION, if that's enough LP -- or too much.
+
+If you have 5 LP and you die TWICE in the first encounter of a dungeon -- or you die once and you lose LP because you took damage on the ground, or you got hit by a rare ability that stole LP -- now you have 3 -- but, because you took part in the fight, you got 1 LP back. So you actually end the fight with 4 LP.
+
+In the next fight, you don't get knocked down at all -- BECAUSE the player is being conservative with that unit, in particular, in the hopes that they could fully recover their LP. After that fight, you now have 5 LP again -- your max.
+
+In the next fight, you die once, and that's it, so your LP is recovered and you end the fight with 5 LP.
+
+The next fight is an extreme case where you die twice and lose LP to some other situation, so you have 2 LP but then the fight ends and you get 1 LP back and now you have 3.
+
+It seems to me, based on these hypotheticals, that a player can reasonably manage LP -- they can bring a unit with low LP into a fight, play ultra-conservatively WITH THAT UNIT and have a very good chance of breaking even or gaining net LP by the end of the fight.
+
+So, 5 seems like kind of a lot of LP -- but let's look, then, at a SINGLE ENCOUNTER, like a boss fight or a very bad-luck situation, where a unit might have all of their LP consumed in a single fight.
+
+Like, if your unit has 5 baseline LP, and you end up losing 2 in a single fight, so now you have 4 LP for your next encounter -- that's kind of scary, because that means that, if you die twice and take two 'crits' or otherwise lose LP in a less common way, that unit cannot be revived at least for the course of that dungeon if not beyond.
+
+So, I feel like '5' is a pretty good balance for baseline LP, if leaning somewhat conservative. But I think that '4' is a slightly less good balance because I feel like it leans kinda risky. So, I'd say that 4-5 is a pretty healthy, normal amount of LP. And maybe glass-cannon units could have 3-4 max and tanks could have 6-8 max.
+
+Before we move on to 3rd Strike, I want to go on a brief tangent about an idea that I had this morning.
+
+When we talk about exhaustion and LP, we've been doing a lot of talking about SINGLEPLAYER content. We're talking about LONG-TERM SURVIVABILITY IN A DUNGEON.
+
+But we're not going to be in a singleplayer position for quite some time. Just like Pokemon is a mix of a single-player experience and a PVP experience -- and just like some 'card games' have JRPGs associated with them where you can play a single-player campaign against AI opponents but the game really shines against other human beings -- our game is going to have a PVP component alongside its single-player campaign, and, for several reasons, I've more-or-less commited to focusing on multiplayer competition as the primary focus of the game.
+
+That all being said, the question comes up as to how we're going to incorporate things like exhaustion and LP into the multiplayer meta.
+
+Up to this point, I haven't really considered it, but it struck me that our game design might actually favor an interesting sort of meta or competitive ruleset:
+
+What if the primary mode of competitive play is NOT a single match but rather to play until all of the 10 units in one of the decks is KO'd. So, a single competitive match might have as many as 5 or so individual battles.
+
+So, that being said, LP could play more of a role, as could exhaustion, even in a multiplayer environment.
+
+I feel like, in that situation, Exhaustion either becomes a NON-FACTOR or we need to ramp it up to 10%. I feel like, in multiplayer, Exhaustion would need to be a non-factor.
+
+So, I'm pretty satisfied that we have a good baseline unit to start doing tests with. Let's look at it.
+
+HP: 60
+LP: 5
+MP: 50
+ATK: 10
+DEF: 10
+SKL: 10
+PRY: 10
+
+Now that we have a baseline unit sort of cut out, I guess it means that it's time for us to start going back to creating some example test classes to get a mock-up battle going.
+
+We're going to need quite a few classes with quite a few abilities. I think that it more-or-less makes sense to stick with RPG tropes for classes or Pokemon monsters. We're going to be crossing that bridge on Wednesday, and it stands to be quite a mess. We've been laying as much groundwork as he we can to minimize how much of a mess that's going to be, but I can't help but think that we're starting to get into a position where, once we start designing units -- even for this first, basic mock-up -- we're talking about some very time-consuming work as we consider many aspects of our game's design.
+
+But that's fine, as long as we can get a test-battle running. Once we get the test battle running, we can start outsourcing unit creation as well as taking individual streams to look at individual units, and so-on-and-so-forth. So, actually, we're on an interesting stretch right now where we need to create just a small handful of test units to get a test battle going -- and then, although the following work will be ultra TIME-CONSUMING, it may actually be more interesting and bring a little bit of life back into this series.
