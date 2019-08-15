@@ -6107,3 +6107,229 @@ Now that we have a baseline unit sort of cut out, I guess it means that it's tim
 We're going to need quite a few classes with quite a few abilities. I think that it more-or-less makes sense to stick with RPG tropes for classes or Pokemon monsters. We're going to be crossing that bridge on Wednesday, and it stands to be quite a mess. We've been laying as much groundwork as he we can to minimize how much of a mess that's going to be, but I can't help but think that we're starting to get into a position where, once we start designing units -- even for this first, basic mock-up -- we're talking about some very time-consuming work as we consider many aspects of our game's design.
 
 But that's fine, as long as we can get a test-battle running. Once we get the test battle running, we can start outsourcing unit creation as well as taking individual streams to look at individual units, and so-on-and-so-forth. So, actually, we're on an interesting stretch right now where we need to create just a small handful of test units to get a test battle going -- and then, although the following work will be ultra TIME-CONSUMING, it may actually be more interesting and bring a little bit of life back into this series.
+
+
+08/14/19:
+
+So, after weeks of examining our mechanics and our stats and levels and parameters, it's finally time to return to creating units, classes, and abilities. I expect that this will be where we'll be spending the bulk of our time INDEFINITELY until we have the game that we want to have. In other words, we're getting into the meat.
+
+I can already tell that we're going to be wallowing in this for a while; it's going to be tedious, but it also affords us an opportunity to continue to think about game-design and the decision-making that our players are going to be making. How can we make it as interesting as possible? How can we make these units as fun as possible to use.
+
+Before we start looking at ABILITIES, it probably makes sense to start thinking about what sorts of ROLES we want for our units to play in battle. Let's lay some groundwork for how battles are going to play out, and we can then think about WHY a player might want to swap ONE UNIT for ANOTHER UNIT. When we're talking about 'roles,' I'd say that's what we're talking about: what is the reason that a player switches one unit for another unit.
+
+That's the question at the core of party-building in a game like this.
+
+1.) Each battle party consists of 4 units.
+2.) Only one unit can be 'in the ring' at a time. Swapping units into and out of the ring incurs a great cost, and the unit that is left in the ring at the end of the turn is vulnerable to attack.
+
+What do these simple rules really mean for the player?
+
+*) The player doesn't WANT to swap, tactically speaking. The IDEAL UNIT, as far as the PLAYER IS CONCERNED -- the unit to end all the units, the unit that would break our game -- is one that can do EVERYTHING that needs to get done in a single battle, with enough HP to be able to survive the course of many turns being left in the ring.
+
+In other words, SWAPPING UNITS is a sacrifice that the player must make for some greater good, because they don't want to swap; that has a cost that they'd rather spend on using abilities.
+
+We can't let a single unit do everything -- or maybe we can, because we have to consider our other rule: the unit that is left in the ring is incurring damage. He's vulnerable. So that's another incentive to swap the unit out -- to protect its HP, to protect it from dying.
+
+So, in that sense, outside of TACTICALLY SWITCHING UNITS TO ACCOMPLISH A CERTAIN OBJECTIVE OR USE A CERTAIN ABILITY, there's also the incentive to switch units because the unit in the ring is gradually losing HP.
+
+So, basically, we have two PRIMARY INCENTIVES to pull a unit out of the ring and replace them with another unit. One is because you WANT TO USE AN ABILITY THAT ANOTHER UNIT HAS. The other reason is because you DON'T WANT FOR THE UNIT CURRENTLY IN THE RING TO TAKE DAMAGE ON THE ENEMY'S TURN.
+
+Well, let's examine the VIABILITY of traditional JRPG roles in the context of our game's particular mechanics. Do they make sense in our game?
+
+Let's talk about 'The Warrior'. The warrior has high base ATK power, often times pretty average defense. So, in our game, the warrior would have damage-centric abilities with pretty much no MP cost; he can use them indefinitely. Okay. Seems simple enough, seems sensible. I guess you'd want to swap this unit in to deal direct HP damage, with little cost, and, because their defense is average, it wouldn't be the end of the world to leave them in the ring for a couple of turns.
+
+'The Mage' is a unit that has MP and so has a limited use of their abilities, and they need to budget the way that they use their abilities. For that reason, those abilities might be MORE DAMAGING than what the warrior has access to -- but, if MP is completely expended, the mage is pretty much worthless. Also, the mage has below-average HP and DEF, which means that you don't want to leave it in the ring. So, right away, a question of viability comes up:
+
+What is the real value of a traditional 'mage' or 'clothy' when, in order to use their abilities at low-risk, you need to swap them IN and swap them OUT in a single turn. That really limits the amount of AP that the player has to spend, on that turn, on using abilities.
+
+So, these abilities, which also have a limited use based on MP, have to be really godlike, right? Because the player is making some kind of large sacrifice to use them:
+
+A.) leaving the clothy, with its low DEF and HP, in the ring between turns,
+B.) expending 6 / 10 AP per turn just swapping units around to have access to this clothy's abilities.
+
+That sounds kind of sensible, as long as the clothy's abilities are really effective -- but it also brings up what could amount to a pretty interesting tactical gameplay element. Basically, 'Warriors' and other non-MP-centric characters will see their AP COST go up based on how 'powerful' the ability that they use is.
+
+What's cool about clothy's is that, because the player might be expected to be low on AP when they want to use their clothy, or to reward the player for taking the risk of leaving the clothy in the ring between turns -- it would make sense for their abilities to have a RELATIVELY LOW AP COST. Because they have this 'MP' mechanic which means that they need to be very careful of how many of what ability they use in a single battle lest they run out of MP and become very limited in their viability.
+
+So, in other words, you have these units which could be looked at as almost being OUTSIDE of the AP system, but rather they work on their own resource of MP which lasts for an entire battle. So, rather than budgeting AP as much as other 'roles' would need to, per turn, they budget their MP PER BATTLE.
+
+So, for the mage, we're talking about two tactical paradigms:
+
+1.) Swap unit out, swap mage in, use a very powerful ability (whether it be direct HP damage to a single unit, HP damage to a group, or some debilitating status change), and then swap the mage out for somebody else, again. So, a turn where only one or two abilities is used. A turn with fewer abilities being used but those abilities can be devasting.
+
+2.) Mage hits hard a couple times, is left IN THE RING. Is NEARLY KILLED BY THE OPPONENT ON THEIR TURN, and then hits really hard on the following turn one or two times before being swapped out -- or three or four times before being left IN THE RING to be sacrificed, basically.
+
+So, before we talk about healers, let's talk about the viability of giving abilities which use 'MP' to NON-MAGE CLASSES. What does it mean for a warrior or a tank or somebody else with decent HP and DEF to have MP.
+
+Well, it seems to me that the meaning of that design would be to have an 'ace in the hole.' Because warriors can do decent damage and fulfill their role, in general, without using MP -- that's sort of the point. But by giving them a couple of very powerful abilities which use MP, or giving them abilities from a secondary or tertiary class which use MP and which defy the 'warrior role,' a Warrior can temporarily by extra flexibility in combat by using MP for one or two turns until their relatively limited MP store runs dry. Or they can suddenly do a huge amount of damage at the cost of MP, and then it's dry.
+
+So, you can give MP to any role, but it sort of has a different meaning when you consider how that unit is going to be swapped into and out of battle.
+
+If a unit has low HP and DEF, they NEED MP to be able to be effective, because, with all of the ring-swapping that a player has to do in order to protect that unit, there isn't a whole lot of AP to go around in terms of actually using abilities. So, units with low HP and DEF need to have abilities with low AP cost and high MP cost. That way, they can still use abilities, but not indefinitely. They have to be budgeted over the course of the battle.
+
+If a unit has average to high HP and DEF, MP is used to give them an 'ace in the hole,' or abilities that they can rarely use which may give them particular advantages on that turn. Having MP might make them more of a threat in terms of the damage they COULD CHOOSE TO DO on a particular turn (but then never again for the rest of the fight), or it could offset their ROLE so that the player can save AP because they don't need to swap in a unit OF THAT ROLE. For instance, a warrior could have a HEALING ABILITY which costs MP. Because the warrior has very limited MP, they can only use it once or twice per battle -- but that might be really clutch when they don't have the AP resources to swap in a healer on that turn, or the healer is low on MP, or whatever. Basically, having MP could be looked at as a way to give a unit which normally conforms to their PRIMARY ROLE a window into their SECONDARY or TERTIARY ROLES.
+
+So, let's talk about 'healers'. A healer is a clothy, most of the time, in traditional RPGs. In our game, that would mean that they have low HP, low DEF, and high MP.
+
+The player should be inclined to PROTECT their healer, because having the healer ALIVE supports the LONGEVITY of the team. The healer keeps the team alive.
+
+So, what does this mean for the tactics surrounding healers in our game, working with the mechanics that we're working with?
+
+For one thing, I immediately see a challenge: if, because of the healer's low HP and DEF, you need to swap them IN, use one ability, and then swap them OUT -- and that's an entire turn -- I can see how it would be very difficult to 'make progress' on that turn. How do you not end up getting 'stuck' in a defensive position?
+
+The enemy team attacks your units, reducing their HP.
+The entire ally turn is spent on the healer restoring that HP.
+The next enemy turn, they just attack your units again, reducing their HP.
+
+Well, one solution I can see right away is to give healers a way to restore MORE HP ON THAT TURN that the enemy can DEAL on a single turn. If a healer can heal TWO TURNS WORTH OF DAMAGE in a single ability, then we have ONE TURN where we can be aggressive:
+
+The enemy team attacks your units, reducing their HP to 2/3.
+The ally team attacks the enemy units.
+The enemy team attacks your units, reducing their HP to 1/3.
+The ally team swaps in a healer, healing ally units by 2/3.
+
+So, in other words, it seems like what we're really looking at may be one of two things:
+
+1.) The unit that we have in the ring, doing damage, is REALLY TANKY. Maybe it has some kind of buff that's raising its DEF temporarily. Maybe it's just got a ton of DEF and HP, but can't inflict that much damage, aggressively. So, that unit can survive multiple turns, and therefore we can swap in a healer every other turn to heal that single unit for a large amount of HP.
+
+2.) We continually swap our aggressive unit in the ring so that none of them in particular takes dire damage. Then, we swap in a healer which can heal our entire team at once.
+
+Those are the two primary situations I see which involve the healer establishing the team's longevity through direct HP healing alone.
+
+So, abilities which restore the HP of a single unit can get a wounded unit back into the ring. If that unit is very tanky, the healer and that tank could have a relationship.
+
+Abilities which restore the HP of multiple units can encourage a strategy where aggressive units take turns taking damage and then the healer heals all of them.
+
+So, it seems to me that a lot of the quintessential RPG 'roles' are fairly applicable within our game's mechanics with a bit of tuning especially regarding the relationship between AP and MP.
+
+But, one of our game's core mechanics is that every unit has three CLASSES which they draw abilities from. So how is that going to impact these roles? How is that going to impact the way that we design units? How is that going to impact the way that the player USES their units?
+
+Well, it seems to me that ONE situation might be to have ALL THREE CLASSES DIRECTLY SUPPORT THE SAME ROLE. For instance, we could have one healer 'class' which specializes in healing one unit at a time, and we could have another healer 'class' which specializes in healing GROUPS, and we could have one more healer class which specializes in, I don't know, reviving units or maybe even restoring MP or restoring LP, even. One unit could have all of these classes at once, and that would make them a unit highly specialized to HEAL and flexible in multiple teams where a healer may need to focus on healing ONE UNIT on one team, and MULTIPLE UNITS on another team -- or maybe they're just more flexible insofar as healing HP because, over the course of a single fight, they could very effectively heal a single unit or multiple units.
+
+So, that's one example of how we can look at our 'tri-class' system. A highly specialized unit with three classes that support a functionally similar 'role'.
+
+Another situation is what we mentioned above regarding warriors and tanks: a single unit could have a class which specializes in doing light damage for light AP use, and a class which can, for instance, heal a single unit, and a class which can buff itself or whatever.
+
+If we give that unit a relatively small store of MP, we see that its primary role as an AP-centric attacker is what comes through the most, but the unit has some added flexibility from these other two classes which require MP -- so this unit doesn't have unlimited access to their other two classes -- but that flexibility might be a huge advantage.
+
+Another situation is one where we have a unit with three classes which might afford it some good flexibility, but none of those classes are especially geared toward using MP. So, this unit is, in general, very flexible without the limitation of MP. And so these three classes might need to be balanced against each other in such a way that the 'flexibility' becomes more situational, in some way, or the three classes, on their own, are just not as applicable as some other classes. A unit which may be more flexible, may be useful in a variety of situations, but those situations aren't bread-and-butter situations.
+
+So, all of these examples rely on one hypothesis or one design philosophy which, up to this point, I haven't been fully committed to. Let's talk about it:
+
+INTRA-CLASS FLEXIBILITY
+
+It seems to make sense, to me, for individual classes to be HIGHLY SPECIALIZED TO A PARTICULAR TASK -- because, in a game where every unit can draw abilities from three different classes, you would expect for that unit's flexibility and strategy to be based around the options they have AS THE RESULT OF THOSE THREE CLASSES.
+
+If a single CLASS has too much flexibility or can do too many DIFFERENT things, you can imagine a unit with three of these classes being able to do a TON of different things such that we don't need other classes or roles or units as much. Swapping becomes less important because this one unit can handle a wide variety of tasks.
+
+So, how much flexibility is the right amount of flexibility WITHIN A SINGLE CLASS.
+
+If we restrict their flexibility TOO MUCH, what is really the difference between a CLASS and an ABILITY. If one class's specialty is just dealing direct HP damage for an AP cost, then how is that not an ability? That's an ability: deal HP damage for an AP cost. How many abilities can we really fit into this class when they all conform to that pattern?
+
+*.) An ability that does a little damage for a little AP.
+*.) An ability that does decent damage for decent AP.
+so on and so on, but that's not very many abilities. How many abilities do we want for each of these classes to have -- and if it's a FEW, then how many different TASKS or ROLES do these classes need to support.
+
+One answer to this question would be that we could have SOME CLASSES which are HIGHLY SPECIALIZED and whose abilities are all very much the SAME, and we can have OTHER CLASSES which have more INTRA-CLASS FLEXIBILITY insofar as their abilities are concerned, but those abilities might be balanced AGAINST THAT FLEXIBILITY -- maybe they're just not as good.
+
+One thing that we haven't really discussed regarding classes is how many classes we expect to have in our game, and that's something that I'm not only TOTALLY open to but which I expect will be a somewhat high number.
+
+If we want to have a wide variety of interesting units (monsters, Pokemon, whatever) and each one draws its abilities from 3 different classes, I don't think that having FOUR CLASSES is going to cut the mustard. I don't think we want to go, "Warrior, Mage, Healer, Tank." I don't think that we could get that many interesting combinations from those four classes.
+
+If we had TEN classes, I'm not sure that it'd be enough.
+
+So, do we want MORE CLASSES or do we want LESS CLASSES but those classes are more flexible.
+
+That's an interesting question that we have to discuss.
+
+What are the ramifications of including a greater VARIETY of abilities in a single class.
+
+We have to establish a couple of things, here:
+
+1.) Although each unit has three classes, they can only access the most BREAD-AND-BUTTER abilities from ONE of those classes. And, from their third class, they can only access the most tangential of abilities. Each unit has three classes, but one is PRIMARY, one is SECONDARY, and one is TERTIARY -- and that WILL HAVE AN IMPACT on the role they play in battle.
+
+2.) Although a unit can learn abilities from all three of their classes, there IS A LIMIT TO HOW MANY ABILITIES A UNIT CAN TAKE INTO BATTLE AT ONE TIME. In our game, abilities are 'learned' and then they're 'equipped,' and a unit has a limited number of slots to equip their abilities. I believe that each of their three classes has their own limit. It's not a shared limit.
+
+What does that mean when we make each of those classes MORE TACTICALLY FLEXIBLE INDIVIDUALLY.
+
+One apparent advantage is that it makes the process of learning and equipping abilities MORE FUN. If we have MORE VARIED ABILITIES PER CLASS, and the player can choose which of those abilities to LEARN and EQUIP, it makes EACH UNIT MUCH MORE CUSTOMIZABLE. And that's fun. I love customizing my units in any game. I love customizing anything in any game, ESPECIALLY if there's a tactical ramification.
+
+But here's the risk. Here's the downside of that advantage: we're not Final Fantasy. We don't have 8 party members to choose from. We have potentially more than 60 different party members to choose from. If we give the player too much freedom over customizing individual monsters, they have less incentive to try other monsters.
+
+In Pokemon, they have this very rigid and tactically SHALLOW 'type' system which is meant to encourage the player to swap units regularly. Also, Pokemon are not very customizable at all; they're very rigid -- but that supports the fact that there's SO MANY OF THEM. You don't customize INDIVIDUAL units as much as you customize the TEAM by bringing units into and out of it.
+
+It's a card game. You don't customize the CARDS. You customize the DECK.
+
+Now, in our game, we're talking about inviting the player or even REQUIRING the player to CUSTOMIZE THE CARDS. And we want for that to be FUN and INTERESTING, but we don't want for that to come at the cost of the experience of CUSTOMIZING THE DECK.
+
+We have to strike a balance between how deep it is to customize the individual CARDS and how interesting it is to customize the DECK. Because if you have too much control over how the CARDS behave, there's much less interest in swapping in OTHER CARDS. If you limit how much you can alter the way that the cards behave, now it becomes more exciting to bring in OTHER cards.
+
+In other words, if we make individual cards too flexible, they make the need for having OTHER CARDS obsolete. And maybe that's not a bad thing.
+
+So, maybe, when we're talking about how flexible we want for individual monsters to be -- and, by extension, how flexible we want individual CLASSES to be -- what we're really talking about is HOW MANY DIFFERENT MONSTERS DO WE WANT IN OUR GAME.
+
+More monsters means that they need to be less flexible.
+
+Less monsters means that they can be more flexible.
+
+What if -- and I'm just spitballing, here -- what if each class only had 3 abilities -- a primary ability, a secondary ability, and a tertiary ability. Or what if each class only had 6 abilities -- two primaries, two secondaries, and two tertiaries.
+
+It's kind of exciting to me to LIMIT THE NUMBER OF ABILITIES THAT A CLASS HAS. That puts you into a position, as a designer, where, if your class is fixated on ONE TASK, you have more options for going about that one task (more flexibility regarding a single task).
+
+If your class has support for MULTIPLE TASKS, it MUST INHERENTLY HAVE FEWER WAYS TO GO ABOUT EACH OF THOSE TASKS, because we're working with a limited number of abilities per class.
+
+That answers the question I had, earlier, about whether we could have two classes which deal with the same task -- but one handles it more exclusively and one handles it along with other tasks but not as effectively. Immediately, once you limit how many abilities a class can have, that answer becomes 'yes'. You can have two classes which tackle the same task, but one might be able to do other things as WELL -- it's just that it becomes a jack-of-all-trades-and-a-master-of-none.
+
+Wodo's looking WAY AHEAD at UI design. I always imagined that we'd be working with a traditional JRPG layout where the first phase of menus is:
+
+Unit Ability
+Item
+Leader Ability
+
+When you open 'Unit Ability,' you get access to how- lemme backspace through this.
+
+I think that Wodo misunderstands.
+
+We're not talking about having units with 4 abilities, max.
+
+We're talking about having classes with 6 abilities, max. And the player can only equip 3 of them from that class. And they also have abilities from two other classes.
+
+Wodo's not talking about classes; he's talking about the max number of abilities that the player can bring into battle.
+
+We're talking about a game which is going to have a text-based UI for a part of the alpha testing, but our end-game is to have a graphical version for Pygame and for browser. We may even skip Pygame, to be honest.
+
+While addressing that concern, it struck me that, if a class only has 6 different abilities, it really diminishes the importance of having an 'equip limit' for that class. We also know that each of those 6 abilities can have an ARBITRARY NUMBER OF VARIATIONS.
+
+Maybe, before we can really be done talking about what it MEANS TO DESIGN A CLASS IN OUR GAME, we need to look at how abilities are LEARNED, EQUIPPED, etc.
+
+So, we touched on this before, but lemme repeat it: the more interesting abilities that a single class has, the more interesting is to choose which of those abilities to equip.
+
+We have this mechanic in our game where a player is asked to LEARN ABILITIES FROM THEIR CLASS and then EQUIP THOSE ABILITIES, and there's a limited number of slots for equipping abilities which they player can RAISE. They can unlock more slots to equip more abilities.
+
+Let's also consider that, going into a dungeon or into a PVP battle, the player has a deck of ten monsters from which they must choose four to bring into battle.
+
+If we limit too much how individually capable these monsters are, we really limit the amount of variety and maybe depth of tactics that we can see in a single battle. In other words, let's say, for the sake of argument, that each monster comes into battle with access to 6 abilities. And, at this rate, even that is looking kind of generous, which may be evidence that we're on the wrong path.
+
+Let's say that they have two abilities from each of their classes. You've got 4 units. I wonder if that's just not enough DYNAMISM for that single battle, which includes 8 total monsters.
+
+I mean, keep in mind that each unit has a 'Unit Dynamic' which applies special rules to the fight just by virtue of that unit being there. So, as you face off against different TEAMS, your circumstances are going to necessarily be somewhat different.
+
+20 abilities total per team seems like it could be a good compromise between INTRA-BATTLE FLEXIBILITY or INTRA-BATTLE VARIETY and the profound difference that you can see from playing different parties.
+
+We've been struggling with this essential riddle that's inherent to an RPG of this type: the microscopic DYNAMISM and VARIETY and DEPTH, vs the MACROSCOPIC dynamism and variety and depth. How much variety do you really want to see in a single battle where you're going to be having tons of battles, and the whole heart of the gameplay is based around choosing what you bring into those battles, tactically. Like, how much strategy takes place BEFORE-HAND and how much strategy takes place IN the battle. How carefully do you want to PICK YOUR UNITS vs how carefully do you want to play your turn. How much depth do you want to have in designing YOUR DECK vs how much depth do you want to have on an individual TURN.
+
+By the very nature of a CARD GAME, you can only play the hand that you're dealt. Or, in a CCG, you can only play the cards that you've drawn. There IS DEPTH IN HOW YOU PLAY THOSE CARDS, obviously. But the ways that you can play those cards are inherently limited -- and that's what makes designing your DECK so interesting, right?
+
+You can't have your cake and eat it to. At what point are you giving the player so much flexibility in how they play their HAND that the way that they design their deck becomes arbitrary. You have to limit the player's options PER TURN in order to make them more thoughtful BEFORE the battle -- in the preparation phase. You can make the preparation phase more meaningful by making the consequences of it harsher.
+
+So, it seems to me that this compromise between consequences for the PREPARATION PHASE and having tactical variety WITHIN THE BATTLE is where we're at.
+
+Before we end today's discussion, let's examine the sorts of conclusions that we came to:
+
+1.) Traditional JRPG roles seem to work fine within our game's mechanics, with some tweaking to accommodate the relationship between AP and MP.
+
+2.) MP can be used in a variety of ways to make sense of the contrast between 'clothies' and 'warriors'. MP can be used AS A REPLACEMENT FOR AP for clothies who need to be swapped in and out in a single turn and thus don't have much AP to work with. For units which can survive in the ring better, MP can open up FLEXIBILITY for that unit as a window to their secondary and tertiary classes that they can only reach through a couple times per fight.
+
+3.) If we explicitly limit the number of abilities that a single class can have, it will make them much easier to balance and compare to each other.
+
+4.) When deciding how much we want to limit the tactical flexibility of a single unit, both in a single battle and in general, we need to keep in mind that whenever you give more potential to a single monster, you're making other monsters obsolete and therefore are reducing the tactical interest in deck-building. Whenever you allow a player to play a card in another, wholly different way, you're taking away consequences that maybe should have come along with placing that card in the deck. You want, to an extent, for the player to be limited by what they've chosen to put into their deck.
