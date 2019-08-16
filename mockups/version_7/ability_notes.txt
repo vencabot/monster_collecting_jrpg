@@ -6333,3 +6333,247 @@ Before we end today's discussion, let's examine the sorts of conclusions that we
 3.) If we explicitly limit the number of abilities that a single class can have, it will make them much easier to balance and compare to each other.
 
 4.) When deciding how much we want to limit the tactical flexibility of a single unit, both in a single battle and in general, we need to keep in mind that whenever you give more potential to a single monster, you're making other monsters obsolete and therefore are reducing the tactical interest in deck-building. Whenever you allow a player to play a card in another, wholly different way, you're taking away consequences that maybe should have come along with placing that card in the deck. You want, to an extent, for the player to be limited by what they've chosen to put into their deck.
+
+
+08/15/19:
+
+While I was washing my ass today, i was thinking about classes and having a strict limit to how many abilities they can have.
+
+The one thing that strikes me right away is that, if we give classes a maximum of twelve different MetaAbilities, then it doesn't really make any sense to limit the player's equipped abilities BY CLASS. We would want to limit their number of equipped abilities TOTAL.
+
+So, if each unit has three classes and each class has two abilities per TIER, that means that each unit has access to a total of 12 MetaAbilities: 6 from their primary class, 4 from their secondary class, and 2 from their tertiary class.
+
+So, it seems to me that it would make sense to limit a level 1 unit's total equipped skills to some low number like 4, and then, over the course of the single-player game, they could enhance that unit until it can have all 12 of its metaabilities equipped at once.
+
+Previously, we were limiting the number of equipped abilities per CLASS, but if, for instance, the tertiary class only has 2 abilities to choose from, limiting it per-class doesn't really make any sense.
+
+On the other, if you limit the TOTAL NUMBER OF ABILITIES and you only give a unit access to two TOTAL abilities from their tertiary class, it seems highly unlikely that players are going to fuck around with their tertiary classes that much.
+
+So maybe it DOES make sense to limit the abilities per-class...? What if a unit started out being able to equip only 1 ability per class...? And then they could 'level up' each class to equip more abilities from that class.
+
+What's interesting about this is that, if we increase the 'cost' of character-growth insofar as each subsequent equip-slot per class costs more to unlock, the player might have more of an incentive to unlock tertiary and secondary slots, because there will come a time where it's much more expensive to unlock a new slot for their primary class.
+
+I guess, when you put it that way, it still makes sense to limit the number of equip slots PER CLASS to encourage the player to experiment more with their secondary and especially tertiary classes. Otherwise, it just seems like, if you have 6 equip slots, you're highly unlikely to want to equip something from your tertiary class. It's just too situational.
+
+So, I guess I'm really in love with the idea of limiting the number of abilities per tier, per class. I've been mostly looking at '2 abilities per tier, per class,' but we could go as high as 3. Nine abilities per class.
+
+That could make, for instance, tertiary and secondary classes more interesting, because you'd have quite a few more abilities to choose from.
+
+The problem with having only TWO abilities per tier, per class, is that tertiary classes get pretty boring: you only have two abilities to choose from. If we give them one more ability, that adds 50% more variety to all classes. I think that's still conservative. I think that should keep things limited enough that we have more classes to go around.
+
+Another thing I was thinking about in the shower was that it might make classes more interesting and it may make it easier to DEVELOP CLASSES if we say that no ability in the game can be shared between two or more classes. So, classes don't share abilities. Every ability that we design for a class must be unique to that class.
+
+That makes some things kind of difficult, especially regarding bread-and-butters like 'attack normally for normal damage,' but maybe that's a good thing. Maybe we don't WANT 'bread and butters' like that. Maybe, by taking away that most obvious option, we can encourage the player to end up in more INTERESTING SITUATIONS and to come up with more INTERESTING STRATEGIES. Maybe very simply dealing direct HP damage is just not that common.
+
+But, yeah, that is the problem with not sharing any abilities between classes. These most simple of concepts need to be divvied up very carefully. I think, with some creativity, we could work around this very effectively in a way that could actually make the game more interesting, but we would need to think about it.
+
+I think that the class-designing process would look like this:
+
+You would come up with a simple TASK that the class is especially geared toward. You should be able to describe it in one sentence.
+
+Then you cook up 9 abilities for that class that aren't in any other classes. Then you split those 9 abilities into 3 tiers of 3 abilities each.
+
+So, that sounds simple enough. I really think that THE MOST DIFFICULT PART OF THAT BRIEF PROCESS is creating 9 abilities which are all useful that no other class already has. Also, keep in mind that these 'abilities' that we're talking about are actually what we refer to in our code as 'metaabilities,' because they have VARIATIONS. So, you can create an IDEA for an ability and then you can create little versions of that ability. So, there really is much more than '9' abilities to choose from for any given class.
+
+Let's close our eyes and imagine -- feel the magic. Vegas on acid. Let's make a class.
+
+Binding an enemy caster.
+
+It has 9 meta-abilities.
+
+* Restrict the usage of abilities that have an MP cost above some value.
+* Reflect abilities which have an MP cost above some value.
+* Restrict the usage of abilities which have more than one target.
+* 'Drain MP,' but that's pretty generic and I can see how that'd cause a problem if no other class can have an ability which simply drains MP.
+* Increase MP costs by some percentage.
+* We could have some kinds of nerfs that specifically target units that have a particular class or 'tag'. Like, a unit could have a 'magical' tag which might not target a high-MP-cost unit like, say, Akuma who uses dark hadou or whatever, but it would target a unit like My Little Pony or The Care Bears or whatever -- a wizard, Merlin -- because we can arbitrary tag units with things like 'magical'.
+* Maybe restrict units that have some kind of MP / HP ratio. That sort of defines a caster.
+
+Let's work with those ideas, above, and create some abilities. Or, at least, an outline for some abilities.
+
+1.) If an ability has an MP cost above ____, it can't be used...? That seems pretty harsh. Maybe, if its MP cost is above ____, then its AP cost goes up by ____%? Maybe the SEVERITY of this 'Dynamic Rule' determines whether the ability CAN'T BE USED AT ALL or if it simply increases an AP cost. Maybe variations will cause the casting unit to take damage or some other negative status change. But all of these ideas sound so different -- distinct -- it feels like maybe they should be different metaabilities? Or maybe they're not that distinct because they all explictly serve the same purpose: limit the usage of abilities above a certain MP cost for a single unit.
+
+Maybe we should have an ability for this class which limits the usage of abilities above a certain MP cost for the whole field -- both ally and enemy teams.
+
+2.) A 'reflect' buff which targets a single ally and reflects the effect of any ability which costs above a certain MP value.
+
+Could also have one which affects the entire ally team.
+
+3.) Target a single enemy to increase the MP costs of their abilities by some %.
+
+Again, like most of these nerfs or buffs, could have a variant which targets the entire enemy party.
+
+4.) Prevent the enemy team from swapping in a unit with some particular HP / MP ratio.
+
+We could also have nerfs which target either enemy units or all units with a particular HP / MP ratio.
+
+#
+
+I'm starting to see a pattern when it comes to the difficulty of creating an interesting ability -- and that's the problem of choice. To satisfy a simple idea like 'restrict casters,' there are SO MANY THINGS THAT WE COULD DO. SO MANY that would be interesting or balanced. Some that target an individual unit. Some that target the enemy party. Some that target the whole field. Some which will reflect damage from abilities that cost a certain amount of MP. Some which reflect damage from units that have a certain HP / MP ratio. Some which reflect damage from units which have a certain TAG.
+
+All of these can be seen as functionally similar but with very slight variations. Maybe that's a case for the 'variation' system? Maybe we have a 'reflect' skill which has variations that have different criteria for what they reflect -- all very similar criteria but which may be different enough to create some interesting decisions in battle.
+
+So, maybe what I'm saying is that we need to create some sort of CRITERIA for what constitues an 'ability variation.' We need to decide when it makes sense to create a WHOLE NEW ABILITY and when it makes sense to create a variation of an existing ability. We also need to decide when it makes sense to create a whole new DYNAMIC_RULE and when it makes more sense to just alter the affects of a Dynamic Rule based on its severity.
+
+We have all of these situations which can affect what an ability 'does'. Like, what's the difference between having two affects split over Ability 1 and Ability 2 or having two affects split over Ability 1 Normal and Ability 1 Crit. It's kind of difficult to break these abilities up based on their affect when affect can be so dynamic in our game's engine.
+
+We need some kind of guidelines or some kind of advice that we can adhere to and offer to other designers when it comes to breaking an idea into abilities. You have an idea for something that you want for a unit to be able to accomplish.
+
+That idea can be accomplished in an infinite number of ways, really.
+
+So when do you make those 'different ways' into Glance, Normal, and Crit effects for a single ability. When do you make them into Intra-Meta-Ability variations. When do you make them into entirely separate Meta-Abilities. When do you make more than one different DynamicRule and when do you just alter that DynamicRule's severity.
+
+I feel like, whenever we've sat down and tried to create abilities, this is the #1 problem that we run into: in a game that's so dynamic, how do you actually settle on where to make ideas distinct.
+
+It's almost like we need some guidance. Some system to decide when it makes sense to split up an ability and when it makes sense to just have a variation on crit and when it makes sense to just lean on 'variation,' linear or non-linear -- but I wonder if having guidelines like that would make abilities less interesting in general. I feel like part of the fun is that, sometimes, certain abilities, when they crit, have crazy affects.
+
+But the problem with THAT way of thinking is that it sort of implies having an INSANE NUMBER OF ABILITIES. Like, do we really need an ability which does extra damage on crit AND an ability which deal AP damage on the opponent's next turn on crit. Those COULD BE THE SAME META-ABILITY but different Non-Linear-Variations... but how many NLV's do we really want for that ONE IDEA.
+
+How do we draw the line? There's SO MUCH that these abilities could do.
+
+Well, maybe one thing that would help would be to EXPLICITLY RESTRICT THE NUMBER OF NON-LINEAR VARIATIONS OF A SINGLE META-ABILITY. And maybe every Meta-Ability has the same number of non-linear variations. That would force us to pick the non-linear-variations which make the MOST sense. Yeah, maybe 10 or 20 or 100 different variations could MAKE SENSE, but if every MetaAbility in the game only has 3 NLVs, then maybe, of those 100 ideas, we have to pick the 3 which make the MOST sense for our class, for our Meta Ability. And then we can re-use the other ideas in other classes and other abilities if need be.
+
+That, right away, makes sense to me. That's one way to control how much variety goes into a single MetaAbility.
+
+So, now we have the question of how do you define and DELIMIT what a particular Dynamic Rule can do. In particular, I want to pose this scenario:
+
+'Bind Spell'
+
+Targets a single unit. Any time that unit takes MP damage, that MP damage is increased by some percentage. This includes when they take an MP cost from using an ability, obviously.
+
+Seems simple. Stands to reason that, as the SEVERITY of Bind Spell goes up (remember that every Dynamic Rule has a 'severity value' which can be altered in a variety of way), that percentage increase in MP damage goes up.
+
+But here's my question: is it fair, or does it make sense, or does it make the game MORE INTERESTING to say something like this:
+
+When 'Bind Spell' reaches max severity, abilities which deal MP damage to the user are nullified. In other words, at max severity, a unit under Bind Spell cannot cast.
+
+Or how about this idea:
+
+When 'Bind Spell' reaches max severity, it targets the entire team of the targetted unit.
+
+The reason that I pose these scenarios is that, right there, I've presented three different options for how Bind Spell could behave at max severity. All three options seem sensible considering what Bind Spell represents. How do we decide which of these three options to go with. How do we decide when to make a whole new Dynamic Rule.
+
+Wouldn't it make sense to say that Bind Spell, as a Dynamic Rule, should be restricted to targeting a single unit. I mean, that's what it's for: restricting a unit's ability to cast by increasing the self-MP-damage of their skills.
+
+But isn't it kind of fun that, at a certain severity, the affect could mutate? Like, now it targets the entire enemy team because it became too severe. Or now the target can't cast at all because it became too severe. And then do we need another Dynamic Rule which really DOES just increase self-MP-damage all the way through max severity. Like, that idea seems sensible, too.
+
+How do we decide when we need two similar Dynamic Rule and when we need to consolidate into one Dynamic Rule.
+
+We're talking about WHAT ARE BEST PRACTICES FOR CREATING AN ABILITY IN THIS GAME.
+
+Well, I'm just spit-balling here, but maybe the argument could be made that you could think of some 'classes' as being subservient to particular Dynamic Rules. In other words, maybe, although you have access to 9 Meta Abilities per class and each Meta Ability can have 3-5 Non-Linear-Variations, maybe the entire class only has access to a few different Dynamic Rules...?
+
+That almost seems like tying disparate ideas into one another, but it also could be an effective way to not only limit ourselves, as creators, and give us some ground to latch onto, but it could also be effective for PLAYERS to get a better understanding of how these classes work. If you can look at a class and get a list of the Dynamic Rules that it can afflict, then you can get an idea of what that class is about and how it's meant to be used.
+
+That really makes sense to me. That's a way to limit the number of Dynamic Rules in our game by the number of classes in our game.
+
+Could even say that, like MetaAbilities, no two classes can share a single Dynamic Rule. Maybe that's a part of what defines a class: the Dynamic Rules that it can afflict.
+
+Although, if you can't share Dynamic Rules AND you can't share abilities, I can see how we could run into situations where we don't have interesting abilities or Dynamic Rules to go around.
+
+Also, that means that we can't really create different Non-Linear-Variations which afflict different Dynamic Rules...? Which is sort of the point of Non-Linear-Variations. I feel like they would OFTEN afflict Dynamic Rules.
+
+So maybe it makes sense to not limit Dynamic Rules to a single class. But, rather, a single class only has access to some number of Dynamic Rules.
+
+That gives us some healthy restrictions when defining how Dynamic Rules will work. If we want for a single class to be able to have more AFFECTS with their Dynamic Rules, that means that we need to lump more affects into a SINGLE Dynamic Rule by way of Severity or something.
+
+Supposing that we go with the ideas that twe defined today regarding classes and meta-abilities and dynamic-rules, we have some questions to answer regarding LIMITATIONS.
+
+Q1.) How many Meta-Abilities per Tier should a single Class have?
+Q2.) How many Non-Linear-Variations should a single Meta-Ability have?
+Q3.) What is the maximum number of Dynamic Rules that a single Class's
+     abilities has access to?
+Q4.) How should we limit what learned abilities a single unit can bring
+     into battle?
+
+Regarding Q4, up to this point, I've expected that we would limit the unit to ONE NON-LINEAR-VARIATION OF A PARTICULAR META-ABILITY at a time. Why? I guess because that seemed tidy.
+
+But why, seriously? Is there any reason to limit a unit to having one version of an ability equipped at a time? If they really feel like there's a tactical advantage to sacrificing one of their ability-equip slots to another variation of an ability they already have equipped, why not let them do that? I don't think there's any way to game the system by having more than one of the same ability equipped -- or by filling their equip slots with a bunch of similar abilities?
+
+AS LONG AS WE DON'T HAVE OVER-POWERED ABILITIES WHICH SAVE THEIR OWN 'HIT COUNTER' AS A WAY TO LIMIT THEM. Like, what if there's a really powerful ability which can only be used 'once per battle.' No MP cost, no nothing else that would limit its usage to once per battle. It's just that the ability instance, itself, saves a record of how many times it's been used in battle -- and, if that flag is at '1' or greater, it can't be used.
+
+If the unit can bring more than one of THAT ability into battle, they could abuse the system.
+
+That being said, THAT particular problem is solved by just tagging the UNIT, itself, rather than saving the value into the ability. That's really a non-issue.
+
+I really feel like there's no reason to limit the number of learned variations of a particular ability that a unit can bring into battle, and that opens up some interesting creative possibilities for us as designers of abilities.
+
+For instance, if you have some kind of slap which afflicts status, and there's one version which afflicts poison and one version which afflicts blindness. Now, the player can bring both into combat if that's what they want to do -- and we can limit those to being NLVs.
+
+To answer a part of Q4, we should NOT limit what abilities a player can bring into battle based on whether or not they belong to the same Meta-Ability.
+
+To continue examing Q4, I DO think, after today's discussion, that we want to limit the number of abilities that a unit can bring into combat for EACH OF THEIR CLASSES. And I think that, as the unit 'grows' to unlock more of these equip-slots, they should become increasingly expensive PER CLASS.
+
+In other words, because the player has the most, best abilities from their PRIMARY CLASS, they're going to want to unlock the most slots for their primary class. But for EACH SLOT THAT THEY UNLOCK FOR THEIR PRIMARY CLASS, the cost for unlock ability-equip slots goes up.
+
+For this reason, a player might be encouraged to open up slots for their Secondary and Tertiary classes instead of their Primary class because it'd be less expensive to open up the 3rd slot for those classes than the 6th slot for their primary class. That makes sense to me.
+
+Now, if we're not going to limit the Non-Linear-Variations that a single unit can equip within their class, there's no reason to place a maximum cap on how many abilities a unit can unlock for any given class.
+
+So, maybe a level 1 unit can equip 4 different abilities at a time: two from their primary class, one from their secondary class, one from their tertiary class. And then that unit can learn new variations of their abilities and they can unlock the ability to equip more abilities for a single battle.
+
+So, that answers Q4.
+
+Q1 is "How many meta-abilities per tier should a class have." What we're talking about, here, is hwo flexible and varied we want for a single class to be.
+
+Originally, I was thinking that we could go as low as 6 total meta-abilities per class, 2 meta-abilities per tier.
+
+But my issue with that is that it makes ESPECIALLY THE TERTIARY CLASS, where a unit can only learn ability variations from TIER 1, very boring. You literally only have two meta-abilities to learn variations from.
+
+Now, obviously, the whole point of limiting a unit's access to their tertiary class to being the 'tier 1 abilities' is meant to be LIMITING. But to only have access to TWO meta-abilities from that class? I'm feeling like we need to go to 3 Meta-Abilities per tier.
+
+So, you have 9 different meta-abilities to learn from in your primary class.
+
+6 different meta-abilities to learn from in your secondary class.
+
+3 different meta-abilities to learn from in your tertiary class.
+
+So, my question becomes... is that still too few? Can we work with that? Or does it make more sense to go to 4 per tier or HIGHER? And I really feel like this comes down to the Tertiary and Secondary classes of a particular unit. That's what's going to benefit THE MOST from having more abilities per tier.
+
+I feel like 4 abilities per tier is too much ESPECIALLY WHEN YOU CONSIDER ALL OF THE NON-LINERA-VARIATIONS OF THOSE 4 META-ABILITIES.
+
+So, let's say that every tier of every class has 3 meta-abilities.
+
+That means that a single unit can learn from 18 different meta-abilities.
+
+That seems pretty fair if we want to have more units in our game, which we do -- it's a monster-collecting game. I don't think that a single unit needs access to more than 18 different meta-abilities, each of which has several non-linear-variations.
+
+So, that's my answer to Q1. 3 Meta-Abilities per tier, per class.
+
+Q2 is "How many Non-Linear-Variations should a single Meta-Ability have?"
+
+More than two. Less than 6.
+
+I feel like '5' would only make sense if you have, like, 3 common variations and 1 uncommon variation and 1 really rare variation. But is that too many -- or is that sort of a good template? Like, one thing I've been wondering is this:
+
+Considering that the Non-Linear-Variation system in our game is based around GACHA. You insert your 'learning points' into the gacha machine and then it spits out a random variation of the ability you picked. Considering that, how much of a role do we want 'rareness' to play in this mechanism? Do we want for these variations to all have approximately an even chance of coming out? Maybe it doesn't make sense to have a 'rareness system' in this sort of game...? Like, how many times do we want for someone to put points into the gacha before they get the variation they want -- it's not like they're earning new abilities after EVERY FIGHT. Learning an ability should be SOMEWHAT expensive, and there-fore I feel like maybe it doesn't make sense for there to be especially rare Non-Linear-Variations.
+
+So, maybe all variations should necessarily be equally common. That makes sense, because, in PVP especially, you wouldn't want for somebody to have a really rare version of an ability that's better because it's more rare.
+
+So, let's lock in the fact that, when you settle down to learn a new ability from the 'gacha,' you have an equal chance of getting any of its variations. You wouldn't want to balance anything around 'rareness' anyway.
+
+That being said, I definitely don't think that we need 5 variations.
+
+So, the question becomes do we want 3 or 4 variations per Meta-Ability? 3 is a pretty round number but seems kind of limiting -- but maybe that's what we want. Makes things simpler for the player. Makes things simpler for us, as designers, because we have to limit ourselves more. When you put it like that, I really feel like we don't NEED 4 VARIATIONS FOR EVERY ABILITY. 3 seems like a GOOD NUMBER for some, a bit of a stretch, even, for others -- and, for a few, maybe not enough. But that's fine. That's what you want.
+
+I'm pretty satisfied with that. Let's lock it in and leave Q3 for Monday.
+
+Q1.) How many Meta-Abilities per Tier should a single Class have?
+A1.) 3 Meta-Abilities per Tier.
+
+Q2.) How many Non-Linear-Variations should a single Meta-Ability have?
+A2.) 3 Non-Linear-Variations per Meta-Ability.
+
+Q3.) What is the maximum number of Dynamic Rules that a single Class's
+     abilities has access to?
+A3.) No clue! Let's look at this on Monday.
+
+Q4.) How should we limit what learned abilities a single unit can bring
+     into battle?
+A4.) A level 1 unit has 2 slots for their Primary Class and 1 slot each for
+     their Secondary and Tertiary Classes. Each additional slot unlocked
+     for a particular class costs more than the previous to encourage
+     players to unlock from their classes evenly. No limit to how many
+     variations of a single Meta-Ability can be equipped.
+
+
