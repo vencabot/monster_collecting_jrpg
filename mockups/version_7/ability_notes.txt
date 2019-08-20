@@ -6577,3 +6577,277 @@ A4.) A level 1 unit has 2 slots for their Primary Class and 1 slot each for
      variations of a single Meta-Ability can be equipped.
 
 
+08/19/19
+
+Recently, we've been talking about CREATING GUIDELINES AND BEST-PRACTICES for the development of units in our game. In particular, we've been thinking about ways that we can abstract away a lot of the work of creating roles and abilities.
+
+Since the beginning, we've had difficulty creating abilities and roles and units because, in our game, there's a big focus on 'dynamism.' As a result of this, we find that, as far as DESIGN is concerned, there's virtually no limit to what we can do with our Unit Abilities. So, it becomes very difficult to settle on a handful of different abilities per class; because we could immediately come up with hundreds of abilities. Where do you draw the line? What variation of an ability is the one that you go with?
+
+So, we've been coming up with some guidelines that I think are going to be HUGELY helpful. Let's review those guidelines right now:
+
+For one thing, every monster has 3 classes at a time. 'Class' means the same thing as, like, a pool of abilities. Every monster can draw abilities from 3 different ability pools.
+
+They have a primary pool, a secondary pool, and a tertiary pool of abilities that they can draw abilities from. And when we talk 'abilities,' we're talking about commands that they can use in battle when it's the player's turn.
+
+What's interesting about having these there ability pools is that the abilities that the monster can draw from that pool are limited based on whether that pool is in their primary, secondary, or tertiary slot. Every pool has certain abilities that can only be accessed depending on what slot that pool is in for that unit.
+
+If an ability pool is in the monster's PRIMARY slot, they have access to the Tier 1, Tier 2, AND Tier 3 abilities in that pool. So, all of the abilities.
+
+If the pool is in the monster's SECONDARY slot, they only have access to the Tier 2 and Tier 3 abilities in that pool.
+
+Finally, if the pool is in the monster's TERTIARY slot, they ONLY have access to the Tier 3 abilities.
+
+One guideline that we created for defining these ability pools, which I think will be helpful, is that there's always going to be THREE abilities per TIER per POOL. And each of those abilities is going to have THREE variations.
+
+One question that we haven't answered regarding the ability definitions for classes (ability pools) is one that we posed last week, on Thursday: I think that it would make sense to LIMIT THE NUMBER OF DYNAMIC_RULES THAT A SINGLE CLASS'S ABILITIES CAN INFLICT. I think that would do a lot to DEFINE the limitations and the purposes of that class.
+
+So, if you have nine abilities per class (three from each tier) and each of those abilities has 3 variations, what is a good limit for how many different Dynamic Rules those abilities can inflict?
+
+I guess it would make sense to think about what kind of class would need to have access to a TON of different Dynamic Rules. It would be, like, an afflicter? Some kind of shaman that would inflict a variety of different negative status changes?
+
+Nine abilities. 3 variations each.
+
+If we have 5 Dynamic Rules split over 9 abilities and their variations (so, 27 abilities total), is that too little? Is that workable? Can we do less than that.
+
+Let's look at it this way: if you had access to only THREE dynamic rules, then each of your 9 abilities could have a variation which afflicts ONE of those rules. You could have nine abilities, and each ability could have a variation which inflicts each dynamic rule.
+
+Also, if you had NINE dynamic rules, you could have a different dynamic_rule for EACH metaability. That's too much.
+
+You could also have different abilities which afflict the same dynamic_rule onto SINGULAR and MULTIPLE opponents. You could have some that afflict at different SEVERITY.
+
+What are some other ways that you can afflict the same Dynamic Rule in different ways?
+
+1.) Afflict on a different number of targets.
+2.) Afflict at a different severity.
+3.) Different % chance to afflict.
+
+We're talking about dynamic_rule economy, basically. Trying to get the most possible mileage out of one dynamic_rule. How many different abilities can you create which all focus around the same dynamic_rule?
+
+Severity is super clutch. The fact that you can use a severity difference to sort of... emphasize DAMAGE on this ability but emphasize THE DYNAMIC on this ability is pretty important.
+
+Like, you could have a 'blind punch' which does ____ damage but also afflicts blindness at a low severity. Or a low chance to afflict.
+
+But compare that to a 'blind spell' which does no damage but therefore has a much higher chance to afflict and / or a much higher severity.
+
+You have nine abilities and three variations per ability. I feel like even 5 dynamic_rules might be cutting it kind of close to create 27 different abilities. And 5 seems like a lot to use to define a class.
+
+'Dynamic Rules' are the core of our game's gimmick. It's pretty much what our game revolves around. They're like 'Laws' in Final Fantasy Tactics Advance, sort of. They're like status-changes in other RPGs in the sense that they can work as buffs or nerfs.
+
+Basically, a Dynamic Rule is a condition that's applied to the battle which takes affect when it's triggered by some other condition.
+
+So, 'Poison' would be a Dynamic Rule expressed like this:
+
+Whenever Unit A takes an action, Unit A takes HP damage.
+
+'Blindness' would be a Dynamic Rule expressed like this:
+
+Whenever Unit A uses an ability, Unit A's 'SKL' (chance to hit) is reduced to some value.
+
+It's like a 'status change' but with an emphasis on controlling your opponent's tactics. For instance, you could have a Dynamic Rule like:
+
+Whenever Unit B is swapped out of the ring, Unit A takes 5 MP damage.
+
+Dynamic Rules are like events which are triggered under certain conditions, and there are a variety of ways that the player(s) can attach these rules to the battle.
+
+Whenever a monster uses an ability, they can attach any number of Dynamic Rules to the battle.
+
+Every monster in the game automatically brings a certain Dynamic Rule into any battle that they're a part of.
+
+A single Dynamic Rule can have any number of 'Severity' values. Basically, in our game code, whenever a Dynamic Rule is TRIGGERED, it checks its own Severity value in order to decide what to do. So, a single Rule can actually have many different outcomes based on its severity.
+
+For instance, a Rule like Toxic which says, "When Unit A takes an action, Unit A takes damage," it could be engineered so that, at Severities 1-9, the Toxic damage varies (goes up) -- but, if it's at Severity 10, maybe the unit just instantly dies.
+
+And a Dynamic Rule on the field can be targeted like a unit, so some abilities may be able to increase or decrease the severity of an active Dynamic Rule.
+
+We're talking about LIMITING A SINGLE CLASS'S POTENTIAL TO INFLICT NEW RULES ON A BATTLE.
+
+I think that, if there was a strict limit to how many different kinds of rules a single class could inflict on a battle, that would go a long way to defining WHAT THE CLASS IS, WHAT IT DOES. We can't just let a single class have access to an indefinite number of rules.
+
+So, I'm asking about rule-economy -- how many different ways can we afflict the same rule.
+
+The problem we're having is that, in a game where every monster ability could potentially do ANY NUMBER OF THINGS. They can do ANYTHING. Obviously, like in most RPGs, yeah, you can HP damage, sure. You can MP damage with some kind of 'drain' ability. You can lower somebody's ATK power.
+
+BUT WITH THIS DYNAMIC RULE SYSTEM, a single ability can do almost ANYTHING. Yeah, maybe your ability does just reduce the opponent's ATK power -- OR, maybe it reduces their ATK power by 1 after every turn in the battle. Or maybe it reduces their ATK power by 1 whenever they take an action. Or maybe it reduces their ATK power by 1 whenever the opponent swaps the unit in the ring. Or maybe it reduces their ATK power by 1 whenever a certain ability is used. Maybe it lowers their ATK power whenever they TAKE damage, to encourage them to be more defensive.
+
+So the problem we're running into is, when you can create abilities which can do ANYTHING, how do you decide which ones to actually bring INTO the game.
+
+And so my idea was to create a LIMIT of Dynamic Rules that a single CLASS (ability pool) can afflict. Not only will that help us as DESIGNERS to encourage us to come up with only the 5 BEST rules that make the most tactical sense, but also I think that it would help the players really understand what a class is FOR if they can see what sorts of Dynamic Rules that class is engineered to afflict. I feel like, by limiting the number of Dynamic Rules that a class can afflict, we're sort of taking a more conscious role in DESIGNING that class.
+
+We're asking the question of rule-economy, and how much we can squeeze out of a single rule? And so Dixx asks a good question: how 'specific' can a single rule get. How much can a single rule's affect vary.
+
+Above, I mentioned a few different things. There's 'severity,' where a Rule's affect can vary depending on its 'severity' value, which can be different when FIRST AFFLICTED, and it can also change over the course of a battle. Also, you could have one ability which afflicts on a single opponent and one which afflicts targeting multiple opponents (or allies).
+
+So, basically, every Rule has a few different variables: severity, target... Rules can know which ability was used to AFFLICT THEM and use that in some way to define their behavior.
+
+Maybe the reason this is causing so much trouble is that I don't really have a great understanding of what it means for an ability to have 'variations'. Let's review that, too.
+
+I'm going to start changing the language of 'class' to 'ability pool,' because I think that it's more clear of what a class actually is.
+
+In terms of character growth, every unit has access to three ability pools, and they're going to have some currency to 'learn' new ability from those pools. And, once learned, that ability can be EQUIPPED onto that unit at any time, but a unit or monster can only equip SO MANY ABILITIES at a time.
+
+So basically, you buy an ability and then you equip it. Sounds straightforward enough.
+
+And your monster's ability pools determine what abilities it can learn.
+
+But there's a GACHA element: when you choose to buy an ability -- to learn an ability -- you will get ONE OF THREE VARIATIONS OF THAT ABILITY, and that variation also has some randomness built in that can make it better or worse, such as a slightly randomized COST to use it, or slightly randomized effectiveness.
+
+So, you'll be learning or buying the same ability repeatedly to get different variations and different 'levels' of that particular variation.
+
+So the idea is that the OVERALL ABILITY THAT YOU'RE PICKING OFF OF THE MENU TO 'LEARN' has some defined usage and purpose, and the three variations below it, one of which you're going to get, put a slightly different spin on that usage and purpose.
+
+In our example, when we were programming this mechanism, was a basic attack ability called 'Slap,' and, when you bought Slap, you got a chance to get either a single, powerful Slap, or a double-slap, or a slap with a small chance to afflict poison.
+
+Those are all essentially similar abilities, but their usage can vary slightly.
+
+That being said, although I like the core of this idea, I don't really understand, PRACTICALLY, how and why we're implementing these three variations per ability. Like, how much are they gonna vary? How do they stay true to the core of their parent ability?
+
+There are any number of Ability Pools in our game, and each Monster has limited access to three of those Pools.
+
+Therefore, the THREE POOLS THAT A MONSTER HAS ACCESS TO IS WHAT DEFINES THAT MONSTER'S TACTICAL POTENTIAL. That's what defines what that monster is good for, so to speak.
+
+Monster A might have access to THESE pools, and therefore THESE abilities. Monster B has access to THESE OTHER POOLS and therefore OTHER abilities. That, probably even more than the monsters' different in stats, is what makes those monters different.
+
+Think Pokemon, how every monster has access to different abilities. That's how these 'pools' work.
+
+And each POOL is meant to serve a certain PURPOSE. Like a pool which specializes in HEALING, or a pool which specializing in limiting the opponent's ability to swap units, etc., etc. So, by having access to these THREE POOLS, you can sort of get an idea of that monster's behavior.
+
+You COULD use stats to differ monsters which have the same three pools, but I don't think that it would make sense to give more than monster the same three pools IN THE SAME ORDER. I look at 'stats' as being more SUBSERVIENT TO THE ROLE IMPLIED BY THE THREE POOLS rather than as a way to distinguish monsters.
+
+I want to stress again that, although a monster has access to three pools, they don't have EQUAL ACCESS TO ALL THREE OF POOLS. One of those pools is going to be their PRIMARY POOL, which they can access ENTIRELY. One of those pools is going to be their SECONDARY POOL, where they can't access the pool's most POWERFUL or BREAD-AND-BUTTER abilities. The third pool is their TERTIARY POOL, where they can only access the most situational or least bread-and-butter of that pool's abilities.
+
+We call those Tier 1 (bread-and-butters), Tier 2 (slightly more situational), and Tier 3 (very situational abilities probably not used often or to great affect).
+
+So, the idea is that each POOL defines a certain tactical behavior, supposing that it's a monster's PRIMARY POOL. So, all of the abilities in a single pool should all be toward a similar purpose or a similar tactic. And therefore, by having access to three DIFFERENT POOLS, we can see a particular monster's tactical FLEXIBILITY. How CAN you use monster?
+
+That being said, each ability can only belong to ONE POOL. So, when talking about how these pools are DESIGNED by US as the game-designers, we need to think about how SPECIFIC a particular ability is to a certain purpose. A challenge immediately arises because you see that only one pool can have something like 'tackle,' which just does raw HP damage.
+
+That seems kind of nuts that only one ability pool would have access to a very simple, raw-damage ability.
+
+But it makes more sense when you consider how our game is meant to be played with a strong emphasis on Dynamic Rules. It's about controlling the battle INDIRECTLY. So maybe it makes sense that abilities which only do straight-up HP damage might be somewhat rare. And, therefore, a monster which has that ABILITY or that POOL could be pretty specialized toward coming in and doing damage.
+
+To answer dixx's question, "What makes Ability 1 belong to Pool 1," the ability's function has a major impact on what pool it goes to -- and, on the other side of the coin, a particular pool might NEED a certain ability in order to round it out, and so that would define what ability it gets, there.
+
+So, the way that I imagine designing these abilities is coming up with a POOL IDEA, first -- a tactic in battle. A way of playing. A purpose that a monster might serve. And then we would come up with abilities which make sense for that pool. And we would break those abilities up into tiers.
+
+Bread-and-butters or THE MOST POOL-DEFINING ABILITIES in Tier 1.
+Abilities which might fulfill that purpose fairly strongly but not as much as the bread-and-butters in Tier 2.
+Some supporting or supplementary abilities which fall under that purpose as Tier 3.
+
+Kind of where we're at, in our game-design process, is thinking about LIMITATIONS and how having those limitations are going to help us understand how many different POOLS and MONSTERS we need.
+
+Last time, we did a lot of talking about INTRA-MONSTER FLEXIBIILTY versus INTRA-DECK FLEXIBILITY.
+
+We talked about how, if a single MONSTER has too many tactical OPTIONS available to it, then there's LESS INCENTIVE to design your entire DECK in a flexible way.
+
+So, we have to limit how many uses a single monster can have -- like, how many purposes -- so that it makes sense to look at a wide variety of monsters and pick them carefully for your deck.
+
+At the same time, we do want to be more flexible than Pokemon, where each monster is pretty much EXTREMELY limited in their role. In Pokemon, you have 4 ability slots, and you can fill them with a variety of abilities depending on what you choose to remember and forget as you level up -- but that's it.
+
+So dixx's question is, "how many monsters are we planning on? And how many pools?," and that's exactly the question that we're trying to answer.
+
+If each pool has more tactical flexibility, then we need less pools. And, by extension, less monsters.
+
+If each pool's purpose is more NARROW, then we need more pools and we need more monsters.
+
+In part of answering that question, in the last stream, we argued back and forth about whether a single POOL should have 6 ABILITIES with 3 variations each or 9 ABILITIES with 3 variations each.
+
+The former would see each pool being more limited, and so we'd end up with more pools and more monsters, which would make deck-building more interesting.
+
+The latter, which we decided to go with, gives each pool more abilities, and therefore more flexibility, and so we won't end up needing as many pools or as many monsters.
+
+But, before our last stream, we had conceived no limits for how many abilities a single pool might have, and so the answer to dixx's question was COMPLETELY up in the air.
+
+Now, we're trying to create guidelines and limitations for each pool so that we can come to a better understanding of what each pool is going to be LIKE. How much flexibility defines a single pool.
+
+Part of answering this question is going to involve taking a closer, more critical look at the idea of 'ability variations.' What kinds of variations make sense for a single ability?
+
+For one thing, we've already discussed that these 'variations' HAVE TO BE MORE than slight differences in cost or effectiveness, because those fall under the randomization that occurs WITHIN a variation. So, a 'variation' (or 'non-linear-variaton,' as we've called them) does imply some tactical difference, but still serving a common purpose with its parent ability.
+
+For each POOL to have TWENTY SEVEN DIFFERENT ABILITIES is starting to sound kind of extreme. Yes, those 27 abilities are divided up under 9 master purposes, but DAMN that's 27 abilities.
+
+Do we need to lower the number of 'parent abilities' to SIX per pool. Two for each tier.
+
+We decided to go with 3-per-tier because we wanted to make learning TERTIARY ABILITIES more interesting. If you have a tertiary pool and you can only access its Tier 3 abilities, that means that, with 6 abilities per pool, you would only have access to 2 abilities from that pool -- and, by extension, 6 different variations.
+
+But I mean hey, depending on what we decide makes sense for the idea of a 'variation,' I mean, that's 6 different abilities to choose from for your tertiary class. Six sounds like a lot. But, if those six pretty much fall under 2 different purposes, maybe that's NOT enough -- but it all comes down to what a 'variation' really amounts to.
+
+Okay, well, how about this: I think we need to look at ability pools as having SIX abilities, two per tier. That encourages us to make variations more interesting. Because, I just don't think that a single pool needs TWENTY SEVEN DIFFERENT 'CHILD' ABILITIES. That's just too much variation for a single pool. Too much to choose from.
+
+If we lock in SIX PARENT ABILITIES PER POOL, or two per tier per pool, that gives us a total of EIGHTEEN CHILD ABILITIES, and that sounds like a lot. That's plenty to choose from. And that extra limitation means that it becomes easier for US to decide what a pool is really 'for,' and it's easier for the player to see, at a glance, what a pool is really for.
+
+And that makes it easier for us to look at those EIGHTEEN VARIATIONS and SIX ABILITIES and figure out how we're going to divy up the DYNAMIC RULES insofar as what these abilities are meant to be used for.
+
+Again, for that sense of clarity for both the designer and player, I'm interested in limiting the number of Dynamic Rules per ability pool as much as we can -- as much as we can where things are still flexible and still make sense.
+
+So my question is this:
+
+If we have six abilities with three variations each, can we work with three dynamic rules per pool. Or is that just too little.
+
+Maybe it makes sense to ask ourselves WHAT AN ABILITY REALLY DOES IN OUR GAME.
+
+Abilities can lower or raise attributes DIRECTLY, PERMANENTLY.
+Abilities can afflict Dynamic Rules.
+
+I think those, in the abstract, are the two things that an ability can do.
+
+So, that being said, what are we REALLY LOOKING AT for ability variations:
+
+1.) They afflict a different dynamic rule.
+2.) They have a different balance between afflicting a rule and affecting an attribute directly.
+3.) Different properties (see above) on glance, normal, crit. Maybe one variation always afflicts at a low-severity but another variation only afflicts on crit but at a high severity.
+4.) They have different options for picking targets, at a spectrum of effectivenesseseses. But then, we gotta remember that our abilities should REALLY focus on the opponent in the ring with only relatively minor attacks on other units. Whenever you talk about targeting multiple units or a team, we gotta be careful with that design.
+5.) Could alter effectiveenss at an altered cost, but this difference would need to be dramatic enough to not fall under the perview of 'linear variation,' or the randomness that can occur within a single variation.
+
+Let me say this: if we have 6 parent abilities per pool and 3 child abilities per parent, and if we only have 3 dynamic rules to afflict, it hardly makes sense to have a variation which afflicts a different dynamic rule.
+
+Maybe we need to examine the option of lowering the number of child abilities per parent ability. I've been hesitant to do that because it calls into question the entire purpose of these variations -- it dramatically reduces the 'gacha element' -- but that would make abilities more sensible to design.
+
+If we were going to go from 3 child abilities to 2, maybe we just simplify it to say that one is common and one is rare. Or maybe we could leverage dixx's idea of having some inherent value into the monster, itself, where some monsters are more inclined to learn Ability B and others are more inclined to learn Ability A, and that could be a fun way to have two different monsters of the same type which have different abilities.
+
+Because, honestly, coming up with THREE DIFFERENT VARIATIONS OF EVERY ABILITY without being able to arbitrarily create new DYNAMIC RULES FOR THOSE VARIATIONS is going to be a huge challenge, right?
+
+Or maybe not. I mean, we could even establish a guideline like, "every ability has a cheap and an expensive variation." That immediately leaves only one variation left to create.
+
+Maybe it makes sense to have a version of each ability that has a greater cost and a greater effectiveness. That doesn't sound that bad. We could do 3 variations per ability.
+
+If we have three dynamic rules per pool and 6 abilities, that would give us a pretty good balance...? Where- yeah. Yeah. But then, taking the example of the 'shaman' or 'afflicter' class which entirely revolves around afflicting a status change, how do we create 6 abilities from three rules?
+
+Well, speaking of 'variations,' let's just assume that every parent ability has a 'cheap' and an 'expensive' child. And let's just assume, for the sake of argument, that there's also a 'risky' child, where the affect on normal is shittier but the affect on crit is much better.
+
+There you go: three interesting variations per ability.
+
+So, what we're realling working with, then, is SIX ABILITIES split over THREE DYNAMIC RULES.
+
+How does this shaman define their abilities from that?
+
+WELL, let's say that this shaman's 'function' revolves around this idea of a 'destiny bind,' where, when one unit takes damage, another unit also takes damage.
+
+Maybe he has ONE ability where he binds a FOE to an ALLY, so now this ALLY cannot be targeted damage unless the enemy player is okay with hurting his own unit.
+
+Maybe he has ANOTHER ability where he bindes a FOE to a FOE, so now it's much riskier for the opponent to swap EITHER of those units into the ring.
+
+Maybe he has an ability where no unit can leave the ring. That binds their fate together and has tactical implications.
+
+So that's three abilities and two rules.
+
+So, basically, we have three abilities left to define and only one rule left to define.
+
+The third rule could be a more severe version of the first rule, where maybe EVERY TYPE OF DAMAGE THAT UNIT A TAKES, UNIT B ALSO TAKES, whether it be damage to ATK or damage to MP or to LP or to HP.
+
+Or maybe it's a rule which swaps the attributes of two units.
+
+Well, that first rule could actually be a SEVERITY VARIATION of the rule for abilities one and 2.
+
+I love the idea of swapping the attributes around for two units. But the problem becomes intra-rule variation: it'd be nice to have one which only swaps HP, and then one which swaps MP and HP. Maybe one that swaps ATK and DEF between two units. So, we have this problem where we want to define too many different rules.
+
+It strikes me, though, that swapping HP and MP wouldn't really need to be a rule, because it'd be permanent, where-as trading ATK and DEF would need to wear off after a while, hence 'rule'.
+
+Maybe the 'ring' ability where neither unit can leave would be a better fit for a different class. So, maybe this pool's three rules are:
+
+1.) Two units share the damage they take.
+2.) Two units have their ATK, DEF, PRY, and SKL swapped.
+3.)
+
+So, basically, I gotta end the stream and play some 3rd Strike. But, based on this example, it seems kind of reasonable, to me, to limit a pool to 6 parent abilities, each with 3 child abilities, and 3 dynamic rules split among those abilities.
+
+We're gonna leave it there.
