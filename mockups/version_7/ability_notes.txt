@@ -6851,3 +6851,538 @@ Maybe the 'ring' ability where neither unit can leave would be a better fit for 
 So, basically, I gotta end the stream and play some 3rd Strike. But, based on this example, it seems kind of reasonable, to me, to limit a pool to 6 parent abilities, each with 3 child abilities, and 3 dynamic rules split among those abilities.
 
 We're gonna leave it there.
+
+
+08/21/19:
+I just had an idea. Considering that, in our game, units are limited to a certain amount of 'LP,' maybe we don't need abilities which are for the express purpose of 'reviving' units. Maybe any ability which restores HP could restore a unit back to a non-KO'd state just by bringing their HP from 0 to some value above zero.
+
+The immediate downside of this is that you may end up in situations where your team has some kind of 'regen' buff, and let's say that it restores 5% of max HP to the entire team, per turn. Now you have a situation where a unit is repeatedly being KO'd and revived maybe only to be KO'd again.
+
+Also, this trivializes the idea of 'reviving' a KO'd team-mate. Like, if this mechanic were to behave as described above, 'regen' would be an INCREDIBLY POWERFUL buff because it would mean that you could passively revive KO'd units without having to expend a turn.
+
+Before we go on talking about game-design and working on our game-design document, the topic has come up a bizarre number of times, tonight, about our game's settings and themes.
+
+When we began this project in January, the idea was for it to be a community-effort where we all chipped in and shared ideas and came up with the world, graphics, music, and game-design together.
+
+That ideal for this series didn't really pan out the way that I hoped it might, although it has mostly panned on the way that I expected it would.
+
+Basically, back when we started, there were, of course, a lot of ideas floating around for THEMES and NARRATIVE and SETTING and ideas for various art style we might use, etc.
+
+As we got past that point and began to focus more on programming and game-design, a lot of interest fell off -- and I do think that programming and game-design should make up the bulk of any game-dev project.
+
+But, going back to January and February, we did more-or-less settle on some ideas for our game's settings and themes:
+
+The idea was that a mild-mannered mall employee, in his early twenties, ends up with this extra-dimensional power that makes him solely aware of an invasive alien force which is going to take over the world by bringing FICTIONAL CHARACTERS from the world of POPULAR CULTURE into the realm of reality and using their power to subjugate mankind.
+
+So, our lead character(s) inherit this ability to also summon these fictional characters and force them to fight, making them pretty much the only opposing force to this evil invader.
+
+What's cool about this idea is that it comes BUILT-IN with ideas for 'monsters' or 'units.' We're talking about tongue-in-cheek copyright-free variations on popular characters. We could do, like, "Scarred Boy Wizard," and "Sparkly Vampire," "Electric Mouse," "Magic Pony." The idea was brought up that we could include pro-wrestlers -- any character from movies, cartoons, music, wrestling -- any pop culture figure.
+
+We kind of put it to a 'majority rules' poll and this is the theme that won out, but there was some push-back from others that thought that it was kind of silly. It was a missed opportunity to go for some more serious themes.
+
+Now that it's literally been more than six months and 90% of those people that voted have apparently lost interest in the project, I think that there will come a time in the future where we're going to reexamine our options for themes.
+
+So, to answer the question that has been coming up tonight, I'm going to say that we're not particularly attached to any ideas yet regarding theming or setting or characters. That's still up-in-the-air. But what we've been WORKING WITH is this idea where the units are pop-culture icons.
+
+Dixx mentions that going with an overly serious tone for the story wouldn't really make a whole lot of sense -- perhaps -- because the STYLE of the game's art and music is going to be such a mish-mash. On the other hand, if we take a step BACK from traditional narratives and go for something more 'surreal', maybe we could even accomplish MORE with the user-created content.
+
+Maybe, instead of having one central story, maybe we could take submissions for more, smaller stories. Maybe these characters end up in ALL kinds of situations that may have little relationship to one another. Just as vehicles to see more peeps' artwork and catch new monsters.
+
+Is it fair to say that we've completed our game-design bible up to the point that we've designed the game. I think that anyone reading this document would get a pretty good idea of how our game is played -- maybe as good of an idea as we have, as designers. There are still quite a few topics which I feel we've explored INADEQUATELY. I've been recording them in the 'to-do list' of the game-design document, but I'm going to refer to them here.
+
+1.) We gotta talk about Exploration and the 1-player experience, in
+    general.
+A.) Fuuuuuuuuck thiiiiiiis. We are so far from worrying about the 1-player experience that I don't even want to think about. As from this very moment, there is no 1 player aspect of this game. We can worry about that once we have the multiplayer working. Which means there's no more narrative, there's no more characters, there's no more theming. In the short-term, as we approach having a playable, multiplayer game where the community comes together to create new 'units' or 'monsters,' there is no theme. If anybody wants to make a unit, make whoever they want. If we want to get to a single-player point, eventually, we can talk about re-skinning the units that we've already made to conform to a theme. But, as of right now, I want to be clear that we're entirely focusing on the multiplayer aspect, and that makes things like 'exploration,' and 'setting,' etc., kind of trivial.
+
+2.) Character growth. How does the player earn points to grow their
+    character? How many kinds of points are there? What are these points
+    used for?
+A.) Alright, let's talk character growth. This is something that we've been HINTING AT for a long time but whose individual mechanics we haven't designed.
+
+First of all, let's talk about what we DO know: first of all, one thing that I'm feeling kind of hard-assy on is that UNITS DO NOT LINEARLY LEVEL UP THROUGH COMBAT EXPERIENCE. This is contrary to 90% of JRPGs, but this NON-LINEAR, POINT-BASED GROWTH is more consistent with WRPG design.
+
+But, that presents a problem: if a unit is meant to be tanky and has default attributes suggesting such, how are we going to encourage it to STAY TANKY if it doesn't level up linearly, but, rather, players get to decide what attributes they want to raise.
+
+Maybe we can give each unit some sort of DISCOUNT for raising certain attributes over others.
+
+In other words, here's a few loose thoughts:
+
+When you succeed in combat, you earn GROWTH POINTS -- toward you, as a player -- not toward your team. Not toward your units. Just toward you: you have an inventory of growth points that you can choose to spend on any unit.
+
+The advantage of this, right away, is that it encourages you, as a player, to experiment with different units on your team -- because you can effectively level-up your units without EVER BRINGING THEM INTO BATTLE. You could save up a store of Growth Points and then pick a brand new unit into your team and level it up to be competitive with other units in the game.
+
+Also, it simplifies things -- but really, I think that, in a game where you're meant to constantly be making tactical decisions about which units are on your team, choosing from potentially more than 50 different unit-types, I think it makes the most sense to allow the player to earn these 'growth points' and then spend them on WHOEVER. That way, it minimizes the player being stuck with a certain team just because that team keeps WINNING and therefore LEVELING UP.
+
+Before we move on from THIS point, let's BE TEH DEVIL'S ADVOCATE and look at ways that this DESIGN immediately fails.
+
+For one thing, you could argue that it TRIVIALIZES THE PLAYER'S ATTACHMENT TO THEIR UNITS when the units that they bring into battle have no impact on which units are actually BENEFITING from that battle.
+
+My immediate counter-argument is that we want for the player to pick units based SOLELY ON TACTICAL CONCERNS. And so this design where growth points are earned and spent freely between units is in support of that design.
+
+One thing that I want to consider is that we're getting ahead of ourselves: we're talking about a ONE-PLAYER, GROWTH-BASED GAMEPLAY EXPERIENCE, and maybe we're just NOT THERE YET. So, before we go any further in that direction, let me pose THIS question:
+
+What IS character growth for the game's PVP element.
+
+First of all, I think that, in the competitive, PVP space, it's important that all units conform to a META LEVEL. I don't think it's constructive, ESPECIALLY BECAUSE OUR GAME'S 1-PLAYER ASPECT IS SO UNDER-DEVELOPED, that we consider teams where one team may have out-grinded another team.
+
+So, in order to facilitate this CHARACTER CUSTOMIZATION, I feel like maybe, rather than worrying about how Growth Points are EARNED, we need to think about a situation where all of the units on both decks are considered to be at the SAME STARTING LEVEL, and both teams are given some budget of Growth Points to spend among their team.
+
+So, yeah, let's walk backwards and forget about the 1-player experience and just consider THIS experience:
+
+The players pick their units for their deck, and they're given some amount of growth points to spend on those units before the battle begins.
+
+So, now we can answer: WHAT ARE THESE POINTS BEING SPENT ON.
+
+Basically, let's list what we KNOW we want to be able to spend points on insofar as growing our units:
+
+I.) Linearly raise their attributes: HP, LP, MP, ATK, DEF, SKL, PRY. Spend some points, raise your attributes.
+
+II.) Learn new abilities from our Ability Pools. Spend some points, get a
+new child ability.
+
+III.) Unlock new Ability Equip Slots. Spend some points, now you can bring more abilities into battle.
+
+IV.) Dixx points out that we could maybe spend this SAME CURRENCY ON BUYING ITEMS BEFORE THE BATTLE. Below, I note that 'items' and 'inventory' are not something that we've talked a lot about, in the past, but which I want to talk about more.
+
+Because this process of 'creating a team from scratch before battle' could be very TIME CONSUMING, maybe it's healthier to imagine a player creating a sort of 'meta build' deck that they can use, at will, in PVP.
+
+Can we just use one master currency? Do we want to use more than one kind of currency? And, importantly, let me ask THIS:
+
+In our game, learning abilities constitutes a GACHA ELEMENT. Abilities you learn have semi-randomized effectiveness and outcomes. We've talked a lot about that. How does this impact the PVP meta? I almost feel like 'learning' abilities shouldn't even be a part of the PVP meta insofar as maybe you can learn abilities OUTSIDE OF COMBAT, OUTSIDE OF YOUR BUDGET, and then use any one you want in PVP.
+
+In some ways, as gross as it sounds (it's not as gross as it sounds), there are some parallels to loot boxes in the way that our game handles Abilities. I don't think that, within the limited randomization of these abilities effectiveness, choosing one over another is going to have a HUGE impact on combat. So, if you grind for a long time and end up with an ability with quite ideal randomization (low cost, high effectiveness), it will give you a MINOR advantage over an opponent who hasn't grinded to get that ability (at random). And, if you're just choosing from 'any ability' before you enter PVP anyway, maybe it makes sense that you can just bring in the abilities that you've unlocked for that unit.
+
+My question is, with the gacha element working as it does, does it make sense AT ALL for abilities to be a part of the budgetted-GP-pre-PVP meta. Because, if you spend GP to learn a Parent Ability, you get one of its 3 child abilities at random. And those child abilities, while conforming to a similar purpose, could be varied enough to have a relatively significant impact on your tactics -- and, like Dixx said, if you don't get the roll that you want, you could obviously just re-roll your whole deck. The only downside to that would be that, if you got a GOOD ROLL on a previous unit and then you get a BAD ROLL (at least, for the strategy you were expecting to play) on the next unit, you have to decide whether you want to re-roll or not.
+
+So, you have to decide how many points you want to spend on re-rolling for abilities (probably only wanna learn each parent ability once, honestly) and how much you want to have left over for raising your attributes or spending on items.
+
+The alternative would be that the GP budget you get is for raising attributes, unlocking ability equip-slots, and / or buying items, but you can bring in any abilities that you've learned for that unit.
+
+Now that I've said it out loud, I can see merits for both approaches: if you can bring in any abilities that you've learned, for that unit, and your GP budget doesn't go toward learning abilities at all, that simplifies things a lot.
+
+If you have to spend your budgeted GP on learning abilities through the gacha, there's this element of randomness that makes the strategy that you end up employing be somewhat DYNAMIC. I kind of love when games give you something you don't expect and you need to think on the fly of how you're going to make the best use of it.
+
+Dixx talks about how spending GP makes it more limited regarding what abilities you can bring into combat, but I want to stress that the 'meta unit' that you bring into PVP defaults to only have 4 ABILITY EQUIP SLOTS. So, no matter how many abilities you've learned, you can still only bring in 4 of those abilities, per unit, unless you want to spend GP to unlock more equip slots.
+
+The gacha kind of suits our ideal of having the CHILD ABILITIES conform to a STRICT PURPOSE OF THE PARENT ABILITY. Like, you would still be able to design your strategy around the PARENT ABILITY THAT YOU BUY, but the implementation might change slightly based on what ability you get from the gacha. So it's not like you completely lose tactical control.
+
+As a loose note, I want to point out, ESPECIALLY after making that lootbox comparison, that none us here want to SELL POINTS TO LEARN ABILITIES, which is a dangerous game when you talk about having GACHA in your game. If you can GRIND for ability-unlocks and then take any ability you've unlocked into the PVP meta, the question becomes: how do you grind for these unlocks in the first place. Winning in PVP? Winning in the hypothetical one-player game? Or, MICROTRANSACTIONS.
+
+I kind of feel like it's more IN THE SPIRIT OF THE GAME to BUDGET the player with some amount of points that they can choose to learn abilities with for this deck -- and if they don't like the rolls that they get, they can start a new deck and try again. Because we're talking about TEN DIFFERENT UNITS IN THE DECK, you're not going to be able to roll until you get a hypothetically PERFECT SET OF ABILITIES. Therefore, the player is always going to have to work with what they're given, and that's kind of attractive to me.
+
+In our MAIN GAME (hypothetical 1-player), you RE-LEARN ABILITIES as many times as you want -- as many times as you can afford. You just get different copies -- you have this inventory of abilities. The unit has this inventory of abilities that they've learned which could feature all kinds of different CHILD ABILITIES of the same parent (we used to call this 'Non-Linear Variaton') and all kinds of LINEAR VARIANTS of those individual child abilities (different effectiveness-levels).
+
+So yeah, in the PVP meta, you would hypothetically be able to relearn abilities the same way -- which could create some fun risk-reward in deck-building. For instance, let's say that you've customized 9 of your ten units and you're quite happy with how they turned out. Now you're on your tenth and last unit, and you get a REALLY SHITTY ROLL ON YOUR ABILITY. Maybe it's the Non-Linear Variant that you LEAST-WANTED, and maybe, as a Linear Variant, it's also really weak (high cost, low effectivenes).
+
+With your budgeted GP, you could choose to RE-LEARN THAT ABILITY and see if you get a better roll. Obviously, you would never do this on your FIRST UNIT you were customizing, because you would just re-roll the deck. But since you're 9 units in and very happy with it, now is the time that you might choose to RE-LEARN AN ABILITY instead of spending those same points on raising attributes.
+
+Now is the time to talk about LEARNING ABILITIES and the COSTS ASSOCIATED WITH THAT.
+
+My thinking has always been that there wouldn't be per-ability costs like there is in a game like, say, Final Fantasy Tactics. Because all abilities are supposed to be designed such that they're all useful, EXCEPT THAT:
+
+Tier 1 Abilities are bread-and-butters that are meant to define the ability pool (or 'class').
+
+Tier 2 Abilities are less-commonly used than bread-and-butters but are still usable pretty often.
+
+Tier 3 Abilities are supportive of the ability pool's goal, but are more situational or less effective.
+
+So, maybe there's a pricing system based on tier? Pricing based on tier doesn't necessarily make sense because the player is already LIMITED to what abilities they can learn from which POOL, by their tier. So, tiers already have a significant limiting impact on the player.
+
+So, I've always just kind of imagined that 'learning an ability' would cost some amount of points -- whether that be some fixed amount of a UNIVERSAL CURRENCY, or whether that be 1 'Ability Learn Token' or whatever, if we want to go with splitting up the currencies.
+
+I think that we want a UNIVERSAL CURRENCY WHEREVER POSSIBLE, because, I don't know if you guys would agree, that a MORE UNIVERSAL CURRENCY MEANS MORE INTERESTING DECISIONS. It means more interesting compromises -- but, then again, that's where splitting your currency comes in. It allows the player to make CERTAIN DECISIONS WITHOUT impacting OTHER DECISIONS, which means that they can be more RISKY.
+
+Like, for instance, if we create 'Ability Coins,' and you spend one ability coin to get a child ability. Now, the player can say, "I have this many Ability Coins, so I have ______ chances to fuck up a gacha roll." So, now they're more inclined to take interesting risks with their Ability Coins. They have to decide WHICH abilities they want to re-roll for.
+
+On the other hand, if our currency is TRULY UNIVERSAL, now the player has to choose between re-rolling and missing out on an opportunity to raise somebody's HP or something. On the one hand, that adds depth -- but, on the other hand, it also kind of makes the player want to lean overly toward optimization.
+
+I guess, in terms of game-design, it kind of makes sense to split up your currency with consideration to the sorts of decisions that you want your player to make -- especially as it relates to CHOOSING BETWEEN TWO THINGS.
+
+Do we want the player to be choosing between TWO ABILITIES? Or do we want the player to be choosing between an ABILITY and RAISING THEIR HP? I mean, for instance, what if we also budgeted them, like, "Equip Slot Coins." Now, the question is no longer, "Do I want an extra equip slot on Unit A or more DEF for Unit B," but rather, "Which of these units do I want to have the most EQUIP slots?"
+
+Let's talk about what we've NAILED DOWN:
+
+A player is going to be able to choose 10 units from their collection for their PVP deck. These units will all be given a meta-level of default attributes based on their unit type. The player will be given a budget of SOME KAINA POINTS that they will use to CUSTOMIZE their PVP team. This INCLUDES learning abilities.
+
+* Should a unit start with 4 default abilities (perhaps the randomized abilities that it had when it was 'caught'), or should the player have to buy any abilities that they're gonna use?
+
+The question is, how many types of currency do we want to budget them to customize their team. How much double-duty is this currency running. Is it the same currency for buying abilities, buying new equip slots, buying enhanced attributes, and buying items? If it's all the same currency, then we get some decisions HIGHLY BASED AROUND OPTIMIZATION, which could be very subjective to what each player thinks of as being optimal, and it means that how you spend this currency has TERRIBLE consequences -- and you guys know how much I love terrible consequences. It means that you've got some really tough decisions to make.
+
+If we split up the currency, it makes the consequences of each individual decision much less drastic, which could benefit the game insofar as allowing the player to be riskier.
+
+When I type it like that, it makes me think about how much more VARIATION you could see in decks when the currency is universal. Like, if we gave the player some 'Attribute Coins' and they just choose how they want to spend them -- yes, that's still an interesting decision, and it may benefit from being much less DIRE compared to when you're deciding if you want more attributes or more abilities... but it also means that EVERY TEAM WILL HAVE RAISED THEIR ATTRIBUTES BY THE SAME AMOUNT. If we make currency universal, it means players will choose WHAT ASPECT OF THE GAME'S MECHANISMS ARE MOST SUPPORTIVE OF THEIR PLAYSTYLE. Maybe they want a greater variety of ABILITIES, or maybe they want a greater variety of ITEMS, but they can't have both.
+
+When I come back from my break, I want to talk more and then FINALIZE a decision regarding the NATURE of this budget that we're giving players to customize their units with. Do we want to go with a universal currency. Do we want to go with individual currencies for EVERY aspect of character develop. Do we want to budget it PER UNIT or PER TEAM.
+
+It's gonna be tough to decide. We gotta really talk this out. The pro's and con's.
+
+We're talking about DIRENESS MANAGEMENT. That strikes me. It seems like the main difference between splitting up our currency per TEAM and per UNIT and per PURPOSE is 'direness management.' It seems like, the more UNIVERSAL we make our points-pool, the GREATER THE CONSEQUENCES OF SPENDING EVERY POINT, because we COULD HAVE SPENT IT on MORE THINGS.
+
+The more LIMITED IN SCOPE we make EACH currency, the less DIRE THE CONSEQUENCES OF SPENDING IT. So, a major question becomes HOW MUCH WE TRYNA STRESS THESE PLAYERS OUT.
+
+But, as I was saying that, it strikes me that there actually is another concern when it comes to making points less universal: and that's balance.
+
+Think of this. What if we had a UNIVERSAL CURRENCY that was in a shared pool FOR THE WHOLE TEAM.
+
+Now imagine that we use that ENTIRE CURRENCY to boost the DEF of a single unit. That unit would be unbeatable unless the enemy team spent their entire currency on buffing the ATK of a single unit.
+
+So, that's a concern that hadn't struck me until now. Universal currency, team-wide pool: what if you just dump everything into one or two things. Does that break our game? Can we make the cost of raising ATK go up so that it's not feasible or sensible to spend all of your points on ATK? Probably, but that NOTION is still there: you can and maybe SHOULD sacrifice entire UNITS of your team to buff others.
+
+I mean, for god's sake, we're talking about PVP mechanism where players can choose to do ONE BATTLE or BEST-OF ANY NUMBER OF BATTLES. If we're doing a one-or-two battle format, then, honestly, we literally have no way to even USE all of the units in our deck. So, they're getting this budget FOR THEIR ENTIRE POOL OF UNITS, and it stands to reason that a couple (or more) of these units would be totally neglected.
+
+But, what we've always said when faced with these sorts of balance problems is that it becomes our responsiblity, as designers, to incentivize the player to grow ALL OF THEIR UNITS. Like, you should WANT to raise ALL of your units. If you fail to raise all of your units, that should come at a great cost to you.
+
+Well, for one thing, we could ask that players choose a BATTLE-TYPE for each deck. Rather than say, "Do you want to use this deck in 1 fight, 2 fights, 3 fights, etc.," we could have them answer that question on deck creation.
+
+Let's not forget, though, that we expect for players to tactically pick their units based on counter-picks of their opponent's units. So, maybe having a larger deck is still sensible -- I mean, you don't want 4 over-powered units... You'd rather have 10 units offering a better tactical splay...? Maybe not. Maybe that's a problem.
+
+It strikes me: let's talk about the DOWNSIDES of having the currency be divided up PER UNIT. Because, when I think about, there really is no downside.
+
+The UPSIDE of having a TEAM-WIDE CURRENCY POOL is that you can choose to buff certain characters more than others. I'm not convinced that's an upside. It's a DECISION that you can make, and that's cool. It's a SACRIFICE.
+
+But isn't that sort of sacrifice CONTRARY to what we're trying to accomplish with this game. The idea is that you should be making TACTICAL DECISIONS ABOUT WHICH UNITS YOU BRING INTO WHICH BATTLES based on their tactical merits. We don't want people bringing in certain units because those units are STRONGER.
+
+So, maybe we need a currency PER UNIT.
+
+And, if we're going PER UNIT, that means that it makes much more sense for that currency to be UNIVERSAL.
+
+If we do it that way, though, it means that we'd need to give the player a separate currency for buying items? Or maybe they could just refund all of the points that they don't use for each unit and use that to buy items?
+
+But we haven't talked about items at all. We don't even really know the FUNCTION or VALUE of items in our game.
+
+So, we've looked at 'inventory,' now, and are more-equipped to come back here and continue looking at CHARACTER GROWTH. Here's how I see deck-construction:
+
+First, you go through and pick 10 units for your DECK. Each unit has its stats set to its meta. You also pick a leader.
+
+Then, you go through on a unit-by-unit basis and spend that unit's POINTS. These points can be spent on any combination of RAISING ATTRIBUTES, LEARNING ABILITIES, AND BUYING ABILITY-EQUIP SLOTS. The responsibility falls on us, as game-designers, to balance these costs in such a way that all three of those options are equally attractive.
+
+When you're done doing this for all of the units in your deck, you can refund all of your unspent points from every unit into a single pool which you can then use to buy items to take into battle.
+
+I.) For PVP, players can choose a deck of 10 of their units which are reset to a 'meta level' with default attributes per-unit. They're also given a per-unit budget of 'Growth Points' we can be spent on learning abilities, unlocking ability-equip slots, and / or raising attributes.
+
+II.) Players can refund their unspent points and use that to buy an item inventory that they can use during their PVP bout.
+
+3.) 'Equipment'. We talked about gear being permanently or semi-permanently
+    bound to a unit and affecting their growth and maybe even their
+    tertiary class? How is this all gonna work?
+A.) I like the idea of GEAR as one more way to AUGMENT a unit. So, WHAT DOES THIS GEAR DO.
+
+I.) Gear augments the 'meta level' of various attributes on the unit. In other words, whenever you BUY AN UPGRADE TO A PARTICULAR ATTRIBUTE, the amount that it GOES UP is in relation to its META LEVEL. This is how we're going to make certain units conform to certain BUILDS even if you want to spend points to make their attributes better.
+
+For example: let's say that we have the Infraggable Cronk, and his meta attributes are as such:
+
+ATK 10
+DEF 5
+SKL 10
+PRY 5
+
+Those are his starting, meta stats. What this also means, though, is that, if you spend 10 GP on raising DEF, you get 1 DEF back. But if you spend 10 GP raising ATK, you get 2 ATK back. The idea is to incentivize the player to conform to the character's meta. You get more of a return for raising the attributes that this unit is supposed to specialize in, and we can see what attributes the unit is supposed to specialize in by looking at their 'meta' or 'level 1' attributes.
+
+This is kind of how Pokemon works and other CLASSIC (and I mean OLD) JRPGs work when it comes to leveling up. In some of these old-ass games, when you level from 1 to 2, you just get your level 1 attributes AGAIN -- and every time you level up, you get your level 1 attributes added to your current attributes. This is how you design a character's percentage splay of attributes across all of their stats: you use their level 1 attributes as a guideline.
+
+So, the way that this relates to 'equipment' is that whatever gear you put onto a unit will augment its META ATTRIBUTES. Therefore, not only does it change their attributes, but it re-incentivizes you to level up certain attributes insofar as spending GP. This would allow you to take a character specializing in ONE ROLE and make them a little bit more suitable for ANOTHER ROLE.
+
+Also, we've been tossing around the idea of having the GEAR SLOT be the determining factor for the unit's TERTIARY ABILITY POOL.
+
+Maybe units inherently only have TWO ability pools: their primary and their secondary. And the TERTIARY POOL can be effectively ANYTHING that you have the gear for.
+
+Also, there was some talk about having this piece of gear bring in its own DYNAMIC.
+
+This is a lot of "there's been talk about," but we gotta start nailing shit DOWN. Does our game even HAVE gear? Does it NEED gear? Does gear make things MORE INTERESTING or LESS interesting?
+
+Let's talk about how it could hypothetically make our game LESS INTERESTING.
+
+If gear augments your meta attributes and especially if it does that AND define your tertiary ability pool, maybe that's too much flexibility for a single unit to have? I mean, that could really change the function of a unit.
+
+But the thing about that argument is, no, it really couldn't. A slight change to your meta-attributes and the INTENTIONALLY INSIGNIFICANT IMPACT OF TERTIARY ABILITIES means that maybe it's PERFECT for letting players pick their own.
+
+Because TERTIARY ABILITIES are meant to have an IMPACT on battle and to come in clutch SITUATIONALLY, but them being so far removed from the bread-and-butter abilities, I feel like it wouldn't really diminish the decision of which units you pick if you could affect their tertiary ability pool with this piece of gear. It could just be a net gain insofar as the extra interest that could come from the player augmenting an existing unit with these new features.
+
+So here's a question that comes to my mind, as I describe these pieces of 'gear': should their functionality BE UNIFORM?
+
+I almost feel like it would be more interesting if it WASN'T.
+
+What if some gear doesn't provide a tertiary class, but provides a Dynamic instead. What if other gear doesn't provide either a tertiary class or a dynamic but just augments your attributes by a greater amount.
+
+What if a piece of gear did ALL THREE but just in a very minor way.
+
+Also, speaking in the sense of PVP (which is now the ONLY aspect of our game), how does the player ACQUIRE this gear? Where does it come from?
+
+Before we go on any further, let's revisit the question: does this mechanic add anything to our game?
+
+One more time, repeating myself, let's examine the MERIT of having gear in the game -- and that merit is pretty simple: it allows you an otherwise extraordinary bit of customization of an individual unit.
+
+It allows you to take a unit that was designed to be good at one or two things and maybe add something else that it could be decent at.
+
+It's just one more way for you to customize a unit.
+
+But here's a question: SUPPOSIGN THERE IS NO 1-PLAYER GAME (and there's not), HOW DOES EQUIPPING A PIECE OF GEAR FOR A UNIT ON YOUR DECK FACTOR OUT TO BEING MORE INTERESTING THAN JUST SPENDING GP TO CUSTOMIZE YOUR UNIT'S ATTRIBUTES.
+
+Well, right away, one difference is that, as stated, equipping gear CHANGES YOUR META-ATTRIBUTES, so it actually changes the RETURN ON INVESTMENT you get when spending your GP. Also, supposing that gear CAN bring an additional Dynamic Rule into battle, that's something that you just can't buy with GP.
+
+First of all, let me lock this in: I kinda like the idea of 'equipping' something onto a unit which changes their meta-attributes. I think that makes customizing their attributes with GP, later, more interesting. One way or another, I think that it makes sense to augment a unit's meta-attributes before you start leveling them up with GP.
+
+Second of all, it kinda makes sense to me that you should be able to exercise control over your units' tertiary ability pool... but should units INHERENTLY have a tertiary ability pool, and then this 'equipment' REPLACES it. Or maybe it just ADDS A SECONDARY TERTIARY ABILITY POOL. I mean, these abilities are so SITUATIONAL that it certainly wouldn't be game-breaking to allow a unit to pick tertiary abilities, for their tertiary-equip-slots, from more than one pool.
+
+But THAT OPENS UP SO MANY DOORS. What if, HYPOTHETICALLY -- and this could stand be game-breaking -- but what if there was gear that could give you a second SECONDARY ability pool? or PRIMARY? Or what if there was gear that could upgrade your tertiary ability pool into a secondary one?
+
+Third of all, if you can exercise control over what dynamics your unit brings into battle, would that REPLACE their old unit-dynamic, or add a new one?
+
+All these questions.
+
+BUT PERHAPS THE MOST IMPORTANT QUESTION REGARDING GEAR, BEFORE WE GO ANY FURTHER: HOW YA GET IT? How ya get gear.
+
+Where does it come from. Are we back on this 'lootbox'esque' idea where we have some persistent inventory that grows BEYOND the stage of a single war.
+
+I want to point out that, right now, our game, has literally NO ACCOUNT SAVING, STEVE. That's kind of crazy to think about, but, right now, it's an entirely multiplayer COMPETITIVE experience where two players pick 10 units from our ENTIRE COLLECTION OF UNITS and then use some budget of points to customize that deck and then battle with that deck.
+
+So, basically, outside of saving 'loadouts' or 'decks' to be used repeatedly, the player isn't earning anything that's kept between battles. As of right now, they're not catching new MONSTERS. They're not unlocking new ABILITIES. They're not leveling anybody UP. And, pertinent to this concern in particular, as of right now, they're not earning any gear or anything.
+
+Everything that you can customize is available to every player, equally, through the meta.
+
+Let's not kid ourselves: being able to earn new stuff that you can then use in future fights is a primary motivating factor for playing games like this. It'd probably do a lot for our gamer-base if they COULD capture units -- if the units they could use were the units they'd somehow earned. Same with gear. Maybe same with abilities (dixx and I were talking about this earlier).
+
+Does that make the game UNFAIR in some way? Maybe not, as long as they're not LEVELING UP MONSTERS. As long as all of the gear is balanced against one another, all that it really means is that, whatever you do end up earning can afford you more TACTICAL OPTIONS IN YOUR NEXT BATTLE. So, the players that have been playing the LONGEST, in this example, would have the most TACTICAL FLEXIBILITY, where-as players that are just starting off would sort of need to play with what they have -- but, in terms of LINEAR FIREPOWER, longer-term players aren't at any advantage. They just have more options with their deck-building -- which would, honestly, correlate directly to more wins against newer players -- but, you know... you unlock things even if you lose. Starting players can get there.
+
+Before we wrap up for the night, let's examine our OPTIONS for how you would get a hold of this gear to equip on your units.
+
+I.) Perhaps most obvious and most in-line with our current mechanisms would be that you're afforded a certain BUDGET of currency and you use THAT to buy equipment. That's option #1. I don't like that. It just doesn't seem like it would work for equipment.
+
+II.) Somehow (????) this gear is earned by or between PVP battles and it's saved to the account (the first of such 'acquisitions' that we've talked about) and then, having earned or otherwise acquired this gear, you can now equip it for future decks.
+
+Neither of these options is especially attractive to me. There's gotta be a better way.
+
+Like, I feel like the FIRST OPTION is worse. I don't think that you can give a player a budget and let them pick from any of the gear in the whole game. That doesn't make sense -- especially if every unit is going to have a piece of gear. Maybe they don't all have a piece of gear -- but even then, how do you choose how to spend your currency? Gear is just too dynamic of a factor to make someone choose BETWEEN THEM with some limited currency. Like... some being more expensive than others? Doesn't make any sense.
+
+Our options then become let the player EARN and SAVE their gear for future decks, or just give them ALL of the gear like we're currently doing for units and make them pick between what gear they use, on who.
+
+But maybe we could partially answer this question if we were also to answer the burning question of HOW DOES A PLAYER ACQUIRE NEW UNITS. We've just been assuming that every player has access to every unit, but that's kinda wack. I like the idea more where units are 'caught' or 'collected,' like Pokemon -- but in an entirely PVP-centric game with no singleplayer element, I'm not immediately accosted by a gang of ideas on how exactly that should work.
+
+Well let's first of all examine some PITFALLS. Things to AVOID. Things that don't make sense.
+
+This is, at least at first, going to be an entirely PVP-centric, tactical competitive game played by an EXTREMELY SMALL POOL OF PLAYERS. EXTREMELY SMALL. IF IT'S EVEN PLAYED BY TWO DIFFERENT PEOPLE. Therefore, whatever solution that we come up with 'earning' stuff needs to scale well from a very, very, very small audience (of two people) up to an arbitrarily large number.
+
+This is one reason that I'm skeptical about 'rewarding' the player for something like 'wins,' because I feel like beating an opponent in a beta-testing environment where neither player is necessarily trying their hardest to win -- that's cheating, it doesn't make sense. You can't reward them for that.
+
+My question is, is there something else that we can look at and reward the player? Steve's suggestion, right away I'm sure, is that we could REWARD the player for giving us MONEY. That's totally independent from 'winning' or 'losing' or performance in general.
+
+Maybe both the winner and the loser get some amount of points -- some amount of reward -- but the winner gets a bit more, and then we're rewarding the player for PLAYING. But then you might as well just have some kind of auto-play script which just plays all day to farm points.
+
+It just seems like, in a PVP-centric game, the ONLY way to effectively reward players is to have an established install-base of competitive players who are all guaranteed to be trying to win.
+
+So that's one reason why it makes sense, for the alpha and beta-testing and perhaps beyond, to just GIVE EVERYONE EVERYTHING from the git-go. And then you just play with the stuff.
+
+This question is just too broad for us to answer, today. Let's sleep on it. Here's the question that we're sleeping on:
+
+We want for the player to be able to earn new units, new equipment, and maybe even new abilities. How do they earn this stuff?
+
+I almost feel like there HAS TO BE SOME SINGLE-PLAYER ASPECT, even if it's something goddamn trivial like some Neopets mini-game shit. Just... there has to be SOMETHING. INTERESTING. THAT THE PLAYER CAN DO TO EARN STUFF.
+
+Match wins SHOULD be rewarded. We gotta assume that people are playing fair -- because, if we're talking about ideas that SCALE, when you assume that you have a large player-base of actually competitive players who are competing for rewards, yeah, you reward them with stuff. It's just that, at a low level, with 10 guys as an OPTIMSTIC ESTIMATE -- making it fun for those TEN GUYS... I kind of feel like rewarding wins is kind of not gonna work.
+
+Dixx points out that the loser could get robbed ("like Pokemon"), and, although that's funny, it's also kind of profound -- one thing we haven't examined is that the LOSER could be PUNISHED for losing by just as much or nearly as much or, hell, worse, than the guy who wins. That way, you just won't see people farming each other for wins, to cheat.
+
+I've always sort of been attracted to the idea of Triple Triad (FFVIII), where the loser has to give one or more of their cards to the winner. This is also a mechanic in marbles and pogs.
+
+When you rob a loser, you gotta be careful, because that can be seen as being not very fun and it can be a huge incentive to quit playing. But I think the CORE of the idea is solid: that the loser loses something. That adds a lot more balance, I think.
+
+Steve's question is extremely valid regarding "does the player who's behind have an incentive to keep playing," and the answer to that is that we need some kind of comeback mechanic -- in the sense that, if some player's resources get too low, we gotta bring it up. There's gotta be a minimum. Like, if we go the triple-triad route (and I doubt we will) where the loser has to surrender one of their units from their deck or something, we gotta give the losing player a random unit if they fall too low or something like that so that they always have enough to make a deck that's at least competitive.
+
+4.) For being a monster-catching game, we haven't really talked at all
+    about exactly how monsters are going to be caught. What's the monster-
+    catching mechanism like? Maybe it's dependent on theme, and that's why
+    we haven't touched it?
+
+5.) How permanent is permadeath? What really happens when a unit runs out
+    of LP?
+
+6.) Do leaders need attributes like HP? MP? ATK, DEF? SKL, PRY? We gotta
+    talk about Leaders.
+A.) I love the idea of leaders having MP, right? They already have abilities which cost AP and which may be unique to each Leader, such as the ability to somewhat 'heal' a particular unit or something like that. Why not give them MP that gives them a limited amount of resources to use certain, powerful abilities...? The only reason not to would be SIMPLIFY a game which already has a LOT OF MECHANICS GOING ON. Maybe the question is worth asking: do leaders NEED MP? Not, "would it be cool if they had MP," but rather, "do leaders really NEED MP?"
+
+If they had MP, what would they use it for? The purpose is MP is to give units a limit to how much they can use certain abilities. Maybe leaders don't need MP because they don't really have that MANY abilities. Yeah, they might have ONE special ability or even TWO special abilities -- but, them being so limited, maybe it doesn't make sense to have this 'MP' limit where they have to say, "Do I want to use THIS five times? Or THIS two times?" Because they just don't have that many abilities to choose from.
+
+Let's be clear: the abilities that a player is using on a given turn are MEANT TO BE THE ABILITIES OF THE UNIT IN THE RING. That's what makes the choice of who is in the ring SIGNIFICANT. You don't want for the player to be over-relying on these 'Leader Abilities'. They should really only be used in EMERGENCIES (maybe you need emergency healing) or to burn 1 or 2 AP that you have left at the end of your turn when your unit doesn't have any abilities that cost less than 3AP.
+
+In other words, Leader abilities need to be SHITTY to make up for the fact that they can be used AT ANY TIME, REGARDLESS OF WHAT UNIT IS IN THE RING.
+
+So, if you look at things that way, maybe we see that leaders don't need a lot of attributes: maybe they DON'T need MP, because they don't have enough interesting abilities to choose between that MP becomes an intresting mechanic. They also probably don't need ATK, DEF, SKL, or PRY, because they're not going to be directly attacking the enemy team in any serious, dynamic capacity.
+
+That leaves one MAJOR question: should leaders have HP?
+
+So, the answer to this question has everything to do with HOW WE WANT FOR OUR BATTLES TO PLAY OUT, TACTICALLY, ESPECIALLY RELATING TO THE END OF BATTLE.
+
+We have two options:
+
+I.) Traditional JRPG combat, including the Pokemon system. There is no over-arching, invisible 'leader' that's a part of the battle, and combat ends when all of the units on the field have been KO'd.
+
+II.) Yugi-oh-oh-hhhh! combat, where all of the monsters and units, etc., are on the field to PROTECT the 'leader' or the 'wizard' or the 'caster,' and when there are no units on the field to protect the wizard or leader, the leader takes direct damage and the fight only ends when the leader has lost all of his HP.
+
+One thing that I find really attractive about giving the leader HP and ending the fight when the leader's HP reaches 'zero' is that it adds another win condition, which I think adds depth to our game. It's one more win-condition for an aggressive player to PURSUE, and it's one more win-condition for a defensive player to AVOID.
+
+So, for instance, our game has an 'LP' system for that very reason. There are MULTIPLE LEVELS of 'defeating' a unit. You can lower its HP to zero, which knocks it out but it can be revived, or you can lower its LP to zero, which knocks it out of the fight entirely. I love that, on top of protecting a unit's HP, you also have to consider it's LP. I love that there will be times where your HP is FULL, but your LP is down to 1, so you can't afford to get knocked out, again, and you might just get one-shotted by an ability which deals LP damage directly. So, there's multiple win-conditions, so to speak.
+
+If we were to give leaders an HP value, it's sort of like having this extra value in th background which is EVEN MORE DIRE THAN LP. It's this value that, once it reaches zero, the fight is over.
+
+But this raises some questions that absolutely have to be answered, especially when you're considering the types of tactics that players will end up choosing between and employing.
+
+First of all, HOW DO YOU DO HP DAMAGE TO THE LEADER. In a game like this, where units take turns in the ring, doesn't it stand to reason that the only way that a player could be directly damaged would be if ALL OF THEIR UNITS WERE DEFEATED, in which case the leader would have NO WAY TO DEFEND HIMSELF, and therefore the fight IS EFFECTIVELY ALREADY OVER. In other words, we've just recreated the 'Pokemon' mechanic, where, once all of your units are dead, the fight is over. Now we're just wasting this extra time, at the end, where the enemy team does a victory lap by bodying the fuck out of your leader.
+
+So, we would need to come up with some creative mechanisms that would allow the enemy team to directly damage your leader before all of your units are down. What sorts of mechanics would support this?
+
+If you have Leader HP, and the goal of the fight is to reduce the leader's HP to zero, HOW DO YOU DAMAGE THAT HP, and HOW CAN YOU PREVENT YOUR LEADER'S HP FROM BEING DAMAGED.
+
+First idea: what if you CANNOT SWAP UNITS UNTIL YOUR NEXT TURN. We know that, in our AP-based system, a team can attack more than once per turn. If your unit in the ring is knocked out on the enemy's first ability, maybe the enemy can use their remaining AP on that turn to directly attack your leader. Once your next turn starts, you choose a unit to bring into the ring.
+
+Neon's idea: special, RARE abilities which directly attack the leader's HP or special abilities (or rules) which bleed damage to the leader. This makes a constructive parallel with our game's 'LP' system, where most abilities in the game are just going to deal HP damage, and, yeah, units always lose 1 LP when they get knocked out, but some rare attacks will attack LP directly or bleed into LP damage. It kinda makes sense that leader HP would work similarly, since it is sort of a parellel of LP.
+
+My question is, if leaders do not have a DEF value, how do we know how much damage they take from a unit that's attacking them?
+
+My solution: units don't ever attack leaders using their regular abilities. Instead, when my unit in the ring is DOWN, my opponent can choose HOW MUCH AP TO SPEND ON A LEADER-ATTACK. I take damage equal to the amount of AP that my opponent spends attacking me.
+
+If I have a wounded unit in the ring and my opponent expends 4 of their 10 AP to knock out my unit, they know have 6 AP that they can choose to use to lower my leader HP by 6.
+
+Or, they can use 3 AP to lower my HP by 3, and then they can use the remaining 3 AP to do something else (heal one of their units, etc.)
+
+This makes sense to me for a variety of reasons. It allows you to set the leader HP to a LOWER value, which means that it's more like LP. It means that you could have rare abilities, as with Neon's idea, where maybe, if this ability crits, it does 1 damage to the leader. Or it has some insane MP cost but it does 1 damage to the leader.
+
+This idea also means that a player has to CHOOSE between taking this opportunity to ATTACK THE ENEMY LEADER or to SUPPORT THEIR OWN TEAM. Yeah, I just knocked out your unit in the ring. I have 6 AP remaining. If I'm feeling HUNGRY, I can expend that AP to reduce your HP and get closer to the battle's ultimate win condition. However, this would almost certainly also be a good time for me to HEAL MY OWN UNITS, or BUFF MY OWN UNITS, or NERF THE ENEMY TEAM. Especially because, at the start of YOUR NEXT TURN, you're going to be able to SWAP A UNIT IN FOR FREE, which is very rare in our game.
+
+As you guys know, it costs 3 AP (1/3rd of your turn) to swap a unit in. When a unit is KO'd, however, that team can swap a unit in, for free, on their next turn. That could give them a lot of comeback potential where now they have 10 AP to spend on this one unit's abilities. So, I have to choose between preparing for THAT or attacking the enemy leader -- or, probably more commonly, I have to compromise. I might heal a unit, make a swap, and then spend 1 or 2 AP to attack the enemy leader.
+
+I like these solutions, but I have one more question regarding this SITUATION IN OUR GAME.
+
+We've discussed the possibility that DOWNED UNITS MIGHT BE VULNERABLE TO ATTACK. In Saga Fronter 2, I believe (which I wanna play on stream soon), when a unit is knocked out, it can still be targeted for attack, and each attack that it takes reduces it LP by 1.
+
+We talked about having this mechanic in our game. In particular, we talked about implementing a system where, when prompted to swap a knocked-out unit out of the ring, a player could ACTUALLY DECLINE and say, "nah, leave that fucker in there."
+
+If the player declines to swap in a unit, the unit left in the ring will be vulnerable to potentially lots of LP damage. The upside would be that certain DYNAMIC RULES that may be taking effect OVER THE COURSE OF SOME TURNS may actually benefit you to just let them ROCK while your party remains safe, hiding behind the corpse of their homie.
+
+By leaving a knocked-out unit in the ring, it means that you don't need to swap in another unit, which means that none of your units are vulnerable (except for the knocked-out one). The two downsides would be that, again, the unit in the ring would be subject to a LOT of LP damage. But, also, you have nothing to spend AP on -- you can't use any of your units' abilities.
+
+So, is this a feature that makes sense?
+
+Do we want for units to be targetable while they're down to lose LP? In many ways, I feel like that just doesn't make sense.
+
+Like, for instance, if we calculate LP loss as, "Every time they get hit, they lose 1 LP," then some 'machine gun blow' move which does 1 HP of damage 10 times would insta-kill a downed opponent.
+
+I think we just need to write this idea off. When your unit is downed, for one thing, you shouldn't be able to choose if it stays in the ring, and it shouldn't be subject to attack.
+
+So, to summarize: when your unit in the ring is knocked out, the opposing team can choose to spend their remaining AP to directly attack your leader's HP. Also, as with LP, some rare attacks, with high cost, may directly target leader HP or may have a rare chance of dealing HP damage to a leader.
+
+This raises a question: how is leader HP going to factor in to the PVP element.
+
+An idea that I recently had for the PVP element is that it doesn't take place over the course of a SINGLE BATTLE. Rather, it takes place until all units on one DECK have been knocked out of the fight.
+
+So, this raises the question: what happens if a battle ends before all of the units on the losing team have been knocked out, because the leader's HP was attacked directly?
+
+And the answer that I think would be cool: what if we look at battles as ROUNDS in a fighting game, of sorts, and maybe you don't fight until an entire DECK IS DEAD. Maybe you fight until some number of battles or 'rounds' are won.
+
+For instance, you could have a two-round-victory condition where you need to win two battles out of three. Or you could have a three-round-victory endurance match.
+
+An alternate condition for victory, instead of winning all of your rounds, would be to kill all of the units on the enemy deck.
+
+The players could agree, beforehand, on how many battle wins it takes to win the match. And, as long as the battle is ongoing, the player can starting new battles, but their units' EXHAUSTION is going up and their LP is probably going down.
+
+So, the players could decide whether they want to do an ENDURANCE MATCH where dwindling LP and rising Exhaustion would be more of a factor, or they can just do a quick one-off or two-off war, where LP and Endurance will probably hardly come into play.
+
+7.) What does 'exhaustion' and LP restoration really mean for PVP? For
+    single-player?
+
+8.) Review the limits of Dynamic Rules to target units and teams that are
+    already being targeted.
+
+9.) I also want to talk about inventory.
+A.) We've spoken about how a common Leader Ability will be to use items from an inventory. This mirrors Pokemon, where the leader (trainer) can use any item that they own in place of using a Pokemon action from their in-ring unit. In our game, the player would choose between spending their AP on unit-abilities or on leader-abilities or a combination of the two until all of their AP spent, and maybe one of these options is to use an item.
+
+So, what kinds of items do we have? How much do they cost? How useful are they?
+
+Basically, it seems like having a large-enough pool of awesome-enough items could totally negate the need for certain roles on a team -- and maybe that's a good thing.
+
+What jumps out at me right away, about inventories, is that, growing up playing JRPGs, I never fucked with healers because buying potions was so trivial that it freed up a whole party member slot.
+
+That seems broken to me.
+
+If we had items that could temporarily buff our units, maybe that would preclude the need for some kind of support unit.
+
+But, here's the thing about that: maybe it's a GOOD IDEA to allow the player to trade a ROLE for ITEMS, because there is (or should be) an INHERENT LIMITATION TO ITEMS, and that is that... you run out of items! If items COST ENOUGH, we get an interesting risk-reward where a player brings 'x' number of potions into battle, and that means that, if they don't wanna bring a healer in, they're counting on the fact that they're never going to need to heal more than 'x' number of times. So, now we have a team which has some other type of unit in play INSTEAD OF a healer, and they have potions instead. The reward is that they have a freed-up unit slot on their team. The risk is that they have limited use of these potions, so they really gotta budget them.
+
+Therefore, it seems that the INTEREST -- the gameplay interest -- inherent to having an INVENTORY is dependent on the COST or the LIMITATIONS of this inventory.
+
+So, it stands to reason that we could have items which could HEAL HP. Could REVIVE UNITS. Could DAMAGE UNITS. Could PUT CERTAIN RULES INTO PLAY. Basically, an item could do anything that an ability could do, but with a limited usage -- limited by how many of that item you have.
+
+So, what are the dangers -- the game-design pitfalls -- of including a mechanic like this.
+
+Like I said above, items could be too easy to acquire, which would make individual units and team composition less important.
+
+Items can be too DIFFICULT to acquire, which means that nobody ever wants to use them.
+
+In particular, it sounds like items could replace Leader Abilities in many respects, because, like leader abilities, they behave as normal abilities but can be used on any turn. That makes them very powerful (if they aren't limited by how many you have).
+
+So, they're basically limited-use Leader Abilities. Limited to what scale? Per battle? Per dungeon? Per EVER (truly consumed)?
+
+A theme of our game-design, so far, is RESTORING STATE AFTER BATTLE. Units get all of their HP and MP and other attributes (aside from LP and exhaustion) back, entirely, after battle. Should we also restore items after battle? Maybe the player picks 5 items, or so, to bring from their pack -- and they get one use of each item, per battle? That could be tactically interesting.
+
+That's basically what we're talking about in the PVP side of things, so why wouldn't it behave the same way in the 1-player experience.
+
+Although, we need to decide if these item-uses in PVP are per-battle or per-war. We've talked about how PVP in our game will mostly consist of MORE THAN ONE BATTLE. It's, like, best-of-three or best-of-five or more. So, if you spend points on items for your PVP build, should they be PER-BATTLE or PER-WAR?
+
+Right away, my gut says "per battle," because the other things that you're spending your points on are per-battle. Because, your team's HP and MP are restoring between fights. So, maybe it makes sense that the items that you buy should be a persistent part of your strategy and therefore be restored at the end of every battle.
+
+On the other hand, AS ALWAYS, we can make these decisions carry more WEIGHT if their consequences are felt in the longer-term. Do you want to spend this potion NOW or do you want to save it for when you might really need it in the next fight?
+
+To answer that question, we again can turn to other design decisions we've made so far:
+
+The reason that we restore HP and MP completely between fights so that the player is encouraged to play RISKIER. To play FASTER and LOOSER, because they know that these resources that they're burning are going to come back.
+
+This is a fairly new concept in JRPGs, and what I found, growing up, playing classic JRPGs, was that the OBFUSCATED NATURE of WHAT EXACTLY YOU'RE BUDGETING FOR makes it very difficult to spend resources. In the example above, there's just no telling if, in the next few fights, you're going to be in a situation where you need to spend this potion more than you need to spend it now. There's just no telling.
+
+In classic JRPGs, your HP and MP wouldn't auto-restore between fights, and so you had to budget your HP and MP to last you for an entire dungeon.
+
+THE PROBLEM IS THAT YOU DON'T KNOW HOW LONG THIS DUNGEON IS UNTIL YOU'VE ALREADY BEATEN IT.
+
+The result is that, in order to budget for an ARBITRARILY-LONG DUNGEON, the player is encouraged to play HYPER-CONSERVATIVELY and not explore the thrill of the game's resource mechanics. The whole point of having resources is in deciding how and when to spend them. If you don't know what you're budgeting for, you can't make those decisions.
+
+Living by that philosophy, it would make the most sense to give the player an auto-refilling inventory. When deciding on their team -- their 'build' -- they decide how much they want to spend on items and which items they want to buy. THAT'S the budgeting phase.
+
+Now that you're IN A FIGHT, we want for you to SPEND THOSE ITEMS. You choose WHEN you spend them. You don't want to use your ONLY HEALING ITEM too early in the FIGHT because you might have a better use for it BEFORE THE END OF THE FIGHT, but, by not asking the player to budget for ARBITRARY FUTURE ENCOUNTERS, we are LIBERATING THEM to spend these items.
+
+That makes items more interesting. You have to be able to use them. Yes, you want for that to be a tough decision -- and we still have that tough decision. Who do you use the item ON? Is now the best time to use it? But, this way, the player has some idea of the SCALE for which they're budgeting: the course of this encounter.
+
+If items auto-restore for each battle, that makes the problem MORE SIGNIFICANT where items are replacing 'Leader Abilities.' What is the point of a Leader with a Leader Ability to offer a small heal at some AP cost when they could just have two potions, per battle, which auto-restore between battles.
+
+Honestly, maybe we should replace the notion of 'leader abilities' WITH ITEMS. One thing we've struggled with regarding how to balance 'leader abilities' is that the NOTION OF THEM IS INHERENTLY STRONG. They're abilities that you can use on ANY turn, regardless of who's in the ring.
+
+So we've asked ourselves, "How WEAK can we make these abilities?" "How much should they COST?"
+
+Maybe the answer is simple: make them as strong as any other ability in the game. As strong as we want. But they can only be used once per battle, per item that the player has budgeted. Maybe the leader abilities come as the result of these itms that you have.
+
+Also, you can easily parallel the decision of which LEADER TO BRING (previously because you wanted an ability of theirs) for which ITEMS TO BRING. So, they're really parallel, in that respect. Maybe we don't need both Leader Abilities and Items, and, honestly, maybe items are more interesting -- because they solve that problem of, "You can use these abilities on any turn." It's like, YEAH, you CAN use these items on any turn, but only until you run out of items. That adds more weight -- more cost -- to these abilities which would otherwise be godlike.
+
+The only downside is that I kind of liked the idea of 'leader abilities' as being a way to burn loose AP. Like, leaders would have some really cheap abilities which would cost 1 or 2 AP and that would be how you spend your remaining AP if you can't spend it any other way. Some shitty little consolation, like healing a unit by 1% or something like that.
+
+But that raises another idea, as I type that. What if we RE-INTERPRET 'Leader Abilities' as some kind of per-leader PERK which allows you to TRADE AP for some RETURN. Maybe one leader can convert your remaining AP into a heal. Maybe another leader can convert your remaining AP into something else. Maybe, it always being a buff, maybe it just happens AUTOMATICALLY when you end your turn; any remaining AP you have gets processed for some BONUS, and that bonus is unique to each Leader.
+
+I kind of like that more than 'Leader Abilities,' and that frees us up to re-interpret leader abilities as a limited inventory.
+
+Let's not fall for the trap, as we think about inventory, of overly-fixating on the singleplayer experience. That whole idea is just so under-developed that we need to continue looking at things with two players fighting each other in mind.
+
+So, okay. Each unit in your deck has some number of points that it can spend to be customized. Any remaining points can be refunded to buy some items for the leader.
+
+So now, all of your units are customized, and the time has come to spend your remaining points on some items. You're presented with a menu of items to buy. What kinds of decision-making are taking place in this phase?
+
+I.) You're looking at a wide variety of items which have a wide variety of effects.
+
+II.) These items have different costs based on their effectiveness.
+
+II*.) A potion that heals 10 HP should cost less than twice as much as two potions which each heal 5 HP.
+
+II**.) So, basically, you have to choose between buying MORE, VARIED ITEMS or buying higher TIERS of other items.
+
+II***.) This raises the question, WILL YOU EVER HAVE MORE THAN ONE OF AN ITEM -- or would you rather save for a higher tier. As soon as I type that, the answer is obvious -- YES, you sometimes buy MORE THAN ONE OF A SINGLE ITEM because you want to use that item TWICE, either on two different targets or at two different times. You could buy one 10HP potion for LESS than two 5 HP potions, but you'd only be able to heal one unit with it.
+
+III.) It's worth noting that you can choose to cash out EARLY of growing a unit so that you have more currency to spend on items. I don't think that we want for this to be a popular strategy, and so, therefore, it's important that we take a few measures.
+
+III*.) We want for there to be a better RETURN ON INVESTMENT FOR RAISING A CHARACTER than using that same amount of GP on buying an item.
+
+III**.) We want to create INTERESTING SITUATIONS where the player MAY END UP WITH MORE EXTRANEOUS GP. For instance, if the cost of raising some attribute is going UP each time it grows, and none of the other attributes interest the player as much, then they may have more spare GP.
