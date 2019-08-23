@@ -15,21 +15,22 @@ HIGH-LEVEL OBSERVATIONS
 
 TO-DO
 -----
-*) We haven't discussed much about the 'exploration' aspect of our game. In the interim, we've been focused on the PVP aspect of the game, which features no exploration.
-
 *) Character growth seems inherent to the 1-player experience, which means that it may hinge on the exploration aspect. Will there be character-growth for PVP, or will units fall into some kind of meta? Maybe each PVP team is awarded a certain amount of growth points to develop their teams with.
+A.) After picking a leader and the 10 units for a deck and equipping those 10 units, each unit in that deck will be given a certain amount of Growth Points with which to learn Abilities (?), unlock ability equip slots, and increase attributes.
 
 *) There was discussion, early-on, about permanently binding some piece of 'equipment' to a unit upon first 'catching' it, which would augment character-growth and maybe even supply the Tertiary Ability Pool. We haven't discussed this much outside of that.
+A.) After choosing the units for a deck, the player will choose what to equip each unit with. This equipment cannot be changed during PVP and can have a wide variety of affects, including adding or replacing an ability pool, upgrading an ability pool (and its slots), adding or replacing a unit dynamic, etc.
 
 *) We have never discussed the precise mechanics for 'catching' new units (or 'monsters'). In Pokemon, you weaken a monster and then throw a ball at it, and there's a chance that it'll be added to your collection. In our game, we haven't really discussed the particular mechanics for how new units are going to be added to the player's collection.
-
-*) We need to talk more about LP and 'permadeath' and just how permanent this death actually is. How punishing should it really be.
+A.) For the alpha and beta, there is no monster-catching, nor equip-gathering. The players (testers) have access to everything to construct their decks with. As for whether or not UNLOCKING THINGS could be a STRONG MOTIVATOR for play once testing is complete -- obviously, we need to consider that. But we'll cross that bridge when we come to it.
 
 *) We need to talk about the conditions for winning a battle: is it when the LEADER runs out of HP, or is it when all of the team's units are knocked out?
+A.) Leaders have a small amount of HP, and battle is over when the leader runs out of HP. When a unit is KO'd, the opposing leader can expend their remaining AP to deal that much damage to the defending leader's HP. At the start of the next turn, the previously vulnerable leader will pick a new unit to bring into the ring.
 
 *) We haven't talked about Exhaustion, yet, in this game-design document, or about LP restoration.
 
 *) We probably need to talk about how each unit has a limited number of rules that they can exclusively be the target of.
+A.) I don't think that we need to limit the number of rules stacked on an individual object. There are better ways to control how rules end up being stacked and how much reward the players get for stacking them. Abilities that inflict rules already come at a wide variety costs, you can only use so many abilities per turn, the opposing team is trying to undermine the rules that you're setting up, etc. Individual units can only have access to so many rules because of the rule-limit per Ability Pool. There are so many limits to what rules you're going to be able to set up, together, that I don't think we need this extremely harsh balancing measure.
 
 
 PVP GAME FLOW

@@ -7386,3 +7386,196 @@ III.) It's worth noting that you can choose to cash out EARLY of growing a unit 
 III*.) We want for there to be a better RETURN ON INVESTMENT FOR RAISING A CHARACTER than using that same amount of GP on buying an item.
 
 III**.) We want to create INTERESTING SITUATIONS where the player MAY END UP WITH MORE EXTRANEOUS GP. For instance, if the cost of raising some attribute is going UP each time it grows, and none of the other attributes interest the player as much, then they may have more spare GP.
+
+
+08/22/19:
+
+Today, we're going to be continuing to look at the 'holes' in our game-design document. Last time, we discussed topics such as:
+
+Leader HP and victory conditions (I'm satisfied with this).
+Deck-building and character growth (I'm mostly satisfied with this).
+Equipment (I'm kinda satisfied with this but not super-satisfied).
+
+
+
+
+Things that we need to talk about:
+Deck-building and character-growth: Do we want to learn abilities during this phase?
+
+Equipment: Where does equipment come from? How powerful is it?
+
+Capturing units: This ties into the 'equipment' question. Where do units come from?
+
+Rule limitations. How many rules can be in play?
+
+LP and Exhaustion, including LP restoration. How's that gonna pan out in PVP?
+
+
+I have a question. DOES IT MAKE SENSE TO LEARN ABILITIES DURING THE DECK-CREATION PHASE.
+
+Yesterday, dixx and I were discussing this at length and we came to a conclusion that I was pretty happy with: yeah, we should learn abilities during deck creation and take all of the gacha that comes along with that.
+
+My question is, DOES IT MAKE SENSE TO LEARN ABILITIES IF YOU'RE ALSO BUYING ABILITY-EQUIP SLOTS.
+
+I mean... You're gonna fill up all of your ability-equip slots, and you definitely don't need to learn any more abilities than you have ability-equip slots. So... I feel as though you could and maybe should tie these concepts together.
+
+Like, when you unlock an equip slot, you also choose to learn an ability that goes into that slot.
+
+So, if we go that route, we have two considerations to make. One is, should we just let the player buy and collect these abilities BETWEEN PVP BATTLES, and then equip them at will?
+
+Or, should we have these abilities be LEARNED WHEN THE SLOT IS PURCHASED, thus adding a bit of randomness.
+
+When Dixx and I were talking about this last night, we decided that it makes sense to have a little bit of randomness in the process of building the deck; that way, there's some extra excitement tied into the process of deck-building. Especially when you're late into creating the deck.
+
+But, maybe that's also tedium; creating and re-creating the same deck hoping that you get better rolls.
+
+Well, we could also just automate the re-roll process so that you could re-roll a deck and see what other abilities you get.
+
+But the upside of allowing the player to learn their OWN abilities and equip abilities from their COLLECTION is that it adds some extra incentive to grind and play the game. In fact, since last night, I've been thinking a lot about the 'incentive' to continue playing the game and how, maybe, there should be more of an incentive than just to WIN IN PVP.
+
+Everyone knows that the typical JRPG formula is to get the player somewhat addicted to the process of grinding -- seeing numbers go up. That's something that I'm very familiar with as a long-time JRPG player. I love that feeling of seeing numbers go up, and the appeal of unlocking new UNITS, new EQUIPMENT, and new ABILITIES could go a long way to increasing the longevity of the game for some players.
+
+On the other hand, I've frequently compared this game to CCG in the vein of Magic the Gathering and Yugi-Oh!, and, in those games, the player isn't consistently unlocking things (through gameplay, at least), and so the desire to play really does just come from the inherent desire to win.
+
+It's kind of a trade-off. I'm attracted to both ideas, as far as abilities are concerned:
+
+1.) You unlock abilities through gameplay and can then equip them onto your deck.
+2.) You purchase abilities as a part of deck-creation, which adds some randomness to the experience of creating a deck.
+
+So, the question now becomes, as far as I can tell, HOW MUCH FUN IS REALLY BEING ADDED BY THIS ELEMENT OF RANDOMNESS. I like the randomness because it means that you, as a player, have to strategize on the fly, somewhat; you have to take the tools that you're given and make the best of them.
+
+Otherwise, you replace this with a strong urge to OPTIMIZE. Grind until you're OPTIMAL. Maybe it's more fun to just give the player something random and let them figure out how to use it. This is the thrill of playing a ROGUELIKE, for instance. One reason that roguelikes are so much fun to play is that they give you something RANDOM and you've gotta figure out the OPTIMAL WAY TO USE IT, rather than trying to plan or design an OPTIMAL CHARACTER.
+
+Let's suppose that we lean on this 'learning semi-randomized abilities' mechanism for deck-creation. And let's suppose that we include, in our game, a simplified UI for re-rolling all of the abilities in a deck.
+
+What's to stop a player from re-rolling the deck ALL NIGHT? For a week straight? Until they get the roll that they want. Obviously, we're talking about SO MANY VARIABLES that it's virtually impossible to get a PERFECT ROLL on a deck, but do we make the re-roll COST SOMETHING so that people can't just do it forever? And if that's a problem, is it a better solution to just let people grind for abilities and use whatever ones they've unlocked?
+
+Well, maybe we should make this argument: at least for the alpha and the beta, maybe abilities are randomized. And maybe the entire collection of units is available to every player. And maybe the entire trove of equipment is available to every player. This way, nobody's unlocking anything -- there is no growth. There's just different builds and strategies (and testing, of course).
+
+After that, maybe we start to think about HOW TO UNLOCK THESE THINGS if we want to. Maybe we just need to say that we'll cross that bridge when we come to it.
+
+As far as the alpha and beta versions of our project are concerned, NOTHING is unlocked and everything is chosen-from during deck-creation. That includes UNITS (there is no 'monster-catching'), ABILITIES (learned, semi-randomly, during deck-creation), and EQUIPMENT (every player has access to the entire trove of equipment).
+
+Before we end today's stream, we need to talk about DYNAMIC RULES and the idea of LIMITING THE NUMBER OF DYNAMIC RULES THAT A SINGLE TARGET IS SUBJECT TO.
+
+The reason that we decided to do this, a long time ago, is that Dynamic Rules, as a concept, are so powerful that breaking the game would become TRIVIAL if you could combine ANY NUMBER OF ARBITRARY DYNAMIC RULES.
+
+It wouldn't be hard to break the game.
+
+As an example, consider something like, "Protect: 50% reduction of physical damage for 5 turns."
+
+Then you stack that with something like, "Uber Shield: 25% reduction of physical damage for 10 turns, but at the cost of 10% of effected units' HP per turn."
+
+On their own, those are workable. But when you combine those two, you end up in a situation where your units are virtually invincible to physical damage at very little cost.
+
+This is only TWO rules, and we can balance rules carefully to avoid these sorts of situations -- but once you start getting into stacking FOUR rules or FIVE rules, suddenly it becomes pretty much impossible to balance.
+
+So, our idea was to establish a rigid system for what a dynamic rule is TARGETING.
+
+Dynamic Rules can target:
+Any number of INDIVIDUAL UNITS
+An entire team
+An entire battlefield
+
+So, our idea for limiting Dynamic Rules was to limit the number of rules that can be stacked FROM ABILITIES OR ITEMS onto any of these targets.
+
+So, Leader Dynamics and Unit Dynamics and Battlefield Dynamics do not affect this number. Only rules that are brought into play DURING THE BATTLE are subject to this limit.
+
+The idea was that each UNIT can only be subject to TWO NEW DYNAMIC RULES from EACH TEAM. And the same goes for each team and each battlefield.
+
+So, this is a pretty dire proposal that would have pretty huge consequences on our games' strategies, so it stands to reason that we should talk about it.
+
+Every unit, team, and battlefield can only be subject to TWO dynamic rules at once originating from each team.
+
+Therefore, if you want to BUFF an ally unit under 6 different rules during combat, you would need to buff that UNIT twice, your TEAM twice, and the battlefield twice -- and then the opposing team would also be under the affect of that rule.
+
+So, if you only want to buff your own, ally unit 4 times, you have to do it twice to the individual unit and twice to the team.
+
+I think that, this all being said, new rules should REPLACE old rules. So, if a unit is already under the affect of two buffs, if you try to buff them again, the first buff is removed.
+
+A problem with this is that you might cast a rule on your own team that has a negative impact along with a positive impact. So, you could effectively instaneously 'cure' such a curse by casting another buff on a cursed unit as soon as you're done taking advantage of the POSITIVE effect. But is that a terrible thing? Especially, is that a terrible price to pay?
+
+On the other hand, we could say that, once a object has its two rules in play, from your team, you can't add any more rules until the old rules expire.
+
+The major problem I see with THIS is that it simplifies combat such that you may only ever inflict a couple rules on each target, and then, if those rules aren't cured, you really can't add any more rules. So, there's this situation where all you can really do is directly attack your opponent, and I don't know if we're going to be able to engineer our Ability Pools to make that FEASIBLE. Like, we've kind of been assuming that ADDING NEW RULES could end up being a BULK of what abilities do. So, if you end up in a situation where you can't add any more rules because you've reached some kind of 'rule limit,' that could be a problem.
+
+All of this raises the question -- is limiting the number of active rules really what we want? Does that actually serve us? Would it make more sense to take other measures to make sure that certain pairs of rules can't be stacked with each other to break the game?
+
+Maybe it just makes no sense, considering our game's emphasis on Dynamic Rules, to strictly limit how many of them can be in play.
+
+I guess that a part of answering this question comes down to, as we've discussed above, HOW WOULD YOU ACTUALLY GO ABOUT LIMITING THE NUMBER OF DYNAMIC RULES TARGETING A SINGLE OBJECT.
+
+When you reach that two-rule limit and you want to add another rule, WUT HAPEN? Does this new rule get BLOCKED? Does it replace an OLDER RULE?
+
+The reason that we're limiting the number of rules that EACH TEAM CAN ADD TO EACH OF THESE UNITS, rather than limiting the TOTAL NUMBER OF RULES, is so that there's an element of player-responsibility. For instance, you can't just stack 4 buffs on a unit and then the opponent can't afflict a negative change. Each TEAM can only apply 2 rules to an individual unit. That way, he can have two buffs from his homies and two nerfs from the enemy team.
+
+And then, if you want to add more rules and you either CAN'T BECAUSE IT'S BLOCKED or DOING SO WOULD REMOVE THE FIRST RULE, you have no one to blame but yourself. It's supposed to encourage the player to think carefully about what rules they apply to an object and when.
+
+But the question remains as to what impact this had not only on turn-to-turn gameplay but on the game-design of these ability pools. If there is a strict limit to how many rules you can stack on something, as a balancing measure, then it hardly makes sense for these Ability Pools to have a ton of abilities which all inflict rules. It's almost like, if we were to do this, we would need more abilities that just do direct damage: things that alter HP, or MP, or other attributes, directly. And I feel like that's kind of contrary to the idea of our game's design, which is like... there'd be relatively few abilities that do direct damage, and most of the damage that would be done would be as the result of playing with rules.
+
+Does limiting the number of active rules on a single object diminish the significance of rules?
+
+Let's re-examine the alternative: there are no limits to how many rules can be stacked.
+
+For one thing, we've taken measures, lately, FOR THE FIRST TIME, to reign in the number of unique rules in the game.
+
+For instance, it's unlikely that we would have an INDEFINITE NUMBER OF RULES which all raise a unit's defense by some percentage -- and that wasn't always the case. There was a time where Dynamic Rules seemed like something that there could be ANY NUMBER OF, and ANY NUMBER OF THEM could have virtually the same function, just with slight variation. Now that we're saying things like, 'Each Ability Pool can only have access to 3 Dynamic Rules,' we start to see Dynamic Rules more as ways to define Ability Pools, and so you wouldn't necessarily need similar Rules across different Ability Pools.
+
+So, if we don't necessarily have Rules that are EXTREMELY SIMILAR IN THEIR PURPOSE, I feel like we're already at less risk of them becoming immediately broken when stacked.
+
+So, let's create another example where having unlimited rule stacking can break a game -- this time by abusing rules whose purposes are actually meant to be quite distinct (but still focusing on an example where DEF is getting dramatically boosted).
+
+1.) Every time that this unit takes HP damage, 1/3rd of that damage is reflected by at the attacker.
+
+2.) Every turn that this unit spends in the ring without being attacked, it gets a 10% DEF bonus.
+
+So far, this just seems like the sort of strategy that you'd healthily expect in a game with a design like this. You put a unit into the ring and put a rule on it where enemies are punished for attacking it, and then you put another rule on it that compels the opponent to attack it.
+
+But how many more rules do you need to stack on here before it gets REALLY BROKEN?
+
+3.) Every time this unit's DEF goes up, its ATK goes up by half as much.
+
+Again, this seems like the sort of strategy that you'd WANT to REWARD a player for? It's a clever combination of rules that, honestly, probably requires access to quite a few different Ability Pools on this team. So, now, if you attack this unit, you lose some HP -- but if you DON'T attack this unit, it gains DEF and ATK.
+
+I feel like this isn't the best example of stacking rules in a way that's going to OVERTLY BREAK THE GAME.
+
+Maybe one way that we could avoid a situation where rule-stacking breaks the game would just be to make the MOST POWERFUL RULES especially rare or hard to use. In the past, we've talked about implimenting rules which might make a unit COMPLETELY INVULNERABLE TO DAMAGE for a single turn, or something, at a great cost.
+
+But maybe it becomes more important, as we consider how stacking Dynamic Rules could stand to break the game, to be EXTREMELY CONSIDERATE of how good single rules are.
+
+For instance, in our example above, we talk about "cutting physical damage in half for 5 turns," as an example of a rule that's easy to stack in such a way that can make a unit pretty much invincible for a long time.
+
+But maybe the problem with that example is not the fact that you can stack an arbitrary number of rules onto one object -- but maybe the problem is that THAT RULE IS JUST TOO DAMN GOOD, ON IT'S OWN. Maybe it's just stupid to have a Rule which cuts damage in half for that much time. Maybe that's just the sort of considerations we'll need to make as this project moves into a TESTING PHASE -- we might just find that rules which may have seemed sensible in the moment that we made them are actually just way too damn strong.
+
+Maybe, with consideration for the fact that OF COURSE RULES ARE GOING TO BE STACKED, we need to keep check on the effectiveness of rules in isolation. Because, yeah, they're gonna be stacked. That's kind of the whole idea.
+
+So, now that I've ranted about this for a while, I feel pretty satisfied that we DON'T need a per-unit, per-team, and per-battlefield limit on the number of rules that can be inflicted by a single team.
+
+There are already ways to limit rules with respect to how they stack:
+
+1.) Just don't make any individual rules too damn strong. And if a rule doesn't seem that strong, on its own, but it ends up being too strong when stacked with something else, then just nerf it. Just nerf it. Who cares if it's not that good 'on its own,' if it's godlike when stacked with something. Maybe the purpose of that rule, then, is to be stacked. Maybe it's just not that good on its own and then, when stacked, it's REALLY good -- but we gotta nerf it, on its own, so that, when stacked, it's not broken.
+
+2.) Rules are inherently limited because a big part of the game's strategy is going to be NEGATING YOUR OPPONENT'S RULES. It's the responsiblity of each team -- it's in each team's interest -- to target and negate any rules and, by extension, any STACKS that the opponent is trying to set up. You've gotta have units and abilities and items which target a rule that your opponent has set up and gets RID of it.
+
+3.) Every Ability Pool only has access to 3 Dynamic Rules, and you only have 4 units on your team, each with 3 Ability Pools -- and VERY LIMITED ACCESS to the most powerful abilities of those pools. So, if you're trying to set up some complex stack of rules to break the game, you're going to need a VERY PARTICULAR PARTY to get access to the right abilities to inflict the right rules, at the right time -- so, as game designers, we could probably solve this problem of a certain combination 'breaking the game' or being 'overpowered'  by just nerfing any ONE of the rules involved -- because it's already difficult enough, probably, to create a team that even has access to all of the rules necessary.
+
+4.) Using abilities that inflict really good rules HAVE COSTS. Abilities have costs. You need to have the AP. The rules need to be at the right SEVERITY. They need to last for the correct AMOUNT OF TIME. Therefore, because many rules may be time-limited, you need to have the AP and the tactical liberty to set up these rules over MULTIPLE TURNS, probably.
+
+So, in general, maybe it's just not going to be as easy as I once expected to create a stack of rules that could break the game -- and, if such a stack does get discovered, I don't think that nerfing it to being reasonable should be as difficult or as controversial as I once thought it would be.
+
+
+
+
+
+
+Ending today's stream (game-dev, anyway), we have one major hole that I want to fill on Monday -- and it's my asshole. But, even more than just metaphorically being my asshole, it's this issue of THE STATE OF A PLAYER'S DECK AS WE GO FROM BATTLE TO CONSECUTIVE PVP BATTLE.
+
+We have these mechanics that we've discussed, at length, which are meant to add some tactical DEPTH to the process of choosing units from the deck to go into the NEXT SUBSEQUENT BATTLE immediately following a battle.
+
+As a unit takes LP damage, that LP is not entirely restored between battles, unlike all other attributes. So, over the course of many back-to-back battles, a unit's LP with dwindle and they will come closer to no longer being able to take part in battle.
+
+Also, whenever a unit partakes in a battle, it's 'exhaustion' attribute goes up, which lowers all of its attributes by some percentage. If you're at 10% exhaustion, all of your attributes are lowered by 10%.
+
+We've talked a little bit about ways that these mechanics might CONFLICT, but also how they can add interest -- especially, maybe, if they ebb and flow. Maybe, if a unit survives an encounter, it gains 1 LP back. Maybe, if a unit is left out of some number of back-to-back encounters, it gains exhaustion back. But that's what we need to discuss on Monday, especially because we're moving away from the idea of a 1-player element, which is where these mechanics were conceived to shine the most. I think that they could be equally interesting in a PVP environment, but exhaustion, especially, might need to be re-examined, because it really was meant to be a growing concern over the course of a long dungeon.
+
+For something like back-to-back PVP battles, does Exhaustion need to be BUFFED? To become MORE DIRE? Or do we need to get rid of the idea of Exhaustion, entirely, and just fall back on LP, which I think still makes  lot of sense considering our PVP mechanics.
