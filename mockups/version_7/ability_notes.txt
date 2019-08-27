@@ -7579,3 +7579,109 @@ Also, whenever a unit partakes in a battle, it's 'exhaustion' attribute goes up,
 We've talked a little bit about ways that these mechanics might CONFLICT, but also how they can add interest -- especially, maybe, if they ebb and flow. Maybe, if a unit survives an encounter, it gains 1 LP back. Maybe, if a unit is left out of some number of back-to-back encounters, it gains exhaustion back. But that's what we need to discuss on Monday, especially because we're moving away from the idea of a 1-player element, which is where these mechanics were conceived to shine the most. I think that they could be equally interesting in a PVP environment, but exhaustion, especially, might need to be re-examined, because it really was meant to be a growing concern over the course of a long dungeon.
 
 For something like back-to-back PVP battles, does Exhaustion need to be BUFFED? To become MORE DIRE? Or do we need to get rid of the idea of Exhaustion, entirely, and just fall back on LP, which I think still makes  lot of sense considering our PVP mechanics.
+
+
+
+08/26/19
+
+Today we've gotta talk about LP, Exhaustion, and, in general, the PROCESS OF GOING BEING BATTLES IN A PVP SET.
+
+Unlike in other games of this genre, where two teams of monsters battle until one team is defeated, I conceive this game's PVP mechanism as behaving more like a fighting-game in the sense that it's conducted in sets of matches.
+
+So, a single set involves both teams picking 4 units out of their respective decks of 10 units each. They battle until one of the team's Leaders is defeated, and then they move on to the next battle.
+
+Players should be able to determine how LONG-TERM OF A SET THEY WANT TO RUN, and longer-term sets will have different tactical challenges (long-term survival) than shorter-term sets (fast-paced firepower).
+
+Players could do a PVP set of ONE battle, or they could do best-of-three, or best-of-five, etc. -- or, they could go until an entire deck is completely destroyed.
+
+So, let's talk about the sorts of considerations that go into play when we talk about 'surviving' long-term sets:
+
+Monsters have an 'LP' value which decreases every time that they're knocked out, and 1 LP is restored at the end of every battle that the team wins. Unless that's too harsh? Maybe you should get an LP back whether you win or lose? Is it giving the winning player too much momentum if the losing team doesn't get their LP restored.
+
+Not necessarily, because each deck has 10 units, which means that the losing team can bring in an entirely fresh team for the next battle, and they have just as good of a chance of winning as their opponent. If the opponent loses the NEXT battle, then THEY don't get their LP back, and momentum is neutralized.
+
+So, for now, why don't we say that LP restoration post-battle is a reward for the winner.
+
+This means that, every time that a unit is knocked out and every time that they take stray LP damage from a particular special ability, the less useful this unit will be in future matches in this set -- because, once a unit's LP hits zero, it cannot be revived, again, and its LP cannot be restored.
+
+So, when we talk about long-term survival in long sets, we're talking about the fact that, over the course of matches, certain units are going to be removed the deck. Ideally, both teams are going to be losing units as time goes on, which means that they're both going to be needing to be flexible with their team make-ups and strategies.
+
+We also have an 'Exhaustion' mechanic which was originally conceived for the now non-existant one-player mode, where players are encouraged to switch between units due to an ever-increasing 'exhaustion' meter on units that are being brought BACK IN to the following fight.
+
+So, whether a team wins or loses the first match in a set, they'll be penalized for bringing the same team into the second match in the set due to the Exhaustion mechanic. They're encouraged to bring in another team.
+
+So, this is an effective way to penalize players, I think, which want to over-rely on a single unit or a single build or a single strategy.
+
+So, that's the real purpose of exhaustion, right? Let's talk about Exhaustion:
+
+1.) It penalizes players for using the same units in back-to-back fights. What's cool about this is that it encourages players to vary their strategies and it also adds conflict when the opposing team picks certain units that the ally player wants to COUNTER-PICK, but their counter-picks have already been used, which means that they'll take a penalty if they bring them in.
+
+Also, it means that we create a sort of META counter-pick, where, if I see that my opponent is using a unit in the FIRST FIGHT which is a strong counter-pick for a unit that I have in my DECK but am not using yet, I know that I can probably bring that unit into the NEXT fight because, if they bring their counter-pick into the next fight, they'll suffer exhaustion.
+
+2.) When we have this meta-counter-pick situation, it DISCOURAGES a player from using the 'CORRECT' unit for a situation. Is this what we want? Isn't tactical counter-picking supposed to be strong in our game?
+
+I think that this is alright, because a relatively minor attribute reduction for exhaustion I think is a fair price to pay so that counter-picks don't become TOO strong. In this situation, a counter-pick is still going to be strong, but it works as a sort of minor come-back mechanic. It also may be seen as a penalty for bringing in a unit BEFORE it's a counter-pick. Like, maybe you brought this unit into the first fight because it's GENERALLY STRONG, without thinking that you may need to bring that unit in, later, as a counter-pick.
+
+3.) So, now we have this question: HOW STRONG SHOULD EXHAUSTION BE, and HOW DO YOU CURE IT?
+
+I think that a 10% attribute reduction per fight seems... fair in the sense that it gives the opposing team an advantage without that advantage being too strong. On the other hand, maybe we should go with a 15% reduction? That's still relatively minor, but more threatening -- and if you get exhaustion twice in a row, you take a 30% reduction rather than a 20% one.
+
+As for curing it, we basically have a couple of options: whenever you leave a unit OUT of a fight, it cures 1 level of exhaustion. Or, whenever you leave a unit out of TWO fights, it cures 1 level of exhaustion.
+
+Or, every fight that you don't take part in recovers 7% exhaustion or something. Or 5%.
+
+If we go 5% for every fight, that means that, if you don't take part in two fights, you still come back to the third fight with 5% exhaustion.
+
+I kind of like this idea, because it's DYNAMIC. It means that, over the course of the set, pretty much no matter WHAT YOU DO, your units' max attributes are going to be fluctuating. But, if you make tactical moves regarding WHEN you use certain units, you can stymie that fluctuation.
+
+So, whenever you take part in a fight, you gain 15% exhaustion afterward. Whenever you DON'T take part in a fight, you recover 5% exhaustion.
+
+So, that's a pretty strong motivator to not use the same unit in back-to-back fights. Maybe too strong of a motivator?
+
+Because that means that, if you DO put a unit into back-to-back fights, now it has 30% exhaustion, and you're gonna be very hard pressed to recover that exhaustion.
+
+So maybe we should lower the 15% to 10%. That way, if you skip two fights, you totally recover.
+
+Maybe, for every fight that you take part in, you gain 10% exhaustion. And every fight that you skip, you recover 3%? I kind of like the idea that, even if you skip two fights, you still have some exhaustion left to deal with. But maybe that's not necessary.
+
+Basically, what I'm looking at, balance-wise, are situations where, no matter WHAT YOU DO, your team is going to become exhausted -- but we're also talking about some VERY LONG SETS. Maybe that's just not necessary. Like, how long are these sets REALLY going to be?
+
+How long are these sets going to be? Maybe it just doesn't matter -- this 'gradual build of exhaustion over time' -- because there's just not gonna be that much time.
+
+So does that mean that we need LESS EXHAUSTION or MORE EXHAUSTION?
+
+Again, if we raise Exhaustion to 15% per fight, then, after two fights, you're at 30%, which is DIRE. That's probably too dire -- that's too much impact.
+
+But at 10% per fight, I would say that it barely acts as designed -- a disincentive. But maybe that's what we want.
+
+But the alternative could be to not have exhaustion AT ALL. I think that I'd rather HAVE IT, so maybe 10% per fight, and recover 5% per fight that you don't take part?
+
+With 10% exhaustion per fight, it acts as a MILD DISINCENTIVE to bringing units back for repeated fights.
+
+What if exhaustion wasn't linear? What if it wasn't a flat 15% per fight?
+
+What if it was 15% the first time, then it raises to 25% the second time...?
+
+But another thing is, if you're running a FIRST TO TWO or BEST OF THREE, that means that, if you WIN THE FIRST FIGHT, you can come into the SECOND FIGHT with the same exact team and only suffer a 15% (relatively minor) attribute reduction. If you win THAT FIGHT, the set is over -- so you don't suffer that extreme exhaustion.
+
+But if you LOSE that second fight, now you're suffering from extreme exhaustion. So, there's a risk-reward there.
+
+Maybe 15% per fight does make sense? I mean, you've got ten fucking units to swap around.
+
+To me that seems fair. If you use a unit two times in a row, you get fucked by the third fight.
+
+So, what if you take 15% PER FIGHT, but recover 10% OFF-FIGHT. This makes it more feasible to recover if you do use the same units two fights in a row. It also means that, if you skip one fight and then bring those units back, they've still suffered 5% exhaustion -- and, at the end of that fight, they'll be at 20% exhaustion.
+
+I think I'm gonna lock that in, for a few reasons:
+
+1.) WE'RE NOT NECESSARILY LOOKING AT LONG, LONG SETS. So, we want to punish users HARSHLY for back-to-back fights, but asking them to be left out of MANY FIGHTS IN A ROW to recover -- or, if they're only left out of one or two fights, to have bleeding exhaustion -- doesn't make sense. Doesn't make AS MUCH SENSE.
+
+2.) With our mechanics intended to be EXTREMELY TACTICAL, perhaps these small exhaustion levels (because we're rewarding skipping fights more) will actually end up being significant.
+
+So, for every fight that you take part in, you gain 15% exhaustion. For every fight that you skip, you lose 10% exhaustion.
+
+For every fight that you win, all of your units which have >0 LP gain 1 LP.
+
+Let's work with that, for now, and build on that if we need to in the future.
+
+So, on THURSDAY, we need to take all of these ideas and implement them into our game_design_bible.txt . After that, we'll do a little more writing in the bible describing game-flow, and then we can move on to programming.
