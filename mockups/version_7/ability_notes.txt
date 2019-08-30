@@ -7685,3 +7685,204 @@ For every fight that you win, all of your units which have >0 LP gain 1 LP.
 Let's work with that, for now, and build on that if we need to in the future.
 
 So, on THURSDAY, we need to take all of these ideas and implement them into our game_design_bible.txt . After that, we'll do a little more writing in the bible describing game-flow, and then we can move on to programming.
+
+
+08/29/19
+
+Over my day off, I played a video game, off-stream, for my own pleasure, for the first time in months. And the experience struck me as being somewhat profound, so I want to take a minute to talk about and, if anybody's in the chat, I want to get your thoughts about it.
+
+So, I was playing Batman: Arkham Knight, which is a game that I've owned for a very long time, and there have been many times where I've wanted to play it but I wasn't necessarily able to -- I wasn't sitting at the TV, I was too busy with other things, etc. Whenever the time would come that I WASN'T busy and I COULD play it, I just felt that the attraction was lost; I just wasn't interested enough to get the game booted up. I looked at the PREVIOUS time that I had beaten the game, at launch, and I would think about the objectives in the game and the FLOW of the game (going from open-world to linear mission) and I just felt like it wasn't worth the energy. I wasn't that into it.
+
+But then, again, whenever I WOULDN'T BE ABLE TO PLAY, I'd feel a strong attraction to play: I wanted to explore the DLC that I never got the chance to play on my first playthrough, years ago. I wanted to check out the new characters and the new challenge maps, etc.
+
+So, what I'm getting at, here, is that I want to talk about MOTIVATION for gaming. What is it? What motivates someone to game? Why do we play video games?
+
+Yesterday, I FINALLY BIT THE BULLET -- and that's what it felt like. I finally sat down and said, okay, I've got some time. I've been wanting to try this game. Let's "get it over with." Let's just boot it up and see what happens -- and this isn't the first time I've done that and been rewarded for it. It's interesting to me that there have been times in my life where I've had to FORCE MYSELF to get over some INERTIA in order to really enjoy something like this.
+
+The same goes for making MUSIC for the first time in a while; I kinda gotta force myself to get the DAW set up and all of that nonsense -- but, once I do, it's great. If only I had known, before-hand, how much fun I would have, it would've been so much easier to take that first step.
+
+Playing Batman yesterday, the first thing that I did was boot up the main game and fly around as Batman, beating up random thugs, trying to get a feel for the controls, again. And I was struck by the same few things that always strike me whenever I play this game:
+
+1.) The game world, environment, and atmosphere are STUNNING. But that isn't enough to keep my interest in the game. I'll look at the rain and the fog and the city for a while and say, "That's really cool," but it feels LIFELESS and like THERE ISN'T ANYTHING TO DO except for annoying waypoint markers and random, unrewarded enemy encounters.
+
+2.) As above, THERE'S NOTHING TO DO. Or, rather, there's nothing that I WANT to do. There's a waypoint marker for the MAIN STORY MISSION, and there are thugs all about, but I want to be let off the leash and so I don't want to do the story mission. At the same time, the things that you can do outside of the story -- in the main game -- seem INCREDIBLY repetitive. The streets are populated with all of the same type of thug, and that's really all there is to do (outside of hunt down Riddler trophies).
+
+In other words, I lost interest. But I decided that I was going to EXIT the main game and have a look at the CHALLENGE MAPS -- and, as soon as I did, my experience did a 180. I picked a stealth challenge map, and I picked Nightwing (which is a character that you only play for a few minutes in the main game), and I was immediately HOOKED on sneaking around, taking guys out, trying to solve the puzzle of this environment to conquer this challenge.
+
+And then, after that, I was addicted for HOURS, playing through various challenges as various characters, and having a TON of fun. Ever since, I've wished that I had the time to go back and play even more.
+
+What does this say about what MOTIVATES a player? Because what struck me about this experience, last night, was how my MOTIVATION AS A PLAYER was in constant flux. At first, I KINDA wanted to play, but I had to FORCE myself to boot the game up. Once I WAS playing, I was KINDA interested but mostly felt aimless. I was wandering the city, looking at the environment, getting bored fighting the same enemies over and over. I had no interest in completing the TASKS that the game set out for me.
+
+Then, I decided to play the challenge maps. WHY did I decide to play the challenge maps?
+
+And when I was playing the challenge maps, I was having a lot of FUN and it was very difficult for me to STOP. At that point, I was PROFOUNDLY MOTIVATED. I just wanted to keep going and going.
+
+Let's first look at WHY I WAS SO ADDICTED TO PLAYING THE CHALLENGE MAPS.
+
+My theory is that, right away, my objective was INTERESTING to me: to EXPLORE a large, mysterious environment while CAREFULLY watching for danger and considering how I could use my TOOLS to protect myself and overcome the challenge.
+
+The first thing that struck me about playing these 'predator' challenge maps, was that, when the game starts, it leaves your character OVERLOOKING a large, varied environment. I watched some kind of TED talk, once, about game design and the 'types of gamers,' where it was theorized that each type of gamer WANTS SOMETHING DIFFERENT out of a game. Different games appeal to different types of gamers because of what those gamers WANT out of the experience of gaming, and I was struck by the proposition put forward in that talk that I conform to an 'explorer' archetype. Where-as some gamers are motivated by things like COMPETITION, or VISCERAL FEEL or whatever (I forget the other archetypes), there is a family of gamer that wants to explore a world or an environment. I consistently find that that's something that I'm powerful drawn to in games.
+
+So, I think that my first motivating factor when it came to the Predator challenge Maps was that I was presented with a SPACE to explore where there was gauranteed to be INTEREST. Compare this to the game's OPEN WORLD, where there is a huge, varied, and nuanced environment to explore but where NOTHING IS OF MECHANICAL CONSEQUENCE. This reminds me of Dragon's Dogma: a large world with a nice atmosphere but with no HOOK. No GAMEPLAY HOOK. It's just empty.
+
+Compare this to the relatively SMALL WORLD of a Predator Challenge Map, which is DENSE with dangerous enemies and things to FIND (traps in particular). Places to HIDE. To me, I immediately want to jump into the space and feel it out. Find my way through it. Master it, and take what I've found in this map and use it to win.
+
+That's an immediate difference between the main game and the predator maps: the predator maps are filled with DANGER. They're filled with CHALLENGE.
+
+So, there came a point in the night where I had come to RE-UNDERSTAND THE GAME (after not playing for many years), and it became relatively trivial to conquer these challenge maps -- to defeat the enemies. At that point, I began to look at the OPTIONAL OBJECTIVES and became obsessed with COMPLETING THEM ALL.
+
+So, my question: why? Why did I want to complete these optional objectives?
+
+## Wodo points out that he thinks that his personal motivation for playing video games is SOCIAL -- as something to do with friends, or to build a project (?) -- or just to get some adrenaline (excitement). This last one (adrenaline) seems kind of ambiguous, to me. What about a video game creates adrenaline? There is no DANGER when playing a video game -- you're safe in your house. What does it take to generate adrenaline in a video game?
+
+It seems obvious to me that I wanted to complete these optional objectives as an EXCUSE TO KEEP PLAYING? Why do I look at these objectives and think of them as being a 'fun' or 'attractive' challenge?
+
+## Why is it fun to shoot or survive in an online game? How much of it is just the COMPETITIVE NATURE OF MAN? How much of it is to conquer another person or prove that you're better than them at this game? And if not that, then what?
+
+I think that the reason that I'm attracted to the optional objectives in a game like Batman: Arkham Knight is that the MECHANICS seem deep and MECHANICAL, and I feel like, with the BASIC challenges, I'm not being encouraged or rewarded for EXPLORING THOSE MECHANICS MORE DEEPLY. So, these optional objectives give me the chance to EXPLORE the mechanics and REWARD ME FOR THEM (although I should note that the reward is TOTALLY TRIVIAL -- literally a star sticker). It seems clear to me that the REWARD is not what I'm doing this for. I don't REALLY WANT THAT STAR THAT BADLY. It's not the STAR that I want. What do I want?
+
+## Wodo makes the point that a draw for a game like this, for him, is the simulation aspect. He, in particular, mentions how games can simulate the experience of PROTECTING something. He theorizes that he wants to protect something and certain types of games give him that experience. So, I would qualify this as a ALPHA GAMER ARCHETYPE, where a player wants to be a hero, and so he plays games that makes him feel heroic. A game where he can protect or rescue.
+
+## This makes me think about the ALPHA GAMER vs BETA GAMER archetypes: it strikes me that ALPHA GAMERS get caught up in THEME and AESTHETIC and IMAGE, and, by my estimation, BETA GAMERS are more caught up in MECHANICS.
+
+## When asking an ALPHA GAMER about what makes a game good, they'll mention THEMES. When asking a beta gamer about what makes a game good, they'll mention MECHANICS (?).
+
+It seems to me that there's something to be said about wanting to PROVE THAT I CAN COMPLETE THESE CHALLENGES. It's not the literal STICKER THAT I WANT. Rather, it's what the sticker represents: mastery. I was given a challenge that I knew would require me to exert myself if I was going to complete it, and I wanted to prove that I could complete it -- to myself. Literally, because, to my knowledge, no one else is examining my scores for these stages, and that's something that's been true in ANY OTHER GAME that I've challenged myself on: back when I was speed-running Mario 64, no one else was interested in my scores. Back when I was speed-running Ninja Gaiden, no one else was interested in my scores. I never publicized my scores. But it was still exciting, for me, to complete these self-imposed objectives... why?
+
+I'm seeing a parallel: why am I completing these optional objectives in Batman? Why am I, alone in my room, trying to complete Mario 64 as fast as possible? Why am I, alone in my room, trying to complete Ninja Gaiden on a single life? What attracts me to these things? Why do I take time out of my day to do these things?
+
+## Even an ALPHA GAMER, who's concerned heavily with themes, can be turned off of a game if the mechanics are bad -- but I think it's interesting that 'bad' is equated here with 'saltiness.' Because I've theorized that, for this same reason that Wodo is mentioning, alpha gamers like to WIN and by extension don't like playing games where they're likely to LOSE.
+
+## As an example, if you're playing a game to feel like a protector or a rescuer, what happens to your motivation when you CAN'T protect what you're trying to protect, and you CAN'T rescue what you're trying to rescue? What if you're not good enough at the game -- what if your opponents are always winning. What happens to your motivation? Can you still feel like a protector -- do you still play this game to feel like a protector -- when you can't protect anyone?
+
+In the case of Batman, Mario 64, and Ninja Gaiden, I don't want to overlook the obvious answer which is that optional objectives give me an EXCUSE or a REASON to keep playing games that I think are "fun." However, although that's been my theory in the past, it doesn't tell the whole story -- it can't. Because, if I have to create my own objectives for a game, then it's because it's STOPPED BEING FUN OTHERWISE. So why do I want to inject more fun into THIS game?
+
+And, my theory right now relates directly to what I said above: all of these games TEASE at a depth of mechanics that I, for whatever reason, want to master.
+
+In Mario 64, looking at the mechanics that the game gives to you, I KNOW that I can complete it faster.
+
+In Ninja Gaiden, looking at the mechanics that the game gives you, I KNOW that I can complete it on a single life.
+
+In Batman, looking at the mechanics that the game gives you, I know that I can complete these objectives in increasingly complex ways. Why be CONTENT with just stealth-killing an opponent when the game has an optional objective to lay a trap for that opponent and trick them into falling into it? The game accommodates this, even if you don't HAVE TO DO IT. You could strip away many of the game's mechanics and still WIN -- but why settle for winning when there's more?
+
+In the case of Batman, I want to note that if it DID NOT HAVE THESE OPTIONAL OBJECTIVES, I would feel much less motivated to explore the mechanics. Once I beat a stage, SOUNDLY, EASILY, I'm pretty satisfied and probably won't need to come back to it. But when the game is taunting me with another CHALLENGE, I want to complete that challenge.
+
+In fact, if Batman did NOT have these optional objectives, the optional objective that I'd most-likely set for MYSELF would be maximum EFFICIENCY. In fact, you see that in my compulsion to speed-run Mario 64 and to complete Ninja Gaiden on a single life: I look at a game's mechanics and I want to complete it EFFICIENTLY.
+
+Basically, in any game that I play, maybe there may as well be an INVISIBLE OPTIONAL OBJECTIVE in my 'side quests menu,' which says, "complete this task as efficiently as possible."
+
+## Kenny mentions that, for him to be motivated to play a game, it has to have something taht he enjoys: be it a story, gameplay mechanics, some kind of challenge, etc.
+
+## But that immediately raises a question to me: what motivates you to START PLAYING A NEW GAME. At that point, all you really have to go on is your friends' reviews, or screenshots demonstrating the game's GRAPHICS (which may appeal to you), but it seems like a stretch to say that... the game has to have something that you enjoy for you to be motivated to play it, because, for one thing, I know, Kenny, because you're a lifelong hardcore gamer, that you have almost certainly EXTENSIVELY played games that you have NOT enjoyed. We play games, sometimes for WAY TOO LONG, searching for something in them to enjoy, when we hate that game. Why do we do that?
+
+## Wodo mentions that searching and testing mechanics for efficiency or behaving strategically can be a big draw for a game, and we can more about that in a bit.
+
+## Kenny says that, maybe for games that we hate but keep playing, finding the joy in them becomes a sort of meta-game where that's a part of the challenge.
+
+I'm trying to avoid the words "fun" and "enjoyable" and "interesting," because those are all not only profoundly SUBJECTIVE, but I know that I've played games in times where I did NOT find them fun, and I was not "enjoying" myself. But I still was MOTIVATED.
+
+Talking about losses and how losing hurts -- that's not exclusive to MULTIPLAYER or competitive games. In ANY game, losing hurts -- even if it's a learning experience. When I'm playing Dark Souls or Sonic the Hedgehog or Paper Mario and I LOSE -- I die, it's game over or I gotta back to a checkpoint -- that hurts. In some games it hurts more than others, but even in a game like Super Meat Boy where you are dying and respawning in LESS THAN A SECOND, there is still that instaneous twinge of, "FUCK." It's kind of profound that, even in a game like Meatboy, where you're not only INTENDED and EXPECTED TO DIE, but the game is INGENEOUSLY DESIGNED AROUND YOUR CONSTANT FAILURE to MINIMIZE the mechanical impact of it. It's a game about trial-and-error that goes a long way to not make you WAIT when you die. You don't lose any PROGRESS when you die.
+
+And yet, when the game gives you a challenge and you fail at that challenge, it still sucks. Maybe there's NOTHING that the game could do to NOT MAKE IT SUCK WHEN YOU LOSE. The game can go a long way to make it hurt LESS or be LESS frustrating, but, even at the tiniest level, when you're given a task and you fuck it up, it sucks.
+
+In some games, you want to try again. To prove yourself? To see what comes after (curiosity)? In other games, you don't. You become so frustrated or otherwise uninterested that you just give up. And in OTHER games, you get a mix where you have this motivation which encourages you to keep playing through COUNTLESS failures, but then, at some point, the pain FINALLY outranks your motivation and you stop playing.
+
+In example #2, I guess, your motivation to play was ALREADY VERY TENUOUS. So all that it takes is a small setback for you to let the game go. We're talking motivation, and I feel like there are games out there which you are BARELY MOTIVATED TO PLAY as long as you can take some tiny, even microscopic amount of enjoyment out of it -- but as soon as the game gives you a challenge that would actually require you to make some kind of SACRIFICE, whether it be making multiple attempts or practicing to master the game's mechanics or something along those lines -- an actual challenge that would require some INVESTMENT from you, your motivation just isn't strong enough.
+
+So, in that last paragraph, I mentioned 'investment.' We INVEST in games that we're motivated to play. Maybe it's fair to say that, the more that a game APPEALS TO US, the more willing we are to get INVESTED in the game -- MECHANICALLY. I mean, yeah, we can get invested in a game's STORY. We can get invested in a game's WORLD or ATMOSPHERE ("immersed"). But there's also the aspect of games being MECHANICAL and having RULES and there IS A LEARNING CURVE, THERE.
+
+And games are, at best (in my opinion), CHALLENGING, which means that there's an element of MASTERY. The player needs to look at their tools and learn their tools and exercise those tools against challenging scenarios which are going to cause the player (again, at best, in my opinion) some amount of STRESS.
+
+Stress that, in daily life, would almost certainly be UNWELCOME. Being stressed out sucks.
+
+But in a game, that's often the point -- and so the question here, perhaps... could be verbalized as, WHY DO WE BRING THIS STRESS INTO OUR LIVES. What not only makes this stress PALATABLE but also ATTRACTIVE. Why do I want to play Darkest Dungeon even though I know that I'm going to be on the razor's edge of losing, I am GOING to lose, I'm going to have to make very difficult decisions; why is that something that I want?
+
+In Dark Souls, it's THEMATIC to the game that the world is against you and you're going to have to EXERT YOURSELF in order to overcome the game's explicit challenges. Why do you want to do that?
+
+And, literally, the topic of this very conversation -- the inciting incident -- relates to these optional objectives in Batman. They're OPTIONAL. The reward that you get for completing them is TRIVIAL. And they are LITERALLY CHALLENGES. The whole idea is that they're more difficult to accomplish than just beating the game in a regular way.
+
+So WHY, why would I want these EXTRA CHALLENGES? What worth do they have to me, as a player? If I can beat the game in a NORMAL, EASY-GOING WAY, why would I want more challenge.
+
+## Eddie brings up the notion of 'collectibles' in games, and how that might appeal to our basic human urge to HOARD things. I can't deny that, when Batman is awarding me with stars for completing optional objectives, that I want to get ALL OF THE STARS just to HAVE ALL THE STARS. How much of a motivating factor is THAT?
+
+But that's exactly why I pointed out, above, that the reward for these objectives is often TRIVIAL. I think that it might be unfair or unrealistic to look at these rewards as being THEIR OWN REWARD. I'm looking at the DEEPER MOTIVATION that makes a person WANT these rewards?
+
+Why do I want all of the riddler trophies?
+
+Why do I want all of the jiggies?
+
+Why do I want EVERY star in Mario 64 when the game can be beaten with only 70.
+
+why do I want all of the stars on this Angry Bird's stage when no one is looking at my stars? No one cares about my high score. What is the point? why do I want these things so bad?
+
+For you guys that are just showing up, today's topic of discussion is PLAYER MOTIVATION IN VIDEO GAMES. What motivates a player to overcome the inherent stresses of playing a video game. Why play a video game when you could do something easier.
+
+## Eddie mentions that, behind collectibles, there is often a final collectible which actually IS attractive on some level beyond 'getting a sticker.' This came to mind as soon as I mentioned the STARS in Mario 64. Because, when you get all of the stars, you get a special ending.
+
+## But before I typed it out -- and a part of the reason that I didn't type it out -- is this, and let me seriously pose this question to you guys: IF, IN MARIO 64, YOU COULD BEAT THE GAME AND SEE YOSHI WITH 120 STARS, BUT THE GAME ACTUALLY HAD 140 STARS... would you still be motivated to get the remaining 20 stars.
+
+And my guess, if you're like me, is yeah. Obviously. In fact, we were talking before about how, before I was a streamer, I went through a phase where I was playing Mario 64 every night and speed-running it. 120 stars. I had zero interest in sharing my times online. I wasn't trying to get to the top of any leaderboard. I was just doing it because I wanted to beat Mario 64 faster.
+
+There is no in-game reward. There is no alternate ending for beating the game under a certain time. If Mario 64 has 140 stars, and there was no in-game reward for getting above 120 stars (except for having another 20 stars in your pocket), I would still RAVENOUSLY pursue those remaining 20 stars. Why?
+
+I want to make a note, right now, about Nioh, which is a game that I HATE. And a big part of why I hated it is that, although the game has TONS of mechanics, I was able to beat the WHOLE GAME by just MASHING one button. And I was hella BORED. And my friends would repeatedly ask me, "if you're so bored, why don't you do something besides just mash a single button?" The game has plenty for you to do. It's packed with things that you COULD do aside from mash a single button.
+
+And I feel like what Tosmith would say, coming from a game-design background, is that I was exercising the PATH OF LEAST RESISTANCE, I had found a DOMINANT STRATEGY, and I just wanted to win. And, honestly, looking at the game's VAST set of mechanics, it was intimidating and it would have required MUCH MORE INVESTMENT FROM ME, AS A PLAYER, to explore and master those mechanics -- and that challenge WASN'T WELCOME because I was beating the game just by pressing a single button. In that case, although the game HAD more depth that I COULD have explored, I wasn't INTERESTED in exploring it.
+
+So, going back to our master question, what motivates a player to want to INVEST in a game?
+
+## Changemewtf talks about 'ranking systems' in games and how they're MARKS OF PRIDE. That's a factor of my urge to beat Mario 64 FASTER -- just the pride of it. I score-attack in games like NiGHTS into dreams, which have no reward at all for high scores. I just want to get higher scores (why?). And, in a game like Bayonetta, I was obsessed with getting higher scores (a very DMC-like game), but a major part of that was the consistent process of UNLOCKING new WEAPONS, new CHARACTERS, new STAGES. And I MIGHT HAVE wanted to get higher scores even without some of those things, but I don't know. Maybe not.
+
+## Changeme and Eddie are both talking about "personal satisfaction" and "pride", and that's sort of the question I'm asking. What makes a game "personally satisfying" such that it motivates you to play.
+
+## Tosmith brings up the topic that I was talking about, earlier, where, legendarily, players fall into archetypes that each look for a different sort of reward in a game. He calls it the "Bartle Test," and the types are: Killers (competitive), Achievers (crave completion), Socializer (maybe what Wodo was talking about, before, when he said that he played games as a way to engage with his friends), Explorers (that's me, I want to find things in a game).
+
+Tosmith also points out that maybe the reason that I CAN beat a game like Mario 64 VERY EASILY, but I'm MOTIVATED to give MYSELF challenges to keep exploring the game more DEEPLY is because it APPEALS TO WHAT I LOOK FOR IN A GAME, as some expression of this Bartle Test.
+
+And that's true of every game that I've mentioned where I've been motivated to pursue optional objectives even, sometimes, with no in-game reward.
+
+On the other hand, maybe I didn't have that same experience with Nioh because it didn't appeal to me on this 'Bartle' level. So maybe, according to Tosmith, the next thing that we should look at is this 'Bartle' theory. But, ignoring this 'Bartle' stuff, there seems to be NO APPARENT REASON that I would SEEK OUT MORE DEPTH in a game like Mario 64, which I could beat at a very SHALLOW level, but at the same time NOT SEEK OUT MORE DEPTH in a game like Nioh, where I was playing at a very shallow level, and I was bored, and I probably would have enjoyed it more if I'd forced myself to explore the game's depth, but I just didn't want to -- I lacked motivation.
+
+What Tosmith is saying about having a game ENGAGE PLAYERS ON A VARIETY OF LEVELS is in response to the question that I asked Kenny, earlier, about "before you've played a game and have had fun playing a game, why do you play a game? Why do you turn it on for the first time?" And Tosmith is talking about essentially an ONION of engagement for the player. Make the game fun at a SHALLOW level, but have something or encourage players to look into it at a DEEPER level.
+
+And that sort of coordinates with the experience that I had yesterday which started this whole discussion, playing Batman. Above, in my notes, I wrote out my exact experience, yesterday, and I mentioned about how, at first -- the reason that I turned the game on was because I wanted to play a certain CHARACTER. That falls into, like, a power fantasy, hence alpha gamer. And it's shallow. I wanted to check out the new DLC, explore the new environments, and I wanted to check out these new characters.
+
+So, I turned the game on and I started the main game, and I was bored. I was struck by how beautiful the world was, but, at the point that my save was at (I've played this game before, months and months ago), there was not an immediately attractive side-objective, and I don't care about the story and I didn't want to get all involved with a plot mission. So I just flew around the town, beating up thugs, and it was very repetitive and shallow and I wasn't having a good time.
+
+When I moved over to the challenge maps, I was IMMEDIATELY pulled in -- but now, with Tosmith's insight, I have some new context for this. Above, I explained how I was having a really good time even though I DIDN'T EVEN KNOW THE CONTROLS. I was LEARNING the controls as I was playing, and I was HIGHLY challenged. And I was having a kick-ass time.
+
+But as I learned the controls and re-learned the game, the challenges that were once really difficult very quickly became trivial. It was at that point that I started looking at the optional challenges to get that sense of challenge back, and that's when I really became addicted and had difficulty turning the game off.
+
+So, maybe the reason that I sought out these optional objectives was that I was ALREADY engaged and maybe I need to reexamine this idea of 'investment.' Because, answering the question of, "why do I pursue optional challenges?," maybe this goes back to what I mentioned earlier about motivation and INVESTMENT. Why do we take the risk of getting INVESTED in games?
+
+What I didn't realize when I first brought that up is that INVESTMENT goes both ways. Maybe, the reason that I pursue these optional objectives is that I'm INVESTED. At that point, when you invest in something, you don't want to pull out; it actually becomes more attractive to keep going than to stop. At first, you have this INERTIA to overcome. How do you convince the player to MAKE THAT INVESTMENT. Once they've made that investment, maybe it's almost harder to LOSE THEM than to KEEP THEM? The deeper a player is invested, perhaps the more likely they are to keep looking for MORE in your game, rather than looking for a way out.
+
+It sort of strikes me how I was drawn INTO Batman as a BEGINNER. I didn't even know what I was doing, but I wanted to play because the game appealed to me as an explorer.
+
+Another example would be Dragon's Dogma. Dragon's Dogma is a longplay that we just stopped doing, here on the channel -- and, on the first day, I was EXTREMELY EXCITED ABOUT THE GAME. I was EXTREMELY MOTIVATED. I got VERY INVESTED. Why? Because it appealed to me as an explorer. The world was apparently large and full of cool stuff to find. The quest system seemed like adequate motivation to reward me for exploring this world.
+
+And then, over time -- over months, as I actually LEARNED HOW TO PLAY DRAGON'S DOGMA, I LOST interest. I found that I was immediately mistaken about Dragon's Dogma's world. It WASN'T that interesting to explore. I didn't feel adequated rewarded. And so I DISENGAGED.
+
+So, on that first sitting with DD, I was SO INVESTED that it kept me going for MONTHS, even when I stopped having fun. So, because I was so invested, it was harder to become disengaged.
+
+And, in Batman, I had a similar experience where, once I started playing challenge mode, I was HIGHLY INVESTED RIGHT AWAY -- or, as Tosmith would say, I was engaged. And as I kept playing, I felt rewarded for my investment WHICH MADE WANT TO INVEST MORE, RIGHT? I wanted more reward, and I had already found that the game was REWARDING ME FOR BECOMING INVESTED, so I wanted to invest even more.
+
+And that correlates with Tosmith's theory about why I didn't have the same experience with Nioh. The game started up and I had some investment because I love Team Ninja and I love Dark Souls and I really wanted to love Nioh. But, right away, the game was not rewarding me for my INVESTMENT (?)... right? I was WINNING, so that's kind of a reward. But maybe I didn't WANT to win. I wanted something else out of the experience that the game wasn't giving me. For one thing, the loot sucked right away, and I'm notoriously motivated by treasure. Partially because of that, I didn't feel rewarded for exploring the stages. I didn't get any cool encounters of it, I didn't get any cool treasure out of it -- so, in that sense, it was a very Dragon's Dogma'esque experience.
+
+So maybe that could be the unifying theory of 'gamer motivation': you need to make the player want to get invested at a SHALLOW LEVEL, and you need to immediately REWARD THEM FOR THAT INVESTMENT so that they want to KEEP INVESTING MORE. And you want for your game to have a high-enough ceiling that they can KEEP INVESTING MORE and KEEP GETTING REWARDED FOR IT, until they're invested so deep that they can't get out.
+
+Tosmith's 'Bartle' idea seems to brush away a big part of this question by asserting that there are just certain ELEMENT THINGS (with no reason to necessarily dig deeper) that people find 'fun'. I'm not really in a position to argue with that, although it would be interesting to look at, but I do kind of like how it separates the idea of FUN from MOTIVATION.
+
+Me and Kenny mentioned earlier about the DIFFERENCE between FUN and MOTIVATION. We aren't talking about why you find a game INTERESTING or why you find it ENJOYABLE -- we're talking about literally what keeps you playing, why do you start playing in the first place.
+
+It sucks to be stressed out. So why do we seek out the stress of these challenges in game when we might not do the same thing in our daily lives.
+
+And I feel like the answer that we've come to is that, in a game, when you complete a challenge, it REWARDS YOU in ways that stress doesn't typically reward you in real life.
+
+One thing that we haven't talked about at all is ESCAPISM. We haven't talked about casual games and how people pull their phones out for a quick few rounds of ______ just to escape the monotony of the ride.
+
+But, you know, there are other ways to escape. Maybe that's a different topic for a different time. I guess what we're focusing on is that GAMES ARE HARD and WATCHING MOVIES IS EASY. Games have CHALLENGE. Why would you choose to use something that you stresses you out, in ANY capacity (I know that my manz KD be getting stressed out by Mario Maker), as a way to escape from your real life.
+
+Next time, on Monday, I want to talk more about what players find REWARDING in games. That's sort of what this Bartle Test is all about, but I wasn't completely satisfied with the test, ITSELF. I'm totally on-board with the idea that different types of gamers get different rewards out of games, and another thing that I'm completely on-board with is that ASKING SOMEONE WHAT REWARD THEY GOT A GAME is probably not the best way to figure out the truth of what they find rewarding in games, because it's very subjective and people don't necessarily always know what they want.
+
+That being said, having looked at this test, I think that I'm not satisfied that the questions are the right questions to ask. I think I'd rather spin my wheels in a discussion with the homies about what they feel is most rewarding in games.
