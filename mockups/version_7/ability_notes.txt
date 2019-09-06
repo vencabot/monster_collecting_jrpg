@@ -7886,3 +7886,91 @@ But, you know, there are other ways to escape. Maybe that's a different topic fo
 Next time, on Monday, I want to talk more about what players find REWARDING in games. That's sort of what this Bartle Test is all about, but I wasn't completely satisfied with the test, ITSELF. I'm totally on-board with the idea that different types of gamers get different rewards out of games, and another thing that I'm completely on-board with is that ASKING SOMEONE WHAT REWARD THEY GOT A GAME is probably not the best way to figure out the truth of what they find rewarding in games, because it's very subjective and people don't necessarily always know what they want.
 
 That being said, having looked at this test, I think that I'm not satisfied that the questions are the right questions to ask. I think I'd rather spin my wheels in a discussion with the homies about what they feel is most rewarding in games.
+
+
+09/04/19:
+
+Over the past few streams, we've been coming up with a lot of ideas -- some of which are brand new -- but it's all been in service of completing this 'game design document,' so that we have some formal notes about how our game is going to play in a way that's easy for other people to parse. Easier than this 8000 line document of notes.
+
+Let's re-examine our game-design document and figure out what needs to be updated.
+
+Before we end today's stream, having accomplished literally nothing (except jamming out), I want to re-examine our values for EXHAUSTION. It's somewhere above. Gotta find it.
+
+1.) After each fight, the WINNING TEAM gains back 1 LP per unit.
+2.) After each fight, EVERY UNIT ON EACH TEAM takes 15% exhaustion. Every unit NOT in the fight RECOVERS 10% exhaustion.
+
+So, for Thursday:
+
+1.) We need to go more in-depth about each phase of battle. We need to go in-depth about the process of CREATING the deck. We need to go into the process of CHOOSING UNITS BEFORE A BATTLE. We need to go into depth about the flow of INDIVIDUAL BATTLES.
+
+2.) As we discuss DECK CREATION, we can talk about Growth Points and allocating them. We can talk about Equipment.
+
+3.) As we discuss the FLOW OF BATTLE, we can talk about leader HP.
+
+4.) We need to re-examine the STRUCTURE of our document. Right now, it's sort of nonsensical, with these headlines:
+
+PVP GAME FLOW
+    Extra-Battle Management
+    Pre-Battle
+    Battle
+    Return to Pre-Battle
+UNITS
+    ATTRIBUTES
+        Max HP
+        Current HP
+        Max LP
+        Current LP
+        Max MP
+        Current MP
+        ATK
+        DEF
+        SKL
+        PRY
+        EXS
+        TAG
+        UDN
+    ABILITIES
+        Effect
+        Cost
+        Descriptor Tags
+        Unique Attributes
+    LEARNING ABILITIES
+        Ability Pools
+        Child Abilities
+        Equipping Abilities
+LEADERS
+DYNAMIC RULES
+    SEVERITY
+    TRIGGERING DYNAMIC RULES (Check Phase)
+
+It seems to me that we need to re-engineer our document from the perspective of a PLAYER. We need to re-organize so that the reader is receiving information at the time that they need it. Think of it as an instruction-manual.
+
+So, basically, we should split the document into GAMEPLAY PHASES and then explain what the player needs to know at each phase to make decisions.
+
+
+09/05/19
+It strikes me that we still haven't really decided on how we want to go about EQUIPPING UNITS WITH ABILITIES.
+
+We could have them spend GP during the deck-construction phase, and maybe that's the only way that we can do it, right now.
+
+What I think I would like would be for players to UNLOCK NEW ABILITIES FOR THEIR POOLS over the course of many fights and then be able to equip those abilities, at will, on any unit which has access to that pool at that tier. But the problem with this is that, as of RIGHT NOW, we don't have any between-battle unlockables. We don't have a mechanism, yet, to unlock new units. Unlock new equipment. Unlock new leaders. And, certainly, not to permanently unlock new abilities.
+
+Maybe it would make THE MOST SENSE, RIGHT NOW, TO JUST GIVE PLAYERS ACCESS TO EVERY ABILITY FOR EVERY ABILITY POOL AT THE ALLOWED TIERS. The downside of this is that there is no GACHA or randomization element.
+
+But maybe that's a good thing, for now. Keep it simple. Is the gacha element SO CENTRAL TO THE GAME-DESIGN that we really need to fuck with it during alpha and beta. No. Honestly, it's not. It's a minor factor meant to add some interest to the game, and so we can probably do without it as we go into the future looking for ways for players to unlock new stuff. We haven't discussed it.
+
+We gotta get rid of the gacha.
+
+Which means that players have access to every ability in the game.
+
+We need to re-examine gacha once we're looking at the OVER-ALL PROCESS OF UNLOCKING CONTENT IN OUR GAME. Gacha is just a part of UNLOCKING CONTENT IN OUR GAME, and we're not at a phase, yet, where we can be concerned about unlocking content. Once we're there, we'll talk more about gacha, we'll talk more about unlocking units and equipment, etc.
+
+So, in the game-design document, it's important that we make note that certain elements and features are going to be much more LIMITED in the final game. You're not going to be able to construct your deck from ANY CARD THAT EXISTS. You're not going to be able to equip your cards with ANY EQUIPMENT THAT EXISTS. And you're not going to be able to equip your units with abilities from ANY ABILITY THAT EXISTS FOR THEIR POOL.
+
+Maybe equipment should have some amount of variation. Units... do? Will?
+
+As we close in on having a finished game-design document, which I believe will expedite the process of getting a working alpha, it's going to become much more important for us to begin considering how we're going to modularize our assets. We're gonna need to have systems in place so that we can quickly add, test, and alter new UNITS, LEADERS, ABILITIES, ABILITY POOLS, ITEMS, AND EQUIPMENT.
+
+All of this actually seems very trivial to modularize EXCEPT FOR ABILITIES, ITEMS, AND DYNAMICS. Because these have dynamic EFFECTS in battle. To modularize these we would basically need to code them in Python. Which won't be as accessible to non-programmers as doing things like CREATING UNITS and POOLS and EQUIPMENT would be.
+
+Units, Pools, and Equipment could essentially be stored as JSON. Abilities, Items, and Dynamics would essentially need to be stored as Python files.

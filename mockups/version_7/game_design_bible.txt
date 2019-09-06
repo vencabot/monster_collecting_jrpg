@@ -1,323 +1,56 @@
-HIGH-LEVEL OBSERVATIONS
------------------------
-1.) This is a monster-collecting JRPG in the vein of Pokemon.
-
-2.) As with Pokemon, each party consists of a team of monsters (or 'units') and only one of those units can be in the 'ring' at a time. Only the unit that is in the ring can use abilities, and, almost always, only the unit in the ring can be targeted by abilities.
-
-3.) Unlike in Pokemon, players can take more than one action per turn. Per-turn actions are limited by a resource called 'AP'.
-
-4.) Unlike in Pokemon, victory is not attained simply by directly attacking the enemy team's HP. Instead, both sides attempt to tactically control combat (limiting their opponent's options and strengthening their own options) by adding new RULES to the battle called 'Dynamic Rules'.
-
-5.) Dynamic Rules are put into play by certain monster (or 'unit') abilities and are also directly attached to certain battlefields and are also directly attached to certain monsters (or 'units').
-
-6.) Dynamic Rules are put into play and then triggered by certain events. For instance, a Dynamic Rule might read, "Whenever a unit from Team B takes damage, every other unit on Team B takes 10% of that damage."
-
-
-TO-DO
------
-*) Character growth seems inherent to the 1-player experience, which means that it may hinge on the exploration aspect. Will there be character-growth for PVP, or will units fall into some kind of meta? Maybe each PVP team is awarded a certain amount of growth points to develop their teams with.
-A.) After picking a leader and the 10 units for a deck and equipping those 10 units, each unit in that deck will be given a certain amount of Growth Points with which to learn Abilities (?), unlock ability equip slots, and increase attributes.
-
-*) There was discussion, early-on, about permanently binding some piece of 'equipment' to a unit upon first 'catching' it, which would augment character-growth and maybe even supply the Tertiary Ability Pool. We haven't discussed this much outside of that.
-A.) After choosing the units for a deck, the player will choose what to equip each unit with. This equipment cannot be changed during PVP and can have a wide variety of affects, including adding or replacing an ability pool, upgrading an ability pool (and its slots), adding or replacing a unit dynamic, etc.
-
-*) We have never discussed the precise mechanics for 'catching' new units (or 'monsters'). In Pokemon, you weaken a monster and then throw a ball at it, and there's a chance that it'll be added to your collection. In our game, we haven't really discussed the particular mechanics for how new units are going to be added to the player's collection.
-A.) For the alpha and beta, there is no monster-catching, nor equip-gathering. The players (testers) have access to everything to construct their decks with. As for whether or not UNLOCKING THINGS could be a STRONG MOTIVATOR for play once testing is complete -- obviously, we need to consider that. But we'll cross that bridge when we come to it.
-
-*) We need to talk about the conditions for winning a battle: is it when the LEADER runs out of HP, or is it when all of the team's units are knocked out?
-A.) Leaders have a small amount of HP, and battle is over when the leader runs out of HP. When a unit is KO'd, the opposing leader can expend their remaining AP to deal that much damage to the defending leader's HP. At the start of the next turn, the previously vulnerable leader will pick a new unit to bring into the ring.
-
-*) We haven't talked about Exhaustion, yet, in this game-design document, or about LP restoration.
-
-*) We probably need to talk about how each unit has a limited number of rules that they can exclusively be the target of.
-A.) I don't think that we need to limit the number of rules stacked on an individual object. There are better ways to control how rules end up being stacked and how much reward the players get for stacking them. Abilities that inflict rules already come at a wide variety costs, you can only use so many abilities per turn, the opposing team is trying to undermine the rules that you're setting up, etc. Individual units can only have access to so many rules because of the rule-limit per Ability Pool. There are so many limits to what rules you're going to be able to set up, together, that I don't think we need this extremely harsh balancing measure.
-
-
-PVP GAME FLOW
--------------
-I.) Extra-Battle Management:
-    In this phase, players choose units from their collection to place into
-    their 10-unit deck. Also, players will expend unit Growth Points to
-    increase their units' combat potential.
-
-II.) Pre-Battle:
-    Before each battle, both sides will roll for initiative, which will give
-    the winner a tactical advantage insofar as picking units from their 10-
-    unit deck to place into their 4-unit battle party.
-
-III.) Battle:
-    Each team takes turns using their respective units' and leader's
-    abilities until their AP (Action Points) reaches 0, at which point it
-    becomes the other team's turn. At the start of each turn, that team's AP
-    is entirely restored. The fight ends when all of the units on a single
-    team are knocked out.
-
-IV.) Post-Battle:
-    Both players will roll for initiative, again, and choose from their
-    remaining units to create new 4-unit battle parties.
-
-V.) This continues until one player has no units remaining.
-
-
-UNITS
------
-    ATTRIBUTES
-    ----------
-    This being a JRPG-style game, character units are defined by a variety
-    of numerical 'attributes'. These determine a units' effectiveness over a
-    very of different tactics that a player might choose to employ.
-
-    Max HP (Health Points):
-        A value which represents how much direct damage a unit can take
-        before it is 'KO'd. A KO'd unit cannot act, and once an entire
-        battle party is KO'd, that team loses that battle.
-
-    Current HP (Health Points):
-        The amount of HP remaining before the unit is KO'd. This value can
-        fluctuate downward toward 0 whenever the unit takes damage and can
-        fluctuate upward toward the Max HP value when the unit is healed.
-
-    Max LP (Life Points):
-        A value which represents the amount of 'critical' damage that a unit
-        can take before it can no longer be revived from 'KO'. Whenever a
-        unit is KO'd, it loses 1 LP. Some abilities may target LP directly
-        for damage.
-
-    Current LP (Life Points):
-        A value which represents how many more times a unit can be KO'd
-        before it can no longer be revived.
-
-    Max MP (Magic Points):
-        A value which represents how much resources a unit has to burn for
-        the purpose of using especially effective abilities. Not every
-        ability has an MP cost -- but, for those that do, they'll become
-        inaccessible once a unit has completely expended its MP.
-
-    Current MP (Magic Points):
-        The amount of MP remaining for the unit to expend on abilities which
-        have an associated MP cost.
-
-    ATK (Attack Power):
-        A value used by abilities to determine how much damage they should
-        do. The more ATK a unit has, typically the more damage it's capable
-        of outputting. It's a measure of how 'aggressive' a unit is.
-
-    DEF (Defensive Power):
-        A value used by abilities to determine how much damage they do. The
-        more DEF a unit has, typically the less damage is takes. Along with
-        'HP,' it's a measure of how defensive or 'tanky' a unit is.
-
-    SKL (Skill):
-        A value utilized when any ability is used by this unit. It's used in
-        a calculation against the target's PRY (Parry) value to decide which
-        of three EFFECTIVENESS LEVELS the ability will be used at. Abilities
-        used at 'Glancing' Effectiveness will be especially ineffectual.
-        Abilities used at 'Normal' Effectiveness will have average output.
-        Abilities used at 'Critical' Effectiveness may deal more output or
-        have special properties be attached to them on top of their normal
-        output.
-
-    PRY (Parry):
-        A value utilized when this unit is targeted by any ability. It's
-        used in a calculated against the opposing unit's SKL (Skill) value
-        to decide which of the three EFFECTIVENESS LEVELS the ability will
-        be used at. You want to have more PRY so that abilities used
-        against you have a lower chance of reaching 'Critical' Effective-
-        ness or a higher chance of falling into 'Glancing' Effectiveness.
-
-    TAG (Descriptor Tags):
-        Loose descriptors of a unit which abilities can take into account
-        when calculating their effect. For instance, both a 'pirate' unit
-        and a 'cyclops' unit could have a tag 'one_eyed'. Then, certain
-        abilities or Dynamic Rules could alter their effect based on whether
-        a target is one_eyed or not. A single unit can have any number of
-        descriptor tags. Furthermore, abilities can add new descriptors to a
-        unit, such as, "covered_in_oil," or, "burnt," etc.
-
-    UDN (Unit Dynamic):
-        A Dynamic Rule that is automatically applied to any battle that this
-        unit is a part of. Just by bringing this unit into their battle
-        party, a player is suggesting some control over the strategies at
-        play within that battle. Therefore, the UDN will probably be a major
-        deciding factor insofar as team structure.
-
-
-    ABILITIES
-    ---------
-    Aside from being defined by their attributes, units are defined by the
-    abilities that they have access to: what they can DO in battle.
-
-    Effect:
-        Abilities will usually alter some attribute of a unit and / or put a
-        new Dynamic Rule into play. For instance, an ability might lower the
-        HP of another unit. It might raise the ATK of an ally unit. It might
-        put a new Dynamic Rule into play which causes an ally unit's DEF to
-        go up whenever it takes HP damage, etc.
-
-    Cost:
-        Abilities will almost always carry some side-effect which limits
-        when or how-often they can be used. The most common side-effect
-        which nearly every ability shares is an AP cost, where the team's
-        collective pool of 'Action Points' is reduced when the ability is
-        used. Each turn, a team is given a limited amount of AP to work
-        with, and, when that AP pool reaches 0, the team's turn is over.
-        Other negative side-effects of ability use could include an MP cost
-        or an HP cost -- or an LP, ATK, DEF, SKL, PRY cost, or some negative
-        Dynamic Rule comes into play. In other words, abilities can have any
-        number of costs -- not just AP and MP.
-
-    Descriptor Tags:
-        Abilities can have 'tags' similar to the way that units do, for the
-        same reason: so that Dynamic Rules might be triggered when abilities
-        that have certain tags are used. For instance, an ability could be
-        tagged as 'magical,' and it could trigger a Dynamic Rule described
-        as, "the MP cost of magical abilities is doubled."
-
-    Unique Attributes:
-        Abilities can individually save any number of values when used.
-        Could save a list of who the ability has been used against. Could
-        save a value for how many times it's been used, etc. These values
-        can then be called upon to change the effect of the ability, such as
-        increasing in power every time it's used or not being usable in
-        back-to-back turns, etc.
-
-
-    LEARNING ABILITIES
-    ------------------
-    When first brought into a player's collection, a unit will be equipped
-    with some basic abilities. As the unit is developed by the player,
-    their kit of abilities will change, affording the player many tactical
-    decisions about how a particular unit will be utilized in combat.
-
-    Ability Pools (Classes / Roles):
-        Every unit has (limited) access to three Ability Pools which may be
-        shared among any number of units. Each of these Pools has a theme to
-        the abilities contained there-in which relates to a particular
-        purpose. There might be an Ability Pool for restricting enemy unit-
-        swapping, or restoring MP, etc., etc. Each ability in the Pool will
-        be designated as Tier 1 (bread-and-butter), Tier 2 (irregular), Tier
-        3 (highly situational). These tiers should reflect how definitive
-        that particular ability is for that Pool.
-
-        Each Ability Pool has two Parent Abilities for each tier, or 6
-        Parent Abilities total.
-
-        Of these three Ability Pools, each unit will have one Primary
-        Ability Pool, one Secondary Ability Pool, and one Tertiary Ability
-        Pool. Units can learn ANY ability from their Primary Ability Pool,
-        but can only learn the Tier 2 and Tier 3 abilities from their
-        Secondary Ability Pool. Units can only learn the Tier 3 abilities
-        from their Tertiary Ability Pool.
-
-        So, the total abilities that a unit can learn are determined by what
-        three Ability Pools they have and in what order they appear
-        (Primary, Secondary, and Tertiary).
-
-    Child Abilities (Learning, Non-Linear Variation):
-        When a unit chooses a Parent Ability to learn from one of their
-        Ability Pools, some randomization comes into play regarding the
-        precise effect of the ability that they learn (non-linear variation)
-        and how effective the ability is over-all (linear variation).
-
-        Upon learning from a Parent Ability, the unit will receive one of 3
-        possible Child Abilities whose effect will vary slightly. For
-        instance, a Parent Ability could be 'Poison' which instates a
-        Dynamic Rule which deals continuous HP damage to a single target.
-        One Child Ability might inflict minor damage over 10 turns, and
-        another Child Ability might inflict major damage over 5 turns, and
-        another could inflict major damage over 10 turns but at a much
-        greater cost. The resultant Child Ability is chosen at random and
-        will also have some of its attributes slightly randomized, including
-        cost and other factors of effectiveness.
-
-        Units will be able to learn from a single Parent Ability any number
-        of times and can accrue a collection of Child Abilities which they
-        can selectively 'equip'.
-
-    Equipping Abilities (Character Growth):
-        When first collected, a unit will have learned two abilities from
-        their Primary Ability Pool, one ability from their Secondary Ability
-        Pool, and one ability from their Tertiary Ability Pool. All of these
-        abilities will be 'equipped' and, therefore, usable in combat, but
-        newly-learned abilities will need to be equipped in their place if
-        they are to be used in battle.
-
-        A newly-acquired unit will have two equip-slots for abilities from
-        their Primary Ability Pool, and one each for their Secondary and
-        Tertiary Ability Pools. More equip-slots can be purchased as a part
-        of character growth using the same currency that would otherwise be
-        used to upgrade attributes (or learn new abilities). (Character
-        growth is not well-defined in our game design, yet.)
-
-
-LEADERS
--------
-Each team can choose a 'Leader' whose abilities can be used on any turn alongside the unit which is currently in the ring. These abilities may include SWAPPING units into and out of the ring and may include using items from an inventory, fleeing from combat, healing units, etc.
-
-Each Leader could have different strengths and weaknesses in terms of what abilities they have access to and how much those abilities cost in terms of AP. Some leaders may even start a turn with more or less AP than others.
-
-Each Leader has a different 'Leader Dynamic' which is a Dynamic Rule that will be automatically applied to any battle that the leader takes part in.
-
-The Leader that a player chooses will influence what sort of benefit they get when they win 'initiative' at the start of a battle. One leader may see their entire enemy's team before they have to start picking units. Another leader may see one unit of the enemy's team and then have to pick a unit for their own team, but perhaps they have a better ability in battle.
-
-* There are still a lot of ideas floating around about Leaders, such as whether or not they should have attributes like HP and MP.
-
-
-DYNAMIC RULES
--------------
-Our game's central gimmick -- the hook that separates it from other games in the genre -- is the significance of the 'Dynamic Rule System'.
-
-Each battle has a list of special rules which will tactically limit participating teams by triggering different positive and negative effects when certain conditions are met.
-
-Both teams will have influence over this list of rules and will try to instill rules that will benefit their own strategies and undermine their opponent's strategies. Teams can influence the rules BEFORE battle begins by choosing particular Leaders (each having their own 'Leader Dynamic' which automatically brings a rule into play) and by choosing particular units for their battle party, all of which have their own 'Unit Dynamic' to automatically bring into play.
-
-Furthermore, during the battle, units can use abilities which will instill a huge variety of Dynamic Rules into play, which can have a huge impact on the way that a battle plays out.
-
-Finally, various 'battlefields' can come inherent with their own Dynamic Rules.
-
-    SEVERITY
-    --------
-    When it comes into play, on top of having a general descriptor of its
-    effect, Dynamic Rules have a variable 'severity' value which determines
-    how potent its effect is. For instance, a 'poison' rule which inflicts
-    HP damage to a unit after every time that it takes an action could have
-    its inflicted damage go up or down dependent on the rule's current
-    Severity value.
-
-    Severity can be dynamically raised or lowered throughout the course of
-    battle by certain unit abilities or even as the result of other Dynamic
-    Rules being triggered.
-
-    A Dynamic Rule's starting severity may be set per the ability which
-    instills it or it could be somewhat variable or randomized based on any
-    number of factors.
-
-    Some Dynamic Rules may see a dramatic change to their effect based on
-    Severity. For instance, our example 'Poison' rule might actually have a
-    condition where it deals 100% of it's target's HP in damage if it
-    reaches '10' Severity, which is our maximum.
-
-    TRIGGERING DYNAMIC RULES (Check Phase)
-    --------------------------------------
-    Dynamic Rules take effect when a particular attribute within the game is
-    changed. For instance, a Dynamic Rule may take effect when the turn
-    counter goes up. It may take effect when a particular unit's HP is
-    lowered or raised. It may take effect when a unit's MP falls below a
-    particular value.
-
-    Essentially, any action may trigger a rule, and all of the above
-    examples would take place in the 'After Check Phase.' Dynamic Rules
-    specifying 'After' as their 'Check Phase' will REACT to changes in the
-    game.
-
-    Dynamic Rules can also take effect when a change is PROPOSED to the game
-    so that the change can be intercepted. For instance, a Dynamic Rule may
-    be described as, "The HP damage of all magical abilities is doubled."
-    This would be a Dynamic Rule with a 'Before' Check Phase, because it
-    would see that HP damage is GOING TO BE DONE, and so it then checks that
-    the ability inflicting this damage is MAGICAL, and then it overwrites
-    the expected damage amount with a new, doubled damage amount.
-
-    So, Dynamic Rules can have a 'Before' or 'After' Check Phase, and that
-    determines whether or not the effect of the Dynamic Rule will take place
-    in REACTION to a change or to AUGMENT a change in the game.
+DECK CONSTRUCTION
+    CHOOSING UNITS
+        ATTRIBUTES
+            NON-LINEAR AND LINEAR VARIATION (not implemented)
+            MAX, CURRENT, AND AUGMENTED ATTRIBUTES
+            HP
+            LP
+            MP
+            ATK
+            DEF
+            SKL
+            PRY
+            EXS
+            TAG
+        DYNAMICS
+            TRIGGERING EFFECTS (check phase)
+            SEVERITY
+        ABILITY POOLS
+            POOL LEVEL
+            PARENT ABILITIES
+                TIERS
+                NON-LINEAR AND LINEAR VARIATION (not implemented)
+                CHILD ABILITIES
+                    DIRECT AND INDIRECT EFFECTS
+                    DIRECT AND INDIRECT COSTS
+                    DESCRIPTOR TAGS
+                    UNIQUE PROPERTIES
+    CHOOSING A LEADER
+        HP AND AP
+        DYNAMICS
+        INITIATIVE
+        LEADER ABILITIES (?) *what if leaders varied AP costs for swapping
+    CHOOSING EQUIPMENT
+        NON-LINEAR AND LINEAR VARIATION (not implemented)
+        ATTRIBUTES
+        REPLACE OR UPGRADE ABILITY POOLS
+        ADD DYNAMICS
+    SPENDING GROWTH POINTS
+        GROWING ATTRIBUTES (including ability slots)
+        BUYING ITEMS
+PRE-BATTLE
+    INITIATIVE
+    FORMING YOUR TEAM
+        COUNTER-PICKING
+        LP AND EXHAUSTION
+BATTLE
+    BATTLEFIELD DYNAMIC
+    CHOOSE UNIT FOR THE RING
+    USING ABILITIES AND ITEMS
+        ADDING DYNAMICS
+        TARGETING DYNAMICS
+        TARGETING UNITS
+    SWAPPING UNITS
+    KO'ING ENEMY UNITS
+    ATTACKING THE ENEMY LEADER
+    ENDING THE TURN
