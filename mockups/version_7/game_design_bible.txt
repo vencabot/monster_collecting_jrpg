@@ -1,26 +1,134 @@
+INTRODUCTION
+------------
+Our game is a monster-battling JRPG in the tradition of Pokemon, but with some tactical sensibilities reminiscent of collectable-card-games in particular.
+
+Similarities to Pokemon involve limiting active battle participants to one-at-a-time with units needing to be 'swapped in' to the 'ring' in order to use abilities, but at the cost of being vulnerable to attack.
+
+The biggest dissimilarity to Pokemon is that a single team can take more than one action per turn in battle, where-as the single-action limitation is a major part of Pokemon's design. In particular, teams are given a fixed amount of 'Action Points' on their turn and can spend these points in a large number of ways, including using monster abilities and swapping units. This means that a player could use an ability with ONE monster and then swap another monster into the ring before the opponent can retaliate against the first.
+
+Furthermore, battle ends when the team LEADER (the 'trainer') is KO'd, and the team leader is vulnerable to damage whenever their current monster is KO'd and the enemy team still has AP remaining.
+
+Finally, unlike in Pokemon, leaders (trainers) don't bring their entire team into each battle. Players form a 'deck' of 10 units (monsters) and, for each battle, they choose 4 of those units to fight alongside them.
+
+One of our game's major gimmicks is the 'Dynamic Rule System,' where the rules of a battle can effectively be altered by its participants with the goal being for one team to establish rules which SUPPORT their tactics and UNDERMINE their enemy's tactics while also trying to de-establish rules which support their ENEMY'S tactics and undermine their own. Dynamic Rules (or simply 'Dynamics') can be implemented into a battle in a variety of ways, including by using Abilities or simply bringing certain units and leaders into battle.
+
+For those familiar, the closest comparison that I can think of to the Dynamic Rule System in existing video games is the 'Laws' system of Final Fantasy Tactics Advance and its sequel. It's essentially a meta way to control your opponent's options.
+
+This document will explain individual mechanics in-depth as they would arise during a player's first sitting with the game, starting with the construction of a 'deck'.
+
+
 DECK CONSTRUCTION
-    CHOOSING UNITS
-        ATTRIBUTES
-            NON-LINEAR AND LINEAR VARIATION (not implemented)
-            MAX, CURRENT, AND AUGMENTED ATTRIBUTES
-            HP
-            LP
-            MP
-            ATK
-            DEF
-            SKL
-            PRY
-            EXS
-            TAG
+-----------------
+A 'deck' is a cherry-picked collection of 10 'units' (monsters) and their 'leader' (trainer). Before each battle, the player will choose 4 of these units to form a team with for that battle, and so the units in a deck should have good synergy with one-another and be able to form teams with a variety of combinations to suit different enemy teams.
+
+There are a number of factors to consider when choosing units for a deck. We'll detail those factors here.
+
+    ABOUT ATTRIBUTES
+    ----------------
+    As with any JRPG, each unit has a variety of attributes (mostly numerical) which will be a major factor in which 'roles' that unit may be suitable for in battle. Players would be well-advised to consider these attributes carefully when picking units for their deck.
+
+        NON-LINEAR AND LINEAR VARIATION (not implemented)
+        -------------------------------------------------
+        Each 'type' of unit will have a baseline combination of attributes which should be roughly balanced against the attributes of all other types of units. However, there will be some randomization regarding unit attributes which should make individual units of a given type fairly unique.
+
+        "Non-linear variation" describes different FAMILIES of units within a single type and may be differentiated by their DESCRIPTOR TAGS and UNIT DYNAMICS (explained below). These non-linear variations should roughly satisfy the same purpose in battle but with an individual twist.
+
+        "Linear variation" describes an amount of randomness in the individual numerical attributes of a given unit within a type. This randomness shouldn't be so drastic as to alter the unit's function in battle but should be enough to be a consideration which may give players a modicum of tactical depth when choosing between two units of the same type.
+
+        Because unit CAPTURING isn't intended to be implemented in our game's alpha and players will instead choose from a common set of units, neither linear nor non-linear variation will be a factor until the beta.
+
+        MAX, CURRENT, AND AUGMENTED ATTRIBUTES
+        --------------------------------------
+        During deck-construction, attributes will be considered in their 'max' form, which is the baseline value for that particular unit. However, attributes have a variety of forms throughout gameplay.
+
+        For consumable attributes which are used as resources battle, their 'current' form represents how much of that resource is remaining. For instance, if a unit begins a battle with their 'max' HP of 20 but then takes 5 HP damage, their 'current' HP is 15 -- but they can still only have their HP restored up to their 'max' HP amount. Resource attributes with a 'current' value include HP, LP, and MP (and a Leader's AP).
+
+        During battle, all attributes also have an 'augmented' value, which represents the value that is used currently by the game's calculations. For instance, although a unit's 'max' ATK may be 5, they may be under the influence of a 'buff' which, at the moment, causes their 'augmented' ATK to be calculated as 7. That same unit may elsewise be subject to a 'nerf' which, at the moment, causes their augmented ATK to be 3.
+
+        In the case of resource attributes like HP, LP, and MP, the 'augmented' value points toward what would be the maximum value for those resources.
+
+        In battle, all effects are calculated from the current 'augmented' value of any attributes involved, and those values default, at the start of battle, to those attributes 'max' or baseline values.
+
+
+    LIST OF BASIC UNIT ATTRIBUTES
+    -----------------------------
+    A unit's 'basic' attributes include their standard numerical attributes (HP, LP, MP, ATK, DEF, SKL, PRY), their current exhaustion level ('EXS,' expressed as a percentage), and that unit's descriptor tags.
+
+        HP (Health Points)
+        ------------------
+        At the start of battle, each unit begins with a full supply of this resource which represents how much physical damage they can take. When a unit's HP is reduced to zero or lower, it's considered "KO'd", and the enemy team can deal direct damage to the KO'd unit's leader, bringing them closer to their win-condition. Furthermore, a unit will be penalized 1 LP when they are KO'd.
+
+        A KO'd unit must be swapped out of the ring at the start of its team's turn (at no AP cost). It cannot be swapped back into the ring or take any more HP or LP damage until its HP is restored above 0. Also, a KO'd unit's 'Unit Dynamic' (explained below) will be stricken inactive while it's KO'd.
+
+        LP (Life Points)
+        ----------------
+        A unit's LP is their only resource attribute which is not completely restored between battles and represents how many more dire wounds that unit can take before it can no longer fight. Once a unit's LP is reduced to 0, it can no longer be revived from a 'KO' state and is effectively removed from the deck (until the session is over).
+
+        Units take 1 LP damage whenever their HP hits 0 or below and they become KO'd. They can also take LP damage as the result of rare critical hits or very rare, expensive abilities. After a battle, every unit on the winning team has their LP restored by 1.
+
+        MP (Magic Points)
+        -----------------
+        On their turn, the number of actions that can be taken on behalf of a particular team is limited by their leader's 'AP' resource. However, the actions of individual units may also be limited OVER THE COURSE OF AN ENTIRE BATTLE by their remaining MP value, which some abilities may consume as a cost.
+
+        Not all abilities consume MP, but those that do should be used carefully. A unit whose MP is entirely consumed may be relatively limited in battle without access to their best abilities.
+
+        As with a unit's HP, this value is entirely restored between battles.
+
+        ATK (Attack Power)
+        ------------------
+        This value represents a unit's offensive potential and is used in damage calculations during ability use.
+
+        Unlike in many JRPGs, units make no distinction between 'physical' attack power and 'magical' attack power, and this value can be used freely for calculating damage to any of a target's attributes, including HP, MP, or elsewise.
+
+        Although damage calculation formulas may vary between abilities, it should be commonly understood that abilities do approximately 100% of their damage when the aggressor's ATK is equal to the defender's DEF. When ATK is 50% of DEF, abilities may do ~50% of their damage. When ATK is 200% of DEF, abilities may do ~200% of their damage, etc.
+
+        DEF (Defensive Power)
+        ---------------------
+        This value represents a unit's defensive potential and is used in damage calculations during ability use.
+
+        As with ATK, no distinction is made between 'physical' defense and 'magical' defense and may be used freely during damage calculation for HP, MP, LP, etc.
+
+        As noted above, damage calculation formulas will vary between abilities -- but, generally, an ability's 'normal' or 'baseline' damage will be inflicted when the defender's DEF is roughly equal to the attacker's ATK, and the damage may scale directly as this ATK:DEF relationship scales.
+
+        SKL (Skillfulness)
+        ------------------
+        This aggressive attribute is compared to a defender's 'PRY' to determine an ability's 'Effectiveness'.
+
+        Each ability in the game has 3 levels of effectiveness ('Glancing', 'Normal', 'Critical'), with each potentially having different effects. When an ability is used, a random number is generated to determine Effectiveness with weighting toward certain Effectiveness levels being based on the SKL:PRY relationship. Having higher SKL will weight your abilities toward 'Critical,' which may make them especially effective.
+
+        PRY (Parry)
+        -----------
+        This defensive attribute is compared to an attacker's 'SKL' to determine an abilitiy's Effectiveness.
+
+        As explained above, abilities each have 3 potential levels of effectiveness, which will determine the outcome of the ability. Whenever an ability is used, a random number is generated to determine Effectiveness, and having higher PRY when an aggressive ability is targeting you will weigh that ability toward 'Glancing' effectiveness, which may make it relatively ineffectual.
+
+        EXS (Exhaustion)
+        ----------------
+        'Exhaustion' is represented as a percentage starting at 0% and defines a penalty to all of a unit's attributes as they enter their next battle.
+
+        At the end of every battle, each participating unit will gain 15% to their EXS, which means that their max attributes will be penalized an additional 15% at the start of the next battle, if they participate.
+
+        For each battle that a unit does NOT participate in, its EXS is lowered by 10%. Therefore, players should choose their teams carefully to not exhaust their units and therefore lower their viability in battle as their attributes become reduced.
+
+        EXS, like LP, is restored entirely at the end of a session.
+
+        TAG (Descriptor Tags)
+        ---------------------
+        This non-numerical attribute is a list of words which could be used to describe this unit, such as 'tiny' or 'metallic' or 'one-eyed', etc. These tags can be used by Abilities or Dynamics to alter their effects. For instance, an Ability implied to be 'electrical' in nature may be especially effective if its target has a 'conductive' tag.
+
+        The value of TAG may be augmented during battle to add or remove current tags. For instance, a unit may receive an 'oil-covered' tag from some Ability targeting them, which may make them increasingly susceptible to a follow-up Ability.
+
         DYNAMICS
             TRIGGERING EFFECTS (check phase)
             SEVERITY
         ABILITY POOLS
             POOL LEVEL
+            ABILITY SLOTS
             PARENT ABILITIES
                 TIERS
                 NON-LINEAR AND LINEAR VARIATION (not implemented)
                 CHILD ABILITIES
+                    EFFECTIVENESS
                     DIRECT AND INDIRECT EFFECTS
                     DIRECT AND INDIRECT COSTS
                     DESCRIPTOR TAGS
@@ -54,3 +162,5 @@ BATTLE
     KO'ING ENEMY UNITS
     ATTACKING THE ENEMY LEADER
     ENDING THE TURN
+POST-BATTLE
+    LP RESTORATION AND EXS

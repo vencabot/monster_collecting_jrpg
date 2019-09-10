@@ -7974,3 +7974,7 @@ As we close in on having a finished game-design document, which I believe will e
 All of this actually seems very trivial to modularize EXCEPT FOR ABILITIES, ITEMS, AND DYNAMICS. Because these have dynamic EFFECTS in battle. To modularize these we would basically need to code them in Python. Which won't be as accessible to non-programmers as doing things like CREATING UNITS and POOLS and EQUIPMENT would be.
 
 Units, Pools, and Equipment could essentially be stored as JSON. Abilities, Items, and Dynamics would essentially need to be stored as Python files.
+
+
+09/09/19
+Remind me: were 'ability slots' limited PER CHARACTER or PER ABILITY POOL FOR THAT CHARACTER?
