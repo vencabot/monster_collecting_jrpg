@@ -1,273 +1,187 @@
 INTRODUCTION
 ------------
+Our game is a monster-battling JRPG in the tradition of Pokemon, but with some tactical sensibilities reminiscent of collectable-card-games in particular.
 
-* The game is a monster-battling JRPG (i.e. Pokemon) but with collectible-
-  card-game'esque tactics.
+Similarities to Pokemon involve limiting active battle participants to one-at-a-time with units needing to be 'swapped in' to the 'ring' in order to use abilities, but at the cost of being vulnerable to attack.
 
-* Players form 'decks' of 10 units (monsters) and one leader. Players
-  commit to multiple battles with a single deck and form teams of 4 units
-  from their deck for each battle.
+The biggest dissimilarity to Pokemon is that a single team can take more than one action per turn in battle, where-as the single-action limitation is a major part of Pokemon's design. In particular, teams are given a fixed amount of 'Action Points' on their turn and can spend these points in a large number of ways, including using monster abilities and swapping units. This means that a player could use an ability with ONE monster and then swap another monster into the ring before the opponent can retaliate against the first.
 
-* During battle, only one unit from each 4-unit team can be 'in the ring'
-  at a given time. In-ring units are especially vulnerable to attack
-  abilities and only their abilities can be used.
+Furthermore, battle ends when the team LEADER (the 'trainer') is KO'd, and the team leader is vulnerable to damage whenever their current monster is KO'd and the enemy team still has AP remaining.
 
-* Teams are not limited to one action per turn (i.e. Pokemon) but have a
-  per-turn 'Action Points' budget to spend on any number of actions before
-  their turn is exhausted.
+Finally, unlike in Pokemon, leaders (trainers) don't bring their entire team into each battle. Players form a 'deck' of 10 units (monsters) and, for each battle, they choose 4 of those units to fight alongside them.
 
-* Turn actions may include using unit abilities, swapping units into and
-  out of the ring, consuming items, and more. As a result, abilities from
-  more than one unit can be used in one turn by utilizing swaps.
+One of our game's major gimmicks is the 'Dynamic Rule System,' where the rules of a battle can effectively be altered by its participants with the goal being for one team to establish rules which SUPPORT their tactics and UNDERMINE their enemy's tactics while also trying to de-establish rules which support their ENEMY'S tactics and undermine their own. Dynamic Rules (or simply 'Dynamics') can be implemented into a battle in a variety of ways, including by using Abilities or simply bringing certain units and leaders into battle.
 
-* Battle ends when one 'team leader' (a special fifth unit) is KO'd. The
-  team leader is vulnerable to damage whenever that team's in-ring unit is
-  KO'd and the enemy team has AP remaining.
+For those familiar, the closest comparison that I can think of to the Dynamic Rule System in existing video games is the 'Laws' system of Final Fantasy Tactics Advance and its sequel. It's essentially a meta way to control your opponent's options.
 
-* The 'Dynamic Rule System' is what separates our game from other RPGs.
-  During battle, players can use a variety of ways to introduce new 'rules'
-  or conditions into play which should support or reward the strategy that
-  they want to employ while undermining or disincentivizing the strategy
-  that the enemy wants to employ.
-
-* An example of a Dynamic Rule (or 'Dynamic') that might undermine an enemy
-  team of 'casters' could be expressed as, "When using an ability, units
-  take HP damage equal to the MP cost of that ability."
-
-* Dynamics can be introduced into battle by using abilities, consuming
-  items, playing on certain battlefields, or simply bringing certain units,
-  leaders, or equipment into battle.
-
-* Dynamics can also be undermined, themselves, by reducing their severity or
-  extinguishing them entirely.
-
-* This document explains mechanics in-depth as they would arise during a
-  first play-session, starting with the construction of a 'deck'.
+This document will explain individual mechanics in-depth as they would arise during a player's first sitting with the game, starting with the construction of a 'deck'.
 
 
 LIMITATIONS OF THE ALPHA (LINEAR AND NON-LINEAR VARIATION)
 ----------------------------------------------------------
-* In 'alpha,' every player will be given access to every deck-construction
-  resource (units, equipment, leaders, item-types) from the start, for
-  testing, rather than by unlocking them through gameplay.
+In Alpha, this game will play like a relatively simple card game where gameplay is entirely player-vs-player and both players have access to all of the same resources, including all of the available units (monsters), leaders, abilities, and equipment. From these resources, both players will construct their decks.
 
-* In the final game, all unlockables will be subject to a randomized
-  "linear" and "non-linear" variation. In the alpha, there is no linear
-  variation, and players have immediate access to all non-linear variants.
+In the Beta, we expect for more-or-less all of these resources to not only be gradually UNLOCKED or EARNED by the player throughout gameplay but each of these individual objects will have a range of 'variation' which adds an element of randomness to the game. Not only will the individual object that the player unlocks be randomized, but the object, itself, will have randomized attributes within certain limitations. This per-object attribute randomization is referred to as "linear variation."
 
-* "Linear" variants of unlockables will feature slightly randomized
-  numerical attributes, making them better or worse for a particular
-  purpose -- or better or worse across the board.
+Aside from linear variation, our game is expected to feature 'non-linear variation,' where similar objects may occupy a particular 'family', and players, when unlocking an object from a family may receive any of these child objects whose differences may be more than just their numerical attributes.
 
-* "Non-linear" variants of unlockables belong to the same family but vary
-  slightly in ways beyond shifted numerical attributes. This may include:
-    + non-linear variants of abilities which have different risk-reward
-      spectrums
-    + units with a few different abilities from others of their type
-    + equipment with slightly differing perks
-    + and more.
+For example, if a player chooses to unlock a 'Slap' ability ('buying' it with some currency), they may receive one of three possible Slaps: a "normal" Slap, a "Big Slap" which does more damage but has a greater penalty for Glancing, and a "Double Slap," where the ability hits twice but at reduced damage each time. All three of these would be 'non-linear variations' of 'Slap,' and each would have their own gamut of LINEAR variation as well (variation to their damage, costs, etc.).
 
-* Non-linear variation example: when unlocking a 'Slap' ability, one of
-  three possible non-linear variants could be received.
-    + "Slap" (even damage across Glancing, Normal, and Critical hit)
-    + "Heavy Slap" (no damage on Glancing hit, high damage on Normal and
-      Critical Hit)
-    + "Double Slap" (better scaling against low DEF, worse scaling against
-      high DEF).
-
-* The unlocked non-linear variant will also have slightly randomized
-  attributes (cost, damage) by way of linear variation.
+In the Alpha, there will be NO linear variation (no variation of numerical attributes within a single object) and players will have access to all of the non-linear variations of every ability, unit, leader, and equipment.
 
 
 DECK CONSTRUCTION
 -----------------
-* A 'deck' is a cherry-picked collection of 10 'units' (monsters) and their
-  'leader' (trainer).
+A 'deck' is a cherry-picked collection of 10 'units' (monsters) and their 'leader' (trainer). Before each battle, the player will choose 4 of these units to form a team with for that battle, and so the units in a deck should have good synergy with one-another and be able to form teams with a variety of combinations to suit different enemy teams.
 
-* Before each battle, the player will choose 4 units from their deck to
-  form a team for that battle.
+There are a number of factors to consider when choosing units for a deck. We'll detail those factors here.
 
-* Units in a deck should have good synergy with one-another and be able to
-  form teams with a variety of combinations to suit different enemy teams.
-
-    UNIT ATTRIBUTES
+    ABOUT UNIT ATTRIBUTES
     ---------------------
-    * Each unit has a variety of attributes (mostly numerical) which will be
-      a major factor in which 'roles' they may be suitable for.
+    As with any JRPG, each unit has a variety of attributes (mostly numerical) which will be a major factor in which 'roles' that unit may be suitable for in battle. Players would be well-advised to consider these attributes carefully when picking units for their deck.
 
-    * 'Resource' attributes:
-        + HP (Hit Points):
-            - when reduced to 0, puts the unit into a 'KO'd state.
-            - when the in-ring unit is KO'd, its leader is vulnerable.
-            - if an in-ring unit is KO'd, another unit must be swapped in
-              (for free) at the start of the next turn.
-            - a KO'd unit cannot be targeted for HP or LP damage.
-            - a unit's 'Unit Dynamics' and 'Equipment Dynamics' are inactive
-              while KO'd.
-            - a KO'd unit may be revived by restoring its HP above 0.
-            - fully restored after every battle.
+    A unit's 'basic' attributes include their standard numerical attributes (HP, LP, MP, ATK, DEF, SKL, PRY), their current exhaustion level ('EXS,' expressed as a percentage), and that unit's descriptor tags.
 
-        + LP (Life Points):
-            - reduced by 1 each time the unit is KO'd.
-            - may also rarely be reduced by other abilities, Dynamics, etc.
-            - at '0', the unit is removed from the team and deck.
-            - is restored by 1 after taking part in a victorious battle.
-            - fully restored after the set.
+        MAX, CURRENT, AND AUGMENTED ATTRIBUTES
+        --------------------------------------
+        During deck-construction, attributes will be considered in their 'max' form, which is the baseline value for that particular unit. However, attributes have a variety of forms throughout gameplay.
 
-        + MP (Mana Points):
-            - necessary for and consumed when using certain abilities.
-            - fully restored after every battle.
+        For consumable attributes which are used as resources battle, their 'current' form represents how much of that resource is remaining. For instance, if a unit begins a battle with their 'max' HP of 20 but then takes 5 HP damage, their 'current' HP is 15 -- but they can still only have their HP restored up to their 'max' HP amount. Resource attributes with a 'current' value include HP, LP, and MP (and a Leader's AP).
 
-    * Attributes used during ability effect calculation:
-        + ATK (Attack Power) and DEF (Defensive Power):
-            - used to calculate resource reduction (HP / MP) against
-              enemies.
-            - no distinction is made for 'magical attack power' and 'magical
-              defensive power'.
-            - an ability may have its own formulas for damage calculation.
-            - an attack's default damage is often scaled by
-              (attacker_ATK / defender_DEF)
-            - some attacks add 'penetration damage' to especially reward or
-              punish an attack based on the defender's DEF
-            - penetration damage is often calculated as
-              (attacker_ATK / defender_DEF - 1)
-              * (attacker_ATK / defender_DEF * penetration_constant)
+        During battle, all attributes also have an 'augmented' value, which represents the value that is used currently by the game's calculations. For instance, although a unit's 'max' ATK may be 5, they may be under the influence of a 'buff' which, at the moment, causes their 'augmented' ATK to be calculated as 7. That same unit may elsewise be subject to a 'nerf' which, at the moment, causes their augmented ATK to be 3.
 
-        + SKL (Skill) and PRY (Parry):
-            - typically used in randomized formulas to select an ability's
-              'Effectiveness' level upon use.
-            - Every ability has 3 levels of Effectiveness: 'Glancing',
-              'Normal', and 'Critical'.
-            - the ability's effect can vary drastically based on what
-              Effectiveness is rolled.
-            - an attacker's SKL is compared to their defender's PRY to
-              weight the chances of getting better Effectiveness.
-            - at 1:1, 'Glancing' and 'Critical' have a 15% chance, and
-              'Normal' has a 70% chance.
-            - as SKL grows over PRY, the chance to 'Normal' decreases and
-              the chance to 'Critical' increases. Max 85%.
-              crit_chance = 15% + (attacker_SKL / defender_PRY - 1) * 70%
-            - as PRY grows over SKL, the chance to 'Normal' decreases and
-              the chance to 'Glancing' increases. Max 85%.
-              glance_chance = 15% + (defender_PRY / attacker_SKL - 1) * 70%
-            - every ability can determine its own formula for Effectiveness,
-              but the above are the defaults.
+        In the case of resource attributes like HP, LP, and MP, the 'augmented' value points toward what would be the maximum value for those resources.
 
-        + EXS (Exhaustion):
-            - expressed as a % reduction of all of a unit's numerical
-              attributes.
-            - raised by 15% after every battle participated in, in a set.
-            - lowered by 10% after every battle not participated in, in a
-              set.
-            - may be raised or lowered during battle by items, abilities,
-              Dynamics, etc.
-            - restored to 0% after the set.
+        In battle, all effects are calculated from the current 'augmented' value of any attributes involved, and those values default, at the start of battle, to those attributes 'max' or baseline values.
 
-        + TAG (Descriptor Tags):
-            - a list of keywords which describe a unit, such as 'hairy',
-              'slimy', and 'giant'.
-            - abilities, items, and Dynamics may have different effects on
-              units whose TAG meets certain criteria.
-            - i.e., a 'Screech' ability may have no effect on a unit without
-              ears.
-            - may be augmented during battle with new descriptors.
+    HP (Health Points)
+    ------------------
+    At the start of battle, each unit begins with a full supply of this resource which represents how much physical damage they can take. When a unit's HP is reduced to zero or lower, it's considered "KO'd", and the enemy team can deal direct damage to the KO'd unit's leader, bringing them closer to their win-condition. Furthermore, a unit will be penalized 1 LP when they are KO'd.
 
-    * UD (Unit Dynamics):
-        + 'rules' which are effective in battle as long as this unit is on
-          the team and not KO'd.
+    A KO'd unit must be swapped out of the ring at the start of its team's turn (at no AP cost). It cannot be swapped back into the ring or take any more HP or LP damage until its HP is restored above 0. Also, a KO'd unit's 'Unit Dynamic' (explained below) will be stricken inactive while it's KO'd.
 
-        + some may be beneficial to your team and may synergize with the
-          functions of other units and their Dynamics.
+    LP (Life Points)
+    ----------------
+    A unit's LP is their only resource attribute which is not completely restored between battles and represents how many more dire wounds that unit can take before it can no longer fight. Once a unit's LP is reduced to 0, it can no longer be revived from a 'KO' state and is effectively removed from the deck (until the session is over).
 
-        + others may be rules that you'll need to work around as costs of
-          using your units and abilities or traps set by the enemy team.
+    Units take 1 LP damage whenever their HP hits 0 or below and they become KO'd. They can also take LP damage as the result of rare critical hits or very rare, expensive abilities. After a battle, every unit on the winning team has their LP restored by 1.
 
-        + i.e., "All ally HP restoration is increased by 10%," or, "When
-          this unit takes damage, it gains +1 ATK."
+    MP (Magic Points)
+    -----------------
+    On their turn, the number of actions that can be taken on behalf of a particular team is limited by their leader's 'AP' resource. However, the actions of individual units may also be limited OVER THE COURSE OF AN ENTIRE BATTLE by their remaining MP value, which some abilities may consume as a cost.
 
-        + Dynamics can be exercised in battle in more ways than just UDs:
-            - brought into battle via 'Equipment Dynamics', 'Leader
-              Dynamics,' and 'Battlefield Dynamics'.
-            - applied or augmented during battle via abilities, items, or
-              other Dynamics.
+    Not all abilities consume MP, but those that do should be used carefully. A unit whose MP is entirely consumed may be relatively limited in battle without access to their best abilities.
 
-        + every Dynamic has a 'Check Phase':
-            - with a 'BEFORE' Check Phase, Dynamics trigger just BEFORE a
-              change to the gamestate is made, to alter or neutralize it.
-            - with an 'AFTER' Check Phase, Dynamics trigger just AFTER a
-              change to the gamestate, to react to it.
-            - i.e. 'BEFORE' Check Phase: "When this unit is reducing another
-              unit's HP, that reduction is increased by 25%."
-            - i.e. 'AFTER' Check Phase: "When this unit reduces another
-              unit's HP, this unit's shadow also attacks for an additional
-              25% damage."
-            - the former may trigger ANOTHER active Dynamic which reacts
-              when a damage threshold is exceeded in a single hit.
-            - the latter may trigger another active Dynamic which reacts
-              after a unit has been hit a certain number of times.
+    As with a unit's HP, this value is entirely restored between battles.
 
-        + every actived Dynamic has a 'Severity' level (1-10):
-            - every Dynamic can have a different effect based on its current
-              Severity. These effects may be wildly different but are often
-              just a scale of effectiveness.
-            - when activated, a Dynamic's starting Severity will depend on
-              the ability or item used to inflict it or whatever formula its
-              using as a Unit Dynamic, Leader Dynamic, etc.
-            - a Dynamic's Severity can be altered during battle, which will
-              change its effect.
+    ATK (Attack Power)
+    ------------------
+    This value represents a unit's offensive potential and is used in damage calculations during ability use.
 
-    MAX, CURRENT, AND AUGMENTED ATTRIBUTES
-    --------------------------------------
-    ##### TALK ABOUT THIS LATER #########
+    Unlike in many JRPGs, units make no distinction between 'physical' attack power and 'magical' attack power, and this value can be used freely for calculating damage to any of a target's attributes, including HP, MP, or elsewise.
+
+    Although damage calculation formulas may vary between abilities, it should be commonly understood that abilities do approximately 100% of their damage when the aggressor's ATK is equal to the defender's DEF. When ATK is 50% of DEF, abilities may do ~50% of their damage. When ATK is 200% of DEF, abilities may do ~200% of their damage, etc.
+
+    DEF (Defensive Power)
+    ---------------------
+    This value represents a unit's defensive potential and is used in damage calculations during ability use.
+
+    As with ATK, no distinction is made between 'physical' defense and 'magical' defense and may be used freely during damage calculation for HP, MP, LP, etc.
+
+    As noted above, damage calculation formulas will vary between abilities -- but, generally, an ability's 'normal' or 'baseline' damage will be inflicted when the defender's DEF is roughly equal to the attacker's ATK, and the damage may scale directly as this ATK:DEF relationship scales.
+
+    SKL (Skillfulness)
+    ------------------
+    This aggressive attribute is compared to a defender's 'PRY' to determine an ability's 'Effectiveness'.
+
+    Each ability in the game has 3 levels of effectiveness ('Glancing', 'Normal', 'Critical'), with each potentially having different effects. When an ability is used, a random number is generated to determine Effectiveness with weighting toward certain Effectiveness levels being based on the SKL:PRY relationship. Having higher SKL will weight your abilities toward 'Critical,' which may make them especially effective.
+
+    PRY (Parry)
+    -----------
+    This defensive attribute is compared to an attacker's 'SKL' to determine an abilitiy's Effectiveness.
+
+    As explained above, abilities each have 3 potential levels of effectiveness, which will determine the outcome of the ability. Whenever an ability is used, a random number is generated to determine Effectiveness, and having higher PRY when an aggressive ability is targeting you will weigh that ability toward 'Glancing' effectiveness, which may make it relatively ineffectual.
+
+    EXS (Exhaustion)
+    ----------------
+    'Exhaustion' is represented as a percentage starting at 0% and defines a penalty to all of a unit's attributes as they enter their next battle.
+
+    At the end of every battle, each participating unit will gain 15% to their EXS, which means that their max attributes will be penalized an additional 15% at the start of the next battle, if they participate.
+
+    For each battle that a unit does NOT participate in, its EXS is lowered by 10%. Therefore, players should choose their teams carefully to not exhaust their units and therefore lower their viability in battle as their attributes become reduced.
+
+    EXS, like LP, is restored entirely at the end of a session.
+
+    TAG (Descriptor Tags)
+    ---------------------
+    This non-numerical attribute is a list of words which could be used to describe this unit, such as 'tiny' or 'metallic' or 'one-eyed', etc. These tags can be used by Abilities or Dynamics to alter their effects. For instance, an Ability implied to be 'electrical' in nature may be especially effective if its target has a 'conductive' tag.
+
+    The value of TAG may be augmented during battle to add or remove current tags. For instance, a unit may receive an 'oil-covered' tag from some Ability targeting them, which may make them increasingly susceptible to a follow-up Ability.
+
+
+    UNIT DYNAMICS (Dynamic Rules)
+    -----------------------------
+    Our game's central gimmick is the 'Dynamic Rule System,' which will encourage players to exert control over the battle's 'rules' to empower their own team's strategies and to limit their opponent's options. Some examples of Dynamic Rules could be, "If a unit's max HP is greater than 40, then the MP cost of their abilities is increased by 20%," or, "Whenever a unit is KO'd on a given team, every remaining unit on that team gains a 5% DEF boost."
+
+    Dynamic Rules can be put into play in a wide variety of ways, including by using certain Abilities, by choosing certain Leaders, and by playing on certain battlefields, but one of the most tactically significant ways is to take advantage of 'Unit Dynamics.'
+
+    A 'Unit Dynamic' is a battle rule ('Dynamic') which will remain active for as long as the attached Unit is active in the battle (on the team and not KO'd). Every Unit in the game has a unique Unit Dynamic, and so constructing a team (and, by extension, a deck) will involve careful consideration of Unit Dynamics and how they might interact with eachother as well as what sorts of tactics they support.
+
+        TRIGGERING DYNAMIC EFFECTS (Check Phase)
+        ----------------------------------------
+        When examining the conditions for a Dynamic Rule to take effect, consider whether it's REACTIVE to some event in battle or if it will ALTER an event in battle.
+
+        For instance, a Dynamic Rule which is REACTIVE (or could be said to have an 'after check-phase') may be expressed as, "When a unit takes 10-or-more HP damage, they gain 1 DEF." In this case, the rule takes effect AFTER some event in the game takes place (a unit loses 10 HP).
+
+        A Dynamic Rule which will ALTER an event (or could be said to have a 'before check-phase') may be expressed as, "When a unit attacks with any ability with the 'magical' descriptor, that ability does twice as much HP damage as it otherwise would have." In this case, the rule CATCHES an event to do HP damage and REPLACES it with another event which will do twice as much HP damage.
+
+        Some Rules ADD ('after') events and other Rules ALTER ('before') events.
+
+        DYNAMIC RULE SEVERITY
+        ---------------------
+        Every Dynamic Rule has a 'Severity' value which can increase how dramatic the Rule's effects are or even augment the Rule's effects in other ways. When a Rule is first implemented into battle, it has some Severity level, and that Severity can be altered over time. For instance, some Rules may lose or gain Severity every turn. Some Abilities can reduce or raise the Severity of a target Rule. Some Rules can reduce or raise the Severity of other Rules.
+
+        In the case of, "When a unit takes 10-or-more HP damage, they gain 1 DEF," the amount of DEF gained may increase with the Rule's Severity. As mentioned, the effect of Rules may be augmented in other ways, as well. For instance, if that Rule were to reach 10 Severity (maximum), perhaps its effect would change to, "When a unit takes any HP damage, they gain 5 DEF."
+
+        Understanding the impact of Severity on a particular Dynamic Rule is integral to understanding how to use that Rule tactically.
+
 
     ABILITY POOLS (Unit Classes / Roles)
     ------------------------------------
-    * packages of 6 abilities, each, that units may use in battle which
-      support a particular function.
+    The Abilities that a unit can use in battle are limited by the 'Ability Pools' that they have access to. Each pool contains Abilities which suit a particular function in battle and could be thought of as being definitive of a Unit's 'role,' 'class,' or 'job'. Some Ability Pools may specialize in dealing straightforward HP damage while others may specialize in controlling the opponent via restrictive Dynamic Rules. Others may be especially good at supporting other units on the ally team, etc.
 
-    * i.e., some pools may have abilities which are entirely offensive while
-      others may have abilities which are entirely defensive. Some may focus
-      on immediate buffs and debuffs while others focus on traps, etc.
+    A single unit has, on average, limited access to three different Ability Pools -- which, together, round out that unit's tactical potential. Most of these Pools will be typical of this unit-type but a unit can also gain access to new Ability Pools or replace their current Pools by changing their 'Equipment' (explained below) or by being under the effect of certain Rules or Abilities in combat.
 
-    * the abilities in each pool are limited to inflicting any of 3 Dynamics
-      unique to that pool. These are known as 'Pool Dynamics'.
-        + players can get an immediate sense of a pool's function by looking
-          at its Pool Dynamics. 
+    Some attributes of a Unit's Ability Pools may be augmented during battle, including their currently-available Ability Pools, the Pool Level of those Pools, and the Ability Slots of those Pools.
 
-        + abilities in the pool can inflict any of these Dynamics at any
-          Severity.
+        POOL LEVEL
+        ----------
+        Each Unit has access to some number of Ability Pools and each Pool has an associated 'Pool Level' (1, 2, or 3) which limits the Abilities from that Pool that a unit can use in battle.
 
-    * an average unit will have access to 3 ability pools by default,
-      limited by those pools' 'levels' and 'ability slots'.
-        + units are restricted to using abilities at tiers at or below their
-          pool's level. Pools have 2 abilities at each of 3 ability tiers.
-            - tier 3 abilities are often bread-and-butter or especially
-              powerful tools definitive of the pool.
-            - tier 1 abilities are edge-case or low-cost tools which may
-              sometimes come in handy.
-            - the pools that a unit has access to and their levels deeply
-              impact that unit's tactical potential and available functions.
+        At Pool Level 3, a unit has access to all of the Abilities in a Pool, including its most powerful or bread-and-butter tools. As such, a level 3 Pool will be highly definitive of a unit's function in battle.
 
-        + a pool's 'ability slots' limits how many abilities from that pool
-          a unit has access to in battle.
-            - each unit can assign each ability in a pool a 'priority'.
-            - a pool's ability slots are filled with the highest priority
-              abilities available to the pool's level.
-            - by default, a pool's available slots are based on its level:
-              2 slots for level 3 and 1 slot for levels 1 and 2.
+        At Pool Level 2, a unit has access to all BUT the most powerful or bread-and-butter tools that a Pool has to offer. As such, Level 2 Pools offer much in the way of supporting-abilities to round out a unit's tactical potential beyond their Level 3 Pool(s).
 
-    * units can gain, lose, or replace their ability pools during deck
-      construction (via Equipment) and during battle (via abilities, items, 
-      or Dynamics).
-        + units can prioritize abilities for pools that they don't typically
-          have access to for this reason.
+        At Pool Level 1, a unit only has access to the least-essential and most tangential Abilities from that Pool. These Abilities may not be useful in every situation but may be convenient in edge-case scenarios or as a way to burn the remainder of a nearly-completed turn.
 
-    * pool levels and ability slots can be grown during deck construction
-      (via Equipment or expending Growth Points, explained below) and during
-      battle (via abilities, items, or Dynamics).
-        + units should carefully prioritize abilities because the abilities
-          they have access to may change during battle.
- 
+        By default, the levels of a unit's Ability Pools are pre-defined by unit-type and are balanced against the default builds of every other unit in the game. However, the level of an Ability Pool can be altered during deck-construction by changing a unit's 'Equipment' (explained below) or in battle by placing the unit under the affect of certain Rules.
+
+        POOL DYNAMICS
+        -------------
+        Between all of the Abilities in a particular Pool, only 3 different Dynamics can be inflicted on battle. Abilities will share these Dynamics and may inflict them at different severities or with different likelihood. By reading and understanding what these Dynamics are, it becomes possible to get a strong sense of the purpose of a particular Ability Pool.
+
+        ABILITY PRIORITY AND SLOTS
+        --------------------------
+        For every Ability Pool in the game, a unit can organize that pool's Abilities, from top-to-bottom, based on how crucial that Ability is to the unit. This is 'Ability Priority' and ties into the purpose of 'Ability Slots,' which is an attribute of a unit's Ability Pool which can change dynamically in battle.
+
+        On top of its Pool Level, every Ability Pool has a number of unlocked 'Ability Slots.' These Slots represent how many Abilities from this Pool this Unit can use in battle. By default, the number of Ability Slots that a unit has access to for a given Pool is based on that Pool's current Level: Level 1 Ability Pools and Level 2 Ability Pools have 1 Ability Slot by default, and Level 3 Ability Pools have 2.
+
+        If a unit has access to 3 Ability Slots for a given Ability Pool, they'll be able to use the 3 Abilities from the Pool that have the highest Ability Priority while also being accessible at the unit's current Pool Level.
+
+        During deck construction, a unit's number of available Ability Slots can be extended by spending that unit's budget of 'Growth Points' (explained below) as well as by using Equipment to upgrade a Pool to level 3 or to directly unlock additional slots. In battle, a unit's number of Ability Slots may change as the result of various Dynamics or Abilities.
+
+        The choice of how many Slots a unit needs and what Ability Priority to assign for their Pools is crucial to how that unit is going to be utilized in battle. Units can prioritize Abilities that they may not be able to use due to their Pool Level limitations, but those Abilities will become unlocked if that unit is under the affect of some Rule or Ability which raises their Pool Level. Likewise, they may lose access to some of their Abilities if under the affect of a Rule which lowers their Pool level.
+
         PARENT ABILITIES
         ----------------
         An Ability Pool contains 6 'Parent Abilities,' which themselves each contain 3 'Child Abilities,' which are what a unit actually equips into their 'Ability Slots' and uses in battle.
@@ -278,11 +192,37 @@ DECK CONSTRUCTION
 
         In that example, all Child Abilities fulfill a very similar purpose but with slight variation in effect.
 
+            ABILITY TIERS
+            -------------
+            Parent Abilities (and, by extension, their Child Abilities) are assigned a 'Tier' which limits their usage to certain Pool Levels. Every Ability Pool has two Abilities for each of three Tiers: Tier 3 (most-powerful and bread-and-butter Abilities), Tier 2 (Abilities that otherwise strongly support tactics), and Tier 1 (Abilities that may occasionally support particular tactics).
+
+            To be able to use Tier 3 Abilities in battle, a unit has to have Level 3 access to the Ability Pool in question, and this also gives them access to Tier 2 and Tier 1 Abilities. Level 2 Pools will be able to use Tier 2 and Tier 1 Abilities, and Level 1 Pools can only use Tier 1 Abilities.
+
             CHILD ABILITIES
             ---------------
             When directly examining an Ability Pool, it's perhaps most important to take note of the PARENT Abilities contained within that Pool. However, it's the CHILD Abilities of those parents which a unit actually takes into battle with them.
 
             When choosing between Child Abilities to take into battle, there are a few factors that are important to understand and examine. 
+
+                EFFECTIVENESS
+                -------------
+                When used in battle, every ability has a randomized 'Effectiveness' level, which will have an impact on the ability's effect. This Effectiveness can come in one of three levels. From least-effective to most-effective, they are: "Glancing," "Normal," and "Critical".
+
+                When rolling for Effectiveness, Unit attributes can have an impact on the chances to fall into a certain Effectiveness level. Higher SKL minimizes the possibility of falling into Glancing Effectiveness and maximizes the possibility of rising into Critical Effectiveness, but the target's PRY can counteract this. In other words, the relationship between the user's SKL and the target's PRY will usually determine the % chance that an ability's usage will fall into a particular Effectiveness level.
+
+                Unlike in other JRPGs where the 'Effectiveness' parallel would be the "miss / hit / critical hit" mechanic, every Ability in this game has three discrete effects depending on what Effectiveness the usage rolls. For instance, some Abilities may miss entirely when landing at Glancing Effectiveness, but others may have reduced damage or inflict a less severe Dynamic, etc. Likewise, "Critical" Effectiveness doesn't imply a direct increase in damage (as it would in other JRPGs), but rather every Ability has a discrete 'Critical' effect, which may result in more HP damage but may also result in a reduced cost or a more severe Dynamic or any other number of auxiliary effects.
+
+                In other words, every Ability in the game can have three different effects depending on the Effectiveness rolled. Also, every Ability may use its own internal calculation for Effectiveness randomization, but the standard calculation is:
+
+                If SKL == PRY:
+                    Glancing 15%, Critical 15%
+                THIS IS SUPER WROGN
+                If SKL > PRY:
+                    Glancing 15%, Critical 15 + (SKL / PRY) * 70%
+                If SKL < PRY:
+                    Glancing 15 + (PRY / SKL) * 70%, Critical 15%
+
+                In other words, the minimum chance to Glance or Crit is 15% and the maximum chance to Glance or Crit is 85%, with the chance to Normal occupying the remainder. As SKL grows over PRY the chance to Normal is reduced and the chance to Critical is increased. As PRY grows over SKL, the chance to Normal is reduced and the chance for Glancing is increased.
 
                 DIRECT AND INDIRECT EFFECTS
                 ---------------------------
