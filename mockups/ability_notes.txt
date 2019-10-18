@@ -8126,3 +8126,149 @@ It strikes me that, when doing early mock-ups in the alpha, we should fixate on 
 By making Ability Pools more dynamic, today, we're basically introducing a new type of conceptual 'object' into battle: the Ability Pool. Previously, the only 'objects' which a player had to concern themselves with DURING BATTLE were UNITS and DYNAMICS. Obviously, Units have attributes that change all the time (HP goes up and down, ATK gets raised and lowered), and, in OUR game, DYNAMICS have attributes that change all the time (Severity, and whether or not they're active).
 
 Now, we're introducing this THIRD kind of object which can change all the time: the Ability Pool of a particular Unit, which may grow or shrink in Pool Level and which may grow or shrink in terms of Ability Slots.
+
+
+
+10/14/19
+
+Looking at our options for renaming 'Parent' and 'Child Abilities.' Dixx makes a very good point that there is a lot of levels of OBFUSCATION that it may be in our best interest to FLATTEN OUT. Let's talk about WHY we have these levels to Abilities and IF it's important enough to justify how stupid it is.
+
+Like, it's kind of stupid to have a 'group' of only 3 abilities. Is that really necessary.
+
+Why do we have Parent and Child Abilities? Well, the immediate reason is to give us a mechanism for our 'gacha': the original idea was that you would spend some kind of growth points to 'learn' a Child Ability out of a Parent Ability, but you wouldn't know what Child Ability you were getting back.
+
+So, you would buy the Parent Ability and it would give you a random one of its three Child Abilities.
+
+Is this the ONLY REASON for parent Abilities. Because I feel like it is.
+
+I mean, it's not like we want to LIMIT units from having more than one Child Ability of the same Parent at the same time. That's not gonna help balance anything. Let 'em use as many Child Abilities from the same Parent as they want.
+
+So what good is the Parent Ability aside from potentially helping organise abilities? In our game, the gacha element means that you may end up with many copies of the same abilities, each with VERY SLIGHTLY DIFFERENT ATTRIBUTES (because they're pseudo-randomised). So, being able to break these up into groups COULD BE USEFUL FROM A UI PERSPECTIVE, but it really has no bearing on gameplay unless we're going with this idea of buying out of the Parent Ability and getting a gacha.
+
+So, how important is it really that we have this notion of the 'parent ability'?
+
+If we don't have a mechanical notion of a 'parent ability,' then we do need some way to organise all of these loose, similar abilities. I mean, the idea is that we have VARIANTS of the same notion, supplied by the parent.
+
+We have three variants of the same idea. And we have 6 of those ideas per pool. So how are we gonna break this down in a sensible way?
+
+I still feel like, again, AT LEAST AS FAR AS THE UI IS CONCERNED, we need these 'parent abilities' so that we can break up our pools like this:
+
+Is it JUST UI? Mechanically, these 'parent abilities' basically have no function UNLESS WE'RE GOING WITH THE IDEA OF THE PLAYER BUYING ABILITIES FROM THESE PARENTS. But, I mean, if you're LITERALLY GETTING A RANDOM ABILITY FOR YOUR POOL, or for a TIER IN THAT POOL, do we really need these extra level of specificity at the mechanical level...?
+
+Let me say this: we need to call the child abilities 'abilities,' and then the Ability Pools remain the Ability Pools. If we can take one thing from this medititation, it's that the 'Parent Abilities,' if they are significant (and I maintain that they are), they're not SO significant that we need to give that much of a fuck about what they're called. They're really just a way to ORGANIZE. I think that, in a game like this, organization is kind of important, but it's not going to have a mechanical impact on the game very much at all.
+
+So what we really have is an ABILITY POOL which has 18 Abilities, and those abilities are grouped into 3s with a similar function.
+
+So, maybe the thing to do, as a meditation, is to understand that ABILITIES go into the ABILITY POOLS and they're ORGANIZED as triplets or trios or whatever. We don't NEED an entire category in the game design bible ABOUT 'parent abilities,' because they're not a THING. It's just how abilities are conceived and organized.
+
+Warrior:
+    Tier 1: Slash
+        + Heavy slash
+        + Double slash
+        + Poison slash
+    Tier 1: Bash
+        + Heavy bash
+        + Shield bash
+        + Giant boot
+    Tier 2: Stab
+    Tier 2: Raise Shield
+    Tier 3: 
+
+
+10/17/19
+
+What you really have to understand about abilities and parent abilities is that we want to LIMIT the amount of tactical variety that you get out of one Ability Pool, and one way that we do that is to limit Ability Pools to SIX DIFFERENT 'Parent Abilities,' and their child abilities are just variations.
+
+So, it's important for the PLAYER to understand that, although there are TWENTY-FOUR abilities in each pool, those twenty-four abilities are not distinct. They conform to six PARENT ABILITIES.
+
+That's really the importance of 'parent abilities.' They act as CATEGORIZERS. They act as a way for developers and players to understand that all of these abilities in the pool are not entirely distinct. But that's their only purpose: as a tool to aid in the understanding of how these pools are designed.
+
+Okay... So, maybe we should, instead of creating this CONSTRUCT of the 'parent ability' -- maybe we should, instead, create this extra attribute of Abilities like... 'parent ability' or 'ability type' or something like that.
+
+Instead of having this parent object, programatically-speaking, we just create an attribute of the Ability object. But what function was the PARENT ABILITY object holding, before? I think it was holding the randomization code for handing out these variants.
+
+So, it strikes me that there was a PROGRAMMATIC function, and that was to READ A UNIT'S ATTRIBUTES AND DETERMINE, FROM THOSE ATTRIBUTES, WHAT CHILD ABILITY TO GIVE THEM WHEN THEY TRIED TO BUY FROM THE PARENT ABILITY.
+
+This is a cool mechanic, but it's one that we've been CONCEPTUALLY MOVING AWAY FROM. It seems to me, now, that child abilities are earned at the PLAYER LEVEL -- not the unit-level. You unlock new abilities through play and you equip them onto your units. As of our recent design ideas, the UNIT does not buy the ability.
+
+Is this something that we're prepared to move past? Because if we're moving away from the idea of units or maybe even PLAYERS buying abilities from parent abilities, then we don't need this 'parent ability' construct, any more.
+
+But if we do want to stay the course with this system where UNITS are buying their own abilities, then this 'parent ability' construct still has a purpose.
+
+So, let's lay out our options more clearly:
+
+OPTIONS FOR ACQUIRING ABILITIES
+1.) During deck-construction, units use their Growth Points to purchase abilities from a parent ability. They're given a non-linear variant of that parent ability based on randomness and that unit's attributes. Some units could be more likely to get certain variants than others.
+
+2.) Using some kind of currency earned through PVP battles, players buy abilities from parent abilities. They're given a random child ability (non-linear variant).
+
+3.) Players are just given child abilities at random as a reward for PVP battles (sort of like a loot box or something).
+
+
+Option '1' is our traditional concept of how abilities would be unlocked. This has some shortcomings:
+1.) There are a lot of abilities in our game and an infinite number of linear variants of those abilities. If abilities, when purchased, are locked to a particular unit, then every unit would need to unlock a ton of abilities. In that respect, it'd be easier for the PLAYER to have a pool of unlocked abilities that they could equip onto any UNIT once unlocked.
+
+But the reason this seems like a shortcoming is because we're talking about two entirely different ways of looking at Abilities. The whole original idea of the 'non-linear variation' was to act as a sort of LIMITATION for particular monsters. You buy a parent ability because its function appeals to you and you get some variant of that ability which may have bonus effects or may not appeal to you quite as much.
+
+And it doesn't matter that each unit 'has to unlock all of these abilities,' because there ARE NO PERMANENT UNITS. They don't UNLOCK and COLLECT abilities. During deck construction, you use GP to unlock some abilities, and THOSE ARE WHAT YOU GET. Next time you make a deck, you need to buy and unlock different abilities.
+
+So the fundamental change in how we've looked at 'abilities' is that they've become sort of COLLECTIBLE. Is that something that we need.
+
+In other words, DO WE WANT FOR ABILITIES TO BE COLLECTIBLE OR DO WE WANT FOR THEM TO BE ATTACHED TO A UNIT AT DECK-CONSTRUCTION.
+
+The latter has some interesting problems with it insofar as them being totally randomized and therefore encouraging players to RE-ROLL THEIR DECKS if they get a bad ability. Also, having to choose between LEARNING ABILITIES and PUMPING STATS seems kind of weird. Especially when you consider the ways that Ability Pools have become MUCH MORE DYNAMIC over the last couple of weeks.
+
+In fact, if you consider how much more DYNAMIC Ability Pools have recently become -- and how much FUN that stands to add to the gameplay, in my opinion -- perhaps that's as much evidence as we need to understand that abilities are now UNLOCKABLES. COLLECTIBLES.
+
+Because we have these mechanisms, now, for 'Ability Priority' such that, during battle, units can gain access to new abilities, lose access to their current abilities, and can even gain access to entirely different ABILITY POOLS.
+
+If a unit has to expend some kind of currency to learn abilities -- and they only have access to the abilities that they've individually LEARNED -- then we can't have these mechanics where units can GROW THEIR POOL LEVEL or GAIN ACCESS TO NEW ABILITY POOLS during combat.
+
+So, let's say that ABILITIES ARE UNLOCKED AT THE PLAYER-LEVEL. Players unlock abilities and then can equip them on any unit on their team. That's necessary to facilitate this idea of more dynamic ability pools.
+
+So, as we continue to examine the idea of PARENT ABILITIES and their worth as a MECHANICAL CONSTRUCT, we need to at least BRIEFLY consider how the player is going to unlock these abilities. Which means examining some ideas of how the player will unlock things, in general, in this game.
+
+If we're going with RAW RANDOMNESS, like a loot-box, we don't need a mechanical construct to represent something like a 'parent ability'.
+
+But maybe something more fun would be to give a player a selection of PARENTS to choose from, and then they get a random variant. That, to me, seems like the most fun way to go about unlocking collectibles in this sort of game.
+
+Like, you win a PVP battle and then the game randomly generates a menu of 5 parents, or so, from a selection of ABILITIES and UNITS and EQUIPMENT and ITEMS and LEADERS. And then the player gets to CHOOSE one or more rewards from that menu, and then they're given a random child from the parents that they chose.
+
+So, the final question regarding the importance of 'parents' as a CONSTRUCT is this: do we want for the child to be chosen ENTIRELY AT RANDOM or do we want for it to be able to weigh RARENESS for each individual child and maybe even consider the unlocking player's attributes when doing so?
+
+Well, we have to also consider that, if we're talking about RARENESS, we also need to be considerate of BALANCE. We can't make BETTER ABILITIES more RARE. Because we don't want for abilities to be strictly 'better' or 'worse' than other abilities.
+
+Should the non-linear variants, as a rule, all have the same chance of getting gacha'd out from their respective parent? I just don't know. That's a big decision to make.
+
+I want to make a note: whether or not these 'parent' constructs have a strictly mechanical purpose, I think that it's important that, at least on the CODE side, these parent objects be expressed as objects -- as classes. We can't just tag abilities as conforming to a certain type. We can't just tag the variants of a piece of equipment as conforming to a certain type. We need for there to be an object -- maybe just a parent class -- which describes all of its variants. And so this would open up the possibility for special rules to come into play when spawning these children, including rarity, considering the player, etc.
+
+So, in the case of child abilities, I think that we do just need to consider this idea of 'arts'. There are 6 arts per Ability Pool, and each art has 3 abilities.
+
+And, dixxucker's concern about the OBFUSCATION. The DEPTH. The... fact that we could or should simplify things by making them FLATTER and not as many CATEGORIES within CATEGORIES... That's super valid. That's super important. What can we do about that?
+
+I mean, here's our categories:
+
+Ability Pool
+    Tier
+        Art
+            Ability
+
+That seems like a lot for what is sort of a pretty simple notion.
+
+But that's because SO MUCH OF THIS IS JUST FOR THE DEVELOPERS TO WORRY ABOUT.
+
+Let's be clear: 'tiers' are not a category. They're an ATTRIBUTE of an ABILITY. The only reason why it's important to express tiers as a CATEGORY is that, as DEVELOPERS, we want to be consistent that there are ALWAYS and NO MORE and NO LESS than two arts per tier.
+
+There's always two arts per tier. In that respect, the 'tier' is a construct with limitations. It's more than just an attribute of an ability.
+
+But, as far as the PLAYER is concerned, it IS just an attribute of an ability. Because the PLAYER isn't the one who's worried about making sure that there are always two arts per tier.
+
+The player may UNDERSTAND that there are two arts per tier. But they don't CARE.
+
+So, when describing the game to PLAYERS, whether it be in the form of a manual or in the UI, you DON'T NEED TO FOLD THE CATEGORIES. You can express them in a FLAT LAYOUT of 24 abilities per ability pool.
+
+And each of those 24 abilities has a tier and an art that they belong to.
+
+So, looking at the game THIS WAY, I'm comfortable saying that, in our game-design document, we don't need to say ANYTHING MORE ABOUT 'ARTS' than that '3' abilities from the Pools' 18 all conform to a particular art. The 18 abilities in a pool make up 6 arts of 3 abilities each.
+
+My math sucks. There are 6 arts, 3 abilities each. 18 abilities in total per pool.
