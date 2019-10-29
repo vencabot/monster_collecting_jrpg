@@ -1,6 +1,5 @@
 INTRODUCTION
 ------------
-
 * The game is a monster-battling JRPG (i.e. Pokemon) but with collectible-
   card-game'esque tactics.
 
@@ -218,14 +217,16 @@ DECK CONSTRUCTION
             - a Dynamic's Severity can be altered during battle, which will
               change its effect.
 
+
     MAX, CURRENT, AND AUGMENTED ATTRIBUTES
     --------------------------------------
     ##### TALK ABOUT THIS LATER #########
 
+
     ABILITY POOLS (Unit Classes / Roles)
     ------------------------------------
     * packages of 18 Abilities, each, that Units may use in battle which
-      support a particular function.
+      support a particular function (like a 'Class', 'Role', or 'Job').
 
     * these 18 Abilities are non-linear variations of 6 different Arts per
       Pool: 3 Abilities per Art.
@@ -234,8 +235,8 @@ DECK CONSTRUCTION
       others may have Abilities which are entirely defensive. Some may focus
       on immediate buffs and debuffs while others focus on traps, etc.
 
-    * the Abilities in each Pool are limited to inflicting any of 3 Dynamics
-      unique to that Pool. These are known as 'Pool Dynamics'.
+    * 'Pool Dynamics': the Abilities in each Pool are limited to inflicting
+      any of 3 Dynamics unique to that Pool, known as 'Pool Dynamics'.
         + players can get an immediate sense of a Pool's function by looking
           at its Pool Dynamics. 
 
@@ -249,8 +250,10 @@ DECK CONSTRUCTION
           2 Arts) at each of 3 Ability Tiers.
             - Tier 3 Abilities are often bread-and-butter or especially
               powerful tools definitive of the Pool.
+
             - Tier 1 Abilities are edge-case or low-cost tools which may
               sometimes come in handy.
+
             - the Pools that a Unit has access to and their Pool Levels
               deeply impact that Unit's tactical potential and available
               functions.
@@ -259,8 +262,10 @@ DECK CONSTRUCTION
           a Unit has access to in battle.
             - each Unit can assign each Ability in a Pool an 'Ability
               Priority'.
+
             - a Pool's Ability Slots are filled with the highest Priority
               Abilities available to the Pool's Level.
+
             - by default, a Pool's available Slots are based on its Level:
               2 Slots for Level 3 and 1 Slot for Levels 1 and 2.
 
@@ -275,50 +280,71 @@ DECK CONSTRUCTION
       battle (via Abilities, Items, or Dynamics).
         + Units should carefully prioritize Abilities because the Abilities
           they have access to may change during battle.
- 
-        Techniques
-        ----------
-        An Ability Pool contains 6 'Parent Abilities,' which themselves each contain 3 'Child Abilities,' which are what a Unit actually equips into their 'Ability Slots' and uses in battle.
 
-        Abilities that are the child of a particular parent will all have a similar function and description but may vary in the particulars of their usage. Some may have more or less reward at various effectiveness levels. Some may have a higher chance of inflicting a particular Dynamic into battle or may inflict different Dynamics entirely.
 
-        For example, a Parent Ability 'Slap' may have 3 children all of which specialize in straightforward HP damage for a middling AP cost. However, one Child Ability, "Double Slap," may split that damage over two hits, which could make it more effective against opponents that have low DEF. Another Child Ability, "Heavy Slap," may deal more damage but will do 0 damage at Glancing Effectiveness. The third child, "Stun Slap," may do average damage at Glancing and Normal Effectiveness -- but, instead of gaining damage at Critical Effectiveness, it has a chance to inflict a 'Stunned' Dynamic on some opponent Unit.
+    ABILITIES
+    ---------
+    * Based on any of 6 Arts from an Ability Pool, along with two other
+      Abilities based on that same Art.
 
-        In that example, all Child Abilities fulfill a very similar purpose but with slight variation in effect.
+    * 'Tier' determines whether or not a Unit can use this Ability at their
+      current Pool Level.
 
-            Abilities
-            ---------
-            When directly examining an Ability Pool, it's perhaps most important to take note of the PARENT Abilities contained within that Pool. However, it's the CHILD Abilities of those parents which a Unit actually takes into battle with them.
+    * Can inflict any of the 3 Pool Dynamics that its Pool has access to.
 
-            When choosing between Child Abilities to take into battle, there are a few factors that are important to understand and examine. 
+    * Described with 'Tags' which may cause certain Dynamics in-play to
+      trigger when this Ability is used.
+        + i.e., "magical", "fiery", "slash"
 
-                DIRECT AND INDIRECT EFFECTS
-                ---------------------------
-                The purpose of using a given Ability is to take advantage of its effects. In essence, there are two types of effects that an Ability can have:
-                1.) Directly increase or decrease a numerical attribute, whether it be the 'current' value of a resource attribute (HP, MP, LP) or the 'augmented' value of an attribute.
-                2.) Impact the Dynamics of battle, including adding new Dynamics, neutralizing existing Dynamics, or altering the Severity of a Dynamic.
+    * Can target any number of Units or Dynamics, although the target is
+      usually the opposing Unit in the ring, an ally Unit, or Dynamic.
 
-                Abilities (and Dynamics) can take more than one target, although, usually, the target will be the opposing Unit in the Ring.
+    * A Unit's Abilities are the primary way that players interact with
+      battle.
+        + Directly alter the attributes of other Units or Leaders.
 
-                By setting up Dynamics, an Ability can create situations where its effects are delayed or set as traps or may synergize with the effects of other abilities and Dynamics to become especially effective under certain tactics.
+        + Indirectly impact battle by adding, removing, or effecting
+          Dynamics currently active in the battle.
 
-                DIRECT AND INDIRECT COSTS
-                -------------------------
-                Unlike in other JRPGs, Abilities don't have a explicit 'cost,' because the Dynamic Rule System means that there could very well be situations where reducing a Unit's 'MP,' for instance, may result in a positive effect for that unit or their team. For this reason, what would be traditionally considered as a 'cost' of an ability in another JRPG should be thought of more as a 'side-effect' of abilities in this game.
+        + Disable a Unit's Equipment effects for any amount of time.
 
-                For instance, an Ability may reduce the target's HP by 10 and the user's MP by 3. In that sense, this ability has an MP 'cost,' but it should be considered that there are many types of 'costs' in this sense outside of just reducing a resource attribute like the user's MP, HP, or even their LP.
+    * Abilities don't have traditional 'costs,' but some of their effects
+      may be disadvantageous to the user or their Team.
+        + The Leader's AP will be consumed, almost certainly.
 
-                An Ability could put a Dynamic into play which has some effect that is a double-edged sword. A Dynamic may prevent the use of ALL Abilities in battle that reduce the user's MP by 10 or more. This would limit the Abilities that both teams can use. On the other hand, if you're putting this Dynamic into play, it must be because you hope that it'll impact your opponent's team more than it'll effect your team.
+        + The user's MP is often consumed when using powerful Abilities.
 
-                So, there may be direct and indirect costs to using any Ability.
+        + There are countless negative effects that an Ability can have,
+          including lowering any attribute of any friendly Unit or
+          instilling a Dynamic that negatively impacts the ally Team, etc.
 
-                DESCRIPTOR TAGS
-                ---------------
-                Abilities can be tagged with any number of arbitrary descriptors, such as "magical" or "fiery" or "blunt," etc. These descriptors can be probed by Dynamics so that they can be triggered under interesting circumstances. For instance, a Dynamic may be described as, "When this Rule's target Unit is targetted by a fiery Ability, that Ability's HP damage is reduced by 20%."
+    * Abilities may save variables between uses for purposes such as
+      counting how many times they've been used, who they've been used
+      against, etc. These may impact their effects.
 
-                UNIQUE PROPERTIES
-                -----------------
-                Some Abilities may internally store variables such as the number of times they've been used in a battle or which targets they've been used on recently, etc. These Abilities may change their effect based on any number of variables over the course of the battle and these traits should be taken into consideration when trying to understand how to best use the ability tactically.
+
+    EQUIPMENT
+    ---------
+    * Alters the base attributes of any Unit wearing it, including TAG.
+        + Because the 'base' attributes are altered, this impacts Unit
+          growth during Growth Point expenditure.
+
+    * May add Unit Dynamics to the equipping Unit.
+
+    * May add, remove, or upgrade Ability Pools.
+        + Specific Pools may be targeted, or they may be chosen by their
+          order.
+            - i.e., "Removes the 'Warrior' Ability Pool" or "Increases the
+              Pool Level of the Unit's 3rd Ability Pool."
+
+        + Pools may have their 'Pool Level' or number of 'Ability Slots'
+          altered by wearing Equipment.
+
+    * Every Unit can wear one piece of Equipment.
+
+    * Certain Abilities may disable the effects of Equipment for any amount
+      of time.
+
 
     CHOOSING A LEADER
     -----------------
@@ -355,32 +381,6 @@ DECK CONSTRUCTION
         Another standard Leader Ability is 'Use Item,' which will expend a consumable item from the team's inventory, which will have some effect on battle. This inventory of items is replenished between battles.
 
         Leaders may also have unique Leader Abilities, such as small buffs or heals or any other sort of Ability similar to what a Unit would have access to, except that they can be used on any turn, making them extremely powerful. In this way, a Leader's abilities could be a major factor in what strategies are most effective for your team and deck.
-
-    CHOOSING EQUIPMENT
-    ------------------
-    Every Unit in the deck can be equipped with a single piece of 'Equipment' which can augment their attributes and abilities. In most cases, this won't drastically change the function of a unit but equipment can have a variety of relatively profound effects.
-
-    In the completed game, Equipment will likely be unlocked on a per-account basis to be equipped into those players' decks. In the alpha, every player will have access to every piece of equipment.
-
-        EQUIPMENT ATTRIBUTES
-        --------------------
-        Equipment has the potential to augment the attributes of a Unit, such as max HP and MP, ATK, DEF, etc. It can also add Descriptor Tags to a unit.
-
-        What's interesting about the way that wearing Equipment augments a Unit's attributes is that the BASE attributes are affected, which means that, during the expenditure of Growth Points (explained below), equipment can alter the payback for expending GP on a particular attribute. If a piece of Equipment raises a unit's Max HP, then that unit will grow HP faster when expending GP.
-
-        ADD, REPLACE, OR UPGRADE ABILITY POOLS
-        --------------------------------------
-        Some Equipment will affect what Abilities the attached Unit will be able to access in battle.
-
-        Equipment may add new Ability Pools to the Unit (probably at a low Pool Level, for balance reasons), or they may replace an existing Ability Pool on that Unit (such as a piece of Equipment which replaces the 'Healer' pool with the 'Warrior' pool, which would only be effective on units which already have the 'Healer' pool).
-
-        Some equipment may upgrade the Pool Level of a particular Ability Pool, whether that be a precise pool ("upgrades the Pool Level of the Healer pool") or maybe a pool-by-reference ("upgrades the Unit's lowest-level Pool by one level," or, "upgrades the unit's third Ability Pool").
-
-        As with other means of altering a Unit's Ability Pools, any equipped Abilities which belong to an augmented pool may become inaccessible in the case that that Equipment is removed or otherwise disabled (perhaps by an Ability in combat).
-
-        ADD DYNAMICS
-        ------------
-        Some Equipment may add a Unit Dynamic to the equipping Unit. This Dynamic behaves exactly the same as other Unit Dynamics in that the Dynamic becomes active as soon as the equipped unit enters battle. However, if a unit's 'Equipment' is disabled in battle (perhaps by an Ability), this Dynamic may cease to be effective.
 
     SPENDING GROWTH POINTS
     ----------------------
